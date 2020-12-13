@@ -125,7 +125,6 @@ void main()
 		block.Rotate(Quaternion(Vec3(0.0001f, 0.0002f, 0.0003f)));
 
 		Mat4 model = Mat4(1.0f);
-		//model = Maths::Rotate(model, Maths::ToRadians(180.0f + a), Vec3(0.0001f, 0.0111f, 0.2f));
 		model = Maths::Translate(model, block.GetPosition());
 		model = Maths::Rotate(model, block.GetRotationMatrix());
 		shader.SetMatrix4fv("model", 1, false, model);
@@ -135,6 +134,6 @@ void main()
 		meshSet.RenderMesh(mesh);
 		meshSet2.RenderMesh(mesh2);
 		meshSet3.RenderMesh(mesh3);
-		//meshSet4.RenderMesh(mesh4);
+		meshSet4.RenderMesh(mesh4);
 	}
 }
