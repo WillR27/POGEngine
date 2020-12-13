@@ -1,0 +1,48 @@
+#pragma once
+
+#include "Window.h"
+
+#include <GLFW/glfw3.h>
+
+namespace PEngine
+{
+	class WindowsWindow : public Window
+	{
+	public:
+		struct WindowData
+		{
+			int width = 0, height = 0;
+			Window::EventCallback eventCallback;
+		};
+
+		WindowsWindow();
+		virtual ~WindowsWindow();
+
+		virtual void Init() override;
+		virtual void Update() override;
+
+		virtual void SwapBuffers() override;
+
+		virtual bool HandleWindowCloseEvent(WindowCloseEvent& e) override;
+		virtual bool HandleWindowSizeEvent(WindowSizeEvent& e) override;
+
+		virtual void SetEventCallback(EventCallback eventCallback) override;
+
+		virtual bool ShouldClose() const override;
+
+	private:
+		WindowData windowData;
+
+		GLFWwindow* window;
+
+		bool shouldClose;
+
+		void InitWindow();
+		void InitCallbacks();
+
+		void Close();
+
+		static WindowData& GetWindowData(GLFWwindow* window);
+	};
+}
+
