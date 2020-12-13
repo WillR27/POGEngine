@@ -4,6 +4,9 @@
 
 namespace PEngine
 {
+	/// <summary>
+	/// An immutable set of meshes with a common vbo, ibo and vao.
+	/// </summary>
 	class StaticMeshSet : public MeshSet
 	{
 	public:
@@ -15,6 +18,8 @@ namespace PEngine
 		virtual void AddMesh(const Mesh& mesh) override;
 
 		virtual void RenderMesh(const Mesh& mesh) override;
+
+		void SetAttribute(unsigned int index, unsigned int numberOfComponents, unsigned int type, bool clamped, int stride, void* offset);
 
 	private:
 		unsigned int count;

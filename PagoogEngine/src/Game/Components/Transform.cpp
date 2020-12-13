@@ -40,6 +40,11 @@ namespace PEngine
 		orientation = Quaternion(newOrientation);
 	}
 
+	void Transform::Rotate(Quaternion rotation)
+	{
+		orientation = glm::normalize(rotation * orientation);
+	}
+
 	void Transform::RotateAround(Vec3 positionToRotateAround, Quaternion rotation)
 	{
 		Mat4 transformation(1.0f);
@@ -48,7 +53,8 @@ namespace PEngine
 		position -= positionToRotateAround;
 		position = transformation * Vec4(position, 1.0f);
 		position += positionToRotateAround;
-		//orientation = glm::normalize(rotation * orientation);
+
+		Rotate(rotation);
 	}
 
 	Mat4 Transform::GetRotationMatrix() const

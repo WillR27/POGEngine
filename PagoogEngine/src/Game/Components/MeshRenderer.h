@@ -1,9 +1,9 @@
 #pragma once
 
-#include "Render/VertexBuffer.h"
-#include "Render/IndexBuffer.h"
-#include "Render/VertexArray.h"
-#include "Render/Shader.h"
+#include "Render/Core/Objects/VertexBuffer.h"
+#include "Render/Core/Objects/IndexBuffer.h"
+#include "Render/Core/Objects/VertexArray.h"
+#include "Render/Core/Shader.h"
 
 #include "Render/Mesh/Mesh.h"
 

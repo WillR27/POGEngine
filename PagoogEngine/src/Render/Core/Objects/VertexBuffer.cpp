@@ -5,25 +5,33 @@
 
 namespace PEngine
 {
+	VertexBuffer* VertexBuffer::currentVBO = nullptr;
+
 	VertexBuffer::VertexBuffer()
-		: vbo(0)
+		: RenderingObject::RenderingObject()
 	{
-		glGenBuffers(1, &vbo);
+		glGenBuffers(1, &id);
 	}
 
 	VertexBuffer::~VertexBuffer()
 	{
-		glDeleteBuffers(1, &vbo);
+		glDeleteBuffers(1, &id);
 	}
 
 	void VertexBuffer::Bind()
 	{
-		glBindBuffer(GL_ARRAY_BUFFER, vbo);
+		glBindBuffer(GL_ARRAY_BUFFER, id);
+		currentVBO = this;
 	}
 
 	void VertexBuffer::Unbind()
 	{
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
+	}
+
+	RenderingObject* VertexBuffer::GetCurrent()
+	{
+		return currentVBO;
 	}
 
 	void VertexBuffer::SetVertexData(const void* vertexData, unsigned int size)

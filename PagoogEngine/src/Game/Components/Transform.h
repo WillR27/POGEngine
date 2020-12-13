@@ -18,6 +18,7 @@ namespace PEngine
 		void SetOrientation(Quaternion newOrientation);
 		void SetOrientation(Vec3 newOrientation);
 
+		void Rotate(Quaternion rotation);
 		void RotateAround(Vec3 positionToRotateAround, Quaternion rotation);
 
 		Mat4 GetRotationMatrix() const;

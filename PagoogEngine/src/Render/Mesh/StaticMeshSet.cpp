@@ -1,7 +1,8 @@
 #include "pgepch.h"
 #include "StaticMeshSet.h"
 
-#include "Render/Render.h"
+#include "Render/Core/Render.h"
+#include "Render/Core/CoreRenderingUtil.h"
 
 namespace PEngine
 {
@@ -27,6 +28,10 @@ namespace PEngine
 
 	void StaticMeshSet::Build()
 	{
+		GetVAO().Bind();
+		GetVBO().Bind();
+		GetIBO().Bind();
+
 		float* combinedVertexDataArray = new float[length];
 
 		unsigned int countOffset = 0;
@@ -91,26 +96,37 @@ namespace PEngine
 			PG_ERROR("No matching mesh found!");
 		}
 
-		int index = std::distance(meshes.begin(), it);
-		Render::RenderTrianglesFromArrays(countOffsets[index], mesh.Count());
+		ScopedBind bind(GetVAO());
+
+		long long index = std::distance(meshes.begin(), it);
+		
+		if (indexSize == 0)
+		{
+			Render::RenderTrianglesFromArrays(countOffsets[index], mesh.Count());
+		}
+		else
+		{
+			Render::RenderTrianglesFromElements(indexLengthOffsets[index], mesh.IndexLength());
+		}
+	}
+
+	void StaticMeshSet::SetAttribute(unsigned int index, unsigned int numberOfComponents, unsigned int type, bool clamped, int stride, void* offset)
+	{
+		GetVAO().SetAttribute(index, numberOfComponents, type, clamped, stride, offset);
 	}
 
 	void StaticMeshSet::SetVertexData(const float* vertexData, unsigned int size)
 	{
 		VertexBuffer& vbo = GetVBO();
-		vbo.Bind();
 		vbo.SetVertexData(vertexData, size);
-		vbo.Unbind();
 	}
 
 	void StaticMeshSet::SetIndexData(const unsigned int* indexData, unsigned int size)
 	{
-		if (size > 0)
+		if (size != 0)
 		{
-			IndexBuffer& ebo = GetEBO();
-			ebo.Bind();
-			ebo.SetIndexData(indexData, size);
-			ebo.Unbind();
+			IndexBuffer& ibo = GetIBO();
+			ibo.SetIndexData(indexData, size);
 		}
 	}
 }

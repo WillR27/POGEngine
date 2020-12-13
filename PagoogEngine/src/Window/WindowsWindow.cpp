@@ -2,10 +2,8 @@
 #include "WindowsWindow.h"
 
 #include "Event/WindowEvents.h"
-#include "Render/VertexBuffer.h"
-#include "Render/VertexArray.h"
-#include "Render/Shader.h"
-#include "Render/Render.h"
+#include "Render/Core/Shader.h"
+#include "Render/Core/Render.h"
 
 #include <glad/glad.h>
 

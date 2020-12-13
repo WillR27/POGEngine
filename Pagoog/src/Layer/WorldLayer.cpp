@@ -2,8 +2,8 @@
 #include "WorldLayer.h"
 
 #include "Game/Camera.h"
-#include "Render/Primitives/Primitives.h"
 #include "Render/Mesh/StaticMeshSet.h"
+#include "Render/Mesh/Primitives/Primitives.h"
 
 namespace Pagoog
 {
@@ -13,8 +13,10 @@ namespace Pagoog
 		, mesh2()
 		, mesh3()
 		, mesh4()
-		//, meshSet(StaticMeshSet())
-		//, meshSet2(StaticMeshSet())
+		, meshSet()
+		, meshSet2()
+		, meshSet3()
+		, meshSet4()
 		, block()
 	{
 	}
@@ -44,26 +46,24 @@ namespace Pagoog
 		mesh4.Build();
 
 		meshSet.AddMesh(mesh);
-		meshSet.AddMesh(mesh2);
 		meshSet.Build();
+		meshSet.SetAttribute(0, 3, PG_FLOAT, false, 6 * sizeof(float), (void*)(0));
+		meshSet.SetAttribute(1, 3, PG_FLOAT, false, 6 * sizeof(float), (void*)(3 * sizeof(float)));
 
-		//meshSet2.AddMesh(mesh3);
-		//meshSet2.AddMesh(mesh4);
-		//meshSet2.Build();
+		meshSet2.AddMesh(mesh2);
+		meshSet2.Build();
+		meshSet2.SetAttribute(0, 3, PG_FLOAT, false, 6 * sizeof(float), (void*)(0));
+		meshSet2.SetAttribute(1, 3, PG_FLOAT, false, 6 * sizeof(float), (void*)(3 * sizeof(float)));
 
-		//VertexBuffer& vbo = meshSet.GetVBO();
-		//IndexBuffer& ebo = meshSet.GetEBO();
-		//VertexArray& vao = meshSet.GetVAO();
+		meshSet3.AddMesh(mesh3);
+		meshSet3.Build();
+		meshSet3.SetAttribute(0, 3, PG_FLOAT, false, 6 * sizeof(float), (void*)(0));
+		meshSet3.SetAttribute(1, 3, PG_FLOAT, false, 6 * sizeof(float), (void*)(3 * sizeof(float)));
 
-		//vbo.Bind();
-		//vbo.SetVertexData(mesh.GetVertexData(), mesh.Size());
-
-		//ebo.Bind();
-		//ebo.SetIndices(indices, sizeof(indices));
-
-		//vao.Bind();
-		//vao.SetAttribute(0, 3, PG_FLOAT, false, 6 * sizeof(float), (void*)(0));
-		//vao.SetAttribute(1, 3, PG_FLOAT, false, 6 * sizeof(float), (void*)(3 * sizeof(float)));
+		meshSet4.AddMesh(mesh4);
+		meshSet4.Build();
+		meshSet4.SetAttribute(0, 3, PG_FLOAT, false, 6 * sizeof(float), (void*)(0));
+		meshSet4.SetAttribute(1, 3, PG_FLOAT, false, 6 * sizeof(float), (void*)(3 * sizeof(float)));
 
 		const char* vertexShaderSource = R"(
 #version 330 core
@@ -110,32 +110,19 @@ void main()
 
 		Render::SetPolygonMode(PG_FRONT_AND_BACK, PG_FILL);
 
-		block.Translate(Vec3(0.0f, 0.0f, 0.0f));
-		//block.RotateAround(Vec3(1, 1, 1), Quaternion(Vec3(glm::half_pi<float>() * 1.5f, 0.0f, 0.0f)));
+		block.Translate(Vec3(-2.0f, -2.0f, 0.0f));
 	}
 
 	void WorldLayer::Update()
 	{
 		Render::EnableDepthTest(true);
 
-		meshSet.GetVBO().Bind();
-		meshSet.GetEBO().Bind();
-
-		VertexArray vao;
-		vao.Bind();
-		vao.SetAttribute(0, 3, PG_FLOAT, false, 6 * sizeof(float), (void*)(0));
-		vao.SetAttribute(1, 3, PG_FLOAT, false, 6 * sizeof(float), (void*)(3 * sizeof(float)));
-
-		//vbo2.Bind();
-		//ebo2.Bind();
-		//vao.Bind();
-		//shader.Use();
-
 		a += 0.001f;
 		//block.SetOrientation(glm::angleAxis(glm::radians(180.0f + a), glm::vec3(1.0f, 0.0f, 0.0f)));
 		//block.SetOrientation(Vec3(1.0f + a, 0.0f, 0.0f));
 		//block.Translate(Vec3(0.0001f, 0.0001f, 0.0001f));
-		block.RotateAround(Vec3(0.5f, 0.0f, 0.0f), Quaternion(Vec3(0.0000f, 0.0000f, 0.0003f)));
+		block.RotateAround(Vec3(0.0f, 0.0f, 0.0f), Quaternion(Vec3(0.0001f, 0.0002f, 0.0003f)));
+		block.Rotate(Quaternion(Vec3(0.0001f, 0.0002f, 0.0003f)));
 
 		Mat4 model = Mat4(1.0f);
 		//model = Maths::Rotate(model, Maths::ToRadians(180.0f + a), Vec3(0.0001f, 0.0111f, 0.2f));
@@ -143,10 +130,11 @@ void main()
 		model = Maths::Rotate(model, block.GetRotationMatrix());
 		shader.SetMatrix4fv("model", 1, false, model);
 
-		//meshSet.GetVAO().Bind();
+		shader.Use();
+
 		meshSet.RenderMesh(mesh);
-		meshSet.RenderMesh(mesh2);
-		//Render::RenderTrianglesFromArrays(0, 36);
-		//Render::RenderTrianglesFromElements(0, 36);
+		meshSet2.RenderMesh(mesh2);
+		meshSet3.RenderMesh(mesh3);
+		//meshSet4.RenderMesh(mesh4);
 	}
 }

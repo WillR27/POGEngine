@@ -1,13 +1,16 @@
 #pragma once
 
-#include "Render/IndexBuffer.h"
-#include "Render/VertexArray.h"
-#include "Render/VertexBuffer.h"
+#include "Render/Core/Objects/IndexBuffer.h"
+#include "Render/Core/Objects/VertexArray.h"
+#include "Render/Core/Objects/VertexBuffer.h"
 
 #include "Mesh.h"
 
 namespace PEngine
 {
+	/// <summary>
+	/// A set of meshes with a common vbo, ibo and vao.
+	/// </summary>
 	class MeshSet
 	{
 	public:
@@ -15,20 +18,23 @@ namespace PEngine
 
 		virtual void Build() = 0;
 
+		/// <summary>
+		/// Adds a mesh to the set. To be used to render, mesh must not go out scope.
+		/// </summary>
 		virtual void AddMesh(const Mesh& mesh) = 0;
 
 		virtual void RenderMesh(const Mesh& mesh) = 0;
 
-		VertexBuffer& GetVBO();
-		IndexBuffer& GetEBO();
-		VertexArray& GetVAO();
-
 	protected:
 		MeshSet();
 
+		VertexBuffer& GetVBO();
+		IndexBuffer& GetIBO();
+		VertexArray& GetVAO();
+
 	private:
 		VertexBuffer vbo;
-		IndexBuffer ebo;
+		IndexBuffer ibo;
 		VertexArray vao;
 	};
 }

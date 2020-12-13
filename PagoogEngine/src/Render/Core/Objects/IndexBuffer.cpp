@@ -5,25 +5,33 @@
 
 namespace PEngine
 {
+	IndexBuffer* IndexBuffer::currentIBO = nullptr;
+
 	IndexBuffer::IndexBuffer()
-		: ibo(0)
+		: RenderingObject::RenderingObject()
 	{
-		glGenBuffers(1, &ibo);
+		glGenBuffers(1, &id);
 	}
 
 	IndexBuffer::~IndexBuffer()
 	{
-		glDeleteBuffers(1, &ibo);
+		glDeleteBuffers(1, &id);
 	}
 
 	void IndexBuffer::Bind()
 	{
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, id);
+		currentIBO = this;
 	}
 
 	void IndexBuffer::Unbind()
 	{
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+	}
+
+	RenderingObject* IndexBuffer::GetCurrent()
+	{
+		return currentIBO;
 	}
 
 	void IndexBuffer::SetIndexData(const void* indexData, int size)

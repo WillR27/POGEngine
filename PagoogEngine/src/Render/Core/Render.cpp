@@ -13,6 +13,12 @@ namespace PEngine
 	void Render::ErrorCallback(unsigned int source, unsigned int type, unsigned int id, unsigned int severity, int length, const char* message, const void* userParam)
 	{
 		PG_ERROR("OpenGL error: {0}", message);
+
+		switch (id)
+		{
+		case 2100: PG_ERROR("This can be caused by not having a vbo bound before trying to write to a vao.");
+		}
+
 		PG_ASSERT(false, "OpenGL error!");
 	}
 

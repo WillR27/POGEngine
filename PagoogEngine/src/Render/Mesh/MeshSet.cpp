@@ -4,8 +4,8 @@
 namespace PEngine
 {
 	MeshSet::MeshSet()
-		: vbo()
-		, ebo()
+		: vbo() // TODO: Construct inside build as we may not want an ibo
+		, ibo()
 		, vao()
 	{
 	}
@@ -14,18 +14,14 @@ namespace PEngine
 	{
 	}
 
-	void MeshSet::Build()
-	{
-	}
-
 	VertexBuffer& MeshSet::GetVBO()
 	{
 		return vbo;
 	}
 
-	IndexBuffer& MeshSet::GetEBO()
+	IndexBuffer& MeshSet::GetIBO()
 	{
-		return ebo;
+		return ibo;
 	}
 
 	VertexArray& MeshSet::GetVAO()
