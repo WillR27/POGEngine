@@ -134,6 +134,6 @@ void main()
 		meshSet.RenderMesh(mesh);
 		meshSet2.RenderMesh(mesh2);
 		meshSet3.RenderMesh(mesh3);
-		meshSet4.RenderMesh(mesh4);
+		//meshSet4.RenderMesh(mesh4);
 	}
 }
