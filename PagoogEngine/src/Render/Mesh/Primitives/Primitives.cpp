@@ -21,6 +21,15 @@ namespace PEngine
 		 0.0f, 1.0f,0.0f,
 		 0.0f, 0.0f,0.0f
 	};
+	const float squareColoursColours[] =
+	{
+		 0.0f, 0.0f,1.0f,
+		0.0f, 0.0f, 0.0f,
+		0.0f, 0.0f, 0.0f,
+		0.0f, 0.0f, 0.0f,
+		 0.0f, 0.0f,0.0f,
+		 0.0f, 0.0f,0.0f
+	};
 
 	const float squarePositions2[] = 
 	{

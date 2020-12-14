@@ -4,6 +4,7 @@ namespace PEngine
 {
 	extern const float squarePositions[18];
 	extern const float squareColours[18];
+	extern const float squareColoursColours[18];
 
 	extern const float squarePositions2[12];
 	extern const float squareColours2[12];

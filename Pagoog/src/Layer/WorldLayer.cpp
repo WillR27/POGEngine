@@ -29,6 +29,7 @@ namespace Pagoog
 	{
 		mesh.SetPositionData(squarePositions, sizeof(squarePositions));
 		mesh.SetColourData(squareColours, sizeof(squareColours));
+		mesh.AddAdditionalData(squareColoursColours, sizeof(squareColoursColours), sizeof(float) * 3);
 		mesh.Build();
 
 		mesh2.SetPositionData(cubePositions2, sizeof(cubePositions2));
@@ -47,8 +48,9 @@ namespace Pagoog
 
 		meshSet.AddMesh(mesh);
 		meshSet.Build();
-		meshSet.SetAttribute(0, 3, PG_FLOAT, false, 6 * sizeof(float), (void*)(0));
-		meshSet.SetAttribute(1, 3, PG_FLOAT, false, 6 * sizeof(float), (void*)(3 * sizeof(float)));
+		meshSet.SetAttribute(0, 3, PG_FLOAT, false, 9 * sizeof(float), (void*)(0));
+		meshSet.SetAttribute(1, 3, PG_FLOAT, false, 9 * sizeof(float), (void*)(3 * sizeof(float)));
+		meshSet.SetAttribute(2, 3, PG_FLOAT, false, 9 * sizeof(float), (void*)(6 * sizeof(float)));
 
 		meshSet2.AddMesh(mesh2);
 		meshSet2.Build();
@@ -68,7 +70,8 @@ namespace Pagoog
 		const char* vertexShaderSource = R"(
 #version 330 core
 layout (location = 0) in vec3 aPos;
-layout (location = 1) in vec3 aColour;
+layout (location = 1) in vec3 aColour2;
+layout (location = 2) in vec3 aColour;
 
 uniform mat4 model;
 uniform mat4 view;
@@ -132,8 +135,8 @@ void main()
 		shader.Use();
 
 		meshSet.RenderMesh(mesh);
-		meshSet2.RenderMesh(mesh2);
-		meshSet3.RenderMesh(mesh3);
+		//meshSet2.RenderMesh(mesh2);
+		//meshSet3.RenderMesh(mesh3);
 		//meshSet4.RenderMesh(mesh4);
 	}
 }
