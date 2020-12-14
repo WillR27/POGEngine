@@ -14,42 +14,41 @@ namespace PEngine
 		const void* GetVertexData() const;
 
 		const float* GetPositionData() const;
-		void SetPositionData(const float* positionDataToBeCopied, size_t size);
+		void SetPositionData(const float* positionDataToBeCopied, int size);
 
 		const float* GetColourData() const;
-		void SetColourData(const float* colourDataToBeCopied, size_t size);
+		void SetColourData(const float* colourDataToBeCopied, int size);
 
-		size_t GetAdditionalStride(int index) const;
+		int GetAdditionalStride(int index) const;
 		const void* GetAdditionalData(int index) const;
-		void AddAdditionalData(const void* dataToBeCopied, size_t size, size_t stride);
+		void AddAdditionalData(const void* dataToBeCopied, int size, int stride);
 
 		const unsigned int* GetIndexData() const;
-		void SetIndexData(const unsigned int* indexDataToBeCopied, size_t size);
+		void SetIndexData(const unsigned int* indexDataToBeCopied, int size);
 
 		/// <summary>
 		/// Returns the number of vertices in the mesh.
 		/// </summary>
 		int Count() const;
 		/// <summary>
-		/// Returns the number of values in the vertex array.
-		/// </summary>
-		int Length() const;
-		/// <summary>
 		/// Returns the size of the vertex array in bytes.
 		/// </summary>
-		size_t Size() const;
+		int Size() const;
 
 		/// <summary>
 		/// Returns the number of indices in the mesh.
 		/// </summary>
-		int IndexLength() const;
+		int IndexCount() const;
 		/// <summary>
 		/// Returns the size of the index array in bytes.
 		/// </summary>
-		size_t IndexSize() const;
+		int IndexSize() const;
 
 	private:
-		const int NumberOfValuesPerVertex = 3 + 3; // TODO: Use data types like Positon, Colour etc. for working out sizes
+		/// <summary>
+		/// The stride of each vertex in bytes, i.e sizeof(position) + sizeof(colour) + sizeof(...).
+		/// </summary>
+		int stride;
 
 		int numberOfVertices;
 		int numberOfIndices;
@@ -60,7 +59,7 @@ namespace PEngine
 		float* colourDataArray;
 
 		std::vector<void*> additionalDataArrays;
-		std::vector<size_t> additionalDataStrides;
+		std::vector<int> additionalDataStrides;
 
 		unsigned int* indexDataArray;
 	};

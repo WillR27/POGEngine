@@ -22,21 +22,19 @@ namespace PEngine
 		void SetAttribute(unsigned int index, unsigned int numberOfComponents, unsigned int type, bool clamped, int stride, void* offset);
 
 	private:
-		unsigned int count;
-		unsigned int length;
-		unsigned int size;
-		unsigned int indexLength;
-		unsigned int indexSize;
+		int count;
+		int size;
+		int indexCount;
+		int indexSize;
 
 		std::vector<const Mesh*> meshes;
-		std::vector<unsigned int> countOffsets;
-		std::vector<unsigned int> lengthOffsets;
-		std::vector<unsigned int> sizeOffsets;
-		std::vector<unsigned int> indexLengthOffsets;
-		std::vector<unsigned int> indexSizeOffsets;
+		std::vector<int> counts;
+		std::vector<int> sizes;
+		std::vector<int> indexCounts;
+		std::vector<int> indexSizes;
 
-		void SetVertexData(const float* vertexData, unsigned int size);
-		void SetIndexData(const unsigned int* indexData, unsigned int size);
+		void SetVertexData(const void* vertexData, int size);
+		void SetIndexData(const unsigned int* indexData, int size);
 	};
 }
 

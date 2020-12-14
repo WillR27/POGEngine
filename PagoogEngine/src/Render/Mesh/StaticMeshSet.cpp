@@ -9,16 +9,14 @@ namespace PEngine
 	StaticMeshSet::StaticMeshSet()
 		: MeshSet::MeshSet()
 		, count(0)
-		, length(0)
 		, size(0)
-		, indexLength(0)
+		, indexCount(0)
 		, indexSize(0)
 		, meshes()
-		, countOffsets()
-		, lengthOffsets()
-		, sizeOffsets()
-		, indexLengthOffsets()
-		, indexSizeOffsets()
+		, counts()
+		, sizes()
+		, indexCounts()
+		, indexSizes()
 	{
 	}
 
@@ -32,22 +30,19 @@ namespace PEngine
 		GetVBO().Bind();
 		GetIBO().Bind();
 
-		float* combinedVertexDataArray = new float[length];
+		char* combinedVertexDataArray = new char[size];
 
-		unsigned int countOffset = 0;
-		unsigned int lengthOffset = 0;
-		unsigned int sizeOffset = 0;
+		int countOffset = 0;
+		int sizeOffset = 0;
 
 		for (const Mesh* mesh : meshes)
 		{
-			countOffsets.push_back(countOffset);
-			lengthOffsets.push_back(lengthOffset);
-			sizeOffsets.push_back(sizeOffset);
+			counts.push_back(countOffset);
+			sizes.push_back(sizeOffset);
 
-			memcpy(&combinedVertexDataArray[lengthOffset], mesh->GetVertexData(), mesh->Size());
+			memcpy(&combinedVertexDataArray[sizeOffset], mesh->GetVertexData(), mesh->Size());
 
 			countOffset += mesh->Count();
-			lengthOffset += mesh->Length();
 			sizeOffset += mesh->Size();
 		}
 
@@ -56,19 +51,19 @@ namespace PEngine
 
 		if (indexSize != 0)
 		{
-			unsigned int* combinedIndexDataArray = new unsigned int[indexLength];
+			unsigned int* combinedIndexDataArray = new unsigned int[indexCount];
 
-			unsigned int indexLengthOffset = 0;
+			unsigned int indexCountOffset = 0;
 			unsigned int indexSizeOffset = 0;
 
 			for (const Mesh* mesh : meshes)
 			{
-				indexLengthOffsets.push_back(indexLengthOffset);
-				indexSizeOffsets.push_back(indexSizeOffset);
+				indexCounts.push_back(indexCountOffset);
+				indexSizes.push_back(indexSizeOffset);
 
-				memcpy(&combinedIndexDataArray[indexLengthOffset], mesh->GetIndexData(), mesh->IndexSize());
+				memcpy(&combinedIndexDataArray[indexCountOffset], mesh->GetIndexData(), mesh->IndexSize());
 
-				indexLengthOffset += mesh->IndexLength();
+				indexCountOffset += mesh->IndexCount();
 				indexSizeOffset += mesh->IndexSize();
 			}
 
@@ -80,9 +75,8 @@ namespace PEngine
 	void StaticMeshSet::AddMesh(const Mesh& mesh)
 	{
 		count += mesh.Count();
-		length += mesh.Length();
 		size += mesh.Size();
-		indexLength += mesh.IndexLength();
+		indexCount += mesh.IndexCount();
 		indexSize += mesh.IndexSize();
 		meshes.push_back(&mesh);
 	}
@@ -102,11 +96,11 @@ namespace PEngine
 		
 		if (indexSize == 0)
 		{
-			Render::RenderTrianglesFromArrays(countOffsets[index], mesh.Count());
+			Render::RenderTrianglesFromArrays(counts[index], mesh.Count());
 		}
 		else
 		{
-			Render::RenderTrianglesFromElements(indexLengthOffsets[index], mesh.IndexLength());
+			Render::RenderTrianglesFromElements(indexCounts[index], mesh.IndexCount());
 		}
 	}
 
@@ -115,13 +109,13 @@ namespace PEngine
 		GetVAO().SetAttribute(index, numberOfComponents, type, clamped, stride, offset);
 	}
 
-	void StaticMeshSet::SetVertexData(const float* vertexData, unsigned int size)
+	void StaticMeshSet::SetVertexData(const void* vertexData, int size)
 	{
 		VertexBuffer& vbo = GetVBO();
 		vbo.SetVertexData(vertexData, size);
 	}
 
-	void StaticMeshSet::SetIndexData(const unsigned int* indexData, unsigned int size)
+	void StaticMeshSet::SetIndexData(const unsigned int* indexData, int size)
 	{
 		if (size != 0)
 		{
