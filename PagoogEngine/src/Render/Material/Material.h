@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Maths/Maths.h"
+#include "Render/Core/Shader.h"
 
 namespace PEngine
 {
@@ -10,12 +11,19 @@ namespace PEngine
 		Material(std::string name);
 		~Material();
 
+		void UpdateShaderUniforms();
+
+		Shader& GetShader() const;
+		void SetShader(Shader& shader);
+
+		const std::map<std::string, Vec4> GetColours() const;
 		void AddColour(std::string name, Vec4 colour = Vec4(0.0f, 0.0f, 0.0f, 1.0f));
 		void SetColour(std::string name, Vec4 colour);
-		const std::map<std::string, Vec4> GetColours() const;
 
 	private:
 		std::string name;
+
+		Shader* shader;
 
 		std::map<std::string, Vec4> colours;
 	};

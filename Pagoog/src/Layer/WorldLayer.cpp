@@ -28,6 +28,8 @@ namespace Pagoog
 
 	void WorldLayer::Init()
 	{
+		Render::SetPolygonMode(PG_FRONT_AND_BACK, PG_FILL);
+
 		mesh.SetPositionData(squarePositions, sizeof(squarePositions));
 		mesh.SetColourData(squareColours, sizeof(squareColours));
 		mesh.Build();
@@ -66,12 +68,6 @@ namespace Pagoog
 		meshSet4.SetAttribute(0, 3, PG_FLOAT, false, 6 * sizeof(float), (void*)(0));
 		meshSet4.SetAttribute(1, 3, PG_FLOAT, false, 6 * sizeof(float), (void*)(3 * sizeof(float)));
 
-		material1.SetColour("colourIn", Vec4(1.0f, 1.0f, 1.0f, 1.0f));
-		material1.AddColour("colourIn", Vec4(1.0f, 0.0f, 0.0f, 1.0f));
-		material1.AddColour("colourIn", Vec4(0.0f, 1.0f, 0.0f, 1.0f));
-		material1.SetColour("colourIn", Vec4(0.0f, 0.0f, 1.0f, 1.0f));
-		material1.SetColour("colourIn", Vec4(0.0f, 1.0f, 0.0f, 1.0f));
-
 		const char* vertexShaderSource = R"(
 #version 330 core
 layout (location = 0) in vec3 aPos;
@@ -87,7 +83,7 @@ out vec3 colour;
 
 void main()
 {
-	colour = aColour;
+	colour = vec3(colourIn.r, colourIn.g, colourIn.b);
     gl_Position = projection * view * model * vec4(aPos, 1.0);
 }
 )";
@@ -104,26 +100,16 @@ void main()
 } 
 )";
 
-		Mat4 model(1.0f);
-		//model = glm::rotate(model, glm::radians(-65.0f), Vec3(1.0f, 0.6f, 0.0f));
-		model = block.GetRotationMatrix();
-		model = glm::translate(model, Vec3(0.0f, 0.0f, 0.0f));
+		shader.Init(vertexShaderSource, fragmentShaderSource);
+
+		material1.AddColour("colourIn", Vec4(1.0f, 0.0f, 0.0f, 1.0f));
+		material1.SetShader(shader);
 
 		Camera camera(Vec3(0.0f, 0.0f, 5.0f));
-
-		shader.Init(vertexShaderSource, fragmentShaderSource);
-		shader.Use();
-		shader.SetMatrix4fv("model", 1, false, model);
-		shader.SetMatrix4fv("view", 1, false, camera.GetView());
-		shader.SetMatrix4fv("projection", 1, false, camera.GetProjection());
+		material1.GetShader().Use();
+		material1.GetShader().SetMatrix4fv("view", 1, false, camera.GetView());
+		material1.GetShader().SetMatrix4fv("projection", 1, false, camera.GetProjection());
 		
-		for (auto const& pair : material1.GetColours())
-		{
-			shader.Set4f(pair.first.c_str(), pair.second.r, pair.second.g, pair.second.b, pair.second.a);
-		}
-
-		Render::SetPolygonMode(PG_FRONT_AND_BACK, PG_FILL);
-
 		block.Translate(Vec3(-2.0f, -2.0f, 0.0f));
 	}
 
@@ -131,19 +117,16 @@ void main()
 	{
 		Render::EnableDepthTest(true);
 
-		a += 0.001f;
-		//block.SetOrientation(glm::angleAxis(glm::radians(180.0f + a), glm::vec3(1.0f, 0.0f, 0.0f)));
-		//block.SetOrientation(Vec3(1.0f + a, 0.0f, 0.0f));
-		//block.Translate(Vec3(0.0001f, 0.0001f, 0.0001f));
 		block.RotateAround(Vec3(0.0f, 0.0f, 0.0f), Quaternion(Vec3(0.0001f, 0.0002f, 0.0003f)));
 		block.Rotate(Quaternion(Vec3(0.0001f, 0.0002f, 0.0003f)));
+
+		material1.SetColour("colourIn", Vec4((float)sin(std::chrono::system_clock::to_time_t(std::chrono::system_clock::now())), 1.0f, 0.0f, 1.0f));
+		material1.UpdateShaderUniforms();
 
 		Mat4 model = Mat4(1.0f);
 		model = Maths::Translate(model, block.GetPosition());
 		model = Maths::Rotate(model, block.GetRotationMatrix());
-		shader.SetMatrix4fv("model", 1, false, model);
-
-		shader.Use();
+		material1.GetShader().SetMatrix4fv("model", 1, false, model);
 
 		meshSet.RenderMesh(mesh);
 		//meshSet2.RenderMesh(mesh2);

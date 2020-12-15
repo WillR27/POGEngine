@@ -5,12 +5,38 @@ namespace PEngine
 {
 	Material::Material(std::string name)
 		: name(name)
+		, shader(nullptr)
 		, colours()
 	{
 	}
 
 	Material::~Material()
 	{
+	}
+
+	void Material::UpdateShaderUniforms()
+	{
+		GetShader().Use();
+
+		for (auto const& pair : GetColours())
+		{
+			GetShader().Set4f(pair.first.c_str(), pair.second.r, pair.second.g, pair.second.b, pair.second.a);
+		}
+	}
+
+	Shader& Material::GetShader() const
+	{
+		return *shader;
+	}
+
+	void Material::SetShader(Shader& shader)
+	{
+		this->shader = &shader;
+	}
+
+	const std::map<std::string, Vec4> Material::GetColours() const
+	{
+		return colours;
 	}
 
 	void Material::AddColour(std::string name, Vec4 colour)
@@ -36,10 +62,5 @@ namespace PEngine
 		{
 			PG_WARN("Colour not set! The colour \"{0}\" does not exist for the material \"{1}\".", name, this->name);
 		}
-	}
-
-	const std::map<std::string, Vec4> Material::GetColours() const
-	{
-		return colours;
 	}
 }

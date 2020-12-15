@@ -38,8 +38,6 @@ namespace Pagoog
 		Shader shader;
 
 		Block block;
-
-		float a = 0.0f;
 	};
 }
 
