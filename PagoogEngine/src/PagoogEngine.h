@@ -10,8 +10,11 @@
 #include <sstream>
 #include <array>
 #include <vector>
+#include <map>
 #include <unordered_map>
 #include <unordered_set>
+
+#include <exception>
 
 #include "Core/Core.h"
 #include "Debug/Log/Log.h"

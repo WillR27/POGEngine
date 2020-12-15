@@ -17,6 +17,7 @@ namespace Pagoog
 		, meshSet2()
 		, meshSet3()
 		, meshSet4()
+		, material1("Material1")
 		, block()
 	{
 	}
@@ -65,6 +66,12 @@ namespace Pagoog
 		meshSet4.SetAttribute(0, 3, PG_FLOAT, false, 6 * sizeof(float), (void*)(0));
 		meshSet4.SetAttribute(1, 3, PG_FLOAT, false, 6 * sizeof(float), (void*)(3 * sizeof(float)));
 
+		material1.SetColour("colourIn", Vec4(1.0f, 1.0f, 1.0f, 1.0f));
+		material1.AddColour("colourIn", Vec4(1.0f, 0.0f, 0.0f, 1.0f));
+		material1.AddColour("colourIn", Vec4(0.0f, 1.0f, 0.0f, 1.0f));
+		material1.SetColour("colourIn", Vec4(0.0f, 0.0f, 1.0f, 1.0f));
+		material1.SetColour("colourIn", Vec4(0.0f, 1.0f, 0.0f, 1.0f));
+
 		const char* vertexShaderSource = R"(
 #version 330 core
 layout (location = 0) in vec3 aPos;
@@ -73,6 +80,8 @@ layout (location = 1) in vec3 aColour;
 uniform mat4 model;
 uniform mat4 view;
 uniform mat4 projection;
+
+uniform vec4 colourIn;
 
 out vec3 colour;
 
@@ -107,6 +116,11 @@ void main()
 		shader.SetMatrix4fv("model", 1, false, model);
 		shader.SetMatrix4fv("view", 1, false, camera.GetView());
 		shader.SetMatrix4fv("projection", 1, false, camera.GetProjection());
+		
+		for (auto const& pair : material1.GetColours())
+		{
+			shader.Set4f(pair.first.c_str(), pair.second.r, pair.second.g, pair.second.b, pair.second.a);
+		}
 
 		Render::SetPolygonMode(PG_FRONT_AND_BACK, PG_FILL);
 

@@ -1,6 +1,5 @@
 #pragma once
 
-#include "Maths/Maths.h"
 #include "MeshDataTypes.h"
 
 namespace PEngine
