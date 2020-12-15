@@ -26,6 +26,7 @@ namespace PEngine
 	{
 		material->GetShader().Use();
 		material->UpdateShaderUniforms();
+		mesh->Render();
 	}
 
 	void MeshRenderer::SetMesh(Mesh& mesh)

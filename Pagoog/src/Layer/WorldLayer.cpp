@@ -111,6 +111,8 @@ void main()
 		material1.GetShader().SetMatrix4fv("projection", 1, false, camera.GetProjection());
 		
 		block.Translate(Vec3(-2.0f, -2.0f, 0.0f));
+		block.SetMaterial(material1);
+		block.SetMesh(mesh);
 	}
 
 	void WorldLayer::Update()
@@ -121,15 +123,13 @@ void main()
 		block.Rotate(Quaternion(Vec3(0.0001f, 0.0002f, 0.0003f)));
 
 		material1.SetColour("colourIn", Vec4((float)sin(std::chrono::system_clock::to_time_t(std::chrono::system_clock::now())), 1.0f, 0.0f, 1.0f));
-		material1.GetShader().Use();
-		material1.UpdateShaderUniforms();
 
 		Mat4 model = Mat4(1.0f);
 		model = Maths::Translate(model, block.GetPosition());
 		model = Maths::Rotate(model, block.GetRotationMatrix());
 		material1.GetShader().SetMatrix4fv("model", 1, false, model);
 
-		mesh.Render();
+		block.Render();
 
 		//meshSet.RenderMesh(mesh);
 		//meshSet2.RenderMesh(mesh2);
