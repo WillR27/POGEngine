@@ -21,6 +21,11 @@ namespace PEngine
 		delete[] colourDataArray;
 		delete[] indexDataArray;
 
+		for (char* additionalDataArray : additionalDataArrays)
+		{
+			delete[] additionalDataArray;
+		}
+
 		PG_ASSERT(vertexDataArray, "Deleted a mesh before any data was used. Are you sure you wanted to do this?");
 		PG_ASSERT(positionDataAray, "Deleted a mesh before any data was set. Are you sure you wanted to do this?");
 	}
@@ -31,23 +36,17 @@ namespace PEngine
 		char* newVertexDataArray = new char[Size()];
 
 		int vertexDataPos = 0;
-		int numberOfValues = 0;
 		int dataPos = 0;
-		int localSize = 0;
 
 		for (int i = 0; i < numberOfVertices; i++)
 		{
-			numberOfValues = 3;
-			dataPos = i * numberOfValues;
-			localSize = sizeof(float) * numberOfValues;
-			memcpy(&newVertexDataArray[vertexDataPos], &positionDataAray[dataPos], localSize);
-			vertexDataPos += localSize;
+			dataPos = i * Position::Count;
+			memcpy(&newVertexDataArray[vertexDataPos], &positionDataAray[dataPos], Position::Size);
+			vertexDataPos += Position::Size;
 
-			numberOfValues = 3;
-			dataPos = i * numberOfValues;
-			localSize = sizeof(float) * numberOfValues;
-			memcpy(&newVertexDataArray[vertexDataPos], &colourDataArray[dataPos], localSize);
-			vertexDataPos += localSize;
+			dataPos = i * Colour::Count;
+			memcpy(&newVertexDataArray[vertexDataPos], &colourDataArray[dataPos], Colour::Size);
+			vertexDataPos += Colour::Size;
 
 			for (int j = 0; j < additionalDataArrays.size(); j++)
 			{
@@ -88,40 +87,40 @@ namespace PEngine
 		return IndexCount() * sizeof(unsigned int);
 	}
 
-	const float* Mesh::GetPositionData() const
+	const Position::ValueType* Mesh::GetPositionData() const
 	{
 		return positionDataAray;
 	}
 
-	void Mesh::SetPositionData(const float* positionDataToBeCopied, int size)
+	void Mesh::SetPositionData(const Position::ValueType* positionDataToBeCopied, int size)
 	{
 		if (positionDataAray == nullptr)
 		{
-			stride += sizeof(float) * 3;
+			stride += Position::Size;
 		}
 
 		delete[] positionDataAray;
 #pragma warning(suppress: 4267) // Ignore warning about loss of data
-		int numberOfValues = size / sizeof(*positionDataAray);
-		numberOfVertices = numberOfValues / 3; // 3 coords per vertex
-		positionDataAray = new float[numberOfValues];
+		int numberOfValues = size / sizeof(Position::ValueType);
+		numberOfVertices = numberOfValues / Position::Count; 
+		positionDataAray = new Position::ValueType[numberOfValues];
 		memcpy(positionDataAray, positionDataToBeCopied, size);
 	}
 
-	const float* Mesh::GetColourData() const
+	const Colour::ValueType* Mesh::GetColourData() const
 	{
 		return colourDataArray;
 	}
 
-	void Mesh::SetColourData(const float* colourDataToBeCopied, int size)
+	void Mesh::SetColourData(const Colour::ValueType* colourDataToBeCopied, int size)
 	{
 		if (colourDataArray == nullptr)
 		{
-			stride += sizeof(float) * 3;
+			stride += Colour::Size;
 		}
 
 		delete[] colourDataArray;
-		colourDataArray = new float[size / sizeof(*colourDataArray)];
+		colourDataArray = new Colour::ValueType[size / sizeof(Colour::ValueType)];
 		memcpy(colourDataArray, colourDataToBeCopied, size);
 	}
 
@@ -139,7 +138,7 @@ namespace PEngine
 	{
 		this->stride += stride;
 
-		void* additionalData = new char[size];
+		char* additionalData = new char[size];
 		memcpy(additionalData, dataToBeCopied, size);
 		additionalDataArrays.push_back(additionalData);
 		additionalDataStrides.push_back(stride);

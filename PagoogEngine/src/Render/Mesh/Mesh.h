@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Maths/Maths.h"
+#include "MeshDataTypes.h"
 
 namespace PEngine
 {
@@ -13,11 +14,11 @@ namespace PEngine
 		void Build();
 		const void* GetVertexData() const;
 
-		const float* GetPositionData() const;
-		void SetPositionData(const float* positionDataToBeCopied, int size);
+		const Position::ValueType* GetPositionData() const;
+		void SetPositionData(const Position::ValueType* positionDataToBeCopied, int size);
 
-		const float* GetColourData() const;
-		void SetColourData(const float* colourDataToBeCopied, int size);
+		const Colour::ValueType* GetColourData() const;
+		void SetColourData(const Colour::ValueType* colourDataToBeCopied, int size);
 
 		int GetAdditionalStride(int index) const;
 		const void* GetAdditionalData(int index) const;
@@ -58,7 +59,7 @@ namespace PEngine
 		float* positionDataAray;
 		float* colourDataArray;
 
-		std::vector<void*> additionalDataArrays;
+		std::vector<char*> additionalDataArrays;
 		std::vector<int> additionalDataStrides;
 
 		unsigned int* indexDataArray;
