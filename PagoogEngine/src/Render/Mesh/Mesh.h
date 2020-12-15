@@ -4,11 +4,15 @@
 
 namespace PEngine
 {
+	class StaticMeshSet;
+
 	class Mesh
 	{
 	public:
 		Mesh();
 		~Mesh();
+
+		void Render();
 
 		void Build();
 		const void* GetVertexData() const;
@@ -25,6 +29,8 @@ namespace PEngine
 
 		const unsigned int* GetIndexData() const;
 		void SetIndexData(const unsigned int* indexDataToBeCopied, int size);
+
+		void SetMeshSet(StaticMeshSet& meshSet);
 
 		/// <summary>
 		/// Returns the number of vertices in the mesh.
@@ -62,6 +68,8 @@ namespace PEngine
 		std::vector<int> additionalDataStrides;
 
 		unsigned int* indexDataArray;
+
+		StaticMeshSet* staticMeshSet;
 	};
 }
 

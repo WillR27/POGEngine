@@ -21,7 +21,7 @@ namespace PEngine
 		/// <summary>
 		/// Adds a mesh to the set. To be used to render, mesh must not go out scope.
 		/// </summary>
-		virtual void AddMesh(const Mesh& mesh) = 0;
+		virtual void AddMesh(Mesh& mesh) = 0;
 
 		virtual void RenderMesh(const Mesh& mesh) = 0;
 

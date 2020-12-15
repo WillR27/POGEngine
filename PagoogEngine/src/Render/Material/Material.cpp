@@ -16,8 +16,6 @@ namespace PEngine
 
 	void Material::UpdateShaderUniforms()
 	{
-		GetShader().Use();
-
 		for (auto const& pair : GetColours())
 		{
 			GetShader().Set4f(pair.first.c_str(), pair.second.r, pair.second.g, pair.second.b, pair.second.a);

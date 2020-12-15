@@ -4,13 +4,37 @@
 namespace PEngine
 {
 	MeshRenderer::MeshRenderer()
+		: mesh(nullptr)
+		, material(nullptr)
 	{
 	}
 
 	MeshRenderer::~MeshRenderer()
 	{
-		//PG_ASSERT(mesh, "Deleted a mesh renderer before a mesh was set. Are you sure you wanted to do this?");
+		if (&mesh == nullptr)
+		{
+			PG_WARN("Deleted a mesh renderer before a mesh was set. Are you sure you wanted to do this?");
+		}
 
-		//delete mesh;
+		if (&material == nullptr)
+		{
+			PG_WARN("Deleted a mesh renderer before a material was set. Are you sure you wanted to do this?");
+		}
+	}
+
+	void MeshRenderer::Render()
+	{
+		material->GetShader().Use();
+		material->UpdateShaderUniforms();
+	}
+
+	void MeshRenderer::SetMesh(Mesh& mesh)
+	{
+		this->mesh = &mesh;
+	}
+	
+	void MeshRenderer::SetMaterial(Material& material)
+	{
+		this->material = &material;
 	}
 }

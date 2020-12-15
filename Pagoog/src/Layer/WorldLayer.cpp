@@ -121,6 +121,7 @@ void main()
 		block.Rotate(Quaternion(Vec3(0.0001f, 0.0002f, 0.0003f)));
 
 		material1.SetColour("colourIn", Vec4((float)sin(std::chrono::system_clock::to_time_t(std::chrono::system_clock::now())), 1.0f, 0.0f, 1.0f));
+		material1.GetShader().Use();
 		material1.UpdateShaderUniforms();
 
 		Mat4 model = Mat4(1.0f);
@@ -128,7 +129,9 @@ void main()
 		model = Maths::Rotate(model, block.GetRotationMatrix());
 		material1.GetShader().SetMatrix4fv("model", 1, false, model);
 
-		meshSet.RenderMesh(mesh);
+		mesh.Render();
+
+		//meshSet.RenderMesh(mesh);
 		//meshSet2.RenderMesh(mesh2);
 		//meshSet3.RenderMesh(mesh3);
 		//meshSet4.RenderMesh(mesh4);

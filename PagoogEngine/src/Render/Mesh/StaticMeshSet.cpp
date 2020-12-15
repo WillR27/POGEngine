@@ -72,13 +72,14 @@ namespace PEngine
 		}
 	}
 
-	void StaticMeshSet::AddMesh(const Mesh& mesh)
+	void StaticMeshSet::AddMesh(Mesh& mesh)
 	{
 		count += mesh.Count();
 		size += mesh.Size();
 		indexCount += mesh.IndexCount();
 		indexSize += mesh.IndexSize();
 		meshes.push_back(&mesh);
+		mesh.SetMeshSet(*this);
 	}
 
 	void StaticMeshSet::RenderMesh(const Mesh& mesh)

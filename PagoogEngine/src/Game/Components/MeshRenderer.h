@@ -1,11 +1,7 @@
 #pragma once
 
-#include "Render/Core/Objects/VertexBuffer.h"
-#include "Render/Core/Objects/IndexBuffer.h"
-#include "Render/Core/Objects/VertexArray.h"
-#include "Render/Core/Shader.h"
-
 #include "Render/Mesh/Mesh.h"
+#include "Render/Material/Material.h"
 
 namespace PEngine
 {
@@ -15,8 +11,14 @@ namespace PEngine
 		MeshRenderer();
 		~MeshRenderer();
 
+		void Render();
+
+		void SetMesh(Mesh& mesh);
+		void SetMaterial(Material& material);
+
 	private:
-		
+		Mesh* mesh;
+		Material* material;
 	};
 }
 

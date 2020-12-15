@@ -1,6 +1,8 @@
 #include "pgepch.h"
 #include "Mesh.h"
 
+#include "StaticMeshSet.h"
+
 namespace PEngine
 {
 	Mesh::Mesh()
@@ -11,6 +13,7 @@ namespace PEngine
 		, positionDataAray(nullptr)
 		, colourDataArray(nullptr)
 		, indexDataArray(nullptr)
+		, staticMeshSet(nullptr)
 	{
 	}
 
@@ -26,8 +29,22 @@ namespace PEngine
 			delete[] additionalDataArray;
 		}
 
-		PG_ASSERT(vertexDataArray, "Deleted a mesh before any data was used. Are you sure you wanted to do this?");
-		PG_ASSERT(positionDataAray, "Deleted a mesh before any data was set. Are you sure you wanted to do this?");
+		if (vertexDataArray == nullptr)
+		{
+			PG_WARN("Deleted a mesh before any data was used. Are you sure you wanted to do this?");
+		}
+	}
+
+	void Mesh::Render()
+	{
+		if (staticMeshSet != nullptr)
+		{
+			staticMeshSet->RenderMesh(*this);
+		}
+		else
+		{
+			// TODO: Render a mesh without a mesh set
+		}
 	}
 
 	void Mesh::Build() // TODO: Mark dirty and rebuild when necessary
@@ -65,26 +82,6 @@ namespace PEngine
 	const void* Mesh::GetVertexData() const
 	{
 		return vertexDataArray;
-	}
-
-	int Mesh::Count() const
-	{
-		return numberOfVertices;
-	}
-
-	int Mesh::Size() const
-	{
-		return numberOfVertices * stride;
-	}
-
-	int Mesh::IndexCount() const
-	{
-		return numberOfIndices;
-	}
-
-	int Mesh::IndexSize() const
-	{
-		return IndexCount() * sizeof(unsigned int);
 	}
 
 	const Position::ValueType* Mesh::GetPositionData() const
@@ -156,5 +153,30 @@ namespace PEngine
 		numberOfIndices = size / sizeof(unsigned int);
 		indexDataArray = new unsigned int[numberOfIndices];
 		memcpy(indexDataArray, indexDataToBeCopied, size);
+	}
+
+	void Mesh::SetMeshSet(StaticMeshSet& meshSet)
+	{
+		staticMeshSet = &meshSet;
+	}
+
+	int Mesh::Count() const
+	{
+		return numberOfVertices;
+	}
+
+	int Mesh::Size() const
+	{
+		return numberOfVertices * stride;
+	}
+
+	int Mesh::IndexCount() const
+	{
+		return numberOfIndices;
+	}
+
+	int Mesh::IndexSize() const
+	{
+		return IndexCount() * sizeof(unsigned int);
 	}
 }

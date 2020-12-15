@@ -15,7 +15,7 @@ namespace PEngine
 
 		virtual void Build() override;
 
-		virtual void AddMesh(const Mesh& mesh) override;
+		virtual void AddMesh(Mesh& mesh) override;
 
 		virtual void RenderMesh(const Mesh& mesh) override;
 
