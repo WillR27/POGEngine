@@ -9,7 +9,7 @@ namespace Pagoog
 	{
 	public:
 		Block();
-		~Block() = default;
+		virtual ~Block() = default;
 	};
 }
 

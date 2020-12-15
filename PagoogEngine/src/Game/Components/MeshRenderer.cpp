@@ -1,6 +1,8 @@
 #include "pgepch.h"
 #include "MeshRenderer.h"
 
+#include "Transform.h"
+
 namespace PEngine
 {
 	MeshRenderer::MeshRenderer()
@@ -26,6 +28,13 @@ namespace PEngine
 	{
 		material->GetShader().Use();
 		material->UpdateShaderUniforms();
+
+		Transform* transform = dynamic_cast<Transform*>(this);
+		if (transform != nullptr)
+		{
+			material->GetShader().SetMatrix4fv("model", 1, false, transform->ModelMatrix());
+		}
+
 		mesh->Render();
 	}
 

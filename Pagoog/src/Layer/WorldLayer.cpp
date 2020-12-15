@@ -124,16 +124,6 @@ void main()
 
 		material1.SetColour("colourIn", Vec4((float)sin(std::chrono::system_clock::to_time_t(std::chrono::system_clock::now())), 1.0f, 0.0f, 1.0f));
 
-		Mat4 model = Mat4(1.0f);
-		model = Maths::Translate(model, block.GetPosition());
-		model = Maths::Rotate(model, block.GetRotationMatrix());
-		material1.GetShader().SetMatrix4fv("model", 1, false, model);
-
 		block.Render();
-
-		//meshSet.RenderMesh(mesh);
-		//meshSet2.RenderMesh(mesh2);
-		//meshSet3.RenderMesh(mesh3);
-		//meshSet4.RenderMesh(mesh4);
 	}
 }

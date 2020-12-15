@@ -57,7 +57,7 @@ namespace PEngine
 		Rotate(rotation);
 	}
 
-	Mat4 Transform::GetRotationMatrix() const
+	Mat4 Transform::RotationMatrix() const
 	{
 		return Maths::ToMatrix(orientation);
 	}
@@ -75,5 +75,13 @@ namespace PEngine
 	void Transform::Scale(Vec3 scaleFactor)
 	{
 		scale *= scaleFactor;
+	}
+
+	Mat4 Transform::ModelMatrix() const
+	{
+		Mat4 model = Mat4(1.0f);
+		model = Maths::Translate(model, GetPosition());
+		model = Maths::Rotate(model, RotationMatrix());
+		return model;
 	}
 }

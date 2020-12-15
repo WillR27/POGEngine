@@ -1,15 +1,16 @@
 #pragma once
 
+#include "BaseComponent.h"
 #include "Render/Mesh/Mesh.h"
 #include "Render/Material/Material.h"
 
 namespace PEngine
 {
-	class MeshRenderer
+	class MeshRenderer : public BaseComponent
 	{
 	public:
 		MeshRenderer();
-		~MeshRenderer();
+		virtual ~MeshRenderer();
 
 		void Render();
 
