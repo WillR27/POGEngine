@@ -38,11 +38,21 @@ namespace PEngine
 		mesh->Render();
 	}
 
+	const Mesh& MeshRenderer::GetMesh() const
+	{
+		return *mesh;
+	}
+
 	void MeshRenderer::SetMesh(Mesh& mesh)
 	{
 		this->mesh = &mesh;
 	}
 	
+	Material& MeshRenderer::GetMaterial() const
+	{
+		return *material;
+	}
+
 	void MeshRenderer::SetMaterial(Material& material)
 	{
 		this->material = &material;

@@ -14,7 +14,10 @@ namespace PEngine
 
 		void Render();
 
+		const Mesh& GetMesh() const;
 		void SetMesh(Mesh& mesh);
+
+		Material& GetMaterial() const;
 		void SetMaterial(Material& material);
 
 	private:
