@@ -30,6 +30,14 @@ namespace PEngine
 		GetVBO().Bind();
 		GetIBO().Bind();
 
+		for (const Mesh* mesh : meshes)
+		{
+			count += mesh->Count();
+			size += mesh->Size();
+			indexCount += mesh->IndexCount();
+			indexSize += mesh->IndexSize();
+		}
+
 		char* combinedVertexDataArray = new char[size];
 
 		int countOffset = 0;
@@ -74,12 +82,13 @@ namespace PEngine
 
 	void StaticMeshSet::AddMesh(Mesh& mesh)
 	{
-		count += mesh.Count();
-		size += mesh.Size();
-		indexCount += mesh.IndexCount();
-		indexSize += mesh.IndexSize();
+		if (std::count(meshes.begin(), meshes.end(), &mesh) != 0)
+		{
+			PG_WARN("Mesh not added to mesh set! The mesh was already present in the mesh set.");
+			return;
+		}
+
 		meshes.push_back(&mesh);
-		mesh.SetMeshSet(*this);
 	}
 
 	void StaticMeshSet::RenderMesh(const Mesh& mesh)

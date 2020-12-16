@@ -26,12 +26,12 @@ namespace Pagoog
 		virtual void Update() override;
 
 	private:
-		Mesh mesh, mesh2, mesh3, mesh4;
-
 		StaticMeshSet meshSet;
 		StaticMeshSet meshSet2;
 		StaticMeshSet meshSet3;
 		StaticMeshSet meshSet4;
+
+		Mesh mesh, mesh2, mesh3, mesh4;
 
 		Material material1;
 

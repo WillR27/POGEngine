@@ -4,12 +4,12 @@
 
 namespace PEngine
 {
-	class StaticMeshSet;
+	class MeshSet;
 
 	class Mesh
 	{
 	public:
-		Mesh();
+		Mesh(MeshSet& meshSet);
 		~Mesh();
 
 		void Render();
@@ -30,8 +30,6 @@ namespace PEngine
 		const unsigned int* GetIndexData() const;
 		void SetIndexData(const unsigned int* indexDataToBeCopied, int size);
 
-		void SetMeshSet(StaticMeshSet& meshSet);
-
 		/// <summary>
 		/// Returns the number of vertices in the mesh.
 		/// </summary>
@@ -49,6 +47,11 @@ namespace PEngine
 		/// Returns the size of the index array in bytes.
 		/// </summary>
 		int IndexSize() const;
+
+		/// <summary>
+		/// Returns whether or not the mesh is currently part of a mesh set.
+		/// </summary>
+		bool HasMeshSet() const;
 
 	private:
 		/// <summary>
@@ -69,7 +72,7 @@ namespace PEngine
 
 		unsigned int* indexDataArray;
 
-		StaticMeshSet* staticMeshSet;
+		MeshSet* meshSet;
 	};
 }
 

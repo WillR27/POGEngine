@@ -1,11 +1,11 @@
 #include "pgepch.h"
 #include "Mesh.h"
 
-#include "StaticMeshSet.h"
+#include "MeshSet.h"
 
 namespace PEngine
 {
-	Mesh::Mesh()
+	Mesh::Mesh(MeshSet& meshSet)
 		: stride(0)
 		, numberOfVertices(0)
 		, numberOfIndices(0)
@@ -13,8 +13,9 @@ namespace PEngine
 		, positionDataAray(nullptr)
 		, colourDataArray(nullptr)
 		, indexDataArray(nullptr)
-		, staticMeshSet(nullptr)
+		, meshSet(&meshSet)
 	{
+		meshSet.AddMesh(*this);
 	}
 
 	Mesh::~Mesh()
@@ -37,9 +38,9 @@ namespace PEngine
 
 	void Mesh::Render()
 	{
-		if (staticMeshSet != nullptr)
+		if (meshSet != nullptr)
 		{
-			staticMeshSet->RenderMesh(*this);
+			meshSet->RenderMesh(*this);
 		}
 		else
 		{
@@ -155,11 +156,6 @@ namespace PEngine
 		memcpy(indexDataArray, indexDataToBeCopied, size);
 	}
 
-	void Mesh::SetMeshSet(StaticMeshSet& meshSet)
-	{
-		staticMeshSet = &meshSet;
-	}
-
 	int Mesh::Count() const
 	{
 		return numberOfVertices;
@@ -178,5 +174,10 @@ namespace PEngine
 	int Mesh::IndexSize() const
 	{
 		return IndexCount() * sizeof(unsigned int);
+	}
+
+	bool Mesh::HasMeshSet() const
+	{
+		return meshSet != nullptr;
 	}
 }

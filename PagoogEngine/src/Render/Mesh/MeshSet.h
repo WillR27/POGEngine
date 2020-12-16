@@ -13,20 +13,22 @@ namespace PEngine
 	/// </summary>
 	class MeshSet
 	{
+		friend class Mesh;
+
 	public:
 		virtual ~MeshSet();
 
 		virtual void Build() = 0;
 
-		/// <summary>
-		/// Adds a mesh to the set. To be used to render, mesh must not go out scope.
-		/// </summary>
-		virtual void AddMesh(Mesh& mesh) = 0;
-
 		virtual void RenderMesh(const Mesh& mesh) = 0;
 
 	protected:
 		MeshSet();
+
+		/// <summary>
+		/// Adds a mesh to the set. To be used to render, mesh must not go out scope.
+		/// </summary>
+		virtual void AddMesh(Mesh& mesh) = 0;
 
 		VertexBuffer& GetVBO();
 		IndexBuffer& GetIBO();

@@ -9,14 +9,14 @@ namespace Pagoog
 {
 	WorldLayer::WorldLayer()
 		: Layer::Layer("World")
-		, mesh()
-		, mesh2()
-		, mesh3()
-		, mesh4()
 		, meshSet()
 		, meshSet2()
 		, meshSet3()
 		, meshSet4()
+		, mesh(meshSet)
+		, mesh2(meshSet2)
+		, mesh3(meshSet3)
+		, mesh4(meshSet4)
 		, material1("Material1")
 		, block()
 	{
@@ -48,22 +48,18 @@ namespace Pagoog
 		mesh4.SetIndexData(cubeIndices3, sizeof(cubeIndices3));
 		mesh4.Build();
 
-		meshSet.AddMesh(mesh);
 		meshSet.Build();
 		meshSet.SetAttribute(0, 3, PG_FLOAT, false, 6 * sizeof(float), (void*)(0));
 		meshSet.SetAttribute(1, 3, PG_FLOAT, false, 6 * sizeof(float), (void*)(3 * sizeof(float)));
 
-		meshSet2.AddMesh(mesh2);
 		meshSet2.Build();
 		meshSet2.SetAttribute(0, 3, PG_FLOAT, false, 6 * sizeof(float), (void*)(0));
 		meshSet2.SetAttribute(1, 3, PG_FLOAT, false, 6 * sizeof(float), (void*)(3 * sizeof(float)));
 
-		meshSet3.AddMesh(mesh3);
 		meshSet3.Build();
 		meshSet3.SetAttribute(0, 3, PG_FLOAT, false, 6 * sizeof(float), (void*)(0));
 		meshSet3.SetAttribute(1, 3, PG_FLOAT, false, 6 * sizeof(float), (void*)(3 * sizeof(float)));
 
-		meshSet4.AddMesh(mesh4);
 		meshSet4.Build();
 		meshSet4.SetAttribute(0, 3, PG_FLOAT, false, 6 * sizeof(float), (void*)(0));
 		meshSet4.SetAttribute(1, 3, PG_FLOAT, false, 6 * sizeof(float), (void*)(3 * sizeof(float)));

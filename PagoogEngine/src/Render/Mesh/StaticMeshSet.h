@@ -15,11 +15,12 @@ namespace PEngine
 
 		virtual void Build() override;
 
-		virtual void AddMesh(Mesh& mesh) override;
-
 		virtual void RenderMesh(const Mesh& mesh) override;
 
 		void SetAttribute(unsigned int index, unsigned int numberOfComponents, unsigned int type, bool clamped, int stride, void* offset);
+
+	protected:
+		virtual void AddMesh(Mesh& mesh) override;
 
 	private:
 		int count;
