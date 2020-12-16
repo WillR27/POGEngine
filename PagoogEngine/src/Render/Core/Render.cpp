@@ -39,7 +39,7 @@ namespace PEngine
 
 	void Render::RenderElements(RenderingOption type, unsigned int first, unsigned int count)
 	{
-		glDrawElements(type, count, GL_UNSIGNED_INT, nullptr); // TODO: Remove GL references
+		glDrawElements(type, count, GL_UNSIGNED_INT, (void*)(first * sizeof(unsigned int))); // TODO: Remove GL references
 	}
 
 	void Render::RenderTrianglesFromArrays(unsigned int first, unsigned int count)

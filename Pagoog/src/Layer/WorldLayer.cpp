@@ -10,13 +10,10 @@ namespace Pagoog
 	WorldLayer::WorldLayer()
 		: Layer::Layer("World")
 		, meshSet()
-		, meshSet2()
-		, meshSet3()
-		, meshSet4()
-		, mesh(meshSet)
-		, mesh2(meshSet2)
-		, mesh3(meshSet3)
-		, mesh4(meshSet4)
+		, mesh(&meshSet)
+		, mesh2(&meshSet)
+		, mesh3(&meshSet)
+		, mesh4(&meshSet)
 		, material1("Material1")
 		, block()
 	{
@@ -51,18 +48,6 @@ namespace Pagoog
 		meshSet.Build();
 		meshSet.SetAttribute(0, 3, PG_FLOAT, false, 6 * sizeof(float), (void*)(0));
 		meshSet.SetAttribute(1, 3, PG_FLOAT, false, 6 * sizeof(float), (void*)(3 * sizeof(float)));
-
-		meshSet2.Build();
-		meshSet2.SetAttribute(0, 3, PG_FLOAT, false, 6 * sizeof(float), (void*)(0));
-		meshSet2.SetAttribute(1, 3, PG_FLOAT, false, 6 * sizeof(float), (void*)(3 * sizeof(float)));
-
-		meshSet3.Build();
-		meshSet3.SetAttribute(0, 3, PG_FLOAT, false, 6 * sizeof(float), (void*)(0));
-		meshSet3.SetAttribute(1, 3, PG_FLOAT, false, 6 * sizeof(float), (void*)(3 * sizeof(float)));
-
-		meshSet4.Build();
-		meshSet4.SetAttribute(0, 3, PG_FLOAT, false, 6 * sizeof(float), (void*)(0));
-		meshSet4.SetAttribute(1, 3, PG_FLOAT, false, 6 * sizeof(float), (void*)(3 * sizeof(float)));
 
 		const char* vertexShaderSource = R"(
 #version 330 core
@@ -119,6 +104,7 @@ void main()
 		block.Rotate(Quaternion(Vec3(0.0001f, 0.0002f, 0.0003f)));
 
 		material1.SetColour("colourIn", Vec4((float)sin(std::chrono::system_clock::to_time_t(std::chrono::system_clock::now())), 1.0f, 0.0f, 1.0f));
+		block.SetMesh(mesh4);
 
 		block.Render();
 	}

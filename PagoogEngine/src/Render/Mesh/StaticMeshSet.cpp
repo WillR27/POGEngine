@@ -61,18 +61,26 @@ namespace PEngine
 		{
 			unsigned int* combinedIndexDataArray = new unsigned int[indexCount];
 
-			unsigned int indexCountOffset = 0;
-			unsigned int indexSizeOffset = 0;
+			int indexCountOffset = 0;
+			int indexSizeOffset = 0;
+			unsigned int indexNumberOffset = 0;
 
 			for (const Mesh* mesh : meshes)
 			{
 				indexCounts.push_back(indexCountOffset);
 				indexSizes.push_back(indexSizeOffset);
 
-				memcpy(&combinedIndexDataArray[indexCountOffset], mesh->GetIndexData(), mesh->IndexSize());
+				unsigned int* updatedIndexDataArray = new unsigned int[mesh->IndexCount()];
+				for (int i = 0; i < mesh->IndexCount(); i++)
+				{
+					updatedIndexDataArray[i] = mesh->GetIndexData()[i] + indexNumberOffset;
+				}
+
+				memcpy(&combinedIndexDataArray[indexCountOffset], updatedIndexDataArray, mesh->IndexSize());
 
 				indexCountOffset += mesh->IndexCount();
 				indexSizeOffset += mesh->IndexSize();
+				indexNumberOffset += mesh->Count();
 			}
 
 			SetIndexData(combinedIndexDataArray, indexSize);
@@ -100,11 +108,11 @@ namespace PEngine
 			PG_ERROR("No matching mesh found!");
 		}
 
-		ScopedBind bind(GetVAO());
+		GetVAO().Bind();
 
 		long long index = std::distance(meshes.begin(), it);
 		
-		if (indexSize == 0)
+		if (mesh.IndexCount() == 0)
 		{
 			Render::RenderTrianglesFromArrays(counts[index], mesh.Count());
 		}

@@ -9,7 +9,7 @@ namespace PEngine
 	class Mesh
 	{
 	public:
-		Mesh(MeshSet& meshSet);
+		Mesh(MeshSet* meshSet);
 		~Mesh();
 
 		void Render();

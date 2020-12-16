@@ -27,9 +27,6 @@ namespace Pagoog
 
 	private:
 		StaticMeshSet meshSet;
-		StaticMeshSet meshSet2;
-		StaticMeshSet meshSet3;
-		StaticMeshSet meshSet4;
 
 		Mesh mesh, mesh2, mesh3, mesh4;
 
