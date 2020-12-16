@@ -5,6 +5,8 @@
 #include "Render/Mesh/StaticMeshSet.h"
 #include "Render/Mesh/Primitives/Primitives.h"
 
+#include "Input/Input.h"
+
 namespace Pagoog
 {
 	WorldLayer::WorldLayer()
@@ -25,7 +27,8 @@ namespace Pagoog
 
 	void WorldLayer::Init()
 	{
-		Render::SetPolygonMode(PG_FRONT_AND_BACK, PG_FILL);
+		inputManager.AddAction("Jump", PG_KEY_SPACE, PG_KEY_RELEASE, PG_MOD_NONE);
+		inputManager.AddActionCallback(PG_BIND_FN(ActionCallback));
 
 		mesh.SetPositionData(squarePositions, sizeof(squarePositions));
 		mesh.SetColourData(squareColours, sizeof(squareColours));
@@ -64,7 +67,8 @@ out vec3 colour;
 
 void main()
 {
-	colour = vec3(colourIn.r, colourIn.g, colourIn.b);
+	//colour = vec3(colourIn.r, colourIn.g, colourIn.b);
+	colour = aColour;
     gl_Position = projection * view * model * vec4(aPos, 1.0);
 }
 )";
@@ -90,22 +94,45 @@ void main()
 		material1.GetShader().Use();
 		material1.GetShader().SetMatrix4fv("view", 1, false, camera.GetView());
 		material1.GetShader().SetMatrix4fv("projection", 1, false, camera.GetProjection());
-		
-		block.Translate(Vec3(-2.0f, -2.0f, 0.0f));
-		block.SetMaterial(material1);
-		block.SetMesh(mesh);
 	}
 
 	void WorldLayer::Update()
 	{
+		Render::SetPolygonMode(PG_FRONT_AND_BACK, PG_FILL);
 		Render::EnableDepthTest(true);
 
-		block.RotateAround(Vec3(0.0f, 0.0f, 0.0f), Quaternion(Vec3(0.0001f, 0.0002f, 0.0003f)));
-		block.Rotate(Quaternion(Vec3(0.0001f, 0.0002f, 0.0003f)));
+		material1.SetColour("colourIn", Vec4((float)(sin(std::chrono::system_clock::to_time_t(std::chrono::system_clock::now())) + 1.0f) / 2.0f, (float)(sin(std::chrono::system_clock::to_time_t(std::chrono::system_clock::now()) * 0.9f) + 1.0f) / 2.0f, (float)(sin(std::chrono::system_clock::to_time_t(std::chrono::system_clock::now()) * 1.1f) + 1.0f) / 2.0f, 1.0f));
 
-		block.GetMaterial().SetColour("colourIn", Vec4((float)(sin(std::chrono::system_clock::to_time_t(std::chrono::system_clock::now())) + 1.0f) / 2.0f, (float)(sin(std::chrono::system_clock::to_time_t(std::chrono::system_clock::now()) * 0.9f) + 1.0f) / 2.0f, (float)(sin(std::chrono::system_clock::to_time_t(std::chrono::system_clock::now()) * 1.1f) + 1.0f) / 2.0f, 1.0f));
+		//float rand1 = (std::rand() % 100) / 100.0f;
+		//float rand2 = (std::rand() % 100) / 100.0f;
+		//float rand3 = (std::rand() % 100) / 100.0f;
+		//block.RotateAround(Vec3(rand1 / 1.f, rand2 / 1.f, rand3 / 1.f), Quaternion(Vec3(rand1 / 1000.f, rand2 / 1000.f, rand3 / 1000.f)));
+		//block.Rotate(Quaternion(Vec3(rand1 / 1000.f, rand2 / 1000.f, rand3 / 1000.f)));
+
+		block.SetMaterial(material1);
 		block.SetMesh(mesh4);
-
 		block.Render();
+	}
+
+	void WorldLayer::HandleEvent(Event& e)
+	{
+		EventDispatcher ed(e);
+		ed.Dispatch<KeyEvent>(PG_BIND_FN(inputManager.HandleKeyEvent));
+	}
+
+	void WorldLayer::ActionCallback(std::vector<Action>& actions)
+	{
+		auto it = actions.begin();
+
+		while (it != actions.end())
+		{
+			Action action = *it;
+
+			if (action.name == "Jump")
+			{
+				block.RotateAround(Vec3(0.0f, 0.0f, 0.0f), Quaternion(Vec3(0.1f, 0.2f, 0.3f)));
+				it = actions.erase(it);
+			}
+		}
 	}
 }

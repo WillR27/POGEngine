@@ -2,6 +2,7 @@
 #include "WindowsWindow.h"
 
 #include "Event/WindowEvents.h"
+#include "Event/InputEvents.h"
 #include "Render/Core/Shader.h"
 #include "Render/Core/Render.h"
 
@@ -86,6 +87,14 @@ namespace PEngine
 				windowData.height = height;
 
 				WindowSizeEvent e(width, height);
+				windowData.eventCallback(e);
+			});
+
+		glfwSetKeyCallback(window, [](GLFWwindow* window, int key, int scancode, int action, int mods)
+			{
+				WindowData& windowData = GetWindowData(window);
+
+				KeyEvent e(key, scancode, action, mods);
 				windowData.eventCallback(e);
 			});
 	}

@@ -24,6 +24,9 @@ namespace Pagoog
 
 		virtual void Init() override;
 		virtual void Update() override;
+		virtual void HandleEvent(Event& e) override;
+
+		void ActionCallback(std::vector<Action>& actions);
 
 	private:
 		StaticMeshSet meshSet;

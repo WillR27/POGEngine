@@ -1,7 +1,9 @@
 #include "pgepch.h"
 #include "Application.h"
 
+#include "Event/InputEvents.h"
 #include "Render/Core/Render.h"
+#include "Input/Input.h"
 
 namespace PEngine
 {
@@ -49,6 +51,11 @@ namespace PEngine
 		EventDispatcher ed(e);
 		ed.Dispatch<WindowCloseEvent>(PG_BIND_FN(window->HandleWindowCloseEvent));
 		ed.Dispatch<WindowSizeEvent>(PG_BIND_FN(window->HandleWindowSizeEvent));
+
+		for (Layer* layer : layers)
+		{
+			layer->HandleEvent(e);
+		}
 	}
 
 	void Application::AddLayer(Layer* layer)
