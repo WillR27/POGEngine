@@ -1,11 +1,14 @@
 #include "pgpch.h"
 #include "WorldLayer.h"
 
+#include "Core/Time.h"
+
 #include "Game/Camera.h"
-#include "Render/Mesh/StaticMeshSet.h"
-#include "Render/Mesh/Primitives/Primitives.h"
 
 #include "Input/Input.h"
+
+#include "Render/Mesh/StaticMeshSet.h"
+#include "Render/Mesh/Primitives/Primitives.h"
 
 namespace Pagoog
 {
@@ -100,10 +103,12 @@ void main()
 		material1.GetShader().SetMatrix4fv("projection", 1, false, camera.GetProjection());
 	}
 
-	void WorldLayer::Update()
+	void WorldLayer::Update(float dt)
 	{
-		Layer::Update();
+	}
 
+	void WorldLayer::FrameUpdate(float dt)
+	{
 		Render::SetPolygonMode(PG_FRONT_AND_BACK, PG_FILL);
 		Render::EnableDepthTest(true);
 
@@ -126,31 +131,31 @@ void main()
 		ed.Dispatch<KeyEvent>(PG_BIND_FN(inputManager.HandleKeyEvent));
 	}
 
-	void WorldLayer::ActionCallback(InputPackage& inputPackage)
+	void WorldLayer::ActionCallback(InputPackage& inputPackage, float dt)
 	{
 		if (inputPackage.HasActionOccurred("Jump"))
 		{
 			block.Rotate(Quaternion(Vec3(0.5f, 0.3f, 0.7f)));
 		}
-		
+
 		if (inputPackage.IsStateActive("Forwards"))
 		{
-			block.Translate(Vec3(0.0f, 0.0f, -0.002f));
+			block.Translate(Vec3(0.0f, 0.0f, -1.0f * dt));
 		}
 
 		if (inputPackage.IsStateActive("Backwards"))
 		{
-			block.Translate(Vec3(0.0f, 0.0f, 0.002f));
+			block.Translate(Vec3(0.0f, 0.0f, 1.0f * dt));
 		}
 
 		if (inputPackage.IsStateActive("Left"))
 		{
-			block.Translate(Vec3(-0.002f, 0.0f, 0.0f));
+			block.Translate(Vec3(-1.0f * dt, 0.0f, 0.0f));
 		}
 
 		if (inputPackage.IsStateActive("Right"))
 		{
-			block.Translate(Vec3(0.002f, 0.0f, 0.0f));
+			block.Translate(Vec3(1.0f * dt, 0.0f, 0.0f));
 		}
 	}
 }

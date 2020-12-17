@@ -10,7 +10,7 @@ namespace PEngine
 	{
 	}
 
-	void InputManager::Send()
+	void InputManager::Send(float dt)
 	{
 		for (State& state : states)
 		{
@@ -24,7 +24,7 @@ namespace PEngine
 		{
 			for (InputPackageCallback inputPackageCallback : inputPackageCallbacks)
 			{
-				inputPackageCallback(inputPackage);
+				inputPackageCallback(inputPackage, dt);
 			}
 		}
 

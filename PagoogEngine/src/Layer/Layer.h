@@ -12,7 +12,10 @@ namespace PEngine
 		virtual ~Layer();
 
 		virtual void Init() = 0;
-		virtual void Update();
+		
+		virtual void InputUpdate(float dt);
+		virtual void Update(float dt) = 0;
+		virtual void FrameUpdate(float dt) = 0;
 
 		virtual void HandleEvent(Event& e);
 

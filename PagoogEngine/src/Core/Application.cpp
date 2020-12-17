@@ -1,6 +1,8 @@
 #include "pgepch.h"
 #include "Application.h"
 
+#include "Time.h"
+
 #include "Event/InputEvents.h"
 #include "Render/Core/Render.h"
 #include "Input/Input.h"
@@ -33,16 +35,46 @@ namespace PEngine
 
 	void Application::Run()
 	{
+		Time::Reset();
+
+		double deltaTime;
+
 		while (!window->ShouldClose())
 		{
-			window->Update();
+			deltaTime = Time::DeltaTime();
 
-			for (Layer* layer : layers)
+			Time::DeltaTimeUpdate += deltaTime;
+			while (Time::DeltaTimeUpdate > Time::TimeUntilUpdate)
 			{
-				layer->Update();
+				window->InputUpdate();
+
+				for (Layer* layer : layers)
+				{
+					layer->InputUpdate(Time::TimeUntilUpdate);
+				}
+
+				for (Layer* layer : layers)
+				{
+					layer->Update(Time::TimeUntilUpdate);
+				}
+
+				Time::DeltaTimeUpdate -= Time::TimeUntilUpdate;
 			}
 
-			window->SwapBuffers();
+			Time::DeltaTimeFrame += deltaTime;
+			if (Time::DeltaTimeFrame > Time::TimeUntilFrame)
+			{
+				window->FrameUpdate();
+
+				for (Layer* layer : layers)
+				{
+					layer->FrameUpdate(Time::DeltaTimeFrame);
+				}
+
+				window->SwapBuffers();
+
+				Time::DeltaTimeFrame = 0.0f;
+			}
 		}
 	}
 

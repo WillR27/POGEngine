@@ -23,10 +23,12 @@ namespace Pagoog
 		virtual ~WorldLayer();
 
 		virtual void Init() override;
-		virtual void Update() override;
+		virtual void Update(float dt) override;
+		virtual void FrameUpdate(float dt) override;
+
 		virtual void HandleEvent(Event& e) override;
 
-		void ActionCallback(InputPackage& inputPackage);
+		void ActionCallback(InputPackage& inputPackage, float dt);
 
 	private:
 		StaticMeshSet meshSet;

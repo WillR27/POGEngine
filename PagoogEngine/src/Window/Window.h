@@ -12,8 +12,9 @@ namespace PEngine
 
 		virtual ~Window() = default;
 
+		virtual void InputUpdate() = 0;
 		virtual void Init() = 0;
-		virtual void Update() = 0;
+		virtual void FrameUpdate() = 0;
 		
 		virtual void SwapBuffers() = 0;
 

@@ -34,12 +34,12 @@ namespace PEngine
 	class InputManager
 	{
 	public:
-		typedef std::function<void(InputPackage&)> InputPackageCallback;
+		typedef std::function<void(InputPackage&, float dt)> InputPackageCallback;
 
 		InputManager();
 		virtual ~InputManager() = default;
 
-		void Send();
+		void Send(float dt);
 
 		bool HandleKeyEvent(KeyEvent& e);
 

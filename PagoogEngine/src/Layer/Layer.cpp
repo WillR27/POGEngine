@@ -13,9 +13,9 @@ namespace PEngine
 	{
 	}
 
-	void Layer::Update()
+	void Layer::InputUpdate(float dt)
 	{
-		inputManager.Send();
+		inputManager.Send(dt);
 	}
 
 	void Layer::HandleEvent(Event& e)

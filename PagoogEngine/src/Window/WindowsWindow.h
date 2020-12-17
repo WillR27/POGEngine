@@ -18,8 +18,9 @@ namespace PEngine
 		WindowsWindow();
 		virtual ~WindowsWindow();
 
+		virtual void InputUpdate() override;
 		virtual void Init() override;
-		virtual void Update() override;
+		virtual void FrameUpdate() override;
 
 		virtual void SwapBuffers() override;
 
