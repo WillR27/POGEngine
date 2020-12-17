@@ -16,6 +16,8 @@ namespace PEngine
 	class State
 	{
 	public:
+		std::string name;
+
 		State(std::string name) : name(name), on(false) {}
 		~State() = default;
 
@@ -23,7 +25,6 @@ namespace PEngine
 		void SetState(bool on) { this->on = on; }
 
 	private:
-		std::string name;
 		bool on;
 	};
 }

@@ -1,7 +1,9 @@
 #pragma once
 
-#include "Event/InputEvents.h"
 #include "InputTypes.h"
+#include "InputPackage.h"
+
+#include "Event/InputEvents.h"
 
 namespace PEngine
 {
@@ -17,25 +19,46 @@ namespace PEngine
 		}
 	};
 
+	struct StateInfo
+	{
+		int key, action, mods;
+
+		StateInfo(int key, int action, int mods)
+			: key(key)
+			, action(action)
+			, mods(mods)
+		{
+		}
+	};
+
 	class InputManager
 	{
 	public:
-		typedef std::function<void(std::vector<Action>&)> ActionCallback;
+		typedef std::function<void(InputPackage&)> InputPackageCallback;
 
 		InputManager();
 		virtual ~InputManager() = default;
 
+		void Send();
+
 		bool HandleKeyEvent(KeyEvent& e);
 
-		void AddActionCallback(ActionCallback actionCallback);
+		void AddInputPackageCallback(InputPackageCallback actionCallback);
 
 		void AddAction(std::string name, int key, int action, int mods);
+		void AddState(std::string name, int activeKey, int activeAction, int activeMods, int inactiveKey, int inactiveAction, int inactiveMods);
 
 	private:
-		std::vector<ActionCallback> actionCallbacks;
+		std::vector<InputPackageCallback> inputPackageCallbacks;
 
 		std::vector<ActionInfo> actionInfos;
 		std::vector<Action> actions;
+
+		std::vector<StateInfo> stateInfosActive;
+		std::vector<StateInfo> stateInfosInactive;
+		std::vector<State> states;
+
+		InputPackage inputPackage;
 	};
 }
 

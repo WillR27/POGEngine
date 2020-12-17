@@ -12,7 +12,8 @@ namespace PEngine
 		virtual ~Layer();
 
 		virtual void Init() = 0;
-		virtual void Update() = 0;
+		virtual void Update();
+
 		virtual void HandleEvent(Event& e);
 
 		const char* GetName() const;

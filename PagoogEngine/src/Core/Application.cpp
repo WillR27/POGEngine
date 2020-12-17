@@ -54,6 +54,11 @@ namespace PEngine
 
 		for (Layer* layer : layers)
 		{
+			if (e.IsHandled())
+			{
+				break;
+			}
+
 			layer->HandleEvent(e);
 		}
 	}

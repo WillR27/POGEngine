@@ -28,7 +28,11 @@ namespace Pagoog
 	void WorldLayer::Init()
 	{
 		inputManager.AddAction("Jump", PG_KEY_SPACE, PG_KEY_RELEASE, PG_MOD_NONE);
-		inputManager.AddActionCallback(PG_BIND_FN(ActionCallback));
+		inputManager.AddState("Forwards", PG_KEY_W, PG_KEY_PRESS, PG_MOD_NONE, PG_KEY_W, PG_KEY_RELEASE, PG_MOD_NONE);
+		inputManager.AddState("Backwards", PG_KEY_S, PG_KEY_PRESS, PG_MOD_NONE, PG_KEY_S, PG_KEY_RELEASE, PG_MOD_NONE);
+		inputManager.AddState("Left", PG_KEY_A, PG_KEY_PRESS, PG_MOD_NONE, PG_KEY_A, PG_KEY_RELEASE, PG_MOD_NONE);
+		inputManager.AddState("Right", PG_KEY_D, PG_KEY_PRESS, PG_MOD_NONE, PG_KEY_D, PG_KEY_RELEASE, PG_MOD_NONE);
+		inputManager.AddInputPackageCallback(PG_BIND_FN(ActionCallback));
 
 		mesh.SetPositionData(squarePositions, sizeof(squarePositions));
 		mesh.SetColourData(squareColours, sizeof(squareColours));
@@ -98,6 +102,8 @@ void main()
 
 	void WorldLayer::Update()
 	{
+		Layer::Update();
+
 		Render::SetPolygonMode(PG_FRONT_AND_BACK, PG_FILL);
 		Render::EnableDepthTest(true);
 
@@ -120,19 +126,31 @@ void main()
 		ed.Dispatch<KeyEvent>(PG_BIND_FN(inputManager.HandleKeyEvent));
 	}
 
-	void WorldLayer::ActionCallback(std::vector<Action>& actions)
+	void WorldLayer::ActionCallback(InputPackage& inputPackage)
 	{
-		auto it = actions.begin();
-
-		while (it != actions.end())
+		if (inputPackage.HasActionOccurred("Jump"))
 		{
-			Action action = *it;
+			block.Rotate(Quaternion(Vec3(0.5f, 0.3f, 0.7f)));
+		}
+		
+		if (inputPackage.IsStateActive("Forwards"))
+		{
+			block.Translate(Vec3(0.0f, 0.0f, -0.002f));
+		}
 
-			if (action.name == "Jump")
-			{
-				block.RotateAround(Vec3(0.0f, 0.0f, 0.0f), Quaternion(Vec3(0.1f, 0.2f, 0.3f)));
-				it = actions.erase(it);
-			}
+		if (inputPackage.IsStateActive("Backwards"))
+		{
+			block.Translate(Vec3(0.0f, 0.0f, 0.002f));
+		}
+
+		if (inputPackage.IsStateActive("Left"))
+		{
+			block.Translate(Vec3(-0.002f, 0.0f, 0.0f));
+		}
+
+		if (inputPackage.IsStateActive("Right"))
+		{
+			block.Translate(Vec3(0.002f, 0.0f, 0.0f));
 		}
 	}
 }

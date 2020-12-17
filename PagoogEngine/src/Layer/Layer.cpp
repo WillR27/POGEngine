@@ -13,6 +13,11 @@ namespace PEngine
 	{
 	}
 
+	void Layer::Update()
+	{
+		inputManager.Send();
+	}
+
 	void Layer::HandleEvent(Event& e)
 	{
 		EventDispatcher ed(e);
