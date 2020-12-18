@@ -41,10 +41,46 @@ namespace PEngine
 	}
 
 	/// <summary>
+	/// Scales the given matrix by the given vector.
+	/// </summary>
+	Mat4 Maths::Scale(Mat4 matrix, Vec3 scale)
+	{
+		return glm::scale(matrix, scale);
+	}
+
+	/// <summary>
+	/// Linearly interpolates between two vectors.
+	/// </summary>
+	Vec3 Maths::Lerp(Vec3 start, Vec3 end, float a)
+	{
+		return glm::mix(start, end, a);
+	}
+
+	/// <summary>
+	/// Linearly interpolates between two quaternions.
+	/// </summary>
+	Quaternion Maths::Lerp(Quaternion start, Quaternion end, float a)
+	{
+		return glm::mix(start, end, a);
+	}
+
+	/// <summary>
 	/// Converts a quaternion to a matrix.
 	/// </summary>
 	Mat4 Maths::ToMatrix(Quaternion orientation)
 	{
 		return glm::toMat4(orientation);
+	}
+
+	/// <summary>
+	/// Creates a model matrix from the passed parameters. 
+	/// </summary>
+	Mat4 Maths::ToModelMatrix(Vec3 position, Quaternion orientation, Vec3 scale)
+	{
+		Mat4 model(1.0f);
+		model = Translate(model, position);
+		model = Rotate(model, ToMatrix(orientation));
+		model = Scale(model, scale);
+		return model;
 	}
 }

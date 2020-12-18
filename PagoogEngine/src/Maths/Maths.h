@@ -35,7 +35,14 @@ namespace PEngine
 		static Mat4 Rotate(Mat4 matrix, float radians, Vec3 axisAmount);
 		static Mat4 Rotate(Mat4 matrix, Quaternion quaternion);
 
+		static Mat4 Scale(Mat4 matrix, Vec3 scale);
+
+		static Vec3 Lerp(Vec3 start, Vec3 end, float a);
+		static Quaternion Lerp(Quaternion  start, Quaternion end, float a);
+
 		static Mat4 ToMatrix(Quaternion orientation);
+
+		static Mat4 ToModelMatrix(Vec3 position, Quaternion orientation, Vec3 scale);
 	};
 }
 
