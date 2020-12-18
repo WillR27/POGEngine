@@ -41,6 +41,10 @@ namespace PEngine
 
 			material->GetShader().SetMatrix4fv("model", 1, false, ToModelMatrix());
 		}
+		else
+		{
+			material->GetShader().SetMatrix4fv("model", 1, false, Mat4(1.0f));
+		}
 
 		mesh->Render();
 	}

@@ -105,6 +105,9 @@ void main()
 
 	void WorldLayer::Update(float dt)
 	{
+		block.SetForce(Vec3(0.01f, 0.0f, 0.0f));
+
+		block.Update(dt);
 	}
 
 	void WorldLayer::FrameUpdate(float dt)
