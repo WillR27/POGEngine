@@ -24,7 +24,7 @@ namespace PEngine
 		}
 	}
 
-	void MeshRenderer::Render()
+	void MeshRenderer::Render(float dt)
 	{
 		material->GetShader().Use();
 		material->UpdateShaderUniforms();
@@ -32,7 +32,15 @@ namespace PEngine
 		Transform* transform = dynamic_cast<Transform*>(this);
 		if (transform != nullptr)
 		{
-			material->GetShader().SetMatrix4fv("model", 1, false, transform->ModelMatrix());
+			Vec3 position = glm::mix(transform->GetPrevPosition(), transform->GetPosition(), dt);
+			Quaternion orientation = glm::mix(transform->GetPrevOrientation(), transform->GetOrientation(), dt);
+			transform->SetPrevPosition(position);
+			transform->SetPrevOrientation(orientation);
+
+			Mat4 model(1.0f);
+			model = Maths::Translate(model, position);
+			model = Maths::Rotate(model, Maths::ToMatrix(orientation));
+			material->GetShader().SetMatrix4fv("model", 1, false, model);
 		}
 
 		mesh->Render();

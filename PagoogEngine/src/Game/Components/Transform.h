@@ -14,10 +14,14 @@ namespace PEngine
 		Vec3 GetPosition() const;
 		void SetPosition(Vec3 newPosition);
 		void Translate(Vec3 translation);
+		Vec3 GetPrevPosition() const;
+		void SetPrevPosition(Vec3 newPosition);
 
 		Quaternion GetOrientation() const;
-		void SetOrientation(Quaternion newOrientation);
+		Quaternion GetPrevOrientation() const;
 		void SetOrientation(Vec3 newOrientation);
+		void SetOrientation(Quaternion newOrientation);
+		void SetPrevOrientation(Quaternion newOrientation);
 
 		void Rotate(Quaternion rotation);
 		void RotateAround(Vec3 positionToRotateAround, Quaternion rotation);
@@ -26,13 +30,20 @@ namespace PEngine
 		Vec3 GetScale() const;
 		void SetScale(Vec3 newScale);
 		void Scale(Vec3 scaleFactor);
+		Vec3 GetPrevScale() const;
+		void SetPrevScale(Vec3 newScale);
 
 		Mat4 ModelMatrix() const;
+		Mat4 PrevModelMatrix() const;
 
 	private:
 		Vec3 position;
 		Quaternion orientation;
 		Vec3 scale;
+
+		Vec3 prevPosition;
+		Quaternion prevOrientation;
+		Vec3 prevScale;
 	};
 }
 

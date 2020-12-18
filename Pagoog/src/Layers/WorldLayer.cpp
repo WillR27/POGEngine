@@ -122,7 +122,7 @@ void main()
 
 		block.SetMaterial(material1);
 		block.SetMesh(mesh4);
-		block.Render();
+		block.Render(dt);
 	}
 
 	void WorldLayer::HandleEvent(Event& e)

@@ -12,7 +12,7 @@ namespace PEngine
 		MeshRenderer();
 		virtual ~MeshRenderer();
 
-		void Render();
+		void Render(float dt);
 
 		const Mesh& GetMesh() const;
 		void SetMesh(Mesh& mesh);
