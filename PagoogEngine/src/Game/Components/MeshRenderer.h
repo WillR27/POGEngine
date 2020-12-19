@@ -27,7 +27,7 @@ namespace PEngine
 		Material* material;
 
 		Vec3 position;
-		Quaternion orientation;
+		Quat orientation;
 		Vec3 scale;
 	};
 }

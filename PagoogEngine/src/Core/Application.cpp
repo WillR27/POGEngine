@@ -37,14 +37,16 @@ namespace PEngine
 	{
 		Time::Reset();
 
-		double deltaTime;
+		float deltaTime;
+		float deltaTimeUpdate = 0.0f;
+		float deltaTimeFrame = 0.0f;
 
 		while (!window->ShouldClose())
 		{
 			deltaTime = Time::DeltaTime();
 
-			Time::DeltaTimeUpdate += deltaTime;
-			while (Time::DeltaTimeUpdate > Time::TimeUntilUpdate)
+			deltaTimeUpdate += deltaTime;
+			while (deltaTimeUpdate > Time::TimeUntilUpdate)
 			{
 				window->InputUpdate();
 
@@ -58,22 +60,22 @@ namespace PEngine
 					layer->Update(Time::TimeUntilUpdate);
 				}
 
-				Time::DeltaTimeUpdate -= Time::TimeUntilUpdate;
+				deltaTimeUpdate -= Time::TimeUntilUpdate;
 			}
 
-			Time::DeltaTimeFrame += deltaTime;
-			if (Time::DeltaTimeFrame > Time::TimeUntilFrame)
+			deltaTimeFrame += deltaTime;
+			if (deltaTimeFrame > Time::TimeUntilFrame)
 			{
 				window->FrameUpdate();
 
 				for (Layer* layer : layers)
 				{
-					layer->FrameUpdate(Time::DeltaTimeFrame);
+					layer->FrameUpdate(deltaTimeFrame);
 				}
 
 				window->SwapBuffers();
 
-				Time::DeltaTimeFrame = 0.0f;
+				deltaTimeFrame = 0.0f;
 			}
 		}
 	}

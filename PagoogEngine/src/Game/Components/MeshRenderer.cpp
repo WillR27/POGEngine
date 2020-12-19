@@ -9,7 +9,7 @@ namespace PEngine
 		: mesh(nullptr)
 		, material(nullptr)
 		, position(Vec3(0.0f, 0.0f, 0.0f))
-		, orientation(Quaternion(Vec3(0.0f, 0.0f, 0.0f)))
+		, orientation(Quat(Vec3(0.0f, 0.0f, 0.0f)))
 		, scale(Vec3(1.0f, 1.0f, 1.0f))
 	{
 	}

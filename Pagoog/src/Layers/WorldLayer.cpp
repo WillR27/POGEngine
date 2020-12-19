@@ -138,7 +138,7 @@ void main()
 	{
 		if (inputPackage.HasActionOccurred("Jump"))
 		{
-			block.Rotate(Quaternion(Vec3(0.5f, 0.3f, 0.7f)));
+			block.Rotate(Quat(Vec3(0.5f, 0.3f, 0.7f)));
 		}
 
 		if (inputPackage.IsStateActive("Forwards"))

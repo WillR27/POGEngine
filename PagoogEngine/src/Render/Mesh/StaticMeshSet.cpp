@@ -73,7 +73,8 @@ namespace PEngine
 				unsigned int* updatedIndexDataArray = new unsigned int[mesh->IndexCount()];
 				for (int i = 0; i < mesh->IndexCount(); i++)
 				{
-					updatedIndexDataArray[i] = mesh->GetIndexData()[i] + indexNumberOffset;
+#pragma warning(suppress: 6386) // Ignore warning about buffer overrun
+					updatedIndexDataArray[i] = (mesh->GetIndexData()[i] + indexNumberOffset);
 				}
 
 				memcpy(&combinedIndexDataArray[indexCountOffset], updatedIndexDataArray, mesh->IndexSize());

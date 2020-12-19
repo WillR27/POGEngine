@@ -10,11 +10,11 @@ namespace PEngine
 		static float FPS;
 		static float TimeUntilFrame;
 
-		static double DeltaTimeUpdate;
-		static double DeltaTimeFrame;
+		static float DeltaTimeUpdate;
+		static float DeltaTimeFrame;
 
 		static void Reset();
-		static double DeltaTime();
+		static float DeltaTime();
 
 	private: 
 		static std::chrono::high_resolution_clock timer;

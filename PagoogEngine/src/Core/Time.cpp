@@ -8,9 +8,6 @@ namespace PEngine
 	float Time::FPS = 1000.0f;
 	float Time::TimeUntilFrame = 1.0f / Time::FPS;
 
-	double Time::DeltaTimeUpdate = 0.0;
-	double Time::DeltaTimeFrame = 0.0;
-
 	std::chrono::high_resolution_clock Time::timer;
 	std::chrono::time_point<std::chrono::steady_clock> Time::prev;
 
@@ -19,11 +16,11 @@ namespace PEngine
 		prev = timer.now();
 	}
 
-	double Time::DeltaTime()
+	float Time::DeltaTime()
 	{
-		std::chrono::time_point<std::chrono::steady_clock> now = timer.now();
+		auto now = timer.now();
 		
-		double deltaTime = std::chrono::duration_cast<std::chrono::duration<float, std::nano>>(now - prev).count() / 100000000.0;
+		float deltaTime = std::chrono::duration_cast<std::chrono::duration<float, std::nano>>(now - prev).count() / 100000000.0f;
 
 		prev = now;
 

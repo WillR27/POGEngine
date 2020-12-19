@@ -15,14 +15,75 @@ namespace PEngine
 		using glm::mat4::mat4;
 
 	public:
-		operator const float* () const;
+		operator const float* () const
+		{
+			return glm::value_ptr(*((glm::mat4*)this));
+		}
 	};
 
-	typedef glm::vec2 Vec2;
-	typedef glm::vec3 Vec3;
-	typedef glm::vec4 Vec4;
 
-	typedef glm::quat Quaternion;
+	class Vec2 : public glm::vec2
+	{
+		using glm::vec2::vec2;
+
+	public:
+		operator const float* () const
+		{
+			return glm::value_ptr(*((glm::vec2*)this));
+		}
+
+		inline std::ostream& operator<<(std::ostream& os)
+		{
+			std::stringstream ss;
+			ss << "Vec2(" << this->x << ", " << this->y << ")";
+			return os << ss.str();
+		}
+	};
+
+	class Vec3 : public glm::vec3
+	{
+		using glm::vec3::vec3;
+
+	public:
+		operator const float* () const
+		{
+			return glm::value_ptr(*((glm::vec3*)this));
+		}
+
+		inline std::ostream& operator<<(std::ostream& os)
+		{
+			std::stringstream ss;
+			ss << "Vec3(" << this->x << ", " << this->y << ", " << this->z << ")";
+			return os << ss.str();
+		}
+	};
+
+	class Vec4 : public glm::vec4
+	{
+		using glm::vec4::vec4;
+
+	public:
+		operator const float* () const
+		{
+			return glm::value_ptr(*((glm::vec4*)this));
+		}
+
+		inline std::ostream& operator<<(std::ostream& os)
+		{
+			std::stringstream ss;
+			ss << "Vec4(" << this->x << ", " << this->y << ", " << this->z << ", " << this->w << ")";
+			return os << ss.str();
+		}
+	};
+
+
+	class Quat : public glm::quat
+	{
+		using glm::quat::quat;
+
+	public:
+
+	};
 
 
 	class Maths
@@ -33,16 +94,16 @@ namespace PEngine
 		static Mat4 Translate(Mat4 matrix, Vec3 translation);
 
 		static Mat4 Rotate(Mat4 matrix, float radians, Vec3 axisAmount);
-		static Mat4 Rotate(Mat4 matrix, Quaternion quaternion);
+		static Mat4 Rotate(Mat4 matrix, Quat quaternion);
 
 		static Mat4 Scale(Mat4 matrix, Vec3 scale);
 
 		static Vec3 Lerp(Vec3 start, Vec3 end, float a);
-		static Quaternion Lerp(Quaternion  start, Quaternion end, float a);
+		static Quat Lerp(Quat  start, Quat end, float a);
 
-		static Mat4 ToMatrix(Quaternion orientation);
+		static Mat4 ToMatrix(Quat orientation);
 
-		static Mat4 ToModelMatrix(Vec3 position, Quaternion orientation, Vec3 scale);
+		static Mat4 ToModelMatrix(Vec3 position, Quat orientation, Vec3 scale);
 	};
 }
 

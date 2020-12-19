@@ -3,7 +3,7 @@
 
 namespace PEngine
 {
-	Transform::Transform(Vec3 position, Quaternion rotation, Vec3 scale)
+	Transform::Transform(Vec3 position, Quat rotation, Vec3 scale)
 		: position(position)
 		, orientation(rotation)
 		, scale(scale)
@@ -25,27 +25,27 @@ namespace PEngine
 		position = newPosition;
 	}
 
-	Quaternion Transform::GetOrientation() const
+	Quat Transform::GetOrientation() const
 	{
 		return orientation;
 	}
 
-	void Transform::SetOrientation(Quaternion newOrientation)
+	void Transform::SetOrientation(Quat newOrientation)
 	{
 		orientation = newOrientation;
 	}
 
 	void Transform::SetOrientation(Vec3 newOrientation)
 	{
-		SetOrientation(Quaternion(newOrientation));
+		SetOrientation(Quat(newOrientation));
 	}
 
-	void Transform::Rotate(Quaternion rotation)
+	void Transform::Rotate(Quat rotation)
 	{
 		SetOrientation(glm::normalize(rotation * orientation));
 	}
 
-	void Transform::RotateAround(Vec3 positionToRotateAround, Quaternion rotation)
+	void Transform::RotateAround(Vec3 positionToRotateAround, Quat rotation)
 	{
 		Mat4 transformation(1.0f);
 		transformation = Maths::Rotate(transformation, rotation);

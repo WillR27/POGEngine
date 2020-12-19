@@ -3,11 +3,6 @@
 
 namespace PEngine
 {
-	Mat4::operator const float* () const
-	{
-		return glm::value_ptr(*((glm::mat4*)this));
-	}
-
 	/// <summary>
 	/// Coverts degrees to radians. Does not normalise.
 	/// </summary>
@@ -35,7 +30,7 @@ namespace PEngine
 	/// <summary>
 	/// Rotates a given matrix by the given quaternion.
 	/// </summary>
-	Mat4 Maths::Rotate(Mat4 matrix, Quaternion quaternion)
+	Mat4 Maths::Rotate(Mat4 matrix, Quat quaternion)
 	{
 		return matrix * ToMatrix(quaternion);
 	}
@@ -45,7 +40,7 @@ namespace PEngine
 	/// </summary>
 	Mat4 Maths::Scale(Mat4 matrix, Vec3 scale)
 	{
-		return glm::scale(matrix, scale);
+		return glm::scale(static_cast<glm::mat4>(matrix), static_cast<glm::vec3>(scale));
 	}
 
 	/// <summary>
@@ -53,29 +48,29 @@ namespace PEngine
 	/// </summary>
 	Vec3 Maths::Lerp(Vec3 start, Vec3 end, float a)
 	{
-		return glm::mix(start, end, a);
+		return glm::mix(static_cast<glm::vec3>(start), static_cast<glm::vec3>(end), a);
 	}
 
 	/// <summary>
 	/// Linearly interpolates between two quaternions.
 	/// </summary>
-	Quaternion Maths::Lerp(Quaternion start, Quaternion end, float a)
+	Quat Maths::Lerp(Quat start, Quat end, float a)
 	{
-		return glm::mix(start, end, a);
+		return glm::mix(static_cast<glm::quat>(start), static_cast<glm::quat>(end), a);
 	}
 
 	/// <summary>
 	/// Converts a quaternion to a matrix.
 	/// </summary>
-	Mat4 Maths::ToMatrix(Quaternion orientation)
+	Mat4 Maths::ToMatrix(Quat orientation)
 	{
-		return glm::toMat4(orientation);
+		return glm::toMat4(static_cast<glm::quat>(orientation));
 	}
 
 	/// <summary>
 	/// Creates a model matrix from the passed parameters. 
 	/// </summary>
-	Mat4 Maths::ToModelMatrix(Vec3 position, Quaternion orientation, Vec3 scale)
+	Mat4 Maths::ToModelMatrix(Vec3 position, Quat orientation, Vec3 scale)
 	{
 		Mat4 model(1.0f);
 		model = Translate(model, position);

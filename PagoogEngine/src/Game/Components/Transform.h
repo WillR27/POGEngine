@@ -8,19 +8,19 @@ namespace PEngine
 	class Transform : public BaseComponent
 	{
 	public:
-		Transform(Vec3 position = Vec3(0.0f, 0.0f, 0.0f), Quaternion orientation = Quaternion(Vec3(0.0f, 0.0f, 0.0f)), Vec3 scale = Vec3(1.0f, 1.0f, 1.0f));
+		Transform(Vec3 position = Vec3(0.0f, 0.0f, 0.0f), Quat orientation = Quat(Vec3(0.0f, 0.0f, 0.0f)), Vec3 scale = Vec3(1.0f, 1.0f, 1.0f));
 		virtual ~Transform() = default;
 
 		Vec3 GetPosition() const;
 		void SetPosition(Vec3 newPosition);
 		void Translate(Vec3 translation);
 
-		Quaternion GetOrientation() const;
+		Quat GetOrientation() const;
 		void SetOrientation(Vec3 newOrientation);
-		void SetOrientation(Quaternion newOrientation);
+		void SetOrientation(Quat newOrientation);
 
-		void Rotate(Quaternion rotation);
-		void RotateAround(Vec3 positionToRotateAround, Quaternion rotation);
+		void Rotate(Quat rotation);
+		void RotateAround(Vec3 positionToRotateAround, Quat rotation);
 		Mat4 RotationMatrix() const;
 
 		Vec3 GetScale() const;
@@ -31,7 +31,7 @@ namespace PEngine
 
 	private:
 		Vec3 position;
-		Quaternion orientation;
+		Quat orientation;
 		Vec3 scale;
 	};
 }
