@@ -22,6 +22,25 @@ namespace PEngine
 	};
 
 
+	template <auto L>
+	class Vec : public glm::vec<L, float, glm::defaultp>
+	{
+		//using glm::vec<L, float, glm::defaultp>::vec<L, float, glm::defaultp>;
+
+	public:
+		operator const float* () const
+		{
+			return glm::value_ptr(*((glm::vec<L, float, glm::defaultp>*)this));
+		}
+
+		inline std::ostream& operator<<(std::ostream& os)
+		{
+			std::stringstream ss;
+			ss << "Vec()";
+			return os << ss.str();
+		}
+	};
+
 	class Vec2 : public glm::vec2
 	{
 		using glm::vec2::vec2;
@@ -83,6 +102,35 @@ namespace PEngine
 
 	public:
 
+	};
+
+
+	template <unsigned int D = 3, typename T = float>
+	struct Size
+	{
+	public:
+		Size(std::initializer_list<T> valuesList)
+		{
+			values.insert(values.end(), valuesList.begin(), valuesList.end());
+		}
+
+		T operator[](unsigned int index) const
+		{
+			if (index >= D)
+			{
+				PG_ASSERT(false, "Tried to access a dimension that didn't exist!");
+			}
+
+			return values[index];
+		}
+
+		int GetDimensions()
+		{
+			return D;
+		}
+
+	private:
+		std::vector<T> values;
 	};
 
 

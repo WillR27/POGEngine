@@ -122,7 +122,7 @@ void main()
 		//float rand3 = (std::rand() % 100) / 100.0f;
 		//block.RotateAround(Vec3(rand1 / 1.f, rand2 / 1.f, rand3 / 1.f), Quaternion(Vec3(rand1 / 1000.f, rand2 / 1000.f, rand3 / 1000.f)));
 		//block.Rotate(Quaternion(Vec3(rand1 / 1000.f, rand2 / 1000.f, rand3 / 1000.f)));
-
+		
 		block.SetMaterial(material1);
 		block.SetMesh(mesh4);
 		block.Render(dt);
