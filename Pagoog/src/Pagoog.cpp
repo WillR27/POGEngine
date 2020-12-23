@@ -5,6 +5,8 @@
 
 #include "Layers/WorldLayer.h"
 
+#include "Input/Input.h"
+
 namespace Pagoog
 {
 	class PagoogApplication : public PEngine::Application
@@ -24,6 +26,18 @@ namespace Pagoog
 			Application::Init();
 
 			AddLayer(new WorldLayer());
+
+			inputManager.AddAction("Quit", PG_KEY_ESCAPE, PG_KEY_RELEASE, PG_MOD_NONE);
+		}
+
+		virtual void ActionCallback(InputPackage& inputPackage, float dt) override
+		{
+			if (inputPackage.HasActionOccurred("Quit"))
+			{
+				WindowCloseEvent e;
+				EventDispatcher ed(e);
+				ed.Dispatch<WindowCloseEvent>(PG_BIND_FN(window->HandleWindowCloseEvent));
+			}
 		}
 	};
 }

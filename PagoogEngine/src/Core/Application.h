@@ -16,12 +16,17 @@ namespace PEngine
 		void Run();
 
 		void HandleEvent(Event& e);
+	
+		virtual void ActionCallback(InputPackage& inputPackage, float dt);
 
 		void AddLayer(Layer* layer);
-	
-	private:
+
+	protected:
+		InputManager inputManager;
+
 		Window* window;
 
+	private:
 		std::vector<Layer*> layers;
 	};
 

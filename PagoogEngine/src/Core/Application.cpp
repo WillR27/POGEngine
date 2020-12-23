@@ -11,6 +11,7 @@ namespace PEngine
 {
 	Application::Application()
 		: window(nullptr)
+		, inputManager()
 	{
 		PG_INFO("Creating application!");
 	}
@@ -29,6 +30,8 @@ namespace PEngine
 		window = Window::Create();
 		window->Init();
 		window->SetEventCallback(PG_BIND_FN(HandleEvent));
+
+		inputManager.AddInputPackageCallback(PG_BIND_FN(ActionCallback));
 
 		Render::Init();
 	}
@@ -49,6 +52,7 @@ namespace PEngine
 			while (deltaTimeUpdate > Time::TimeUntilUpdate)
 			{
 				window->InputUpdate();
+				inputManager.Send(deltaTimeUpdate);
 
 				for (Layer* layer : layers)
 				{
@@ -85,6 +89,7 @@ namespace PEngine
 		EventDispatcher ed(e);
 		ed.Dispatch<WindowCloseEvent>(PG_BIND_FN(window->HandleWindowCloseEvent));
 		ed.Dispatch<WindowSizeEvent>(PG_BIND_FN(window->HandleWindowSizeEvent));
+		ed.Dispatch<KeyEvent>(PG_BIND_FN(inputManager.HandleKeyEvent));
 
 		for (Layer* layer : layers)
 		{
@@ -95,6 +100,10 @@ namespace PEngine
 
 			layer->HandleEvent(e);
 		}
+	}
+
+	void Application::ActionCallback(InputPackage& inputPackage, float dt)
+	{
 	}
 
 	void Application::AddLayer(Layer* layer)
