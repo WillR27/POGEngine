@@ -28,7 +28,7 @@ namespace PEngine
 		delete window;
 	}
 
-	void Application::Init()
+	void Application::PreInit()
 	{
 		PG_INFO("Initialising application!");
 
@@ -39,6 +39,11 @@ namespace PEngine
 		inputManager.AddInputPackageCallback(PG_BIND_FN(ActionCallback));
 
 		Render::Init();
+	}
+
+	void Application::PostInit()
+	{
+		activeScene->Init();
 	}
 
 	void Application::Run()
@@ -59,7 +64,7 @@ namespace PEngine
 				window->InputUpdate();
 				inputManager.Send(deltaTimeUpdate);
 
-				activeScene->Update(Time::TimeUntilUpdate);
+				activeScene->UpdateRigidBody(Time::TimeUntilUpdate);
 
 				deltaTimeUpdate -= Time::TimeUntilUpdate;
 			}
@@ -85,14 +90,9 @@ namespace PEngine
 		ed.Dispatch<WindowSizeEvent>(PG_BIND_FN(window->HandleWindowSizeEvent));
 		ed.Dispatch<KeyEvent>(PG_BIND_FN(inputManager.HandleKeyEvent));
 
-		for (Layer* layer : activeScene->layers)
+		if (!e.IsHandled())
 		{
-			if (e.IsHandled())
-			{
-				break;
-			}
-
-			layer->HandleEvent(e);
+			activeScene->HandleEvent(e);
 		}
 	}
 

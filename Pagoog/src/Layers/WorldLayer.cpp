@@ -2,13 +2,11 @@
 #include "WorldLayer.h"
 
 #include "Core/Time.h"
-
 #include "Game/Camera.h"
-
 #include "Input/Input.h"
-
 #include "Render/Mesh/StaticMeshSet.h"
 #include "Render/Mesh/Primitives/Primitives.h"
+#include "Scene/Scene.h"
 
 namespace Pagoog
 {
@@ -20,7 +18,8 @@ namespace Pagoog
 		, mesh3(&meshSet)
 		, mesh4(&meshSet)
 		, material1("Material1")
-		, block()
+		, blockTemplate()
+		, controllableBlock(nullptr)
 	{
 	}
 
@@ -101,13 +100,19 @@ void main()
 		material1.GetShader().Use();
 		material1.GetShader().SetMatrix4fv("view", 1, false, camera.GetView());
 		material1.GetShader().SetMatrix4fv("projection", 1, false, camera.GetProjection());
+
+		material1.SetColour("colourIn", Vec4((float)(sin(std::chrono::system_clock::to_time_t(std::chrono::system_clock::now())) + 1.0f) / 2.0f, (float)(sin(std::chrono::system_clock::to_time_t(std::chrono::system_clock::now()) * 0.9f) + 1.0f) / 2.0f, (float)(sin(std::chrono::system_clock::to_time_t(std::chrono::system_clock::now()) * 1.1f) + 1.0f) / 2.0f, 1.0f));
+
+		blockTemplate.SetMaterial(material1);
+		blockTemplate.SetMesh(mesh4);
+
+		controllableBlock = Scene::CreateGameObject(blockTemplate);
+		controllableBlock->SetForce(Vec3(0.01f, 0.0f, 0.0f));
 	}
 
 	void WorldLayer::Update(float dt)
 	{
-		block.SetForce(Vec3(0.01f, 0.0f, 0.0f));
-
-		block.Update(dt);
+		
 	}
 
 	void WorldLayer::FrameUpdate(float dt)
@@ -115,17 +120,11 @@ void main()
 		Render::SetPolygonMode(PG_FRONT_AND_BACK, PG_FILL);
 		Render::EnableDepthTest(true);
 
-		material1.SetColour("colourIn", Vec4((float)(sin(std::chrono::system_clock::to_time_t(std::chrono::system_clock::now())) + 1.0f) / 2.0f, (float)(sin(std::chrono::system_clock::to_time_t(std::chrono::system_clock::now()) * 0.9f) + 1.0f) / 2.0f, (float)(sin(std::chrono::system_clock::to_time_t(std::chrono::system_clock::now()) * 1.1f) + 1.0f) / 2.0f, 1.0f));
-
 		//float rand1 = (std::rand() % 100) / 100.0f;
 		//float rand2 = (std::rand() % 100) / 100.0f;
 		//float rand3 = (std::rand() % 100) / 100.0f;
 		//block.RotateAround(Vec3(rand1 / 1.f, rand2 / 1.f, rand3 / 1.f), Quaternion(Vec3(rand1 / 1000.f, rand2 / 1000.f, rand3 / 1000.f)));
 		//block.Rotate(Quaternion(Vec3(rand1 / 1000.f, rand2 / 1000.f, rand3 / 1000.f)));
-		
-		block.SetMaterial(material1);
-		block.SetMesh(mesh4);
-		block.Render(dt);
 	}
 
 	void WorldLayer::HandleEvent(Event& e)
@@ -138,27 +137,27 @@ void main()
 	{
 		if (inputPackage.HasActionOccurred("Jump"))
 		{
-			block.Rotate(Quat(Vec3(0.5f, 0.3f, 0.7f)));
+			controllableBlock->Rotate(Quat(Vec3(0.5f, 0.3f, 0.7f)));
 		}
 
 		if (inputPackage.IsStateActive("Forwards"))
 		{
-			block.Translate(Vec3(0.0f, 0.0f, -1.0f * dt));
+			controllableBlock->Translate(Vec3(0.0f, 0.0f, -1.0f * dt));
 		}
 
 		if (inputPackage.IsStateActive("Backwards"))
 		{
-			block.Translate(Vec3(0.0f, 0.0f, 1.0f * dt));
+			controllableBlock->Translate(Vec3(0.0f, 0.0f, 1.0f * dt));
 		}
 
 		if (inputPackage.IsStateActive("Left"))
 		{
-			block.Translate(Vec3(-1.0f * dt, 0.0f, 0.0f));
+			controllableBlock->Translate(Vec3(-1.0f * dt, 0.0f, 0.0f));
 		}
 
 		if (inputPackage.IsStateActive("Right"))
 		{
-			block.Translate(Vec3(1.0f * dt, 0.0f, 0.0f));
+			controllableBlock->Translate(Vec3(1.0f * dt, 0.0f, 0.0f));
 		}
 	}
 }

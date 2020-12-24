@@ -10,7 +10,7 @@ namespace PEngine
 	{
 	}
 
-	void RigidBody::Update(float dt)
+	void RigidBody::UpdateRigidBody(float dt)
 	{
 		Vec3 acceleration = force / mass;
 		velocity += acceleration * dt;

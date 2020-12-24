@@ -40,7 +40,8 @@ namespace Pagoog
 
 		Shader shader;
 
-		Block block;
+		Block blockTemplate;
+		Block* controllableBlock;
 	};
 }
 

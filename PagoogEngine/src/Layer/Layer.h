@@ -2,6 +2,9 @@
 
 #include "Event/Event.h"
 #include "Input/InputManager.h"
+#include "Game/GameObject/GameObject.h"
+#include "Game/GameObject/Components/MeshRenderer.h"
+#include "Game/GameObject/Components/RigidBody.h"
 
 namespace PEngine
 {
@@ -14,8 +17,7 @@ namespace PEngine
 		virtual ~Layer();
 
 		virtual void Init() = 0;
-		
-		void InputUpdate(float dt);
+	
 		virtual void Update(float dt) = 0;
 		virtual void FrameUpdate(float dt) = 0;
 
@@ -27,6 +29,19 @@ namespace PEngine
 		const char* name;
 
 		InputManager inputManager;
+
+	private:
+		std::vector<GameObject*> gameObjects;
+		std::vector<MeshRenderer*> meshRenderers;
+		std::vector<RigidBody*> rigidBodies;
+
+		void InputUpdate(float dt);
+		void CollisionsUpdate(float dt);
+
+		void PreUpdate(float dt);
+		void PostUpdate(float dt);
+		void PreFrameUpdate(float dt);
+		void PostFrameUpdate(float dt);
 	};
 }
 

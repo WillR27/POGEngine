@@ -11,11 +11,43 @@ namespace PEngine
 
 	Layer::~Layer()
 	{
+		for (GameObject* gameObject : gameObjects)
+		{
+			delete gameObject;
+		}
 	}
 
 	void Layer::InputUpdate(float dt)
 	{
 		inputManager.Send(dt);
+	}
+
+	void Layer::CollisionsUpdate(float dt)
+	{
+	}
+
+	void Layer::PreUpdate(float dt)
+	{
+	}
+
+	void Layer::PostUpdate(float dt)
+	{
+		for (RigidBody* rigidBody : rigidBodies)
+		{
+			rigidBody->UpdateRigidBody(dt);
+		}
+	}
+
+	void Layer::PreFrameUpdate(float dt)
+	{
+	}
+
+	void Layer::PostFrameUpdate(float dt)
+	{
+		for (MeshRenderer* meshRenderer : meshRenderers)
+		{
+			meshRenderer->Render(dt);
+		}
 	}
 
 	void Layer::HandleEvent(Event& e)

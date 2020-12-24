@@ -1,11 +1,11 @@
 #pragma once
 
-#include "BaseComponent.h"
 #include "Maths/Maths.h"
+#include "Game/GameObject/GameObject.h"
 
 namespace PEngine
 {
-	class Transform : public BaseComponent
+	class Transform : public virtual GameObject
 	{
 	public:
 		Transform(Vec3 position = Vec3(0.0f, 0.0f, 0.0f), Quat orientation = Quat(Vec3(0.0f, 0.0f, 0.0f)), Vec3 scale = Vec3(1.0f, 1.0f, 1.0f));

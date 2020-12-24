@@ -13,7 +13,9 @@ namespace PEngine
 		Application();
 		~Application();
 
-		virtual void Init();
+		void PreInit();
+		virtual void Init() = 0;
+		void PostInit();
 		void Run();
 
 		void HandleEvent(Event& e);

@@ -1,19 +1,18 @@
 #pragma once
 
-#include "BaseComponent.h"
 #include "Transform.h"
-
 #include "Maths/Maths.h"
+#include "Game/GameObject/GameObject.h"
 
 namespace PEngine
 {
-	class RigidBody : public BaseComponent
+	class RigidBody : public virtual GameObject
 	{
 	public:
 		RigidBody();
 		virtual ~RigidBody() = default;
 
-		void Update(float dt);
+		void UpdateRigidBody(float dt);
 
 		Vec3 GetForce() const;
 		void SetForce(Vec3 newForce);

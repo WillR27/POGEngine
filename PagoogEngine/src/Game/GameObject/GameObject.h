@@ -4,6 +4,7 @@ namespace PEngine
 {
 	class GameObject
 	{
-
+	public:
+		virtual ~GameObject() = default;
 	};
 }

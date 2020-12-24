@@ -1,12 +1,12 @@
 #pragma once
 
-#include "BaseComponent.h"
 #include "Render/Mesh/Mesh.h"
 #include "Render/Material/Material.h"
+#include "Game/GameObject/GameObject.h"
 
 namespace PEngine
 {
-	class MeshRenderer : public BaseComponent
+	class MeshRenderer : public virtual GameObject
 	{
 	public:
 		MeshRenderer();

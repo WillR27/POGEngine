@@ -3,7 +3,24 @@
 
 namespace PEngine
 {
-	const Layer* Scene::ActiveLayer = nullptr;
+	Layer* Scene::ActiveLayer = nullptr;
+
+	void Scene::AddGameObject(GameObject* gameObject)
+	{
+		ActiveLayer->gameObjects.push_back(gameObject);
+
+		MeshRenderer* meshRenderer = dynamic_cast<MeshRenderer*>(gameObject);
+		if (meshRenderer != nullptr)
+		{
+			ActiveLayer->meshRenderers.push_back(meshRenderer);
+		}
+
+		RigidBody* rigidBody = dynamic_cast<RigidBody*>(gameObject);
+		if (rigidBody != nullptr)
+		{
+			ActiveLayer->rigidBodies.push_back(rigidBody);
+		}
+	}
 
 	Scene::Scene(std::string name)
 		: name(name)
@@ -18,7 +35,16 @@ namespace PEngine
 		}
 	}
 
-	void Scene::Update(float dt)
+	void Scene::Init()
+	{
+		for (Layer* layer : layers)
+		{
+			ActiveLayer = layer;
+			layer->Init();
+		}
+	}
+
+	void Scene::UpdateRigidBody(float dt)
 	{
 		for (Layer* layer : layers)
 		{
@@ -29,7 +55,15 @@ namespace PEngine
 		for (Layer* layer : layers)
 		{
 			ActiveLayer = layer;
+			layer->CollisionsUpdate(dt);
+		}
+
+		for (Layer* layer : layers)
+		{
+			ActiveLayer = layer;
+			layer->PreUpdate(dt);
 			layer->Update(dt);
+			layer->PostUpdate(dt);
 		}
 	}
 
@@ -38,13 +72,27 @@ namespace PEngine
 		for (Layer* layer : layers)
 		{
 			ActiveLayer = layer;
+			layer->PreFrameUpdate(dt);
 			layer->FrameUpdate(dt);
+			layer->PostFrameUpdate(dt);
+		}
+	}
+
+	void Scene::HandleEvent(Event & e)
+	{
+		for (Layer* layer : layers)
+		{
+			if (e.IsHandled())
+			{
+				break;
+			}
+
+			layer->HandleEvent(e);
 		}
 	}
 
 	void Scene::AddLayer(Layer* layer)
 	{
-		layer->Init();
 		layers.push_back(layer);
 	}
 }

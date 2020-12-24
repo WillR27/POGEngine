@@ -1,12 +1,11 @@
 #pragma once
 
-#include "BaseComponent.h"
-
 #include "Maths/Collisions.h"
+#include "Game/GameObject/GameObject.h"
 
 namespace PEngine
 {
-	class BoxCollider : public BaseComponent
+	class BoxCollider : public virtual GameObject
 	{
 	public:
 		BoxCollider(std::initializer_list<float> dimensions = {1.0f, 1.0f, 1.0f});

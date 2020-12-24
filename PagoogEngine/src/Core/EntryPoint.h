@@ -11,7 +11,9 @@ int main(int argc, char** argv)
 
 	auto app = PEngine::CreateApplication();
 
+	app->PreInit();
 	app->Init();
+	app->PostInit();
 
 	app->Run();
 

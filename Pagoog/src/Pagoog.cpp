@@ -23,8 +23,6 @@ namespace Pagoog
 
 		virtual void Init() override
 		{
-			Application::Init();
-
 			Scene* scene = new Scene("Main Scene");
 			scene->AddLayer(new WorldLayer());
 
