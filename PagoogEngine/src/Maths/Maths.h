@@ -22,15 +22,15 @@ namespace PEngine
 	};
 
 
-	template <auto L>
-	class Vec : public glm::vec<L, float, glm::defaultp>
+	template <auto L, typename T = float>
+	class Vec : public glm::vec<L, T, glm::defaultp>
 	{
 		//using glm::vec<L, float, glm::defaultp>::vec<L, float, glm::defaultp>;
 
 	public:
-		operator const float* () const
+		operator const T* () const
 		{
-			return glm::value_ptr(*((glm::vec<L, float, glm::defaultp>*)this));
+			return glm::value_ptr(*((glm::vec<L, T, glm::defaultp>*)this));
 		}
 
 		inline std::ostream& operator<<(std::ostream& os)
@@ -109,9 +109,25 @@ namespace PEngine
 	struct Size
 	{
 	public:
+		Size()
+		{
+
+		}
+
 		Size(std::initializer_list<T> valuesList)
 		{
-			values.insert(values.end(), valuesList.begin(), valuesList.end());
+			std::vector<T> v; // TODO: Fix this ugliness
+			v.insert(v.end(), valuesList.begin(), valuesList.end());
+
+			for (int d = 0; d < D; d++)
+			{
+				values[d] = v[d];
+			}
+		}
+
+		Size(Vec<D> size)
+			: values(size)
+		{
 		}
 
 		T operator[](unsigned int index) const
@@ -124,13 +140,18 @@ namespace PEngine
 			return values[index];
 		}
 
-		int GetDimensions()
+		int GetDimensions() const
 		{
 			return D;
 		}
 
+		Vec<D, T> ToVec() const
+		{
+			return values;
+		}
+
 	private:
-		std::vector<T> values;
+		Vec<D, T> values;
 	};
 
 
@@ -152,6 +173,8 @@ namespace PEngine
 		static Mat4 ToMatrix(Quat orientation);
 
 		static Mat4 ToModelMatrix(Vec3 position, Quat orientation, Vec3 scale);
+
+		static float DotProduct(Vec3 vec1, Vec3 vec2);
 	};
 }
 

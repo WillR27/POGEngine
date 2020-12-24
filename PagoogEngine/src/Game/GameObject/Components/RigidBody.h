@@ -14,8 +14,14 @@ namespace PEngine
 
 		void UpdateRigidBody(float dt);
 
+		float GetMass() const;
+
 		Vec3 GetForce() const;
 		void SetForce(Vec3 newForce);
+
+		Vec3 GetVelocity() const;
+		void SetVelocity(Vec3 newVelocity);
+		void AddVelocity(Vec3 velocity);
 
 	private:
 		float mass;

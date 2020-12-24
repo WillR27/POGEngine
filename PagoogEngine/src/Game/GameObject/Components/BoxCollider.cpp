@@ -1,6 +1,8 @@
 #include "pgepch.h"
 #include "BoxCollider.h"
 
+#include "RigidBody.h"
+
 namespace PEngine
 {
     BoxCollider::BoxCollider(std::initializer_list<float> dimensions)
@@ -10,12 +12,64 @@ namespace PEngine
 
 	void BoxCollider::CollideWith(BoxCollider& boxCollider)
 	{
-		const AABB<3>& aabb1 = GetAABB();
-		const AABB<3>& aabb2 = boxCollider.GetAABB();
+		RigidBody* rigidBody1 = this->To<RigidBody>();
+		PG_ASSERT(rigidBody1, GetName() + " has a box collider component but no rigid body component!");
+
+		RigidBody* rigidBody2 = boxCollider.To<RigidBody>();
+		PG_ASSERT(rigidBody2, boxCollider.GetName() + " has a box collider component but no rigid body component!");
+
+		const AABB<3>& aabb1 = GetTransformedAABB();
+		const AABB<3>& aabb2 = boxCollider.GetTransformedAABB();
+
+		if (aabb1.IsCollidingWith(aabb2))
+		{
+			Transform* transform1 = this->To<Transform>();
+			Transform* transform2 = boxCollider.To<Transform>();
+
+			Vec3 collisionNormal(1.0f, 0.0f, 0.0f);
+			Vec3 relativeVelocity = rigidBody2->GetVelocity() - rigidBody1->GetVelocity();
+			float dotProduct = Maths::DotProduct(relativeVelocity, collisionNormal);
+			float restitution = 1.0f;
+			float impulseScalar = -(1 + restitution) * dotProduct;
+			impulseScalar /= 1.0f / rigidBody1->GetMass() + 1.0f / rigidBody2->GetMass();
+			Vec3 impulse = impulseScalar * collisionNormal;
+
+			rigidBody1->AddVelocity(-1.0f / rigidBody1->GetMass() * impulse);
+			rigidBody2->AddVelocity(1.0f / rigidBody2->GetMass() * impulse);
+		}
 	}
 
 	AABB<3> BoxCollider::GetAABB() const
     {
         return aabb;
     }
+
+	AABB<3> BoxCollider::GetTransformedAABB() const
+	{
+		const Transform* transform = this->To<Transform>();
+		PG_ASSERT(transform, GetName() + " has a box collider component but no transform component!");
+
+		Vec3 min(transform->GetPosition());
+		min.x -= aabb.GetSize()[0];		
+		min.y -= aabb.GetSize()[1];		
+		min.z -= aabb.GetSize()[2];		
+
+		Vec3 max(transform->GetPosition());
+		max.x += aabb.GetSize()[0];
+		max.y += aabb.GetSize()[1];
+		max.z += aabb.GetSize()[2];
+
+		Vec<3> minVec;
+		Vec<3> maxVec;
+
+		minVec.x = min.x;
+		minVec.y = min.y;
+		minVec.z = min.z;
+
+		maxVec.x = max.x;
+		maxVec.y = max.y;
+		maxVec.z = max.z;
+
+		return AABB<3>(minVec, maxVec);
+	}
 }

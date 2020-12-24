@@ -9,11 +9,12 @@ namespace PEngine
 	{
 	public:
 		BoxCollider(std::initializer_list<float> dimensions = {1.0f, 1.0f, 1.0f});
-		~BoxCollider() override = default;
+		virtual ~BoxCollider() override = default;
 
 		void CollideWith(BoxCollider& boxCollider);
 
 		AABB<3> GetAABB() const;
+		AABB<3> GetTransformedAABB() const;
 
 	private:
 		AABB<3> aabb;

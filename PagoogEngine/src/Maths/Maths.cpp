@@ -78,4 +78,9 @@ namespace PEngine
 		model = Scale(model, scale);
 		return model;
 	}
+
+	float Maths::DotProduct(Vec3 vec1, Vec3 vec2)
+	{
+		return glm::dot(static_cast<glm::vec3>(vec1), static_cast<glm::vec3>(vec2));
+	}
 }

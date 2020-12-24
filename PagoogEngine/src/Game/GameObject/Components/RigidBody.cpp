@@ -18,6 +18,11 @@ namespace PEngine
 		ToTransform().Translate(velocity * dt);
 	}
 
+	float RigidBody::GetMass() const
+	{
+		return mass;
+	}
+
 	Vec3 RigidBody::GetForce() const
 	{
 		return force;
@@ -26,6 +31,21 @@ namespace PEngine
 	void RigidBody::SetForce(Vec3 newForce)
 	{
 		force = newForce;
+	}
+
+	Vec3 RigidBody::GetVelocity() const
+	{
+		return velocity;
+	}
+
+	void RigidBody::SetVelocity(Vec3 newVelocity)
+	{
+		velocity = newVelocity;
+	}
+
+	void RigidBody::AddVelocity(Vec3 velocity)
+	{
+		this->velocity += static_cast<glm::vec3>(velocity);
 	}
 
 	Transform& RigidBody::ToTransform()

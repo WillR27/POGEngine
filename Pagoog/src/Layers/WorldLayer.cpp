@@ -107,15 +107,16 @@ void main()
 		blockTemplate.SetMesh(mesh4);
 
 		controllableBlock = Scene::CreateGameObject(blockTemplate);
+		controllableBlock->SetPosition(Vec3(-2.5f, 0.0f, 0.0f));
 		//controllableBlock->SetForce(Vec3(0.01f, 0.0f, 0.0f));
 
 		Block* staticBlock = Scene::CreateGameObject(blockTemplate);
-		staticBlock->SetPosition(Vec3(-2.5f, 0.0f, 0.0f));
+		staticBlock->SetPosition(Vec3(0.0f, 0.0f, 0.0f));
 	}
 
 	void WorldLayer::Update(float dt)
 	{
-		
+
 	}
 
 	void WorldLayer::FrameUpdate(float dt)
@@ -145,22 +146,22 @@ void main()
 
 		if (inputPackage.IsStateActive("Forwards"))
 		{
-			controllableBlock->Translate(Vec3(0.0f, 0.0f, -1.0f * dt));
+			controllableBlock->SetVelocity(Vec3(0.0f, 0.0f, -1.0f));
 		}
 
 		if (inputPackage.IsStateActive("Backwards"))
 		{
-			controllableBlock->Translate(Vec3(0.0f, 0.0f, 1.0f * dt));
+			controllableBlock->SetVelocity(Vec3(0.0f, 0.0f, 1.0f));
 		}
 
 		if (inputPackage.IsStateActive("Left"))
 		{
-			controllableBlock->Translate(Vec3(-1.0f * dt, 0.0f, 0.0f));
+			controllableBlock->SetVelocity(Vec3(-1.0f, 0.0f, 0.0f));
 		}
 
 		if (inputPackage.IsStateActive("Right"))
 		{
-			controllableBlock->Translate(Vec3(1.0f * dt, 0.0f, 0.0f));
+			controllableBlock->SetVelocity(Vec3(1.0f, 0.0f, 0.0f));
 		}
 	}
 }
