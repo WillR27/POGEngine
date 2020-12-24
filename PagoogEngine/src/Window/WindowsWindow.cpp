@@ -39,8 +39,8 @@ namespace PEngine
 
 	void WindowsWindow::InitWindow()
 	{
-		windowData.width = 640;
-		windowData.height = 480;
+		windowData.width = 1000;
+		windowData.height = 800;
 		windowData.eventCallback = [](Event& e)
 		{
 			PG_WARN("Event callback has not been set!");
@@ -62,7 +62,7 @@ namespace PEngine
 #endif
 
 		PG_INFO("Creating window with OpenGL context!");
-		window = glfwCreateWindow(640, 480, "Pagoog", NULL, NULL);
+		window = glfwCreateWindow(1000, 800, "Pagoog", NULL, NULL);
 		PG_ASSERT(window, "Window or OpenGL context failed!");
 
 		// Make sure our OpenGL context is set to our new window
