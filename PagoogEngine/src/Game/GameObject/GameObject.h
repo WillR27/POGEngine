@@ -6,5 +6,11 @@ namespace PEngine
 	{
 	public:
 		virtual ~GameObject() = default;
+
+		template <typename T>
+		T* To()
+		{
+			return dynamic_cast<T*>(this);
+		}
 	};
 }

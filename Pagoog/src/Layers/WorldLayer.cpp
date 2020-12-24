@@ -107,7 +107,10 @@ void main()
 		blockTemplate.SetMesh(mesh4);
 
 		controllableBlock = Scene::CreateGameObject(blockTemplate);
-		controllableBlock->SetForce(Vec3(0.01f, 0.0f, 0.0f));
+		//controllableBlock->SetForce(Vec3(0.01f, 0.0f, 0.0f));
+
+		Block* staticBlock = Scene::CreateGameObject(blockTemplate);
+		staticBlock->SetPosition(Vec3(-2.5f, 0.0f, 0.0f));
 	}
 
 	void WorldLayer::Update(float dt)

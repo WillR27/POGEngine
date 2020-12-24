@@ -3,6 +3,7 @@
 #include "Event/Event.h"
 #include "Input/InputManager.h"
 #include "Game/GameObject/GameObject.h"
+#include "Game/GameObject/Components/BoxCollider.h"
 #include "Game/GameObject/Components/MeshRenderer.h"
 #include "Game/GameObject/Components/RigidBody.h"
 
@@ -32,14 +33,17 @@ namespace PEngine
 
 	private:
 		std::vector<GameObject*> gameObjects;
+		std::vector<BoxCollider*> boxColliders;
 		std::vector<MeshRenderer*> meshRenderers;
 		std::vector<RigidBody*> rigidBodies;
 
 		void InputUpdate(float dt);
-		void CollisionsUpdate(float dt);
 
 		void PreUpdate(float dt);
 		void PostUpdate(float dt);
+
+		void CollisionsUpdate(float dt);
+
 		void PreFrameUpdate(float dt);
 		void PostFrameUpdate(float dt);
 	};

@@ -9,13 +9,19 @@ namespace PEngine
 	{
 		ActiveLayer->gameObjects.push_back(gameObject);
 
-		MeshRenderer* meshRenderer = dynamic_cast<MeshRenderer*>(gameObject);
+		BoxCollider* boxCollider = gameObject->To<BoxCollider>();
+		if (boxCollider != nullptr)
+		{
+			ActiveLayer->boxColliders.push_back(boxCollider);
+		}
+
+		MeshRenderer* meshRenderer = gameObject->To<MeshRenderer>();
 		if (meshRenderer != nullptr)
 		{
 			ActiveLayer->meshRenderers.push_back(meshRenderer);
 		}
 
-		RigidBody* rigidBody = dynamic_cast<RigidBody*>(gameObject);
+		RigidBody* rigidBody = gameObject->To<RigidBody>();
 		if (rigidBody != nullptr)
 		{
 			ActiveLayer->rigidBodies.push_back(rigidBody);
@@ -44,7 +50,7 @@ namespace PEngine
 		}
 	}
 
-	void Scene::UpdateRigidBody(float dt)
+	void Scene::Update(float dt)
 	{
 		for (Layer* layer : layers)
 		{

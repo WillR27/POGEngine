@@ -22,10 +22,6 @@ namespace PEngine
 		inputManager.Send(dt);
 	}
 
-	void Layer::CollisionsUpdate(float dt)
-	{
-	}
-
 	void Layer::PreUpdate(float dt)
 	{
 	}
@@ -35,6 +31,20 @@ namespace PEngine
 		for (RigidBody* rigidBody : rigidBodies)
 		{
 			rigidBody->UpdateRigidBody(dt);
+		}
+	}
+
+	void Layer::CollisionsUpdate(float dt)
+	{
+		if (boxColliders.size() > 1)
+		{
+			for (int i = 0; i < boxColliders.size(); i++)
+			{
+				for (int j = i + 1; j < boxColliders.size(); j++)
+				{
+					boxColliders[i]->CollideWith(*boxColliders[j]);
+				}
+			}
 		}
 	}
 

@@ -64,7 +64,7 @@ namespace PEngine
 				window->InputUpdate();
 				inputManager.Send(deltaTimeUpdate);
 
-				activeScene->UpdateRigidBody(Time::TimeUntilUpdate);
+				activeScene->Update(Time::TimeUntilUpdate);
 
 				deltaTimeUpdate -= Time::TimeUntilUpdate;
 			}

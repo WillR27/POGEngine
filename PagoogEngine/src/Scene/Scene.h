@@ -25,7 +25,7 @@ namespace PEngine
 
 		void Init();
 
-		void UpdateRigidBody(float dt);
+		void Update(float dt);
 		void FrameUpdate(float dt);
 
 		void HandleEvent(Event& e);
