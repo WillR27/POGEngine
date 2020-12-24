@@ -25,7 +25,10 @@ namespace Pagoog
 		{
 			Application::Init();
 
-			AddLayer(new WorldLayer());
+			Scene* scene = new Scene("Main Scene");
+			scene->AddLayer(new WorldLayer());
+
+			AddScene(scene);
 
 			inputManager.AddAction("Quit", PG_KEY_ESCAPE, PG_KEY_RELEASE, PG_MOD_NONE);
 		}

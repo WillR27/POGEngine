@@ -23,6 +23,7 @@ namespace Pagoog
 		virtual ~WorldLayer();
 
 		virtual void Init() override;
+
 		virtual void Update(float dt) override;
 		virtual void FrameUpdate(float dt) override;
 

@@ -8,12 +8,14 @@ namespace PEngine
 	class Layer
 	{
 	public:
+		friend class Scene;
+
 		Layer(const char* name);
 		virtual ~Layer();
 
 		virtual void Init() = 0;
 		
-		virtual void InputUpdate(float dt);
+		void InputUpdate(float dt);
 		virtual void Update(float dt) = 0;
 		virtual void FrameUpdate(float dt) = 0;
 

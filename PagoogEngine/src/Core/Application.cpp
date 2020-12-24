@@ -20,6 +20,11 @@ namespace PEngine
 	{
 		PG_INFO("Destroying application!");
 
+		for (Scene* scene : scenes)
+		{
+			delete scene;
+		}
+
 		delete window;
 	}
 
@@ -54,15 +59,7 @@ namespace PEngine
 				window->InputUpdate();
 				inputManager.Send(deltaTimeUpdate);
 
-				for (Layer* layer : layers)
-				{
-					layer->InputUpdate(Time::TimeUntilUpdate);
-				}
-
-				for (Layer* layer : layers)
-				{
-					layer->Update(Time::TimeUntilUpdate);
-				}
+				activeScene->Update(Time::TimeUntilUpdate);
 
 				deltaTimeUpdate -= Time::TimeUntilUpdate;
 			}
@@ -72,10 +69,7 @@ namespace PEngine
 			{
 				window->FrameUpdate();
 
-				for (Layer* layer : layers)
-				{
-					layer->FrameUpdate(deltaTimeFrame);
-				}
+				activeScene->FrameUpdate(deltaTimeFrame);
 
 				window->SwapBuffers();
 
@@ -91,7 +85,7 @@ namespace PEngine
 		ed.Dispatch<WindowSizeEvent>(PG_BIND_FN(window->HandleWindowSizeEvent));
 		ed.Dispatch<KeyEvent>(PG_BIND_FN(inputManager.HandleKeyEvent));
 
-		for (Layer* layer : layers)
+		for (Layer* layer : activeScene->layers)
 		{
 			if (e.IsHandled())
 			{
@@ -106,9 +100,9 @@ namespace PEngine
 	{
 	}
 
-	void Application::AddLayer(Layer* layer)
+	void Application::AddScene(Scene* scene)
 	{
-		layer->Init();
-		layers.push_back(layer);
+		scenes.push_back(scene);
+		activeScene = scene;
 	}
 }

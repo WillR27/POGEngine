@@ -3,6 +3,7 @@
 #include "Window/Window.h"
 #include "Event/Event.h"
 #include "Layer/Layer.h"
+#include "Scene/Scene.h"
 
 namespace PEngine
 {
@@ -19,7 +20,7 @@ namespace PEngine
 	
 		virtual void ActionCallback(InputPackage& inputPackage, float dt);
 
-		void AddLayer(Layer* layer);
+		void AddScene(Scene* scene);
 
 	protected:
 		InputManager inputManager;
@@ -27,7 +28,9 @@ namespace PEngine
 		Window* window;
 
 	private:
-		std::vector<Layer*> layers;
+		Scene* activeScene;
+
+		std::vector<Scene*> scenes;
 	};
 
 	Application* CreateApplication();
