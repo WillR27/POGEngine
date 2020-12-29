@@ -6,6 +6,11 @@ namespace PEngine
 	Layer::Layer(const char* name)
 		: name(name)
 		, inputManager()
+		, gameObjects()
+		, boxColliders()
+		, meshRenderers()
+		, rigidBodies()
+		, transforms()
 	{
 	}
 
@@ -19,11 +24,17 @@ namespace PEngine
 
 	void Layer::InputUpdate(float dt)
 	{
+		for (Transform* transform : transforms)
+		{
+			transform->PreInputUpdateTransform();
+		}
+
 		inputManager.Send(dt);
 	}
 
 	void Layer::PreUpdate(float dt)
 	{
+
 	}
 
 	void Layer::PostUpdate(float dt)

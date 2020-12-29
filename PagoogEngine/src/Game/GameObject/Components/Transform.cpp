@@ -18,6 +18,13 @@ namespace PEngine
 		SetPosition(position + translation);
 	}
 
+	void Transform::PreInputUpdateTransform()
+	{
+		prevPosition = position;
+		prevOrientation = orientation;
+		prevScale = scale;
+	}
+
 	Vec3 Transform::GetPosition() const
 	{
 		return position;

@@ -30,7 +30,12 @@ namespace PEngine
 			MeshRenderer* mr1 = this->To<MeshRenderer>();
 			MeshRenderer* mr2 = boxCollider.To<MeshRenderer>();
 
-			Vec3 collisionNormal(1.0f, 0.0f, 0.0f);
+			Vec3 displacement = transform2->GetPosition() - transform1->GetPosition();
+			float x = abs(displacement.x) > abs(displacement.y) && abs(displacement.x) > abs(displacement.z) ? displacement.x > 0 ? 1.0f : -1.0f : 0.0f;
+			float y = x == 0.0f && abs(displacement.y) > abs(displacement.x) && abs(displacement.y) > abs(displacement.z) ? displacement.y > 0 ? 1.0f : -1.0f : 0.0f;
+			float z = y == 0.0f && abs(displacement.z) > abs(displacement.x) && abs(displacement.z) > abs(displacement.y) ? displacement.z > 0 ? 1.0f : -1.0f : 0.0f;
+			Vec3 collisionNormal(x, y, z);
+
 			Vec3 relativeVelocity = rigidBody2->GetVelocity() - rigidBody1->GetVelocity();
 			float dotProduct = Maths::DotProduct(relativeVelocity, collisionNormal);
 			float restitution = 1.0f;

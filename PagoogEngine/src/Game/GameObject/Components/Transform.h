@@ -11,6 +11,8 @@ namespace PEngine
 		Transform(Vec3 position = Vec3(0.0f, 0.0f, 0.0f), Quat orientation = Quat(Vec3(0.0f, 0.0f, 0.0f)), Vec3 scale = Vec3(1.0f, 1.0f, 1.0f));
 		virtual ~Transform() = default;
 
+		void PreInputUpdateTransform();
+
 		Vec3 GetPosition() const;
 		Vec3 GetPrevPosition() const;
 		void SetPosition(Vec3 newPosition);

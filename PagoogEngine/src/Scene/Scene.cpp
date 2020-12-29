@@ -26,6 +26,12 @@ namespace PEngine
 		{
 			ActiveLayer->rigidBodies.push_back(rigidBody);
 		}
+
+		Transform* transform = gameObject->To<Transform>();
+		if (transform != nullptr)
+		{
+			ActiveLayer->transforms.push_back(transform);
+		}
 	}
 
 	Scene::Scene(std::string name)

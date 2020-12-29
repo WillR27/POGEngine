@@ -36,6 +36,7 @@ namespace PEngine
 		std::vector<BoxCollider*> boxColliders;
 		std::vector<MeshRenderer*> meshRenderers;
 		std::vector<RigidBody*> rigidBodies;
+		std::vector<Transform*> transforms;
 
 		void InputUpdate(float dt);
 
