@@ -26,6 +26,12 @@ namespace PEngine
 			return glm::value_ptr(*((glm::vec2*)this));
 		}
 
+		void operator+=(const Vec2& rhs)
+		{
+			this->x += rhs.x;
+			this->y += rhs.y;
+		}
+
 		inline std::ostream& operator<<(std::ostream& os)
 		{
 			std::stringstream ss;
@@ -44,6 +50,13 @@ namespace PEngine
 			return glm::value_ptr(*((glm::vec3*)this));
 		}
 
+		void operator+=(const Vec3& rhs)
+		{
+			this->x += rhs.x;
+			this->y += rhs.y;
+			this->z += rhs.z;
+		}
+
 		inline std::ostream& operator<<(std::ostream& os)
 		{
 			std::stringstream ss;
@@ -60,6 +73,14 @@ namespace PEngine
 		operator const float* () const
 		{
 			return glm::value_ptr(*((glm::vec4*)this));
+		}
+
+		void operator+=(const Vec4& rhs)
+		{
+			this->x += rhs.x;
+			this->y += rhs.y;
+			this->z += rhs.z;
+			this->w += rhs.w;
 		}
 
 		inline std::ostream& operator<<(std::ostream& os)

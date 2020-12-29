@@ -146,22 +146,22 @@ void main()
 
 		if (inputPackage.IsStateActive("Forwards"))
 		{
-			controllableBlock->SetVelocity(Vec3(0.0f, 0.0f, -1.0f));
+			controllableBlock->AddForce(Vec3(0.0f, 0.0f, -1.0f * dt));
 		}
 
 		if (inputPackage.IsStateActive("Backwards"))
 		{
-			controllableBlock->SetVelocity(Vec3(0.0f, 0.0f, 1.0f));
+			controllableBlock->AddForce(Vec3(0.0f, 0.0f, 1.0f * dt));
 		}
 
 		if (inputPackage.IsStateActive("Left"))
 		{
-			controllableBlock->SetVelocity(Vec3(-1.0f, 0.0f, 0.0f));
+			controllableBlock->AddForce(Vec3(-1.0f * dt, 0.0f, 0.0f));
 		}
 
 		if (inputPackage.IsStateActive("Right"))
 		{
-			controllableBlock->SetVelocity(Vec3(1.0f, 0.0f, 0.0f));
+			controllableBlock->AddForce(Vec3(1.0f * dt, 0.0f, 0.0f));
 		}
 	}
 }

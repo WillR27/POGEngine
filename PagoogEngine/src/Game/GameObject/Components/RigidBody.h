@@ -18,6 +18,7 @@ namespace PEngine
 
 		Vec3 GetForce() const;
 		void SetForce(Vec3 newForce);
+		void AddForce(Vec3 force);
 
 		Vec3 GetVelocity() const;
 		void SetVelocity(Vec3 newVelocity);
