@@ -28,7 +28,7 @@ namespace PEngine
 				sizeVec[d] = static_cast<float>(abs(min[d] - max[d]));
 			}
 
-			size = Size(sizeVec);
+			//size = Size(sizeVec);
 		}
 
 		bool IsCollidingWith(const AABB<D>& aabb) const

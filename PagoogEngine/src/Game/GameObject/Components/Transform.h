@@ -12,10 +12,12 @@ namespace PEngine
 		virtual ~Transform() = default;
 
 		Vec3 GetPosition() const;
+		Vec3 GetPrevPosition() const;
 		void SetPosition(Vec3 newPosition);
 		void Translate(Vec3 translation);
 
 		Quat GetOrientation() const;
+		Quat GetPrevOrientation() const;
 		void SetOrientation(Vec3 newOrientation);
 		void SetOrientation(Quat newOrientation);
 
@@ -24,6 +26,7 @@ namespace PEngine
 		Mat4 RotationMatrix() const;
 
 		Vec3 GetScale() const;
+		Vec3 GetPrevScale() const;
 		void SetScale(Vec3 newScale);
 		void Scale(Vec3 scaleFactor);
 
@@ -33,6 +36,10 @@ namespace PEngine
 		Vec3 position;
 		Quat orientation;
 		Vec3 scale;
+
+		Vec3 prevPosition;
+		Quat prevOrientation;
+		Vec3 prevScale;
 	};
 }
 

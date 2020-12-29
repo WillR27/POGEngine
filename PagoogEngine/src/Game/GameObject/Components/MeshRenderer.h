@@ -20,15 +20,9 @@ namespace PEngine
 		Material& GetMaterial() const;
 		void SetMaterial(Material& material);
 
-		Mat4 ToModelMatrix() const;
-
 	private:
 		Mesh* mesh;
 		Material* material;
-
-		Vec3 position;
-		Quat orientation;
-		Vec3 scale;
 	};
 }
 

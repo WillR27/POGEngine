@@ -48,15 +48,15 @@ namespace PEngine
 		}
 	}
 
-	void Layer::PreFrameUpdate(float dt)
+	void Layer::PreFrameUpdate(float alpha)
 	{
 	}
 
-	void Layer::PostFrameUpdate(float dt)
+	void Layer::PostFrameUpdate(float alpha)
 	{
 		for (MeshRenderer* meshRenderer : meshRenderers)
 		{
-			meshRenderer->Render(dt);
+			meshRenderer->Render(alpha);
 		}
 	}
 

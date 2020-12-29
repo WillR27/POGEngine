@@ -73,14 +73,14 @@ namespace PEngine
 		}
 	}
 
-	void Scene::FrameUpdate(float dt)
+	void Scene::FrameUpdate(float alpha)
 	{
 		for (Layer* layer : layers)
 		{
 			ActiveLayer = layer;
-			layer->PreFrameUpdate(dt);
-			layer->FrameUpdate(dt);
-			layer->PostFrameUpdate(dt);
+			layer->PreFrameUpdate(alpha);
+			layer->FrameUpdate(alpha);
+			layer->PostFrameUpdate(alpha);
 		}
 	}
 

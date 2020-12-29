@@ -2,6 +2,7 @@
 #include "BoxCollider.h"
 
 #include "RigidBody.h"
+#include <Game\GameObject\Components\MeshRenderer.h>
 
 namespace PEngine
 {
@@ -26,6 +27,9 @@ namespace PEngine
 			Transform* transform1 = this->To<Transform>();
 			Transform* transform2 = boxCollider.To<Transform>();
 
+			MeshRenderer* mr1 = this->To<MeshRenderer>();
+			MeshRenderer* mr2 = boxCollider.To<MeshRenderer>();
+
 			Vec3 collisionNormal(1.0f, 0.0f, 0.0f);
 			Vec3 relativeVelocity = rigidBody2->GetVelocity() - rigidBody1->GetVelocity();
 			float dotProduct = Maths::DotProduct(relativeVelocity, collisionNormal);
@@ -47,7 +51,7 @@ namespace PEngine
 	AABB<3> BoxCollider::GetTransformedAABB() const
 	{
 		const Transform* transform = this->To<Transform>();
-		PG_ASSERT(transform, GetName() + " has a box collider component but no transform component!");
+		PG_ASSERT((transform != nullptr), GetName() + " has a box collider component but no transform component!");
 
 		Vec3 min(transform->GetPosition());
 		min.x -= aabb.GetSize()[0];		
@@ -59,17 +63,6 @@ namespace PEngine
 		max.y += aabb.GetSize()[1];
 		max.z += aabb.GetSize()[2];
 
-		Vec<3> minVec;
-		Vec<3> maxVec;
-
-		minVec.x = min.x;
-		minVec.y = min.y;
-		minVec.z = min.z;
-
-		maxVec.x = max.x;
-		maxVec.y = max.y;
-		maxVec.z = max.z;
-
-		return AABB<3>(minVec, maxVec);
+		return AABB<3>(min, max);
 	}
 }

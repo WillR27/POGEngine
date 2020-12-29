@@ -7,6 +7,9 @@ namespace PEngine
 		: position(position)
 		, orientation(rotation)
 		, scale(scale)
+		, prevPosition(position)
+		, prevOrientation(rotation)
+		, prevScale(scale)
 	{
 	}
 
@@ -20,8 +23,14 @@ namespace PEngine
 		return position;
 	}
 
+	Vec3 Transform::GetPrevPosition() const
+	{
+		return prevPosition;
+	}
+
 	void Transform::SetPosition(Vec3 newPosition)
 	{
+		prevPosition = position;
 		position = newPosition;
 	}
 
@@ -30,8 +39,14 @@ namespace PEngine
 		return orientation;
 	}
 
+	Quat Transform::GetPrevOrientation() const
+	{
+		return prevOrientation;
+	}
+
 	void Transform::SetOrientation(Quat newOrientation)
 	{
+		prevOrientation = orientation;
 		orientation = newOrientation;
 	}
 
@@ -67,8 +82,14 @@ namespace PEngine
 		return scale;
 	}
 
+	Vec3 Transform::GetPrevScale() const
+	{
+		return prevScale;
+	}
+
 	void Transform::SetScale(Vec3 newScale)
 	{
+		prevScale = scale;
 		scale = newScale;
 	}
 

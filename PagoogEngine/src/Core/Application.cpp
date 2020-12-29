@@ -59,7 +59,12 @@ namespace PEngine
 			deltaTime = Time::DeltaTime();
 
 			deltaTimeUpdate += deltaTime;
-			while (deltaTimeUpdate > Time::TimeUntilUpdate)
+			if (deltaTimeUpdate > 1.0f)
+			{
+				deltaTimeUpdate = 1.0f; // Avoid spiral of death
+			}
+
+			if (deltaTimeUpdate >= Time::TimeUntilUpdate)
 			{
 				window->InputUpdate();
 				inputManager.Send(deltaTimeUpdate);
@@ -70,11 +75,11 @@ namespace PEngine
 			}
 
 			deltaTimeFrame += deltaTime;
-			if (deltaTimeFrame > Time::TimeUntilFrame)
+			if (deltaTimeFrame >= Time::TimeUntilFrame)
 			{
 				window->FrameUpdate();
 
-				activeScene->FrameUpdate(deltaTimeFrame);
+				activeScene->FrameUpdate(deltaTimeUpdate / Time::TimeUntilUpdate);
 
 				window->SwapBuffers();
 

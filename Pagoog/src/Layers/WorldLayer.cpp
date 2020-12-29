@@ -96,7 +96,7 @@ void main()
 		material1.AddColour("colourIn", Vec4(1.0f, 0.0f, 0.0f, 1.0f));
 		material1.SetShader(shader);
 
-		Camera camera(Vec3(0.0f, 0.0f, 5.0f));
+		Camera camera(Vec3(0.0f, 0.0f, 10.0f));
 		material1.GetShader().Use();
 		material1.GetShader().SetMatrix4fv("view", 1, false, camera.GetView());
 		material1.GetShader().SetMatrix4fv("projection", 1, false, camera.GetProjection());

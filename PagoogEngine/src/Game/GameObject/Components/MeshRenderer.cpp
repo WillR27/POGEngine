@@ -8,9 +8,6 @@ namespace PEngine
 	MeshRenderer::MeshRenderer()
 		: mesh(nullptr)
 		, material(nullptr)
-		, position(Vec3(0.0f, 0.0f, 0.0f))
-		, orientation(Quat(Vec3(0.0f, 0.0f, 0.0f)))
-		, scale(Vec3(1.0f, 1.0f, 1.0f))
 	{
 	}
 
@@ -27,7 +24,7 @@ namespace PEngine
 		}
 	}
 
-	void MeshRenderer::Render(float dt)
+	void MeshRenderer::Render(float alpha)
 	{
 		material->GetShader().Use();
 		material->UpdateShaderUniforms();
@@ -35,11 +32,11 @@ namespace PEngine
 		Transform* transform = dynamic_cast<Transform*>(this);
 		if (transform != nullptr)
 		{
-			position = Maths::Lerp(position, transform->GetPosition(), dt);
-			orientation = Maths::Lerp(orientation, transform->GetOrientation(), dt);
-			scale = Maths::Lerp(scale, transform->GetScale(), dt);
+			Vec3 position = Maths::Lerp(transform->GetPrevPosition(), transform->GetPosition(), alpha);
+			Quat orientation = Maths::Lerp(transform->GetPrevOrientation(), transform->GetOrientation(), alpha);
+			Vec3 scale = Maths::Lerp(transform->GetPrevScale(), transform->GetScale(), alpha);
 
-			material->GetShader().SetMatrix4fv("model", 1, false, ToModelMatrix());
+			material->GetShader().SetMatrix4fv("model", 1, false, Maths::ToModelMatrix(position, orientation, scale));
 		}
 		else
 		{
@@ -67,10 +64,5 @@ namespace PEngine
 	void MeshRenderer::SetMaterial(Material& material)
 	{
 		this->material = &material;
-	}
-
-	Mat4 MeshRenderer::ToModelMatrix() const
-	{
-		return Maths::ToModelMatrix(position, orientation, scale);
 	}
 }

@@ -8,6 +8,8 @@
 #include <gtx/string_cast.hpp>
 #include <gtc/type_ptr.hpp>
 
+#include "Vectors.h"
+
 namespace PEngine
 {
 	class Mat4 : public glm::mat4
@@ -18,80 +20,6 @@ namespace PEngine
 		operator const float* () const
 		{
 			return glm::value_ptr(*((glm::mat4*)this));
-		}
-	};
-
-
-	template <auto L, typename T = float>
-	class Vec : public glm::vec<L, T, glm::defaultp>
-	{
-		//using glm::vec<L, float, glm::defaultp>::vec<L, float, glm::defaultp>;
-
-	public:
-		operator const T* () const
-		{
-			return glm::value_ptr(*((glm::vec<L, T, glm::defaultp>*)this));
-		}
-
-		inline std::ostream& operator<<(std::ostream& os)
-		{
-			std::stringstream ss;
-			ss << "Vec()";
-			return os << ss.str();
-		}
-	};
-
-	class Vec2 : public glm::vec2
-	{
-		using glm::vec2::vec2;
-
-	public:
-		operator const float* () const
-		{
-			return glm::value_ptr(*((glm::vec2*)this));
-		}
-
-		inline std::ostream& operator<<(std::ostream& os)
-		{
-			std::stringstream ss;
-			ss << "Vec2(" << this->x << ", " << this->y << ")";
-			return os << ss.str();
-		}
-	};
-
-	class Vec3 : public glm::vec3
-	{
-		using glm::vec3::vec3;
-
-	public:
-		operator const float* () const
-		{
-			return glm::value_ptr(*((glm::vec3*)this));
-		}
-
-		inline std::ostream& operator<<(std::ostream& os)
-		{
-			std::stringstream ss;
-			ss << "Vec3(" << this->x << ", " << this->y << ", " << this->z << ")";
-			return os << ss.str();
-		}
-	};
-
-	class Vec4 : public glm::vec4
-	{
-		using glm::vec4::vec4;
-
-	public:
-		operator const float* () const
-		{
-			return glm::value_ptr(*((glm::vec4*)this));
-		}
-
-		inline std::ostream& operator<<(std::ostream& os)
-		{
-			std::stringstream ss;
-			ss << "Vec4(" << this->x << ", " << this->y << ", " << this->z << ", " << this->w << ")";
-			return os << ss.str();
 		}
 	};
 
