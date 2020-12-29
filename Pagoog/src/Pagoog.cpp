@@ -28,7 +28,7 @@ namespace Pagoog
 
 			AddScene(scene);
 
-			inputManager.AddAction("Quit", PG_KEY_ESCAPE, PG_KEY_RELEASE, PG_MOD_NONE);
+			inputManager.AddAction("Quit", InputInfo(PG_KEY_ESCAPE, PG_KEY_RELEASE, PG_MOD_NONE));
 		}
 
 		virtual void ActionCallback(InputPackage& inputPackage, float dt) override

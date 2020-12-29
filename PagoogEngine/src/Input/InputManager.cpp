@@ -16,8 +16,13 @@ namespace PEngine
 		{
 			if (state.IsOn())
 			{
-				inputPackage.AddOrReplaceState(state);
+				inputPackage.AddState(state);
 			}
+		}
+
+		for (Axis& axis : axes)
+		{
+			inputPackage.AddAxis(axis);
 		}
 
 		if (!inputPackage.IsEmpty())
@@ -33,40 +38,93 @@ namespace PEngine
 
 	bool InputManager::HandleKeyEvent(KeyEvent& e)
 	{
-		for (int i = 0; i < actionInfos.size(); i++)
-		{
-			ActionInfo actionInfo = actionInfos[i];
+		InputInfo eventInputInfo(e.key, e.action, e.mods);
+		bool handled = false;
 
-			if (e.key == actionInfo.key && e.action == actionInfo.action && e.mods == actionInfo.mods)
+		// Actions
+		for (int i = 0; i < actions.size(); i++)
+		{
+			InputInfo inputInfo = actionInfos[i];
+			if (inputInfo == eventInputInfo)
 			{
 				inputPackage.AddAction(actions[i]);
-				return true;
+				handled = true;
 			}
 		}
 
-		for (int i = 0; i < stateInfosActive.size(); i++)
+		// States
+		for (int i = 0; i < states.size(); i++)
 		{
-			StateInfo stateInfoActive = stateInfosActive[i];
-
-			if (e.key == stateInfoActive.key && e.action == stateInfoActive.action && e.mods == stateInfoActive.mods)
+			InputInfo inputInfoActive = stateInfosActive[i];
+			if (inputInfoActive == eventInputInfo)
 			{
 				states[i].SetState(true);
-				return true;
+				handled = true;
 			}
-		}
-
-		for (int i = 0; i < stateInfosInactive.size(); i++)
-		{
-			StateInfo stateInfoInctive = stateInfosInactive[i];
-
-			if (e.key == stateInfoInctive.key && e.action == stateInfoInctive.action && e.mods == stateInfoInctive.mods)
+			else
 			{
-				states[i].SetState(false);
-				return true;
+				InputInfo inputInfoInactive = stateInfosInactive[i];
+				if (inputInfoInactive == eventInputInfo)
+				{
+					states[i].SetState(false);
+					handled = true;
+				}
 			}
 		}
 
-		return false;
+		// Axes
+		for (int i = 0; i < axes.size(); i++)
+		{
+			int axisValue = axes[i].GetValue();
+
+			InputInfo inputInfoActiveNegative = axisInfosActiveNegative[i];
+			if (inputInfoActiveNegative == eventInputInfo)
+			{
+				if (axisValue > -1)
+				{
+					axisValue -= 1;
+				}
+				handled = true;
+			}
+			else
+			{
+				InputInfo inputInfoInactiveNegative = axisInfosInactiveNegative[i];
+				if (inputInfoInactiveNegative == eventInputInfo)
+				{
+					if (axisValue < 1)
+					{
+						axisValue += 1;
+					}
+					handled = true;
+				}
+			}
+
+			InputInfo inputInfoActivePositive = axisInfosActivePositive[i];
+			if (inputInfoActivePositive == eventInputInfo)
+			{
+				if (axisValue < 1)
+				{
+					axisValue += 1;
+				}
+				handled = true;
+			}
+			else
+			{
+				InputInfo inputInfoInactivePositive = axisInfosInactivePositive[i];
+				if (inputInfoInactivePositive == eventInputInfo)
+				{
+					if (axisValue > -1)
+					{
+						axisValue -= 1;
+					}
+					handled = true;
+				}
+			}
+
+			axes[i].SetValue(axisValue);
+		}
+
+		return handled;
 	}
 
 	void InputManager::AddInputPackageCallback(InputPackageCallback actionCallback)
@@ -74,16 +132,25 @@ namespace PEngine
 		inputPackageCallbacks.push_back(actionCallback);
 	}
 
-	void InputManager::AddAction(std::string name, int key, int action, int mods)
+	void InputManager::AddAction(std::string name, InputInfo inputInfo)
 	{
-		actionInfos.emplace_back(key, action, mods);
+		actionInfos.push_back(inputInfo);
 		actions.emplace_back(name);
 	}
 
-	void InputManager::AddState(std::string name, int activeKey, int activeAction, int activeMods, int inactiveKey, int inactiveAction, int inactiveMods)
+	void InputManager::AddState(std::string name, InputInfo activeInputInfo, InputInfo inactiveInputInfo)
 	{
-		stateInfosActive.emplace_back(activeKey, activeAction, activeMods);
-		stateInfosInactive.emplace_back(inactiveKey, inactiveAction, inactiveMods);
+		stateInfosActive.push_back(activeInputInfo);
+		stateInfosInactive.push_back(inactiveInputInfo);
 		states.emplace_back(name);
+	}
+
+	void InputManager::AddAxis(std::string name, InputInfo activeNegativeInputInfo, InputInfo inactiveNegativeInputInfo, InputInfo activePositiveInputInfo, InputInfo inactivePositiveInputInfo)
+	{
+		axisInfosActiveNegative.push_back(activeNegativeInputInfo);
+		axisInfosInactiveNegative.push_back(inactiveNegativeInputInfo);
+		axisInfosActivePositive.push_back(activePositiveInputInfo);
+		axisInfosInactivePositive.push_back(inactivePositiveInputInfo);
+		axes.emplace_back(name);
 	}
 }

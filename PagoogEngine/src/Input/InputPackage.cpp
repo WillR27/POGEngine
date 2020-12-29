@@ -31,14 +31,6 @@ namespace PEngine
 
     void InputPackage::AddAction(Action action)
     {
-        for (Action& existingAction : actions)
-        {
-            if (existingAction.name == action.name)
-            {
-                PG_WARN("Did not add action to the input package! Action \"{0}\" already exists in the input package.", existingAction.name);
-            }
-        }
-
         actions.push_back(action);
     }
 
@@ -68,19 +60,27 @@ namespace PEngine
         return false;
     }
 
-    void InputPackage::AddOrReplaceState(State state)
+    void InputPackage::AddState(State state)
     {
-        auto it = states.begin();
+        states.push_back(state);
+    }
 
-        for (; it != states.end();)
+    int InputPackage::GetAxisValue(std::string name, bool remove)
+    {
+        auto it = axes.begin();
+
+        for (; it != axes.end();)
         {
-            State& existingSstate = *it;
+            Axis& axis= *it;
 
-            if (existingSstate.name == state.name)
+            if (axis.name == name)
             {
-                states.erase(it);
+                if (remove)
+                {
+                    axes.erase(it);
+                }
 
-                break;
+                return axis.GetValue();
             }
             else
             {
@@ -88,17 +88,23 @@ namespace PEngine
             }
         }
 
-        states.push_back(state);
+        return 0;
+    }
+
+    void InputPackage::AddAxis(Axis axis)
+    {
+        axes.push_back(axis);
     }
 
     void InputPackage::Clear()
     {
         actions.clear();
         states.clear();
+        axes.clear();
     }
 
     bool InputPackage::IsEmpty() const
     {
-        return actions.size() == 0 && states.size() == 0;
+        return actions.size() == 0 && states.size() == 0 && axes.size() == 0;
     }
 }

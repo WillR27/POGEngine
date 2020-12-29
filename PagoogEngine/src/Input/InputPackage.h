@@ -14,7 +14,10 @@ namespace PEngine
 		void AddAction(Action action);
 
 		bool IsStateActive(std::string name, bool remove = true);
-		void AddOrReplaceState(State state);
+		void AddState(State state);
+
+		int GetAxisValue(std::string name, bool remove = true);
+		void AddAxis(Axis axis);
 
 		void Clear();
 
@@ -23,6 +26,7 @@ namespace PEngine
 	private:
 		std::vector<Action> actions;
 		std::vector<State> states;
+		std::vector<Axis> axes;
 	};
 }
 

@@ -31,20 +31,25 @@ namespace PEngine
 			MeshRenderer* mr2 = boxCollider.To<MeshRenderer>();
 
 			Vec3 displacement = transform2->GetPosition() - transform1->GetPosition();
-			float x = abs(displacement.x) > abs(displacement.y) && abs(displacement.x) > abs(displacement.z) ? displacement.x > 0 ? 1.0f : -1.0f : 0.0f;
-			float y = x == 0.0f && abs(displacement.y) > abs(displacement.x) && abs(displacement.y) > abs(displacement.z) ? displacement.y > 0 ? 1.0f : -1.0f : 0.0f;
-			float z = y == 0.0f && abs(displacement.z) > abs(displacement.x) && abs(displacement.z) > abs(displacement.y) ? displacement.z > 0 ? 1.0f : -1.0f : 0.0f;
-			Vec3 collisionNormal(x, y, z);
-
 			Vec3 relativeVelocity = rigidBody2->GetVelocity() - rigidBody1->GetVelocity();
-			float dotProduct = Maths::DotProduct(relativeVelocity, collisionNormal);
-			float restitution = 1.0f;
-			float impulseScalar = -(1 + restitution) * dotProduct;
-			impulseScalar /= 1.0f / rigidBody1->GetMass() + 1.0f / rigidBody2->GetMass();
-			Vec3 impulse = impulseScalar * collisionNormal;
+			float movingTowards = Maths::DotProduct(relativeVelocity, displacement);
 
-			rigidBody1->AddVelocity(-1.0f / rigidBody1->GetMass() * impulse);
-			rigidBody2->AddVelocity(1.0f / rigidBody2->GetMass() * impulse);
+			if (movingTowards < 0.0f)
+			{
+				float x = abs(displacement.x) > abs(displacement.y) && abs(displacement.x) > abs(displacement.z) ? displacement.x > 0 ? 1.0f : -1.0f : 0.0f;
+				float y = x == 0.0f && abs(displacement.y) > abs(displacement.x) && abs(displacement.y) > abs(displacement.z) ? displacement.y > 0 ? 1.0f : -1.0f : 0.0f;
+				float z = y == 0.0f && abs(displacement.z) > abs(displacement.x) && abs(displacement.z) > abs(displacement.y) ? displacement.z > 0 ? 1.0f : -1.0f : 0.0f;
+				Vec3 collisionNormal(x, y, z);
+
+				float dotProduct = Maths::DotProduct(relativeVelocity, collisionNormal);
+				float restitution = 1.0f;
+				float impulseScalar = -(1 + restitution) * dotProduct;
+				impulseScalar /= 1.0f / rigidBody1->GetMass() + 1.0f / rigidBody2->GetMass();
+				Vec3 impulse = impulseScalar * collisionNormal;
+
+				rigidBody1->AddVelocity(-1.0f / rigidBody1->GetMass() * impulse);
+				rigidBody2->AddVelocity(1.0f / rigidBody2->GetMass() * impulse);
+			}
 		}
 	}
 

@@ -7,27 +7,20 @@
 
 namespace PEngine
 {
-	struct ActionInfo
+	struct InputInfo
 	{
 		int key, action, mods;
 
-		ActionInfo(int key, int action, int mods)
+		InputInfo(int key, int action, int mods)
 			: key(key)
 			, action(action)
 			, mods(mods)
 		{
 		}
-	};
 
-	struct StateInfo
-	{
-		int key, action, mods;
-
-		StateInfo(int key, int action, int mods)
-			: key(key)
-			, action(action)
-			, mods(mods)
+		bool operator==(const InputInfo& rhs) const
 		{
+			return key == rhs.key && action == rhs.action && mods == rhs.mods;
 		}
 	};
 
@@ -45,18 +38,25 @@ namespace PEngine
 
 		void AddInputPackageCallback(InputPackageCallback actionCallback);
 
-		void AddAction(std::string name, int key, int action, int mods);
-		void AddState(std::string name, int activeKey, int activeAction, int activeMods, int inactiveKey, int inactiveAction, int inactiveMods);
+		void AddAction(std::string name, InputInfo inputInfo);
+		void AddState(std::string name, InputInfo activeInputInfo, InputInfo inactiveInputInfo);
+		void AddAxis(std::string name, InputInfo activeNegativeInputInfo, InputInfo inactiveNegativeInputInfo, InputInfo activePositiveInputInfo, InputInfo inactivePositiveInputInfo);
 
 	private:
 		std::vector<InputPackageCallback> inputPackageCallbacks;
 
-		std::vector<ActionInfo> actionInfos;
+		std::vector<InputInfo> actionInfos;
 		std::vector<Action> actions;
 
-		std::vector<StateInfo> stateInfosActive;
-		std::vector<StateInfo> stateInfosInactive;
+		std::vector<InputInfo> stateInfosActive;
+		std::vector<InputInfo> stateInfosInactive;
 		std::vector<State> states;
+
+		std::vector<InputInfo> axisInfosActiveNegative;
+		std::vector<InputInfo> axisInfosInactiveNegative;
+		std::vector<InputInfo> axisInfosActivePositive;
+		std::vector<InputInfo> axisInfosInactivePositive;
+		std::vector<Axis> axes;
 
 		InputPackage inputPackage;
 	};

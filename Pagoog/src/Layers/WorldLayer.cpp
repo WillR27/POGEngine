@@ -29,11 +29,13 @@ namespace Pagoog
 
 	void WorldLayer::Init()
 	{
-		inputManager.AddAction("Jump", PG_KEY_SPACE, PG_KEY_RELEASE, PG_MOD_NONE);
-		inputManager.AddState("Forwards", PG_KEY_W, PG_KEY_PRESS, PG_MOD_NONE, PG_KEY_W, PG_KEY_RELEASE, PG_MOD_NONE);
-		inputManager.AddState("Backwards", PG_KEY_S, PG_KEY_PRESS, PG_MOD_NONE, PG_KEY_S, PG_KEY_RELEASE, PG_MOD_NONE);
-		inputManager.AddState("Left", PG_KEY_A, PG_KEY_PRESS, PG_MOD_NONE, PG_KEY_A, PG_KEY_RELEASE, PG_MOD_NONE);
-		inputManager.AddState("Right", PG_KEY_D, PG_KEY_PRESS, PG_MOD_NONE, PG_KEY_D, PG_KEY_RELEASE, PG_MOD_NONE);
+		inputManager.AddAction("Jump", InputInfo(PG_KEY_SPACE, PG_KEY_RELEASE, PG_MOD_NONE));
+		//inputManager.AddState("Forwards", InputInfo(PG_KEY_W, PG_KEY_PRESS, PG_MOD_NONE), InputInfo(PG_KEY_W, PG_KEY_RELEASE, PG_MOD_NONE));
+		//inputManager.AddState("Backwards", InputInfo(PG_KEY_S, PG_KEY_PRESS, PG_MOD_NONE), InputInfo(PG_KEY_S, PG_KEY_RELEASE, PG_MOD_NONE));
+		//inputManager.AddState("Left", InputInfo(PG_KEY_A, PG_KEY_PRESS, PG_MOD_NONE), InputInfo(PG_KEY_A, PG_KEY_RELEASE, PG_MOD_NONE));
+		//inputManager.AddState("Right", InputInfo(PG_KEY_D, PG_KEY_PRESS, PG_MOD_NONE), InputInfo(PG_KEY_D, PG_KEY_RELEASE, PG_MOD_NONE));
+		inputManager.AddAxis("Horizontal", InputInfo(PG_KEY_A, PG_KEY_PRESS, PG_MOD_NONE), InputInfo(PG_KEY_A, PG_KEY_RELEASE, PG_MOD_NONE), InputInfo(PG_KEY_D, PG_KEY_PRESS, PG_MOD_NONE), InputInfo(PG_KEY_D, PG_KEY_RELEASE, PG_MOD_NONE));
+		inputManager.AddAxis("Vertical", InputInfo(PG_KEY_S, PG_KEY_PRESS, PG_MOD_NONE), InputInfo(PG_KEY_S, PG_KEY_RELEASE, PG_MOD_NONE), InputInfo(PG_KEY_W, PG_KEY_PRESS, PG_MOD_NONE), InputInfo(PG_KEY_W, PG_KEY_RELEASE, PG_MOD_NONE));
 		inputManager.AddInputPackageCallback(PG_BIND_FN(ActionCallback));
 
 		mesh.SetPositionData(squarePositions, sizeof(squarePositions));
@@ -144,24 +146,6 @@ void main()
 			controllableBlock->Rotate(Quat(Vec3(0.5f, 0.3f, 0.7f)));
 		}
 
-		if (inputPackage.IsStateActive("Forwards"))
-		{
-			controllableBlock->AddForce(Vec3(0.0f, 0.0f, -1.0f * dt));
-		}
-
-		if (inputPackage.IsStateActive("Backwards"))
-		{
-			controllableBlock->AddForce(Vec3(0.0f, 0.0f, 1.0f * dt));
-		}
-
-		if (inputPackage.IsStateActive("Left"))
-		{
-			controllableBlock->AddForce(Vec3(-1.0f * dt, 0.0f, 0.0f));
-		}
-
-		if (inputPackage.IsStateActive("Right"))
-		{
-			controllableBlock->AddForce(Vec3(1.0f * dt, 0.0f, 0.0f));
-		}
+		controllableBlock->SetVelocity(Vec3(inputPackage.GetAxisValue("Horizontal") / 4.0f, 0.0f, -inputPackage.GetAxisValue("Vertical") / 4.0f));
 	}
 }
