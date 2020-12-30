@@ -109,16 +109,21 @@ void main()
 		blockTemplate.SetMesh(mesh4);
 
 		controllableBlock = Scene::CreateGameObject(blockTemplate);
-		controllableBlock->SetPosition(Vec3(-2.5f, 0.0f, 0.0f));
+		controllableBlock->SetPosition(Vec3(-4.0f, 0.0f, 0.0f));
+		controllableBlock->SetVelocity(Vec3(0.4f, 0.0f, 0.0f));
+		controllableBlock->SetMass(0.5f);
 		//controllableBlock->SetForce(Vec3(0.01f, 0.0f, 0.0f));
 
 		Block* staticBlock = Scene::CreateGameObject(blockTemplate);
 		staticBlock->SetPosition(Vec3(0.0f, 0.0f, 0.0f));
 	}
 
+	void WorldLayer::CollisionsUpdate(float dt)
+	{
+	}
+
 	void WorldLayer::Update(float dt)
 	{
-
 	}
 
 	void WorldLayer::FrameUpdate(float dt)

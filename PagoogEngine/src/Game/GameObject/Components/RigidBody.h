@@ -14,6 +14,7 @@ namespace PEngine
 
 		void UpdateRigidBody(float dt);
 
+		void SetMass(float newMass);
 		float GetMass() const;
 
 		Vec3 GetForce() const;

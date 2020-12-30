@@ -67,7 +67,9 @@ namespace PEngine
 		for (Layer* layer : layers)
 		{
 			ActiveLayer = layer;
+			layer->CollisionsPreUpdate(dt);
 			layer->CollisionsUpdate(dt);
+			layer->CollisionsPostUpdate(dt);
 		}
 
 		for (Layer* layer : layers)

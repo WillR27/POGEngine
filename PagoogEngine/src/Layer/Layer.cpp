@@ -45,7 +45,11 @@ namespace PEngine
 		}
 	}
 
-	void Layer::CollisionsUpdate(float dt)
+	void Layer::CollisionsPreUpdate(float dt)
+	{
+	}
+
+	void Layer::CollisionsPostUpdate(float dt)
 	{
 		if (boxColliders.size() > 1)
 		{

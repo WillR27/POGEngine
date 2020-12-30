@@ -18,6 +18,13 @@ namespace PEngine
 		ToTransform().Translate(velocity * dt);
 	}
 
+	void RigidBody::SetMass(float newMass)
+	{
+		PG_ASSERT((newMass > 0.0f), "Tried to set mass to a value not greater than 0!");
+
+		this->mass = newMass;
+	}
+
 	float RigidBody::GetMass() const
 	{
 		return mass;

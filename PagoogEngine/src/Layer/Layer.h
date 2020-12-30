@@ -19,6 +19,7 @@ namespace PEngine
 
 		virtual void Init() = 0;
 	
+		virtual void CollisionsUpdate(float dt) = 0;
 		virtual void Update(float dt) = 0;
 		virtual void FrameUpdate(float dt) = 0;
 
@@ -43,7 +44,8 @@ namespace PEngine
 		void PreUpdate(float dt);
 		void PostUpdate(float dt);
 
-		void CollisionsUpdate(float dt);
+		void CollisionsPreUpdate(float dt);
+		void CollisionsPostUpdate(float dt);
 
 		void PreFrameUpdate(float dt);
 		void PostFrameUpdate(float dt);
