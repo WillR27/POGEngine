@@ -99,9 +99,7 @@ void main()
 		material1.SetShader(shader);
 
 		Camera camera(Vec3(0.0f, 0.0f, 10.0f));
-		material1.GetShader().Use();
-		material1.GetShader().SetMatrix4fv("view", 1, false, camera.GetView());
-		material1.GetShader().SetMatrix4fv("projection", 1, false, camera.GetProjection());
+		Camera::MainCamera = MakeUnique<Camera>(camera);
 
 		material1.SetColour("colourIn", Vec4((float)(sin(std::chrono::system_clock::to_time_t(std::chrono::system_clock::now())) + 1.0f) / 2.0f, (float)(sin(std::chrono::system_clock::to_time_t(std::chrono::system_clock::now()) * 0.9f) + 1.0f) / 2.0f, (float)(sin(std::chrono::system_clock::to_time_t(std::chrono::system_clock::now()) * 1.1f) + 1.0f) / 2.0f, 1.0f));
 

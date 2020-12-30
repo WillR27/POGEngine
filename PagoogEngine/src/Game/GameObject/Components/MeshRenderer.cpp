@@ -2,6 +2,8 @@
 #include "MeshRenderer.h"
 
 #include "Transform.h"
+#include "Game/Camera.h"
+#include "Render/Core/Shader.h"
 
 namespace PEngine
 {
@@ -36,7 +38,10 @@ namespace PEngine
 			Quat orientation = Maths::Lerp(transform->GetPrevOrientation(), transform->GetOrientation(), alpha);
 			Vec3 scale = Maths::Lerp(transform->GetPrevScale(), transform->GetScale(), alpha);
 
-			material->GetShader().SetMatrix4fv("model", 1, false, Maths::ToModelMatrix(position, orientation, scale));
+			Shader& shader = material->GetShader();
+			shader.SetMatrix4fv("view", 1, false, Camera::MainCamera->GetView());
+			shader.SetMatrix4fv("projection", 1, false, Camera::MainCamera->GetProjection());
+			shader.SetMatrix4fv("model", 1, false, Maths::ToModelMatrix(position, orientation, scale));
 		}
 		else
 		{

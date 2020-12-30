@@ -7,6 +7,8 @@ namespace PEngine
 	class Camera
 	{
 	public:
+		static Shared<Camera> MainCamera;
+
 		Camera(Vec3 cameraPos = Vec3(0.0f, 0.0f, 0.0f), Vec3 cameraTarget = Vec3(0.0f, 0.0f, 0.0f), Vec3 cameraDirection = Vec3(0.0f, 0.0f, 1.0f));
 		~Camera();
 

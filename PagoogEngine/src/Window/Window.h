@@ -18,6 +18,10 @@ namespace PEngine
 		
 		virtual void SwapBuffers() = 0;
 
+		virtual bool IsFullscreen() const = 0;
+		virtual void SetFullscreen(bool fullscreen) = 0;
+		virtual void ToggleFullscreen() = 0;
+
 		virtual bool HandleWindowCloseEvent(WindowCloseEvent& e) = 0;
 		virtual bool HandleWindowSizeEvent(WindowSizeEvent& e) = 0;
 

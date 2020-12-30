@@ -24,6 +24,10 @@ namespace PEngine
 
 		virtual void SwapBuffers() override;
 
+		virtual bool IsFullscreen() const override;
+		virtual void SetFullscreen(bool fullscreen) override;
+		virtual void ToggleFullscreen() override;
+
 		virtual bool HandleWindowCloseEvent(WindowCloseEvent& e) override;
 		virtual bool HandleWindowSizeEvent(WindowSizeEvent& e) override;
 
@@ -37,6 +41,7 @@ namespace PEngine
 		GLFWwindow* window;
 
 		bool shouldClose;
+		bool fullscreen;
 
 		void InitWindow();
 		void InitCallbacks();

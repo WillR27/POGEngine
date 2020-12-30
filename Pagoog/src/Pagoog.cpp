@@ -29,6 +29,7 @@ namespace Pagoog
 			AddScene(scene);
 
 			inputManager.AddAction("Quit", InputInfo(PG_KEY_ESCAPE, PG_KEY_RELEASE, PG_MOD_NONE));
+			inputManager.AddAction("Fullscreen", InputInfo(PG_KEY_F11, PG_KEY_RELEASE, PG_MOD_NONE));
 		}
 
 		virtual void ActionCallback(InputPackage& inputPackage, float dt) override
@@ -38,6 +39,11 @@ namespace Pagoog
 				WindowCloseEvent e;
 				EventDispatcher ed(e);
 				ed.Dispatch<WindowCloseEvent>(PG_BIND_FN(window->HandleWindowCloseEvent));
+			}
+
+			if (inputPackage.HasActionOccurred("Fullscreen"))
+			{
+				window->ToggleFullscreen();
 			}
 		}
 	};

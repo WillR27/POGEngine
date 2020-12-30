@@ -3,6 +3,7 @@
 
 #include "Event/WindowEvents.h"
 #include "Event/InputEvents.h"
+#include "Game/Camera.h"
 #include "Render/Core/Shader.h"
 #include "Render/Core/Render.h"
 
@@ -18,6 +19,7 @@ namespace PEngine
 	WindowsWindow::WindowsWindow()
 		: window(nullptr)
 		, shouldClose(false)
+		, fullscreen(false)
 	{
 	}
 
@@ -116,6 +118,38 @@ namespace PEngine
 		glfwSwapBuffers(window);
 	}
 
+	bool WindowsWindow::IsFullscreen() const
+	{
+		return fullscreen;
+	}
+
+	void WindowsWindow::SetFullscreen(bool fullscreen)
+	{
+		static int width, height, x, y;
+		this->fullscreen = fullscreen;
+
+		if (fullscreen)
+		{
+			width = windowData.width;
+			height = windowData.height;
+			glfwGetWindowPos(window, &x, &y);
+
+			const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+			glfwSetWindowMonitor(window, glfwGetPrimaryMonitor(), 0, 0, mode->width, mode->height, GLFW_DONT_CARE);
+			HandleWindowSizeEvent(WindowSizeEvent(mode->width, mode->height));
+		}
+		else
+		{
+			glfwSetWindowMonitor(window, nullptr, x, y, width, height, GLFW_DONT_CARE);
+			HandleWindowSizeEvent(WindowSizeEvent(width, height));
+		}
+	}
+
+	void WindowsWindow::ToggleFullscreen()
+	{
+		SetFullscreen(!fullscreen);
+	}
+
 	void WindowsWindow::Close()
 	{
 		glfwDestroyWindow(window);
@@ -133,6 +167,7 @@ namespace PEngine
 	{
 		glfwSetWindowSize(window, e.width, e.height);
 		glViewport(0, 0, e.width, e.height);
+		Camera::MainCamera->SetAspectRatio(static_cast<float>(e.width) / e.height);
 
 		return true;
 	}

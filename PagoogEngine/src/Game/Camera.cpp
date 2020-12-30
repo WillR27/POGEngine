@@ -3,6 +3,9 @@
 
 namespace PEngine
 {
+	// Assigned to a default camera by default
+	Shared<Camera> Camera::MainCamera = MakeShared<Camera>();
+
 	Camera::Camera(Vec3 cameraPos, Vec3 cameraTarget, Vec3 cameraDirection)
 		: worldUp(Vec3(0.0f, 1.0f, 0.0f))
 		, cameraPos(cameraPos)

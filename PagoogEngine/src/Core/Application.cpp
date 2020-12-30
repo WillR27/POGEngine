@@ -12,6 +12,7 @@ namespace PEngine
 	Application::Application()
 		: window(nullptr)
 		, inputManager()
+		, activeScene(nullptr)
 	{
 		PG_INFO("Creating application!");
 	}
