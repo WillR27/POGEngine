@@ -17,6 +17,9 @@ namespace PEngine
 		void SetMass(float newMass);
 		float GetMass() const;
 
+		void SetDragCoef(float newDragCoef);
+		float GetDragCoef() const;
+
 		Vec3 GetForce() const;
 		void SetForce(Vec3 newForce);
 		void AddForce(Vec3 force);
@@ -27,6 +30,7 @@ namespace PEngine
 
 	private:
 		float mass;
+		float dragCoef;
 		Vec3 force;
 		Vec3 velocity;
 

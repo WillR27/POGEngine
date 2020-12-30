@@ -114,6 +114,7 @@ void main()
 
 		Block* staticBlock = Scene::CreateGameObject(blockTemplate);
 		staticBlock->SetPosition(Vec3(0.0f, 0.0f, 0.0f));
+		staticBlock->SetDragCoef(3.0f);
 	}
 
 	void WorldLayer::CollisionsUpdate(float dt)
@@ -149,6 +150,6 @@ void main()
 			controllableBlock->Rotate(Quat(Vec3(0.5f, 0.3f, 0.7f)));
 		}
 
-		controllableBlock->SetVelocity(Vec3(inputPackage.GetAxisValue("Horizontal") / 4.0f, 0.0f, -inputPackage.GetAxisValue("Vertical") / 4.0f));
+		controllableBlock->SetVelocity(Vec3(inputPackage.GetAxisValue("Horizontal") / 3.0f, 0.0f, -inputPackage.GetAxisValue("Vertical") / 3.0f));
 	}
 }

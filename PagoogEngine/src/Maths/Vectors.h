@@ -32,6 +32,12 @@ namespace PEngine
 			this->y += rhs.y;
 		}
 
+		void operator-=(const Vec2& rhs)
+		{
+			this->x -= rhs.x;
+			this->y -= rhs.y;
+		}
+
 		inline std::ostream& operator<<(std::ostream& os)
 		{
 			std::stringstream ss;
@@ -57,11 +63,23 @@ namespace PEngine
 			this->z += rhs.z;
 		}
 
-		inline std::ostream& operator<<(std::ostream& os)
+		void operator-=(const Vec3& rhs)
+		{
+			this->x -= rhs.x;
+			this->y -= rhs.y;
+			this->z -= rhs.z;
+		}
+
+		std::string ToString() const
 		{
 			std::stringstream ss;
 			ss << "Vec3(" << this->x << ", " << this->y << ", " << this->z << ")";
-			return os << ss.str();
+			return ss.str();
+		}
+
+		inline std::ostream& operator<<(std::ostream& os)
+		{
+			return os << ToString();
 		}
 	};
 
@@ -81,6 +99,14 @@ namespace PEngine
 			this->y += rhs.y;
 			this->z += rhs.z;
 			this->w += rhs.w;
+		}
+
+		void operator-=(const Vec4& rhs)
+		{
+			this->x -= rhs.x;
+			this->y -= rhs.y;
+			this->z -= rhs.z;
+			this->w -= rhs.w;
 		}
 
 		inline std::ostream& operator<<(std::ostream& os)

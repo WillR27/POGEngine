@@ -83,4 +83,18 @@ namespace PEngine
 	{
 		return glm::dot(static_cast<glm::vec3>(vec1), static_cast<glm::vec3>(vec2));
 	}
+
+	Vec3 Maths::Vec3MultiplyPreserveSigns(Vec3 vec1, Vec3 vec2)
+	{
+		Vec3 retVec;
+		retVec.x = abs(vec1.x) * vec2.x;
+		retVec.y = abs(vec1.y) * vec2.y;
+		retVec.z = abs(vec1.z) * vec2.z;
+		return retVec;
+	}
+
+	float Maths::DistanceSq(Vec3 vec)
+	{
+		return DotProduct(vec, vec);
+	}
 }

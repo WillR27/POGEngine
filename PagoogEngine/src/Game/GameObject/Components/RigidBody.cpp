@@ -5,6 +5,7 @@ namespace PEngine
 {
 	RigidBody::RigidBody()
 		: mass(1.0f)
+		, dragCoef(1.0f)
 		, force(Vec3(0.0f, 0.0f, 0.0f))
 		, velocity(Vec3(0.0f, 0.0f, 0.0f))
 	{
@@ -12,8 +13,12 @@ namespace PEngine
 
 	void RigidBody::UpdateRigidBody(float dt)
 	{
-		Vec3 acceleration = force / mass;
+		Vec3 drag = dragCoef * Maths::Vec3MultiplyPreserveSigns(velocity, velocity);
+		Vec3 acceleration = (force - drag) / mass;
 		velocity += acceleration * dt;
+		velocity.y = abs(velocity.y) > 0.01f ? velocity.y : 0.0f;
+		velocity.z = abs(velocity.z) > 0.01f ? velocity.z : 0.0f;
+		velocity.x = abs(velocity.x) > 0.01f ? velocity.x : 0.0f;
 
 		ToTransform().Translate(velocity * dt);
 	}
@@ -28,6 +33,16 @@ namespace PEngine
 	float RigidBody::GetMass() const
 	{
 		return mass;
+	}
+
+	void RigidBody::SetDragCoef(float newDragCoef)
+	{
+		this->dragCoef = newDragCoef;
+	}
+
+	float RigidBody::GetDragCoef() const
+	{
+		return dragCoef;
 	}
 
 	Vec3 RigidBody::GetForce() const

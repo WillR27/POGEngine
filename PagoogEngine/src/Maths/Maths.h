@@ -103,6 +103,10 @@ namespace PEngine
 		static Mat4 ToModelMatrix(Vec3 position, Quat orientation, Vec3 scale);
 
 		static float DotProduct(Vec3 vec1, Vec3 vec2);
+
+		static Vec3 Vec3MultiplyPreserveSigns(Vec3 vec1, Vec3 vec2);
+
+		static float DistanceSq(Vec3 vec);
 	};
 }
 
