@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Game/GameObject/GameObject.h"
 #include "Game/GameObject/Components/Transform.h"
 #include "Game/GameObject/Components/RigidBody.h"
 #include "Game/GameObject/Components/BoxCollider.h"
@@ -7,15 +8,13 @@
 
 namespace Pagoog
 {
-	class Block 
-		: public PEngine::Transform
-		, public PEngine::RigidBody
-		, public PEngine::BoxCollider
-		, public PEngine::MeshRenderer
+	class Block : public GameObject
 	{
 	public:
 		Block();
 		virtual ~Block() = default;
+
+		virtual void AddInitialComponents() override;
 	};
 }
 

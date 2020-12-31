@@ -2,7 +2,9 @@
 #include "BoxCollider.h"
 
 #include "RigidBody.h"
-#include <Game\GameObject\Components\MeshRenderer.h>
+
+#include "Game/GameObject/GameObject.h"
+#include "Game/GameObject/Components/MeshRenderer.h"
 
 namespace PEngine
 {
@@ -13,25 +15,25 @@ namespace PEngine
 
 	void BoxCollider::CollideWith(BoxCollider& boxCollider)
 	{
-		RigidBody* rigidBody1 = this->To<RigidBody>();
-		PG_ASSERT(rigidBody1, GetName() + " has a box collider component but no rigid body component!");
+		RigidBody& rigidBody1 = gameObject->GetComponent<RigidBody>();
+		PG_ASSERT(&rigidBody1, gameObject->GetName() + " has a box collider component but no rigid body component!");
 
-		RigidBody* rigidBody2 = boxCollider.To<RigidBody>();
-		PG_ASSERT(rigidBody2, boxCollider.GetName() + " has a box collider component but no rigid body component!");
+		RigidBody& rigidBody2 = boxCollider.gameObject->GetComponent<RigidBody>();
+		PG_ASSERT(&rigidBody2, boxCollider.gameObject->GetName() + " has a box collider component but no rigid body component!");
 
 		const AABB<3>& aabb1 = GetTransformedAABB();
 		const AABB<3>& aabb2 = boxCollider.GetTransformedAABB();
 
 		if (aabb1.IsCollidingWith(aabb2))
 		{
-			Transform* transform1 = this->To<Transform>();
-			Transform* transform2 = boxCollider.To<Transform>();
+			Transform& transform1 = gameObject->GetComponent<Transform>();
+			Transform& transform2 = boxCollider.gameObject->GetComponent<Transform>();
 
-			MeshRenderer* mr1 = this->To<MeshRenderer>();
-			MeshRenderer* mr2 = boxCollider.To<MeshRenderer>();
+			MeshRenderer& mr1 = gameObject->GetComponent<MeshRenderer>();
+			MeshRenderer& mr2 = boxCollider.gameObject->GetComponent<MeshRenderer>();
 
-			Vec3 displacement = transform2->GetPosition() - transform1->GetPosition();
-			Vec3 relativeVelocity = rigidBody2->GetVelocity() - rigidBody1->GetVelocity();
+			Vec3 displacement = transform2.GetPosition() - transform1.GetPosition();
+			Vec3 relativeVelocity = rigidBody2.GetVelocity() - rigidBody1.GetVelocity();
 			float movingTowards = Maths::DotProduct(relativeVelocity, displacement);
 
 			if (movingTowards < 0.0f)
@@ -44,11 +46,11 @@ namespace PEngine
 				float dotProduct = Maths::DotProduct(relativeVelocity, collisionNormal);
 				float restitution = 1.0f;
 				float impulseScalar = -(1 + restitution) * dotProduct;
-				impulseScalar /= 1.0f / rigidBody1->GetMass() + 1.0f / rigidBody2->GetMass();
+				impulseScalar /= 1.0f / rigidBody1.GetMass() + 1.0f / rigidBody2.GetMass();
 				Vec3 impulse = impulseScalar * collisionNormal;
 
-				rigidBody1->AddVelocity(-1.0f / rigidBody1->GetMass() * impulse);
-				rigidBody2->AddVelocity(1.0f / rigidBody2->GetMass() * impulse);
+				rigidBody1.AddVelocity(-1.0f / rigidBody1.GetMass() * impulse);
+				rigidBody2.AddVelocity(1.0f / rigidBody2.GetMass() * impulse);
 			}
 		}
 	}
@@ -60,19 +62,24 @@ namespace PEngine
 
 	AABB<3> BoxCollider::GetTransformedAABB() const
 	{
-		const Transform* transform = this->To<Transform>();
-		PG_ASSERT((transform != nullptr), GetName() + " has a box collider component but no transform component!");
+		const Transform& transform = gameObject->GetComponent<Transform>();
+		PG_ASSERT(&transform, gameObject->GetName() + " has a box collider component but no transform component!");
 
-		Vec3 min(transform->GetPosition());
+		Vec3 min(transform.GetPosition());
 		min.x -= aabb.GetSize()[0];		
 		min.y -= aabb.GetSize()[1];		
 		min.z -= aabb.GetSize()[2];		
 
-		Vec3 max(transform->GetPosition());
+		Vec3 max(transform.GetPosition());
 		max.x += aabb.GetSize()[0];
 		max.y += aabb.GetSize()[1];
 		max.z += aabb.GetSize()[2];
 
 		return AABB<3>(min, max);
+	}
+
+	std::string BoxCollider::GetComponentName() const
+	{
+		return ComponentName();
 	}
 }

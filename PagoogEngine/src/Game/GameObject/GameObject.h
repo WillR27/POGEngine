@@ -1,28 +1,44 @@
 #pragma once
 
+#include "Game/GameObject/Components/Component.h"
+#include "Scene/Scene.h"
+
 namespace PEngine
 {
 	class GameObject
 	{
 	public:
-		virtual ~GameObject() = default;
+		GameObject(std::string name = "Game Object");
+		virtual ~GameObject();
 
-		template <typename T>
-		T* To()
+		template<typename T>
+		T& GetComponent()
 		{
-			return dynamic_cast<T*>(this);
+			return *(static_cast<T*>(components[T::ComponentName()]));
 		}
 
-		template <typename T>
-		const T* To() const
+		template<typename T, typename... Args>
+		T& AddComponent(Args&&... args)
 		{
-			return dynamic_cast<const T*>(this);
+			T* component = new T(std::forward<Args>(args)...);
+			component->gameObject = this;
+
+			std::string componentName = T::ComponentName();
+			components[componentName] = static_cast<Component*>(component);
+
+			Scene::AddComponent(static_cast<Component*>(component));
+
+			return *component;
 		}
 
 		void SetName(std::string name);
 		std::string GetName() const;
 
+		virtual void AddInitialComponents() = 0;
+
 	private:
 		std::string name;
+
+		std::unordered_map<std::string, Component*> components;
 	};
 }

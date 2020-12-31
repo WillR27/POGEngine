@@ -1,11 +1,11 @@
 #pragma once
 
 #include "Maths/Maths.h"
-#include "Game/GameObject/GameObject.h"
+#include "Game/GameObject/Components/Component.h"
 
 namespace PEngine
 {
-	class Transform : public virtual GameObject
+	class Transform : public Component
 	{
 	public:
 		Transform(Vec3 position = Vec3(0.0f, 0.0f, 0.0f), Quat orientation = Quat(Vec3(0.0f, 0.0f, 0.0f)), Vec3 scale = Vec3(1.0f, 1.0f, 1.0f));
@@ -33,6 +33,13 @@ namespace PEngine
 		void Scale(Vec3 scaleFactor);
 
 		Mat4 ModelMatrix() const;
+
+		static constexpr const char* ComponentName()
+		{
+			return STRINGIFY(Transform);
+		}
+
+		virtual std::string GetComponentName() const override;
 
 	private:
 		Vec3 position;

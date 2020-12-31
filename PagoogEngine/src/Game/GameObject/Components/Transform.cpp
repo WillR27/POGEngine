@@ -109,4 +109,9 @@ namespace PEngine
 	{
 		return Maths::ToModelMatrix(position, orientation, scale);
 	}
+
+	std::string Transform::GetComponentName() const
+	{
+		return ComponentName();
+	}
 }

@@ -2,11 +2,11 @@
 
 #include "Render/Mesh/Mesh.h"
 #include "Render/Material/Material.h"
-#include "Game/GameObject/GameObject.h"
+#include "Game/GameObject/Components/Component.h"
 
 namespace PEngine
 {
-	class MeshRenderer : public virtual GameObject
+	class MeshRenderer : public Component
 	{
 	public:
 		MeshRenderer();
@@ -19,6 +19,13 @@ namespace PEngine
 
 		Material& GetMaterial() const;
 		void SetMaterial(Material& material);
+
+		static constexpr const char* ComponentName()
+		{
+			return STRINGIFY(MeshRenderer);
+		}
+
+		virtual std::string GetComponentName() const override;
 
 	private:
 		Mesh* mesh;

@@ -79,6 +79,8 @@ namespace PEngine
 
 				memcpy(&combinedIndexDataArray[indexCountOffset], updatedIndexDataArray, mesh->IndexSize());
 
+				delete[] updatedIndexDataArray;
+
 				indexCountOffset += mesh->IndexCount();
 				indexSizeOffset += mesh->IndexSize();
 				indexNumberOffset += mesh->Count();

@@ -4,6 +4,7 @@
 #include "Transform.h"
 #include "Game/Camera.h"
 #include "Render/Core/Shader.h"
+#include "Game/GameObject/GameObject.h"
 
 namespace PEngine
 {
@@ -31,12 +32,12 @@ namespace PEngine
 		material->GetShader().Use();
 		material->UpdateShaderUniforms();
 
-		Transform* transform = dynamic_cast<Transform*>(this);
-		if (transform != nullptr)
+		Transform& transform = gameObject->GetComponent<Transform>();
+		if (&transform != nullptr)
 		{
-			Vec3 position = Maths::Lerp(transform->GetPrevPosition(), transform->GetPosition(), alpha);
-			Quat orientation = Maths::Lerp(transform->GetPrevOrientation(), transform->GetOrientation(), alpha);
-			Vec3 scale = Maths::Lerp(transform->GetPrevScale(), transform->GetScale(), alpha);
+			Vec3 position = Maths::Lerp(transform.GetPrevPosition(), transform.GetPosition(), alpha);
+			Quat orientation = Maths::Lerp(transform.GetPrevOrientation(), transform.GetOrientation(), alpha);
+			Vec3 scale = Maths::Lerp(transform.GetPrevScale(), transform.GetScale(), alpha);
 
 			Shader& shader = material->GetShader();
 			shader.SetMatrix4fv("view", 1, false, Camera::MainCamera->GetView());
@@ -69,5 +70,10 @@ namespace PEngine
 	void MeshRenderer::SetMaterial(Material& material)
 	{
 		this->material = &material;
+	}
+
+	std::string MeshRenderer::GetComponentName() const
+	{
+		return ComponentName();
 	}
 }

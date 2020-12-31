@@ -1,6 +1,8 @@
 #include "pgepch.h"
 #include "RigidBody.h"
 
+#include "Game/GameObject/GameObject.h"
+
 namespace PEngine
 {
 	RigidBody::RigidBody()
@@ -20,7 +22,7 @@ namespace PEngine
 		velocity.z = abs(velocity.z) > 0.01f ? velocity.z : 0.0f;
 		velocity.x = abs(velocity.x) > 0.01f ? velocity.x : 0.0f;
 
-		ToTransform().Translate(velocity * dt);
+		gameObject->GetComponent<Transform>().Translate(velocity * dt);
 	}
 
 	void RigidBody::SetMass(float newMass)
@@ -75,10 +77,8 @@ namespace PEngine
 		this->velocity += velocity;
 	}
 
-	Transform& RigidBody::ToTransform()
+	std::string RigidBody::GetComponentName() const
 	{
-		Transform* transform = dynamic_cast<Transform*>(this);
-		PG_ASSERT(transform, "Rigid body does not have a transform to work with!");
-		return *transform;
+		return ComponentName();
 	}
 }

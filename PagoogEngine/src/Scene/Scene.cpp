@@ -1,6 +1,14 @@
 #include "pgepch.h"
 #include "Scene.h"
 
+#include "Layer/Layer.h"
+#include "Game/GameObject/GameObject.h"
+#include "Game/GameObject/Components/Component.h"
+#include "Game/GameObject/Components/BoxCollider.h"
+#include "Game/GameObject/Components/MeshRenderer.h"
+#include "Game/GameObject/Components/RigidBody.h"
+#include "Game/GameObject/Components/Transform.h"
+
 namespace PEngine
 {
 	Layer* Scene::ActiveLayer = nullptr;
@@ -8,29 +16,36 @@ namespace PEngine
 	void Scene::AddGameObject(GameObject* gameObject)
 	{
 		ActiveLayer->gameObjects.push_back(gameObject);
+		ActiveLayer->boxColliders.push_back(nullptr);
+		ActiveLayer->meshRenderers.push_back(nullptr);
+		ActiveLayer->rigidBodies.push_back(nullptr);
+		ActiveLayer->transforms.push_back(nullptr);
 
-		BoxCollider* boxCollider = gameObject->To<BoxCollider>();
-		if (boxCollider != nullptr)
-		{
-			ActiveLayer->boxColliders.push_back(boxCollider);
-		}
+		gameObject->AddInitialComponents();
+	}
 
-		MeshRenderer* meshRenderer = gameObject->To<MeshRenderer>();
-		if (meshRenderer != nullptr)
+	void Scene::AddComponent(Component* component)
+	{
+		int index = IndexOf(ActiveLayer->gameObjects, component->gameObject);
+		
+		if (index != -1)
 		{
-			ActiveLayer->meshRenderers.push_back(meshRenderer);
-		}
-
-		RigidBody* rigidBody = gameObject->To<RigidBody>();
-		if (rigidBody != nullptr)
-		{
-			ActiveLayer->rigidBodies.push_back(rigidBody);
-		}
-
-		Transform* transform = gameObject->To<Transform>();
-		if (transform != nullptr)
-		{
-			ActiveLayer->transforms.push_back(transform);
+			if (component->GetComponentName() == BoxCollider::ComponentName())
+			{
+				ActiveLayer->boxColliders[index] = static_cast<BoxCollider*>(component);
+			}
+			else if (component->GetComponentName() == MeshRenderer::ComponentName())
+			{
+				ActiveLayer->meshRenderers[index] = static_cast<MeshRenderer*>(component);
+			}
+			else if (component->GetComponentName() == RigidBody::ComponentName())
+			{
+				ActiveLayer->rigidBodies[index] = static_cast<RigidBody*>(component);
+			}
+			else if (component->GetComponentName() == Transform::ComponentName())
+			{
+				ActiveLayer->transforms[index] = static_cast<Transform*>(component);
+			}
 		}
 	}
 

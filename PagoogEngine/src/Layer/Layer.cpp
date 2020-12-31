@@ -26,7 +26,10 @@ namespace PEngine
 	{
 		for (Transform* transform : transforms)
 		{
-			transform->PreInputUpdateTransform();
+			if (transform != nullptr)
+			{
+				transform->PreInputUpdateTransform();
+			}
 		}
 
 		inputManager.Send(dt);
@@ -41,7 +44,10 @@ namespace PEngine
 	{
 		for (RigidBody* rigidBody : rigidBodies)
 		{
-			rigidBody->UpdateRigidBody(dt);
+			if (rigidBody != nullptr)
+			{
+				rigidBody->UpdateRigidBody(dt);
+			}
 		}
 	}
 
@@ -57,7 +63,10 @@ namespace PEngine
 			{
 				for (int j = i + 1; j < boxColliders.size(); j++)
 				{
-					boxColliders[i]->CollideWith(*boxColliders[j]);
+					if (boxColliders[i] != nullptr && boxColliders[j] != nullptr)
+					{
+						boxColliders[i]->CollideWith(*boxColliders[j]);
+					}
 				}
 			}
 		}
@@ -71,7 +80,10 @@ namespace PEngine
 	{
 		for (MeshRenderer* meshRenderer : meshRenderers)
 		{
-			meshRenderer->Render(alpha);
+			if (meshRenderer != nullptr)
+			{
+				meshRenderer->Render(alpha);
+			}
 		}
 	}
 

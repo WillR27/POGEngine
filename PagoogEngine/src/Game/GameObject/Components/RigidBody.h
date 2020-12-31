@@ -2,11 +2,11 @@
 
 #include "Transform.h"
 #include "Maths/Maths.h"
-#include "Game/GameObject/GameObject.h"
+#include "Game/GameObject/Components/Component.h"
 
 namespace PEngine
 {
-	class RigidBody : public virtual GameObject
+	class RigidBody : public Component
 	{
 	public:
 		RigidBody();
@@ -27,6 +27,13 @@ namespace PEngine
 		Vec3 GetVelocity() const;
 		void SetVelocity(Vec3 newVelocity);
 		void AddVelocity(Vec3 velocity);
+
+		static constexpr const char* ComponentName()
+		{
+			return STRINGIFY(RigidBody);
+		}
+
+		virtual std::string GetComponentName() const override;
 
 	private:
 		float mass;
