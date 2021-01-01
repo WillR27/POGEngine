@@ -32,7 +32,7 @@ namespace PEngine
 		material->GetShader().Use();
 		material->UpdateShaderUniforms();
 
-		Transform& transform = gameObject->GetComponent<Transform>();
+		Transform& transform = *gameObject->GetComponent<Transform>();
 		if (&transform != nullptr)
 		{
 			Vec3 position = Maths::Lerp(transform.GetPrevPosition(), transform.GetPosition(), alpha);

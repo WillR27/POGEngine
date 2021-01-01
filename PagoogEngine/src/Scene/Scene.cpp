@@ -3,11 +3,7 @@
 
 #include "Layer/Layer.h"
 #include "Game/GameObject/GameObject.h"
-#include "Game/GameObject/Components/Component.h"
-#include "Game/GameObject/Components/BoxCollider.h"
-#include "Game/GameObject/Components/MeshRenderer.h"
-#include "Game/GameObject/Components/RigidBody.h"
-#include "Game/GameObject/Components/Transform.h"
+#include "Game/GameObject/Components/Components.h"
 
 namespace PEngine
 {
@@ -16,12 +12,13 @@ namespace PEngine
 	void Scene::AddGameObject(GameObject* gameObject)
 	{
 		ActiveLayer->gameObjects.push_back(gameObject);
-		ActiveLayer->boxColliders.push_back(nullptr);
-		ActiveLayer->meshRenderers.push_back(nullptr);
-		ActiveLayer->rigidBodies.push_back(nullptr);
-		ActiveLayer->transforms.push_back(nullptr);
+		ActiveLayer->boxColliders.push_back(gameObject->GetComponent<BoxCollider>());
+		ActiveLayer->meshRenderers.push_back(gameObject->GetComponent<MeshRenderer>());
+		ActiveLayer->rigidBodies.push_back(gameObject->GetComponent<RigidBody>());
+		ActiveLayer->transforms.push_back(gameObject->GetComponent<Transform>());
 
-		gameObject->AddInitialComponents();
+		gameObject->inScene = true;
+		gameObject->Init();
 	}
 
 	Scene::Scene(std::string name)

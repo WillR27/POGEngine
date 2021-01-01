@@ -1,10 +1,7 @@
 #pragma once
 
 #include "Game/GameObject/GameObject.h"
-#include "Game/GameObject/Components/Transform.h"
-#include "Game/GameObject/Components/RigidBody.h"
-#include "Game/GameObject/Components/BoxCollider.h"
-#include "Game/GameObject/Components/MeshRenderer.h"
+#include "Game/GameObject/Components/Components.h"
 
 namespace Pagoog
 {
@@ -14,7 +11,7 @@ namespace Pagoog
 		Block();
 		virtual ~Block() = default;
 
-		virtual void AddInitialComponents() override;
+		virtual void Init() override;
 	};
 }
 

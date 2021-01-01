@@ -6,6 +6,10 @@ namespace PEngine
 	GameObject::GameObject(std::string name)
 		: name(name)
 		, components()
+		, inScene(false)
+		, boxCollider(nullptr)
+		, meshRenderer(nullptr)
+		, rigidBody(nullptr)
 		, transform(nullptr)
 	{
 
@@ -23,7 +27,7 @@ namespace PEngine
 	{
 		if (boxCollider == nullptr)
 		{
-			boxCollider = &GetComponent<BoxCollider>();
+			boxCollider = GetComponent<BoxCollider>();
 		}
 
 		return *boxCollider;
@@ -33,7 +37,7 @@ namespace PEngine
 	{
 		if (meshRenderer == nullptr)
 		{
-			meshRenderer = &GetComponent<MeshRenderer>();
+			meshRenderer = GetComponent<MeshRenderer>();
 		}
 
 		return *meshRenderer;
@@ -43,7 +47,7 @@ namespace PEngine
 	{
 		if (rigidBody == nullptr)
 		{
-			rigidBody = &GetComponent<RigidBody>();
+			rigidBody = GetComponent<RigidBody>();
 		}
 
 		return *rigidBody;
@@ -53,7 +57,7 @@ namespace PEngine
 	{
 		if (transform == nullptr)
 		{
-			transform = &GetComponent<Transform>();
+			transform = GetComponent<Transform>();
 		}
 
 		return *transform;
@@ -67,5 +71,10 @@ namespace PEngine
 	std::string GameObject::GetName() const
 	{
 		return name;
+	}
+
+	bool GameObject::InScene() const
+	{
+		return inScene;
 	}
 }

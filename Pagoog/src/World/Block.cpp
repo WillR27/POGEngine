@@ -5,13 +5,14 @@ namespace Pagoog
 {
 	Block::Block()
 	{
-	}
-
-	void Block::AddInitialComponents()
-	{
-		AddComponent<Transform>();
-		AddComponent<RigidBody>();
 		AddComponent<BoxCollider>();
 		AddComponent<MeshRenderer>();
+		AddComponent<RigidBody>();
+		AddComponent<Transform>();
+	}
+
+	void Block::Init()
+	{
+
 	}
 }

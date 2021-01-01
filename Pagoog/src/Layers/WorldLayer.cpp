@@ -18,6 +18,7 @@ namespace Pagoog
 		, mesh3(&meshSet)
 		, mesh4(&meshSet)
 		, material1("Material1")
+		, templateBlock()
 		, controllableBlock(nullptr)
 	{
 	}
@@ -102,19 +103,18 @@ void main()
 
 		material1.SetColour("colourIn", Vec4((float)(sin(std::chrono::system_clock::to_time_t(std::chrono::system_clock::now())) + 1.0f) / 2.0f, (float)(sin(std::chrono::system_clock::to_time_t(std::chrono::system_clock::now()) * 0.9f) + 1.0f) / 2.0f, (float)(sin(std::chrono::system_clock::to_time_t(std::chrono::system_clock::now()) * 1.1f) + 1.0f) / 2.0f, 1.0f));
 
-		controllableBlock = &Scene::AddGameObject<Block>();
-		controllableBlock->GetComponent<MeshRenderer>().SetMaterial(material1);
-		controllableBlock->GetComponent<MeshRenderer>().SetMesh(mesh4);
-		controllableBlock->GetComponent<Transform>().SetPosition(Vec3(-4.0f, 0.0f, 0.0f));
-		controllableBlock->GetComponent<RigidBody>().SetVelocity(Vec3(0.4f, 0.0f, 0.0f));
-		controllableBlock->GetComponent<RigidBody>().SetMass(0.5f);
+		templateBlock.GetComponent<MeshRenderer>()->SetMaterial(material1);
+		templateBlock.GetComponent<MeshRenderer>()->SetMesh(mesh4);
+
+		controllableBlock = &Scene::CreateGameObject(templateBlock);
+		controllableBlock->GetComponent<Transform>()->SetPosition(Vec3(-4.0f, 0.0f, 0.0f));
+		controllableBlock->GetComponent<RigidBody>()->SetVelocity(Vec3(0.4f, 0.0f, 0.0f));
+		controllableBlock->GetComponent<RigidBody>()->SetMass(0.5f);
 		//controllableBlock->SetForce(Vec3(0.01f, 0.0f, 0.0f));
 
-		Block& staticBlock = Scene::AddGameObject<Block>();
-		staticBlock.GetComponent<MeshRenderer>().SetMaterial(material1);
-		staticBlock.GetComponent<MeshRenderer>().SetMesh(mesh4);
-		staticBlock.GetComponent<Transform>().SetPosition(Vec3(0.0f, 0.0f, 0.0f));
-		staticBlock.GetComponent<RigidBody>().SetDragCoef(3.0f);
+		Block& staticBlock = Scene::CreateGameObject(templateBlock);
+		staticBlock.GetComponent<Transform>()->SetPosition(Vec3(0.0f, 0.0f, 0.0f));
+		staticBlock.GetComponent<RigidBody>()->SetDragCoef(3.0f);
 	}
 
 	void WorldLayer::CollisionsUpdate(float dt)
@@ -147,9 +147,9 @@ void main()
 	{
 		if (inputPackage.HasActionOccurred("Jump"))
 		{
-			controllableBlock->GetComponent<Transform>().Rotate(Quat(Vec3(0.5f, 0.3f, 0.7f)));
+			controllableBlock->GetComponent<Transform>()->Rotate(Quat(Vec3(0.5f, 0.3f, 0.7f)));
 		}
 
-		controllableBlock->GetComponent<RigidBody>().SetVelocity(Vec3(inputPackage.GetAxisValue("Horizontal") / 3.0f, 0.0f, -inputPackage.GetAxisValue("Vertical") / 3.0f));
+		controllableBlock->GetComponent<RigidBody>()->SetVelocity(Vec3(inputPackage.GetAxisValue("Horizontal") / 3.0f, 0.0f, -inputPackage.GetAxisValue("Vertical") / 3.0f));
 	}
 }

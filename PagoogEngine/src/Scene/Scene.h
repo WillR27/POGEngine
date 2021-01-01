@@ -14,13 +14,13 @@ namespace PEngine
 		friend class GameObject;
 
 		template <typename T>
-		static T* CreateGameObject(const T& gameObject)
+		static T& CreateGameObject(const T& gameObject)
 		{
 			T* newGameObject = new T(gameObject);
 
 			AddGameObject(newGameObject);
 
-			return newGameObject;
+			return *newGameObject;
 		}
 
 		template <typename T, typename... Args>
