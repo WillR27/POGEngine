@@ -1,6 +1,8 @@
 #include "pgepch.h"
 #include "Layer.h"
 
+#include "Game/GameObject/GameObject.h"
+
 namespace PEngine
 {
 	Layer::Layer(const char* name)

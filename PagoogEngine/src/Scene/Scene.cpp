@@ -24,31 +24,6 @@ namespace PEngine
 		gameObject->AddInitialComponents();
 	}
 
-	void Scene::AddComponent(Component* component)
-	{
-		int index = IndexOf(ActiveLayer->gameObjects, component->gameObject);
-		
-		if (index != -1)
-		{
-			if (component->GetComponentName() == BoxCollider::ComponentName())
-			{
-				ActiveLayer->boxColliders[index] = static_cast<BoxCollider*>(component);
-			}
-			else if (component->GetComponentName() == MeshRenderer::ComponentName())
-			{
-				ActiveLayer->meshRenderers[index] = static_cast<MeshRenderer*>(component);
-			}
-			else if (component->GetComponentName() == RigidBody::ComponentName())
-			{
-				ActiveLayer->rigidBodies[index] = static_cast<RigidBody*>(component);
-			}
-			else if (component->GetComponentName() == Transform::ComponentName())
-			{
-				ActiveLayer->transforms[index] = static_cast<Transform*>(component);
-			}
-		}
-	}
-
 	Scene::Scene(std::string name)
 		: name(name)
 	{

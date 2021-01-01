@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Game/GameObject/Components/Component.h"
+#include "Game/GameObject/Components/Components.h"
 #include "Scene/Scene.h"
 
 namespace PEngine
@@ -23,13 +23,17 @@ namespace PEngine
 			T* component = new T(std::forward<Args>(args)...);
 			component->gameObject = this;
 
-			std::string componentName = T::ComponentName();
-			components[componentName] = static_cast<Component*>(component);
+			components[T::ComponentName()] = static_cast<Component*>(component);
 
-			Scene::AddComponent(static_cast<Component*>(component));
+			Scene::AddComponent(component);
 
 			return *component;
 		}
+
+		BoxCollider& GetBoxCollider();
+		MeshRenderer& GetMeshRenderer();
+		RigidBody& GetRigidBody();
+		Transform& GetTransform();
 
 		void SetName(std::string name);
 		std::string GetName() const;
@@ -40,5 +44,11 @@ namespace PEngine
 		std::string name;
 
 		std::unordered_map<std::string, Component*> components;
+
+		// Commonly accessed components that we can cache
+		BoxCollider* boxCollider;
+		MeshRenderer* meshRenderer;
+		RigidBody* rigidBody;
+		Transform* transform;
 	};
 }

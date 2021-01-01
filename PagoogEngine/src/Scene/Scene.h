@@ -1,12 +1,12 @@
 #pragma once
 
 #include "Event/Event.h"
+#include "Layer/Layer.h"
+#include "Game/GameObject/Components/Components.h"
 
 namespace PEngine
 {
 	class GameObject;
-	class Component;
-	class Layer;
 
 	class Scene
 	{
@@ -34,8 +34,33 @@ namespace PEngine
 		}
 
 	private:
+		template <typename T>
+		static void AddComponent(T* component)
+		{
+			int index = IndexOf(ActiveLayer->gameObjects, component->gameObject);
+
+			if (index != -1)
+			{
+				if (T::ComponentName() == BoxCollider::ComponentName())
+				{
+					ActiveLayer->boxColliders[index] = reinterpret_cast<BoxCollider*>(component);
+				}
+				else if (T::ComponentName() == MeshRenderer::ComponentName())
+				{
+					ActiveLayer->meshRenderers[index] = reinterpret_cast<MeshRenderer*>(component);
+				}
+				else if (T::ComponentName() == RigidBody::ComponentName())
+				{
+					ActiveLayer->rigidBodies[index] = reinterpret_cast<RigidBody*>(component);
+				}
+				else if (T::ComponentName() == Transform::ComponentName())
+				{
+					ActiveLayer->transforms[index] = reinterpret_cast<Transform*>(component);
+				}
+			}
+		}
+
 		static void AddGameObject(GameObject* gameObject);
-		static void AddComponent(Component* component);
 
 	public:
 		Scene(std::string name);
