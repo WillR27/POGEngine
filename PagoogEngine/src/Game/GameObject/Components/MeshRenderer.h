@@ -12,6 +12,8 @@ namespace PEngine
 		MeshRenderer();
 		virtual ~MeshRenderer();
 
+		virtual Component* Clone() const override;
+
 		void Render(float dt);
 
 		const Mesh& GetMesh() const;

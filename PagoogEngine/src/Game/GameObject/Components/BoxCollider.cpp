@@ -13,6 +13,11 @@ namespace PEngine
     {
     }
 
+	Component* BoxCollider::Clone() const
+	{
+		return new BoxCollider(*this);
+	}
+
 	void BoxCollider::CollideWith(BoxCollider& boxCollider)
 	{
 		RigidBody& rigidBody1 = *gameObject->GetComponent<RigidBody>();

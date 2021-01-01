@@ -27,6 +27,11 @@ namespace PEngine
 		}
 	}
 
+	Component* MeshRenderer::Clone() const
+	{
+		return new MeshRenderer(*this);
+	}
+
 	void MeshRenderer::Render(float alpha)
 	{
 		material->GetShader().Use();

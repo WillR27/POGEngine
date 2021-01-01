@@ -23,44 +23,21 @@ namespace PEngine
 		}
 	}
 
-	BoxCollider& GameObject::GetBoxCollider()
+	GameObject::GameObject(const GameObject& gameObject)
+		: name(gameObject.name)
+		, components()
+		, inScene(false)
+		, boxCollider(nullptr)
+		, meshRenderer(nullptr)
+		, rigidBody(nullptr)
+		, transform(nullptr)
 	{
-		if (boxCollider == nullptr)
+		for (auto componentPair : gameObject.components)
 		{
-			boxCollider = GetComponent<BoxCollider>();
+			Component* component = componentPair.second->Clone();
+			component->gameObject = this;
+			components[componentPair.first] = component;
 		}
-
-		return *boxCollider;
-	}
-
-	MeshRenderer& GameObject::GetMeshRenderer()
-	{
-		if (meshRenderer == nullptr)
-		{
-			meshRenderer = GetComponent<MeshRenderer>();
-		}
-
-		return *meshRenderer;
-	}
-
-	RigidBody& GameObject::GetRigidBody()
-	{
-		if (rigidBody == nullptr)
-		{
-			rigidBody = GetComponent<RigidBody>();
-		}
-
-		return *rigidBody;
-	}
-
-	Transform& GameObject::GetTransform()
-	{
-		if (transform == nullptr)
-		{
-			transform = GetComponent<Transform>();
-		}
-
-		return *transform;
 	}
 
 	void GameObject::SetName(std::string name)

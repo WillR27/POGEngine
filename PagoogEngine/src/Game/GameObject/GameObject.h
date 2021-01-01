@@ -13,6 +13,8 @@ namespace PEngine
 		GameObject(std::string name = "Game Object");
 		virtual ~GameObject();
 
+		GameObject(const GameObject& gameObject);
+
 		template<typename T>
 		bool HasComponent()
 		{
@@ -28,8 +30,9 @@ namespace PEngine
 			return true;
 		}
 
+	private:
 		template<typename T>
-		T* GetComponent()
+		T* _GetComponent()
 		{
 			try
 			{
@@ -40,6 +43,37 @@ namespace PEngine
 				//PG_WARN("Component does not exist! The component \"{0}\" does not exist for the game object \"{1}\".", T::ComponentName(), this->name);
 				return nullptr;
 			}
+		}
+
+	public:
+		template<typename T>
+		T* GetComponent()
+		{
+			return _GetComponent<T>();
+		}
+
+		template<>
+		BoxCollider* GetComponent<BoxCollider>()
+		{
+			return boxCollider != nullptr ? boxCollider : boxCollider = _GetComponent<BoxCollider>();
+		}
+
+		template<>
+		MeshRenderer* GetComponent<MeshRenderer>()
+		{
+			return meshRenderer != nullptr ? meshRenderer : meshRenderer = _GetComponent<MeshRenderer>();
+		}
+
+		template<>
+		RigidBody* GetComponent<RigidBody>()
+		{
+			return rigidBody != nullptr ? rigidBody : rigidBody = _GetComponent<RigidBody>();
+		}
+
+		template<>
+		Transform* GetComponent<Transform>()
+		{
+			return transform != nullptr ? transform : transform = _GetComponent<Transform>();
 		}
 
 		template<typename T, typename... Args>
@@ -57,11 +91,6 @@ namespace PEngine
 
 			return component;
 		}
-
-		BoxCollider& GetBoxCollider();
-		MeshRenderer& GetMeshRenderer();
-		RigidBody& GetRigidBody();
-		Transform& GetTransform();
 
 		void SetName(std::string name);
 		std::string GetName() const;

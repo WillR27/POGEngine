@@ -99,7 +99,7 @@ void main()
 		material1.SetShader(shader);
 
 		Camera camera(Vec3(0.0f, 0.0f, 10.0f));
-		Camera::MainCamera = MakeUnique<Camera>(camera);
+		Camera::MainCamera = MakeShared<Camera>(camera);
 
 		material1.SetColour("colourIn", Vec4((float)(sin(std::chrono::system_clock::to_time_t(std::chrono::system_clock::now())) + 1.0f) / 2.0f, (float)(sin(std::chrono::system_clock::to_time_t(std::chrono::system_clock::now()) * 0.9f) + 1.0f) / 2.0f, (float)(sin(std::chrono::system_clock::to_time_t(std::chrono::system_clock::now()) * 1.1f) + 1.0f) / 2.0f, 1.0f));
 

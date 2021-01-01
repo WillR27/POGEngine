@@ -11,6 +11,8 @@ namespace PEngine
 		BoxCollider(std::initializer_list<float> dimensions = {1.0f, 1.0f, 1.0f});
 		virtual ~BoxCollider() override = default;
 
+		virtual Component* Clone() const override;
+
 		void CollideWith(BoxCollider& boxCollider);
 
 		AABB<3> GetAABB() const;

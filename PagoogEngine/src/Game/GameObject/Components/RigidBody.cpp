@@ -13,6 +13,11 @@ namespace PEngine
 	{
 	}
 
+	Component* RigidBody::Clone() const
+	{
+		return new RigidBody(*this);
+	}
+
 	void RigidBody::UpdateRigidBody(float dt)
 	{
 		Vec3 drag = dragCoef * Maths::Vec3MultiplyPreserveSigns(velocity, velocity);

@@ -18,6 +18,11 @@ namespace PEngine
 		SetPosition(position + translation);
 	}
 
+	Component* Transform::Clone() const
+	{
+		return new Transform(*this);
+	}
+
 	void Transform::PreInputUpdateTransform()
 	{
 		prevPosition = position;
