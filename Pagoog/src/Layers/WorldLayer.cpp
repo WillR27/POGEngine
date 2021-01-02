@@ -108,7 +108,6 @@ void main()
 
 		controllableBlock = &Scene::CreateGameObject(templateBlock);
 		controllableBlock->GetComponent<Transform>()->SetPosition(Vec3(-4.0f, 0.0f, 0.0f));
-		controllableBlock->GetComponent<RigidBody>()->SetVelocity(Vec3(0.4f, 0.0f, 0.0f));
 		controllableBlock->GetComponent<RigidBody>()->SetMass(0.5f);
 		//controllableBlock->SetForce(Vec3(0.01f, 0.0f, 0.0f));
 
@@ -151,7 +150,12 @@ void main()
 		}
 
 		//controllableBlock->GetComponent<RigidBody>()->SetVelocity(Vec3(inputPackage.GetAxisValue("Horizontal") / 3.0f, 0.0f, -inputPackage.GetAxisValue("Vertical") / 3.0f));
-		controllableBlock->GetComponent<Transform>()->MoveRight(inputPackage.GetAxisValue("Horizontal") * dt);
-		controllableBlock->GetComponent<Transform>()->MoveForward(inputPackage.GetAxisValue("Vertical") * dt);
+		//controllableBlock->GetComponent<Transform>()->MoveForward(inputPackage.GetAxisValue("Vertical") * dt);
+		//controllableBlock->GetComponent<Transform>()->MoveRight(inputPackage.GetAxisValue("Horizontal") * dt);
+		
+		Transform& transform = *controllableBlock->GetComponent<Transform>();
+		RigidBody& rigidBody = *controllableBlock->GetComponent<RigidBody>();
+
+		rigidBody.SetVelocity(((transform.ToForwardVec() * (inputPackage.GetAxisValue("Vertical") / 3.0f)) + transform.ToRightVec() * (inputPackage.GetAxisValue("Horizontal") / 3.0f)) / 2.0f);
 	}
 }

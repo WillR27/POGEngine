@@ -107,9 +107,9 @@ namespace PEngine
 
 		static float DistanceSq(Vec3 vec);
 
-		static Vec3 ToForwardVector(const Quat& quat);
-		static Vec3 ToUpVector(const Quat& quat);
-		static Vec3 ToRightVector(const Quat& quat);
+		static Vec3 ToForwardVec(const Quat& quat);
+		static Vec3 ToUpVec(const Quat& quat);
+		static Vec3 ToRightVec(const Quat& quat);
 	};
 }
 
