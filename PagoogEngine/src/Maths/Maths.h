@@ -29,7 +29,6 @@ namespace PEngine
 		using glm::quat::quat;
 
 	public:
-
 	};
 
 
@@ -107,6 +106,10 @@ namespace PEngine
 		static Vec3 Vec3MultiplyPreserveSigns(Vec3 vec1, Vec3 vec2);
 
 		static float DistanceSq(Vec3 vec);
+
+		static Vec3 ToForwardVector(const Quat& quat);
+		static Vec3 ToUpVector(const Quat& quat);
+		static Vec3 ToRightVector(const Quat& quat);
 	};
 }
 

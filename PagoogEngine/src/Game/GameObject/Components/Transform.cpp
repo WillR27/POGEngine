@@ -110,6 +110,21 @@ namespace PEngine
 		SetScale(scale * scaleFactor);
 	}
 
+	void Transform::MoveForward(float amount)
+	{
+		SetPosition(position + (Maths::ToForwardVector(orientation) * amount));
+	}
+
+	void Transform::MoveUp(float amount)
+	{
+		SetPosition(position + (Maths::ToUpVector(orientation) * amount));
+	}
+
+	void Transform::MoveRight(float amount)
+	{
+		SetPosition(position + (Maths::ToRightVector(orientation) * amount));
+	}
+
 	Mat4 Transform::ModelMatrix() const
 	{
 		return Maths::ToModelMatrix(position, orientation, scale);

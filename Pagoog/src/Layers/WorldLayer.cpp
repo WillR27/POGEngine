@@ -147,9 +147,11 @@ void main()
 	{
 		if (inputPackage.HasActionOccurred("Jump"))
 		{
-			controllableBlock->GetComponent<Transform>()->Rotate(Quat(Vec3(0.5f, 0.3f, 0.7f)));
+			controllableBlock->GetComponent<Transform>()->Rotate(Quat(Vec3(0.2f, 0.1f, 0.3f)));
 		}
 
-		controllableBlock->GetComponent<RigidBody>()->SetVelocity(Vec3(inputPackage.GetAxisValue("Horizontal") / 3.0f, 0.0f, -inputPackage.GetAxisValue("Vertical") / 3.0f));
+		//controllableBlock->GetComponent<RigidBody>()->SetVelocity(Vec3(inputPackage.GetAxisValue("Horizontal") / 3.0f, 0.0f, -inputPackage.GetAxisValue("Vertical") / 3.0f));
+		controllableBlock->GetComponent<Transform>()->MoveRight(inputPackage.GetAxisValue("Horizontal") * dt);
+		controllableBlock->GetComponent<Transform>()->MoveForward(inputPackage.GetAxisValue("Vertical") * dt);
 	}
 }

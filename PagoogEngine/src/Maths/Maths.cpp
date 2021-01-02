@@ -97,4 +97,22 @@ namespace PEngine
 	{
 		return DotProduct(vec, vec);
 	}
+
+	Vec3 Maths::ToForwardVector(const Quat& quat)
+	{
+		return glm::rotate(quat, Vec3(0.0f, 0.0f, -1.0f));
+		//return Vec3(2.0f * (quat.x * quat.z - quat.w * quat.y), 2.0f * (quat.y * quat.z + quat.w * quat.x), 1.0f - 2.0f * (quat.x * quat.x + quat.y * quat.y));
+	}
+
+	Vec3 Maths::ToUpVector(const Quat& quat)
+	{
+		return glm::rotate(quat, Vec3(0.0f, 1.0f, 0.0f));
+		//return Vec3(2.0f * (quat.x * quat.y - quat.w * quat.z), 1.0f - 2.0f * (quat.x * quat.x + quat.z * quat.z), 2.0f * (quat.y * quat.z + quat.w * quat.x));
+	}
+
+	Vec3 Maths::ToRightVector(const Quat& quat)
+	{
+		return glm::rotate(quat, Vec3(1.0f, 0.0f, 0.0f));
+		//return -Vec3(1.0f - 2.0f * (quat.y * quat.y + quat.z * quat.z), 2.0f * (quat.x * quat.y + quat.w * quat.z), 2.0f * (quat.x * quat.z - quat.w * quat.y));
+	}
 }

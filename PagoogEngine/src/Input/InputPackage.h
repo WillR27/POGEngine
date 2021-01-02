@@ -10,13 +10,13 @@ namespace PEngine
 		InputPackage() = default;
 		~InputPackage() = default;
 
-		bool HasActionOccurred(std::string name, bool remove = true);
+		bool HasActionOccurred(std::string name, bool remove = false);
 		void AddAction(Action action);
 
-		bool IsStateActive(std::string name, bool remove = true);
+		bool IsStateActive(std::string name, bool remove = false);
 		void AddState(State state);
 
-		int GetAxisValue(std::string name, bool remove = true);
+		int GetAxisValue(std::string name, bool remove = false);
 		void AddAxis(Axis axis);
 
 		void Clear();

@@ -34,6 +34,10 @@ namespace PEngine
 		void SetScale(Vec3 newScale);
 		void Scale(Vec3 scaleFactor);
 
+		void MoveForward(float amount);
+		void MoveUp(float amount);
+		void MoveRight(float amount);
+
 		Mat4 ModelMatrix() const;
 
 		static constexpr const char* ComponentName()

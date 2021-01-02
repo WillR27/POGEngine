@@ -29,7 +29,7 @@ namespace PEngine
 
 		Vec3 cameraPos;
 		Vec3 cameraTarget;
-		Vec3 cameraDirection;
+		Vec3 cameraForward;
 
 		Vec3 cameraRight;
 		Vec3 cameraUp;

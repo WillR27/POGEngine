@@ -10,7 +10,7 @@ namespace PEngine
 		: worldUp(Vec3(0.0f, 1.0f, 0.0f))
 		, cameraPos(cameraPos)
 		, cameraTarget(cameraTarget)
-		, cameraDirection(cameraDirection)
+		, cameraForward(cameraDirection)
 		, cameraRight(-glm::normalize(glm::cross(worldUp, cameraDirection)))
 		, cameraUp(glm::cross(cameraDirection, cameraRight))
 		, view(glm::lookAt(cameraPos, cameraTarget, worldUp))
@@ -40,26 +40,26 @@ namespace PEngine
 	void Camera::SetCameraPos(Vec3 newCameraPos)
 	{
 		cameraPos = newCameraPos;
-		cameraDirection = glm::normalize(cameraPos - cameraTarget);
-		cameraRight = -glm::normalize(glm::cross(worldUp, cameraDirection));
-		cameraUp = glm::cross(cameraDirection, cameraRight);
+		cameraForward = glm::normalize(cameraPos - cameraTarget);
+		cameraRight = -glm::normalize(glm::cross(worldUp, cameraForward));
+		cameraUp = glm::cross(cameraForward, cameraRight);
 		view = glm::lookAt(cameraPos, cameraTarget, worldUp);
 	}
 
 	void Camera::SetCameraTarget(Vec3 newCameraTarget)
 	{
 		cameraTarget = newCameraTarget;
-		cameraDirection = glm::normalize(cameraPos - cameraTarget);
-		cameraRight = -glm::normalize(glm::cross(worldUp, cameraDirection));
-		cameraUp = glm::cross(cameraDirection, cameraRight);
+		cameraForward = glm::normalize(cameraPos - cameraTarget);
+		cameraRight = -glm::normalize(glm::cross(worldUp, cameraForward));
+		cameraUp = glm::cross(cameraForward, cameraRight);
 		view = glm::lookAt(cameraPos, cameraTarget, worldUp);
 	}
 
 	void Camera::SetCameraDirection(Vec3 newCameraDirection)
 	{
-		cameraDirection = newCameraDirection;
-		cameraRight = -glm::normalize(glm::cross(worldUp, cameraDirection));
-		cameraUp = glm::cross(cameraDirection, cameraRight);
+		cameraForward = newCameraDirection;
+		cameraRight = -glm::normalize(glm::cross(worldUp, cameraForward));
+		cameraUp = glm::cross(cameraForward, cameraRight);
 	}
 
 	void Camera::SetFov(float newFov)

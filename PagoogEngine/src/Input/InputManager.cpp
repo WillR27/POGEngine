@@ -22,7 +22,10 @@ namespace PEngine
 
 		for (Axis& axis : axes)
 		{
-			inputPackage.AddAxis(axis);
+			if (axis.GetValue() != 0)
+			{
+				inputPackage.AddAxis(axis);
+			}
 		}
 
 		if (!inputPackage.IsEmpty())
