@@ -85,7 +85,15 @@ namespace PEngine
 	class Maths
 	{
 	public:
+		template <typename T> 
+		static int Sign(T val) 
+		{
+			return (T(0) < val) - (val < T(0));
+		}
+
 		static float ToRadians(float degrees);
+
+		static Vec3 Normalise(Vec3 vector);
 
 		static Mat4 Translate(Mat4 matrix, Vec3 translation);
 

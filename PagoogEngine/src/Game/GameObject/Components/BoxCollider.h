@@ -5,10 +5,12 @@
 
 namespace PEngine
 {
+	class Transform;
+
 	class BoxCollider : public Component
 	{
 	public:
-		BoxCollider(std::initializer_list<float> dimensions = {1.0f, 1.0f, 1.0f});
+		BoxCollider(std::initializer_list<float> dimensions = { 1.0f, 1.0f, 1.0f });
 		virtual ~BoxCollider() override = default;
 
 		virtual Component* Clone() const override;
@@ -16,7 +18,7 @@ namespace PEngine
 		void CollideWith(BoxCollider& boxCollider);
 
 		AABB<3> GetAABB() const;
-		AABB<3> GetTransformedAABB() const;
+		AABB<3> GetTransformedAABB(const Transform& transform) const;
 
 		static constexpr const char* ComponentName()
 		{

@@ -12,6 +12,14 @@ namespace PEngine
 	}
 
 	/// <summary>
+	/// Normalises the given vector.
+	/// </summary>
+	Vec3 Maths::Normalise(Vec3 vector)
+	{
+		return glm::normalize(vector);
+	}
+
+	/// <summary>
 	/// Translates the given matrix by the given translation vector.
 	/// </summary>
 	Mat4 Maths::Translate(Mat4 matrix, Vec3 translation)
