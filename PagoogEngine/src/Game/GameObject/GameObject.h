@@ -92,6 +92,22 @@ namespace PEngine
 			return component;
 		}
 
+		template<typename T, typename U>
+		T* AddComponent(std::initializer_list<U> initList)
+		{
+			T* component = new T(initList);
+			component->gameObject = this;
+
+			components[T::ComponentName()] = static_cast<Component*>(component);
+
+			if (inScene)
+			{
+				Scene::AddComponent(component);
+			}
+
+			return component;
+		}
+
 		void SetName(std::string name);
 		std::string GetName() const;
 

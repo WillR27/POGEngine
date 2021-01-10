@@ -11,6 +11,7 @@
 #include "Render/Material/Material.h"
 
 #include "World/Block.h"
+#include "World/Player.h"
 
 using namespace PEngine;
 
@@ -43,6 +44,8 @@ namespace Pagoog
 
 		Block templateBlock;
 		Block* controllableBlock;
+
+		Player* player;
 	};
 }
 

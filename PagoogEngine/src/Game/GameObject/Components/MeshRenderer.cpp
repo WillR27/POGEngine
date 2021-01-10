@@ -2,7 +2,7 @@
 #include "MeshRenderer.h"
 
 #include "Transform.h"
-#include "Game/Camera.h"
+#include "Game/GameObject/Components/Camera.h"
 #include "Render/Core/Shader.h"
 #include "Game/GameObject/GameObject.h"
 

@@ -2,7 +2,7 @@
 #include "WorldLayer.h"
 
 #include "Core/Time.h"
-#include "Game/Camera.h"
+#include "Game/GameObject/Components/Camera.h"
 #include "Input/Input.h"
 #include "Render/Mesh/StaticMeshSet.h"
 #include "Render/Mesh/Primitives/Primitives.h"
@@ -20,6 +20,7 @@ namespace Pagoog
 		, material1("Material1")
 		, templateBlock()
 		, controllableBlock(nullptr)
+		, player(nullptr)
 	{
 	}
 
@@ -98,9 +99,6 @@ void main()
 		material1.AddColour("colourIn", Vec4(1.0f, 0.0f, 0.0f, 1.0f));
 		material1.SetShader(shader);
 
-		Camera camera(Vec3(0.0f, 0.0f, 10.0f));
-		Camera::MainCamera = MakeShared<Camera>(camera);
-
 		material1.SetColour("colourIn", Vec4((float)(sin(std::chrono::system_clock::to_time_t(std::chrono::system_clock::now())) + 1.0f) / 2.0f, (float)(sin(std::chrono::system_clock::to_time_t(std::chrono::system_clock::now()) * 0.9f) + 1.0f) / 2.0f, (float)(sin(std::chrono::system_clock::to_time_t(std::chrono::system_clock::now()) * 1.1f) + 1.0f) / 2.0f, 1.0f));
 
 		templateBlock.GetComponent<MeshRenderer>()->SetMaterial(material1);
@@ -114,6 +112,13 @@ void main()
 		Block& staticBlock = Scene::CreateGameObject(templateBlock);
 		staticBlock.GetComponent<Transform>()->SetPosition(Vec3(0.0f, 0.0f, 0.0f));
 		staticBlock.GetComponent<RigidBody>()->SetDragCoef(3.0f);
+
+		player = &Scene::AddGameObject<Player>();
+		Transform& transform = *player->GetComponent<Transform>();
+		transform.SetPosition(Vec3(0.0f, 0.0f, 10.0f));
+
+		Camera* camera = player->GetComponent<Camera>();
+		Camera::MainCamera = camera;
 	}
 
 	void WorldLayer::CollisionsUpdate(float dt)
@@ -153,8 +158,8 @@ void main()
 		//controllableBlock->GetComponent<Transform>()->MoveForward(inputPackage.GetAxisValue("Vertical") * dt);
 		//controllableBlock->GetComponent<Transform>()->MoveRight(inputPackage.GetAxisValue("Horizontal") * dt);
 		
-		Transform& transform = *controllableBlock->GetComponent<Transform>();
-		RigidBody& rigidBody = *controllableBlock->GetComponent<RigidBody>();
+		Transform& transform = *player->GetComponent<Transform>();
+		RigidBody& rigidBody = *player->GetComponent<RigidBody>();
 
 		rigidBody.SetVelocity(((transform.ToForwardVec() * (inputPackage.GetAxisValue("Vertical") / 3.0f)) + transform.ToRightVec() * (inputPackage.GetAxisValue("Horizontal") / 3.0f)) / 2.0f);
 	}

@@ -3,7 +3,7 @@
 
 #include "Event/WindowEvents.h"
 #include "Event/InputEvents.h"
-#include "Game/Camera.h"
+#include "Game/GameObject/Components/Camera.h"
 #include "Render/Core/Shader.h"
 #include "Render/Core/Render.h"
 

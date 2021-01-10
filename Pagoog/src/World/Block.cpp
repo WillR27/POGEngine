@@ -5,7 +5,7 @@ namespace Pagoog
 {
 	Block::Block()
 	{
-		AddComponent<BoxCollider>();
+		AddComponent<BoxCollider>({ 2.0f, 2.0f, 2.0f });
 		AddComponent<MeshRenderer>();
 		AddComponent<RigidBody>();
 		AddComponent<Transform>();

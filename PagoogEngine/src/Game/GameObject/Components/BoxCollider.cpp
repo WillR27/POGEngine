@@ -89,14 +89,14 @@ namespace PEngine
 	AABB<3> BoxCollider::GetTransformedAABB(const Transform& transform) const
 	{
 		Vec3 min(transform.GetPosition());
-		min.x -= aabb.GetSize()[0];		
-		min.y -= aabb.GetSize()[1];		
-		min.z -= aabb.GetSize()[2];		
+		min.x -= aabb.GetRadii()[0];		
+		min.y -= aabb.GetRadii()[1];
+		min.z -= aabb.GetRadii()[2];
 
 		Vec3 max(transform.GetPosition());
-		max.x += aabb.GetSize()[0];
-		max.y += aabb.GetSize()[1];
-		max.z += aabb.GetSize()[2];
+		max.x += aabb.GetRadii()[0];
+		max.y += aabb.GetRadii()[1];
+		max.z += aabb.GetRadii()[2];
 
 		return AABB<3>(min, max);
 	}

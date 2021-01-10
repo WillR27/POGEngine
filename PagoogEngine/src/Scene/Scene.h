@@ -14,7 +14,7 @@ namespace PEngine
 		friend class GameObject;
 
 		template <typename T>
-		static T& CreateGameObject(const T& gameObject)
+		static T& CreateGameObject(const T& gameObject) // TODO: Rename to add
 		{
 			T* newGameObject = new T(gameObject);
 
