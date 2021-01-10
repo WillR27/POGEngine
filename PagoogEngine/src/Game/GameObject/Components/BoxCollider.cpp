@@ -8,6 +8,7 @@ namespace PEngine
 {
     BoxCollider::BoxCollider(std::initializer_list<float> dimensions)
         : aabb(dimensions)
+		, stickiness(0.0f)
     {
     }
 
@@ -63,56 +64,21 @@ namespace PEngine
 			// The speed of the collision is the dot product between the collision direction and the relative velocity
 			float speedOfCollision = Maths::DotProduct(collisionDirection, relativeVelocity);
 
-			if (speedOfCollision <= 0.0f)
+			float coefficientOfRestitution = (2.0f - (this->stickiness + boxCollider.stickiness)) / 2.0f;
+			float speedAfterCollision = coefficientOfRestitution * speedOfCollision;
+
+			if (speedAfterCollision <= 0.0f)
 			{
 				return;
 			}
 
-			float impulse = speedOfCollision / (mass1 + mass2);
+			float impulse = speedAfterCollision / (mass1 + mass2);
 			Vec3 changeInVelocity1 = -impulse * mass1 * collisionDirection;
 			Vec3 changeInVelocity2 =  impulse * mass1 * collisionDirection;
 
 			rigidBody1->AddVelocity(changeInVelocity1);
 			rigidBody2->AddVelocity(changeInVelocity2);
 		}
-
-		/*if (aabb1.IsCollidingWith(aabb2))
-		{
-			Transform& transform1 = *gameObject->GetComponent<Transform>();
-			Transform& transform2 = *boxCollider.gameObject->GetComponent<Transform>();
-
-			Vec3 position1 = transform1.GetPosition();
-			Vec3 position2 = transform2.GetPosition();
-
-			Vec3 min1 = this->GetAABB().GetMin();
-			Vec3 max1 = this->GetAABB().GetMax();
-			Vec3 min2 = boxCollider.GetAABB().GetMin();
-			Vec3 max2 = boxCollider.GetAABB().GetMax();
-
-			float displacementX1 = (position1.x + max1.x) - (position2.x + min1.x);
-			PG_TRACE(displacementX1);
-
-			Vec3 displacement = transform2.GetPosition() - transform1.GetPosition();
-			Vec3 relativeVelocity = rigidBody2.GetVelocity() - rigidBody1.GetVelocity();
-			float movingTowards = Maths::DotProduct(relativeVelocity, displacement);
-
-			if (movingTowards < 0.0f)
-			{
-				float x = abs(displacement.x) > abs(displacement.y) && abs(displacement.x) > abs(displacement.z) ? displacement.x > 0 ? 1.0f : -1.0f : 0.0f;
-				float y = x == 0.0f && abs(displacement.y) > abs(displacement.x) && abs(displacement.y) > abs(displacement.z) ? displacement.y > 0 ? 1.0f : -1.0f : 0.0f;
-				float z = y == 0.0f && abs(displacement.z) > abs(displacement.x) && abs(displacement.z) > abs(displacement.y) ? displacement.z > 0 ? 1.0f : -1.0f : 0.0f;
-				Vec3 collisionNormal(x, y, z);
-
-				float dotProduct = Maths::DotProduct(relativeVelocity, collisionNormal);
-				float restitution = 1.0f;
-				float impulseScalar = -(1 + restitution) * dotProduct;
-				impulseScalar /= 1.0f / rigidBody1.GetMass() + 1.0f / rigidBody2.GetMass();
-				Vec3 impulse = impulseScalar * collisionNormal;
-
-				rigidBody1.AddVelocity(-1.0f / rigidBody1.GetMass() * impulse);
-				rigidBody2.AddVelocity(1.0f / rigidBody2.GetMass() * impulse);
-			}
-		}*/
 	}
 
 	AABB<3> BoxCollider::GetAABB() const
@@ -133,6 +99,17 @@ namespace PEngine
 		max.z += aabb.GetSize()[2];
 
 		return AABB<3>(min, max);
+	}
+
+	float BoxCollider::GetStickiness() const
+	{
+		return stickiness;
+	}
+
+	void BoxCollider::SetStickiness(float newStickiness)
+	{
+		PG_ASSERT((newStickiness >= 0.0f && newStickiness <= 1.0f), "Tried to set a box collider's stickiness to a value outside the range 0-1!");
+		this->stickiness = newStickiness;
 	}
 
 	std::string BoxCollider::GetComponentName() const

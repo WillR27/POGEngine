@@ -20,6 +20,9 @@ namespace PEngine
 		AABB<3> GetAABB() const;
 		AABB<3> GetTransformedAABB(const Transform& transform) const;
 
+		float GetStickiness() const;
+		void SetStickiness(float newStickiness);
+
 		static constexpr const char* ComponentName()
 		{
 			return STRINGIFY(BoxCollider);
@@ -29,6 +32,8 @@ namespace PEngine
 
 	private:
 		AABB<3> aabb;
+
+		float stickiness;
 	};
 }
 
