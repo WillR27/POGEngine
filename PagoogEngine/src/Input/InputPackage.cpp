@@ -3,6 +3,14 @@
 
 namespace PEngine
 {
+    InputPackage::InputPackage()
+        : actions()
+        , states()
+        , axes()
+        , hasMouseMoved(false)
+    {
+    }
+
     bool InputPackage::HasActionOccurred(std::string name, bool remove)
     {
         auto it = actions.begin();
@@ -96,15 +104,23 @@ namespace PEngine
         axes.push_back(axis);
     }
 
+    void InputPackage::SetMouseMoved(bool value)
+    {
+        hasMouseMoved = value;
+    }
+
+    bool InputPackage::HasMouseMoved(bool remove)
+    {
+        bool tmp = hasMouseMoved;
+        if (remove) hasMouseMoved = false;
+        return tmp;
+    }
+
     void InputPackage::Clear()
     {
         actions.clear();
         states.clear();
         axes.clear();
-    }
-
-    bool InputPackage::IsEmpty() const
-    {
-        return actions.size() == 0 && states.size() == 0 && axes.size() == 0;
+        hasMouseMoved = false;
     }
 }

@@ -140,6 +140,19 @@ namespace PEngine
 {
 	class Input
 	{
+	public:
+		friend class MouseMoveEvent;
+
+	private:
+		static double MouseX, MouseY;
+		static double PrevMouseX, PrevMouseY;
+		static double DeltaMouseX, DeltaMouseY;
+
+	public:
+		static double GetMouseX();
+		static double GetMouseY();
+		static double GetPrevMouseX();
+		static double GetPrevMouseY();
 	};
 }
 

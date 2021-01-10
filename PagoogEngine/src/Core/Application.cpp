@@ -95,6 +95,7 @@ namespace PEngine
 		ed.Dispatch<WindowCloseEvent>(PG_BIND_FN(window->HandleWindowCloseEvent));
 		ed.Dispatch<WindowSizeEvent>(PG_BIND_FN(window->HandleWindowSizeEvent));
 		ed.Dispatch<KeyEvent>(PG_BIND_FN(inputManager.HandleKeyEvent));
+		ed.Dispatch<MouseMoveEvent>(PG_BIND_FN(inputManager.HandleMouseMoveEvent));
 
 		if (!e.IsHandled())
 		{

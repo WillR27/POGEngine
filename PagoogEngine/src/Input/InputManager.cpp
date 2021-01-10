@@ -28,12 +28,9 @@ namespace PEngine
 			}
 		}
 
-		if (!inputPackage.IsEmpty())
+		for (InputPackageCallback inputPackageCallback : inputPackageCallbacks)
 		{
-			for (InputPackageCallback inputPackageCallback : inputPackageCallbacks)
-			{
-				inputPackageCallback(inputPackage, dt);
-			}
+			inputPackageCallback(inputPackage, dt);
 		}
 
 		inputPackage.Clear();
@@ -128,6 +125,13 @@ namespace PEngine
 		}
 
 		return handled;
+	}
+
+	bool InputManager::HandleMouseMoveEvent(MouseMoveEvent& e)
+	{
+		inputPackage.SetMouseMoved();
+
+		return false;
 	}
 
 	void InputManager::AddInputPackageCallback(InputPackageCallback actionCallback)

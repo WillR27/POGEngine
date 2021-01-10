@@ -35,6 +35,7 @@ namespace PEngine
 		void Send(float dt);
 
 		bool HandleKeyEvent(KeyEvent& e);
+		bool HandleMouseMoveEvent(MouseMoveEvent& e);
 
 		void AddInputPackageCallback(InputPackageCallback actionCallback);
 

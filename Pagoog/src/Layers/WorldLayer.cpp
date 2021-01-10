@@ -145,6 +145,7 @@ void main()
 	{
 		EventDispatcher ed(e);
 		ed.Dispatch<KeyEvent>(PG_BIND_FN(inputManager.HandleKeyEvent));
+		ed.Dispatch<MouseMoveEvent>(PG_BIND_FN(inputManager.HandleMouseMoveEvent));
 	}
 
 	void WorldLayer::ActionCallback(InputPackage& inputPackage, float dt)

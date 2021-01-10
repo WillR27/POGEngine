@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Event.h"
+#include "Input/Input.h"
 
 namespace PEngine
 {
@@ -19,13 +20,39 @@ namespace PEngine
 
 		virtual const char* GetName() const override
 		{
-			return "KeyEvent";
+			return STRINGIFY(KeyEvent);
 		}
 
 		virtual std::string ToString() const override
 		{ 
 			std::stringstream ss;
 			ss << GetName() << ": " << "KEY:" << key << ", SCANCODE: " << scancode << ", ACTION: " << action << ", MODS: " << mods;
+			return ss.str();
+		}
+	};
+
+	class MouseMoveEvent : public Event
+	{
+	public:
+		MouseMoveEvent(double mouseX, double mouseY)
+		{
+			Input::PrevMouseX = Input::MouseX;
+			Input::PrevMouseY = Input::MouseY;
+			Input::MouseX = mouseX;
+			Input::MouseY = mouseY;
+			Input::DeltaMouseX = Input::PrevMouseX - Input::MouseX;
+			Input::DeltaMouseY = Input::PrevMouseY - Input::MouseY;
+		}
+
+		virtual const char* GetName() const override
+		{
+			return STRINGIFY(MouseMoveEvent);
+		}
+
+		virtual std::string ToString() const override
+		{
+			std::stringstream ss;
+			ss << GetName() << ": " << "MouseX:" << Input::MouseX << ", MouseY: " << Input::MouseY;
 			return ss.str();
 		}
 	};

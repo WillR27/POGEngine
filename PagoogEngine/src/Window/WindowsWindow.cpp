@@ -104,6 +104,14 @@ namespace PEngine
 				KeyEvent e(key, scancode, action, mods);
 				windowData.eventCallback(e);
 			});
+
+		glfwSetCursorPosCallback(window, [](GLFWwindow* window, double posX, double posY)
+			{
+				WindowData& windowData = GetWindowData(window);
+
+				MouseMoveEvent e(posX, posY);
+				windowData.eventCallback(e);
+			});
 	}
 
 	void WindowsWindow::FrameUpdate()
