@@ -10,6 +10,7 @@ namespace PEngine
 		, inputManager()
 		, gameObjects()
 		, boxColliders()
+		, cameras()
 		, meshRenderers()
 		, rigidBodies()
 		, transforms()
@@ -30,7 +31,7 @@ namespace PEngine
 		{
 			if (transform != nullptr)
 			{
-				transform->PreInputUpdateTransform();
+				transform->PreInputUpdate();
 			}
 		}
 
@@ -39,7 +40,10 @@ namespace PEngine
 
 	void Layer::PreUpdate(float dt)
 	{
-
+		for (GameObject* gameObject : gameObjects)
+		{
+			gameObject->Update(dt);
+		}
 	}
 
 	void Layer::PostUpdate(float dt)
@@ -48,7 +52,15 @@ namespace PEngine
 		{
 			if (rigidBody != nullptr)
 			{
-				rigidBody->UpdateRigidBody(dt);
+				rigidBody->Update(dt);
+			}
+		}
+
+		for (Camera* camera : cameras)
+		{
+			if (camera != nullptr)
+			{
+				camera->Update(dt);
 			}
 		}
 	}
@@ -76,6 +88,10 @@ namespace PEngine
 
 	void Layer::PreFrameUpdate(float alpha)
 	{
+		for (GameObject* gameObject : gameObjects)
+		{
+			gameObject->FrameUpdate(alpha);
+		}
 	}
 
 	void Layer::PostFrameUpdate(float alpha)
@@ -84,15 +100,21 @@ namespace PEngine
 		{
 			if (meshRenderer != nullptr)
 			{
-				meshRenderer->Render(alpha);
+				meshRenderer->FrameUpdate(alpha);
 			}
 		}
 	}
 
-	void Layer::HandleEvent(Event& e)
+	void Layer::PreHandleEvent(Event& e)
 	{
 		EventDispatcher ed(e);
 		ed.Dispatch<KeyEvent>(PG_BIND_FN(inputManager.HandleKeyEvent));
+		ed.Dispatch<MouseMoveEvent>(PG_BIND_FN(inputManager.HandleMouseMoveEvent));
+
+		if (!e.IsHandled())
+		{
+			this->HandleEvent(e);
+		}
 	}
 
 	const char* Layer::GetName() const

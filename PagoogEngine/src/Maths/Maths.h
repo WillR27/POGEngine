@@ -85,6 +85,21 @@ namespace PEngine
 	class Maths
 	{
 	public:
+		static constexpr float TwoPi()
+		{
+			return glm::two_pi<float>();
+		}
+
+		static constexpr float Pi()
+		{
+			return glm::pi<float>();
+		}
+
+		static constexpr float HalfPi()
+		{
+			return glm::half_pi<float>();
+		}
+
 		template <typename T> 
 		static int Sign(T val) 
 		{
@@ -94,6 +109,7 @@ namespace PEngine
 		static float ToRadians(float degrees);
 
 		static Vec3 Normalise(Vec3 vector);
+		static Quat Normalise(Quat quaternion);
 
 		static Mat4 Translate(Mat4 matrix, Vec3 translation);
 

@@ -54,4 +54,16 @@ namespace PEngine
 	{
 		return inScene;
 	}
+
+	void GameObject::Init()
+	{
+	}
+
+	void GameObject::Update(float dt)
+	{
+	}
+
+	void GameObject::FrameUpdate(float alpha)
+	{
+	}
 }

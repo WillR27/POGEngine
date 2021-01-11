@@ -30,14 +30,28 @@ namespace Pagoog
 
 	void WorldLayer::Init()
 	{
-		inputManager.AddAction("Jump", InputInfo(PG_KEY_SPACE, PG_KEY_RELEASE, PG_MOD_NONE));
-		//inputManager.AddState("Forwards", InputInfo(PG_KEY_W, PG_KEY_PRESS, PG_MOD_NONE), InputInfo(PG_KEY_W, PG_KEY_RELEASE, PG_MOD_NONE));
-		//inputManager.AddState("Backwards", InputInfo(PG_KEY_S, PG_KEY_PRESS, PG_MOD_NONE), InputInfo(PG_KEY_S, PG_KEY_RELEASE, PG_MOD_NONE));
-		//inputManager.AddState("Left", InputInfo(PG_KEY_A, PG_KEY_PRESS, PG_MOD_NONE), InputInfo(PG_KEY_A, PG_KEY_RELEASE, PG_MOD_NONE));
-		//inputManager.AddState("Right", InputInfo(PG_KEY_D, PG_KEY_PRESS, PG_MOD_NONE), InputInfo(PG_KEY_D, PG_KEY_RELEASE, PG_MOD_NONE));
-		inputManager.AddAxis("Horizontal", InputInfo(PG_KEY_A, PG_KEY_PRESS, PG_MOD_NONE), InputInfo(PG_KEY_A, PG_KEY_RELEASE, PG_MOD_NONE), InputInfo(PG_KEY_D, PG_KEY_PRESS, PG_MOD_NONE), InputInfo(PG_KEY_D, PG_KEY_RELEASE, PG_MOD_NONE));
-		inputManager.AddAxis("Vertical", InputInfo(PG_KEY_S, PG_KEY_PRESS, PG_MOD_NONE), InputInfo(PG_KEY_S, PG_KEY_RELEASE, PG_MOD_NONE), InputInfo(PG_KEY_W, PG_KEY_PRESS, PG_MOD_NONE), InputInfo(PG_KEY_W, PG_KEY_RELEASE, PG_MOD_NONE));
+		inputManager.AddAction("Jump", InputInfo(PG_KEY_SPACE, PG_KEY_RELEASE, PG_MOD_ANY));
+		
+		inputManager.AddAxis("Fly", 
+			InputInfo(PG_KEY_LEFT_CONTROL, PG_KEY_PRESS, PG_MOD_ANY), 
+			InputInfo(PG_KEY_LEFT_CONTROL, PG_KEY_RELEASE, PG_MOD_ANY), 
+			InputInfo(PG_KEY_SPACE, PG_KEY_PRESS, PG_MOD_ANY), 
+			InputInfo(PG_KEY_SPACE, PG_KEY_RELEASE, PG_MOD_ANY));
+		
+		inputManager.AddAxis("Horizontal", 
+			InputInfo(PG_KEY_A, PG_KEY_PRESS, PG_MOD_ANY), 
+			InputInfo(PG_KEY_A, PG_KEY_RELEASE, PG_MOD_ANY), 
+			InputInfo(PG_KEY_D, PG_KEY_PRESS, PG_MOD_ANY), 
+			InputInfo(PG_KEY_D, PG_KEY_RELEASE, PG_MOD_ANY));
+		
+		inputManager.AddAxis("Vertical", 
+			InputInfo(PG_KEY_S, PG_KEY_PRESS, PG_MOD_ANY), 
+			InputInfo(PG_KEY_S, PG_KEY_RELEASE, PG_MOD_ANY), 
+			InputInfo(PG_KEY_W, PG_KEY_PRESS, PG_MOD_ANY), 
+			InputInfo(PG_KEY_W, PG_KEY_RELEASE, PG_MOD_ANY));
+		
 		inputManager.AddInputPackageCallback(PG_BIND_FN(ActionCallback));
+		inputManager.AddInputPackageCallback(PG_BIND_FN(player->ActionCallback));
 
 		mesh.SetPositionData(squarePositions, sizeof(squarePositions));
 		mesh.SetColourData(squareColours, sizeof(squareColours));
@@ -104,16 +118,33 @@ void main()
 		templateBlock.GetComponent<MeshRenderer>()->SetMaterial(material1);
 		templateBlock.GetComponent<MeshRenderer>()->SetMesh(mesh4);
 
-		controllableBlock = &Scene::CreateGameObject(templateBlock);
+		controllableBlock = Scene::CreateGameObject(templateBlock);
 		controllableBlock->GetComponent<Transform>()->SetPosition(Vec3(-4.0f, 0.0f, 0.0f));
 		controllableBlock->GetComponent<RigidBody>()->SetMass(0.5f);
-		//controllableBlock->SetForce(Vec3(0.01f, 0.0f, 0.0f));
 
-		Block& staticBlock = Scene::CreateGameObject(templateBlock);
-		staticBlock.GetComponent<Transform>()->SetPosition(Vec3(0.0f, 0.0f, 0.0f));
-		staticBlock.GetComponent<RigidBody>()->SetDragCoef(3.0f);
+		templateBlock.SetName("111111111");
+		Block* staticBlock = Scene::CreateGameObject(templateBlock);
+		staticBlock->GetComponent<Transform>()->SetPosition(Vec3(0.0f, 0.0f, 0.0f));
+		staticBlock->GetComponent<RigidBody>()->SetDragCoef(3.0f);
+
+		templateBlock.SetName("2222222222");
+		staticBlock = Scene::CreateGameObject(templateBlock);
+		staticBlock->GetComponent<Transform>()->SetPosition(Vec3(-10.0f, 1.0f, 10.0f));
+		staticBlock->GetComponent<RigidBody>()->SetDragCoef(3.0f);
+
+		templateBlock.SetName("333333333");
+		staticBlock = Scene::CreateGameObject(templateBlock);
+		staticBlock->GetComponent<Transform>()->SetPosition(Vec3(10.0f, -1.0f, 10.0f));
+		staticBlock->GetComponent<RigidBody>()->SetDragCoef(3.0f);
+
+		templateBlock.SetName("444444444");
+		staticBlock = Scene::CreateGameObject(templateBlock);
+		staticBlock->GetComponent<Transform>()->SetPosition(Vec3(00.0f, 1.0f, 20.0f));
+		staticBlock->GetComponent<RigidBody>()->SetDragCoef(3.0f);
 
 		player = &Scene::AddGameObject<Player>();
+		player->GetComponent<MeshRenderer>()->SetMaterial(material1);
+		//player->GetComponent<MeshRenderer>()->SetMesh(mesh2);
 		Transform& transform = *player->GetComponent<Transform>();
 		transform.SetPosition(Vec3(0.0f, 0.0f, 10.0f));
 
@@ -127,25 +158,18 @@ void main()
 
 	void WorldLayer::Update(float dt)
 	{
+		controllableBlock->GetComponent<Transform>()->Rotate(Quat(Vec3(0.002f, 0.001f, 0.003f)));
 	}
 
-	void WorldLayer::FrameUpdate(float dt)
+	void WorldLayer::FrameUpdate(float alpha)
 	{
 		Render::SetPolygonMode(PG_FRONT_AND_BACK, PG_FILL);
 		Render::EnableDepthTest(true);
-
-		//float rand1 = (std::rand() % 100) / 100.0f;
-		//float rand2 = (std::rand() % 100) / 100.0f;
-		//float rand3 = (std::rand() % 100) / 100.0f;
-		//block.RotateAround(Vec3(rand1 / 1.f, rand2 / 1.f, rand3 / 1.f), Quaternion(Vec3(rand1 / 1000.f, rand2 / 1000.f, rand3 / 1000.f)));
-		//block.Rotate(Quaternion(Vec3(rand1 / 1000.f, rand2 / 1000.f, rand3 / 1000.f)));
 	}
 
 	void WorldLayer::HandleEvent(Event& e)
 	{
-		EventDispatcher ed(e);
-		ed.Dispatch<KeyEvent>(PG_BIND_FN(inputManager.HandleKeyEvent));
-		ed.Dispatch<MouseMoveEvent>(PG_BIND_FN(inputManager.HandleMouseMoveEvent));
+		
 	}
 
 	void WorldLayer::ActionCallback(InputPackage& inputPackage, float dt)
@@ -154,14 +178,5 @@ void main()
 		{
 			controllableBlock->GetComponent<Transform>()->Rotate(Quat(Vec3(0.2f, 0.1f, 0.3f)));
 		}
-
-		//controllableBlock->GetComponent<RigidBody>()->SetVelocity(Vec3(inputPackage.GetAxisValue("Horizontal") / 3.0f, 0.0f, -inputPackage.GetAxisValue("Vertical") / 3.0f));
-		//controllableBlock->GetComponent<Transform>()->MoveForward(inputPackage.GetAxisValue("Vertical") * dt);
-		//controllableBlock->GetComponent<Transform>()->MoveRight(inputPackage.GetAxisValue("Horizontal") * dt);
-		
-		Transform& transform = *player->GetComponent<Transform>();
-		RigidBody& rigidBody = *player->GetComponent<RigidBody>();
-
-		rigidBody.SetVelocity(((transform.ToForwardVec() * (inputPackage.GetAxisValue("Vertical") / 3.0f)) + transform.ToRightVec() * (inputPackage.GetAxisValue("Horizontal") / 3.0f)) / 2.0f);
 	}
 }

@@ -28,6 +28,10 @@ namespace PEngine
 		virtual void SetFullscreen(bool fullscreen) override;
 		virtual void ToggleFullscreen() override;
 
+		virtual bool HasCursor() const override;
+		virtual void SetCursorMode(bool cursor) override;
+		virtual void ToggleCursorMode() override;
+
 		virtual bool HandleWindowCloseEvent(WindowCloseEvent& e) override;
 		virtual bool HandleWindowSizeEvent(WindowSizeEvent& e) override;
 
@@ -42,6 +46,7 @@ namespace PEngine
 
 		bool shouldClose;
 		bool fullscreen;
+		bool cursor;
 
 		void InitWindow();
 		void InitCallbacks();

@@ -8,6 +8,7 @@ namespace PEngine
 	class GameObject
 	{
 	public:
+		friend class Layer;
 		friend class Scene;
 
 		GameObject(std::string name = "Game Object");
@@ -114,7 +115,10 @@ namespace PEngine
 		bool InScene() const;
 
 	protected:
-		virtual void Init() = 0;
+		virtual void Init();
+
+		virtual void Update(float dt);
+		virtual void FrameUpdate(float alpha);
 
 	private:
 		std::string name;

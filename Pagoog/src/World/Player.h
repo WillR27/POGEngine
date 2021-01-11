@@ -11,7 +11,9 @@ namespace Pagoog
 		Player();
 		virtual ~Player() = default;
 
-		virtual void Init() override;
+		virtual void Update(float dt) override;
+
+		void ActionCallback(InputPackage& inputPackage, float dt);
 	};
 }
 

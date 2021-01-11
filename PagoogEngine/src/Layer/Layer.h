@@ -23,7 +23,8 @@ namespace PEngine
 		virtual void Update(float dt) = 0;
 		virtual void FrameUpdate(float dt) = 0;
 
-		virtual void HandleEvent(Event& e);
+		void PreHandleEvent(Event& e);
+		virtual void HandleEvent(Event& e) = 0;
 
 		const char* GetName() const;
 
@@ -35,6 +36,7 @@ namespace PEngine
 	private:
 		std::vector<GameObject*> gameObjects;
 		std::vector<BoxCollider*> boxColliders;
+		std::vector<Camera*> cameras;
 		std::vector<MeshRenderer*> meshRenderers;
 		std::vector<RigidBody*> rigidBodies;
 		std::vector<Transform*> transforms;

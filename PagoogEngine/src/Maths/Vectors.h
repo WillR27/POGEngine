@@ -70,6 +70,11 @@ namespace PEngine
 			this->z -= rhs.z;
 		}
 
+		Vec3 operator*(const Vec3& rhs)
+		{
+			return Vec3(this->x * rhs.x, this->y * rhs.y, this->z * rhs.z);
+		}
+
 		std::string ToString() const
 		{
 			std::stringstream ss;

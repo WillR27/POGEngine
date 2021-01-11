@@ -18,7 +18,7 @@ namespace PEngine
 		return new RigidBody(*this);
 	}
 
-	void RigidBody::UpdateRigidBody(float dt)
+	void RigidBody::Update(float dt)
 	{
 		Vec3 drag = dragCoef * Maths::Vec3MultiplyPreserveSigns(velocity, velocity);
 		Vec3 acceleration = (force - drag) / mass;

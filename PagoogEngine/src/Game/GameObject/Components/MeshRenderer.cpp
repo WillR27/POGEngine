@@ -32,29 +32,32 @@ namespace PEngine
 		return new MeshRenderer(*this);
 	}
 
-	void MeshRenderer::Render(float alpha)
+	void MeshRenderer::FrameUpdate(float alpha)
 	{
-		material->GetShader().Use();
-		material->UpdateShaderUniforms();
-
-		Transform& transform = *gameObject->GetComponent<Transform>();
-		if (&transform != nullptr)
+		if (mesh != nullptr)
 		{
-			Vec3 position = Maths::Lerp(transform.GetPrevPosition(), transform.GetPosition(), alpha);
-			Quat orientation = Maths::Lerp(transform.GetPrevOrientation(), transform.GetOrientation(), alpha);
-			Vec3 scale = Maths::Lerp(transform.GetPrevScale(), transform.GetScale(), alpha);
+			material->GetShader().Use();
+			material->UpdateShaderUniforms();
 
-			Shader& shader = material->GetShader();
-			shader.SetMatrix4fv("view", 1, false, Camera::MainCamera->GetView());
-			shader.SetMatrix4fv("projection", 1, false, Camera::MainCamera->GetProjection());
-			shader.SetMatrix4fv("model", 1, false, Maths::ToModelMatrix(position, orientation, scale));
-		}
-		else
-		{
-			material->GetShader().SetMatrix4fv("model", 1, false, Mat4(1.0f));
-		}
+			Transform& transform = *gameObject->GetComponent<Transform>();
+			if (&transform != nullptr)
+			{
+				Vec3 position = Maths::Lerp(transform.GetPrevPosition(), transform.GetPosition(), alpha);
+				Quat orientation = Maths::Lerp(transform.GetPrevOrientation(), transform.GetOrientation(), alpha); // TODO: Fix flickering
+				Vec3 scale = Maths::Lerp(transform.GetPrevScale(), transform.GetScale(), alpha);
 
-		mesh->Render();
+				Shader& shader = material->GetShader();
+				shader.SetMatrix4fv("view", 1, false, Camera::MainCamera->GetView());
+				shader.SetMatrix4fv("projection", 1, false, Camera::MainCamera->GetProjection());
+				shader.SetMatrix4fv("model", 1, false, Maths::ToModelMatrix(position, orientation, scale));
+			}
+			else
+			{
+				material->GetShader().SetMatrix4fv("model", 1, false, Mat4(1.0f));
+			}
+
+			mesh->Render();
+		}
 	}
 
 	const Mesh& MeshRenderer::GetMesh() const

@@ -14,7 +14,7 @@ namespace PEngine
 
 		virtual Component* Clone() const override;
 
-		void UpdateRigidBody(float dt);
+		void Update(float dt);
 
 		void SetMass(float newMass);
 		float GetMass() const;

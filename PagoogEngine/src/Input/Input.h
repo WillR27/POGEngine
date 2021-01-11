@@ -124,10 +124,11 @@
 #define PG_KEY_RIGHT_SUPER        347
 #define PG_KEY_MENU               348
 
-#define PG_KEY_RELEASE                0
-#define PG_KEY_PRESS          		  1
-#define PG_KEY_REPEAT  				  2
+#define PG_KEY_RELEASE            0
+#define PG_KEY_PRESS          	  1
+#define PG_KEY_REPEAT  			  2
 
+#define PG_MOD_ANY               -0x0001
 #define PG_MOD_NONE               0x0000
 #define PG_MOD_SHIFT              0x0001
 #define PG_MOD_CONTROL            0x0002
@@ -142,17 +143,20 @@ namespace PEngine
 	{
 	public:
 		friend class MouseMoveEvent;
+		friend class WindowsWindow;
 
 	private:
-		static double MouseX, MouseY;
-		static double PrevMouseX, PrevMouseY;
-		static double DeltaMouseX, DeltaMouseY;
+		static float MouseX, MouseY;
+		static float PrevMouseX, PrevMouseY;
+		static float DeltaMouseX, DeltaMouseY;
 
 	public:
-		static double GetMouseX();
-		static double GetMouseY();
-		static double GetPrevMouseX();
-		static double GetPrevMouseY();
+		static float GetMouseX();
+		static float GetMouseY();
+		static float GetPrevMouseX();
+		static float GetPrevMouseY();
+		static float GetDeltaMouseX();
+		static float GetDeltaMouseY();
 	};
 }
 

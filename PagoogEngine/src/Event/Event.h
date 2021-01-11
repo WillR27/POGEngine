@@ -29,7 +29,7 @@ namespace PEngine
 		template<typename T, typename F>
 		bool Dispatch(const F& func)
 		{
-			if (typeid(e) == typeid(T))
+			if (typeid(e) == typeid(T) || typeid(T) == typeid(Event))
 			{
 				e.handled = func(static_cast<T&>(e));
 				return true;

@@ -20,6 +20,7 @@ namespace PEngine
 		: window(nullptr)
 		, shouldClose(false)
 		, fullscreen(false)
+		, cursor(true)
 	{
 	}
 
@@ -30,6 +31,8 @@ namespace PEngine
 
 	void WindowsWindow::InputUpdate()
 	{
+		Input::DeltaMouseX = 0;
+		Input::DeltaMouseY = 0;
 		glfwPollEvents();
 	}
 
@@ -109,7 +112,7 @@ namespace PEngine
 			{
 				WindowData& windowData = GetWindowData(window);
 
-				MouseMoveEvent e(posX, posY);
+				MouseMoveEvent e(static_cast<float>(posX), static_cast<float>(posY));
 				windowData.eventCallback(e);
 			});
 	}
@@ -156,6 +159,24 @@ namespace PEngine
 	void WindowsWindow::ToggleFullscreen()
 	{
 		SetFullscreen(!fullscreen);
+		Input::DeltaMouseX = 0.0f;
+		Input::DeltaMouseY = 0.0f;
+	}
+
+	bool WindowsWindow::HasCursor() const
+	{
+		return cursor;
+	}
+
+	void WindowsWindow::SetCursorMode(bool cursor)
+	{
+		this->cursor = cursor;
+		glfwSetInputMode(window, GLFW_CURSOR, cursor ? GLFW_CURSOR_NORMAL : GLFW_CURSOR_DISABLED);
+	}
+
+	void WindowsWindow::ToggleCursorMode()
+	{
+		SetCursorMode(!cursor);
 	}
 
 	void WindowsWindow::Close()

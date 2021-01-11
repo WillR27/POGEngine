@@ -13,6 +13,7 @@ namespace PEngine
 	{
 		ActiveLayer->gameObjects.push_back(gameObject);
 		ActiveLayer->boxColliders.push_back(gameObject->GetComponent<BoxCollider>());
+		ActiveLayer->cameras.push_back(gameObject->GetComponent<Camera>());
 		ActiveLayer->meshRenderers.push_back(gameObject->GetComponent<MeshRenderer>());
 		ActiveLayer->rigidBodies.push_back(gameObject->GetComponent<RigidBody>());
 		ActiveLayer->transforms.push_back(gameObject->GetComponent<Transform>());
@@ -88,7 +89,7 @@ namespace PEngine
 				break;
 			}
 
-			layer->HandleEvent(e);
+			layer->PreHandleEvent(e);
 		}
 	}
 

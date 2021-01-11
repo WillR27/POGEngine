@@ -36,6 +36,7 @@ namespace PEngine
 		window = Window::Create();
 		window->Init();
 		window->SetEventCallback(PG_BIND_FN(HandleEvent));
+		window->SetCursorMode(false);
 
 		inputManager.AddInputPackageCallback(PG_BIND_FN(ActionCallback));
 
@@ -60,24 +61,25 @@ namespace PEngine
 			deltaTime = Time::DeltaTime();
 
 			deltaTimeUpdate += deltaTime;
-			if (deltaTimeUpdate > 1.0f)
-			{
-				deltaTimeUpdate = 1.0f; // Avoid spiral of death
-			}
 
-			if (deltaTimeUpdate >= Time::TimeUntilUpdate)
+			float spiralOfDeathPreventer = 1.0f;
+			while (deltaTimeUpdate >= Time::TimeUntilUpdate)
 			{
+				//PG_TRACE((1.0f / deltaTimeUpdate));
 				window->InputUpdate();
 				inputManager.Send(deltaTimeUpdate);
 
 				activeScene->Update(Time::TimeUntilUpdate);
+				
+				deltaTimeUpdate -= (Time::TimeUntilUpdate * spiralOfDeathPreventer);
 
-				deltaTimeUpdate -= Time::TimeUntilUpdate;
+				spiralOfDeathPreventer += 0.2f;
 			}
 
 			deltaTimeFrame += deltaTime;
 			if (deltaTimeFrame >= Time::TimeUntilFrame)
 			{
+				//PG_WARN((1.0f / deltaTimeFrame));
 				window->FrameUpdate();
 
 				activeScene->FrameUpdate(deltaTimeUpdate / Time::TimeUntilUpdate);

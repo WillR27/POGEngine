@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Input.h"
 #include "InputTypes.h"
 #include "InputPackage.h"
 
@@ -20,7 +21,7 @@ namespace PEngine
 
 		bool operator==(const InputInfo& rhs) const
 		{
-			return key == rhs.key && action == rhs.action && mods == rhs.mods;
+			return key == rhs.key && action == rhs.action && (mods == PG_MOD_ANY || rhs.mods == PG_MOD_ANY || mods == rhs.mods);
 		}
 	};
 

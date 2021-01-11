@@ -13,7 +13,7 @@ namespace PEngine
 
 		virtual Component* Clone() const override;
 
-		void PreInputUpdateTransform();
+		void PreInputUpdate();
 
 		Vec3 GetPosition() const;
 		Vec3 GetPrevPosition() const;
@@ -26,6 +26,7 @@ namespace PEngine
 		void SetOrientation(Quat newOrientation);
 
 		void Rotate(Quat rotation);
+		void Rotate(Vec3 eulerRotation);
 		void RotateAround(Vec3 positionToRotateAround, Quat rotation);
 		Mat4 RotationMatrix() const;
 

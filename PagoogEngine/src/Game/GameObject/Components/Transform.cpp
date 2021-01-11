@@ -23,7 +23,7 @@ namespace PEngine
 		return new Transform(*this);
 	}
 
-	void Transform::PreInputUpdateTransform()
+	void Transform::PreInputUpdate()
 	{
 		prevPosition = position;
 		prevOrientation = orientation;
@@ -59,7 +59,7 @@ namespace PEngine
 	void Transform::SetOrientation(Quat newOrientation)
 	{
 		prevOrientation = orientation;
-		orientation = newOrientation;
+		orientation = Maths::Normalise(newOrientation);
 	}
 
 	void Transform::SetOrientation(Vec3 newOrientation)
@@ -69,7 +69,12 @@ namespace PEngine
 
 	void Transform::Rotate(Quat rotation)
 	{
-		SetOrientation(glm::normalize(rotation * orientation));
+		SetOrientation(rotation * orientation);
+	}
+
+	void Transform::Rotate(Vec3 eulerRotation)
+	{
+		Rotate(Quat(eulerRotation));
 	}
 
 	void Transform::RotateAround(Vec3 positionToRotateAround, Quat rotation)

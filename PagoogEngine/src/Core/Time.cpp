@@ -3,7 +3,7 @@
 
 namespace PEngine
 {
-	float Time::UPS = 100.0f;
+	float Time::UPS = 50.0f;
 	float Time::TimeUntilUpdate = 1.0f / Time::UPS;
 	float Time::FPS = 1000.0f;
 	float Time::TimeUntilFrame = 1.0f / Time::FPS;

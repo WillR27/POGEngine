@@ -20,6 +20,14 @@ namespace PEngine
 	}
 
 	/// <summary>
+	/// Normalises the given quaternion.
+	/// </summary>
+	Quat Maths::Normalise(Quat quaternion)
+	{
+		return glm::normalize(quaternion);
+	}
+
+	/// <summary>
 	/// Translates the given matrix by the given translation vector.
 	/// </summary>
 	Mat4 Maths::Translate(Mat4 matrix, Vec3 translation)

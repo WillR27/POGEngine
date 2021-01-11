@@ -5,31 +5,41 @@
 
 namespace PEngine
 {
-	double Input::MouseX = 0.0;
-	double Input::MouseY = 0.0;
-	double Input::PrevMouseX = 0.0;
-	double Input::PrevMouseY = 0.0;
-	double Input::DeltaMouseX = 0.0;
-	double Input::DeltaMouseY = 0.0;
+	float Input::MouseX = -1.0f;
+	float Input::MouseY = 0.0f;
+	float Input::PrevMouseX = 0.0f;
+	float Input::PrevMouseY = 0.0f;
+	float Input::DeltaMouseX = 0.0f;
+	float Input::DeltaMouseY = 0.0f;
 
 
-	double Input::GetMouseX()
+	float Input::GetMouseX()
 	{
 		return MouseX;
 	}
 
-	double Input::GetMouseY()
+	float Input::GetMouseY()
 	{
 		return MouseY;
 	}
 
-	double Input::GetPrevMouseX()
+	float Input::GetPrevMouseX()
 	{
 		return PrevMouseX;
 	}
 
-	double Input::GetPrevMouseY()
+	float Input::GetPrevMouseY()
 	{
 		return PrevMouseY;
+	}
+
+	float Input::GetDeltaMouseX()
+	{
+		return DeltaMouseX;
+	}
+
+	float Input::GetDeltaMouseY()
+	{
+		return DeltaMouseY;
 	}
 }

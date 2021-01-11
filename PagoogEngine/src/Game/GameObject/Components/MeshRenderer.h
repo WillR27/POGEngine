@@ -14,7 +14,7 @@ namespace PEngine
 
 		virtual Component* Clone() const override;
 
-		void Render(float dt);
+		void FrameUpdate(float dt);
 
 		const Mesh& GetMesh() const;
 		void SetMesh(Mesh& mesh);

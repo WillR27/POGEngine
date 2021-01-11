@@ -10,11 +10,16 @@ namespace PEngine
 	Camera* Camera::MainCamera = nullptr; // TODO: Replace access with getter/setter
 
 	Camera::Camera()
-		: worldUp(Vec3(0.0f, 1.0f, 0.0f))
+		: pitch(0.0f)
+		, yaw(0.0f)
+		, forwardVec(0.0f, 0.0f, -1.0f)
+		, upVec(0.0f, 1.0f, 0.0f)
+		, rightVec(1.0f, 0.0f, 0.0f)
 		, fov(glm::radians(60.0f))
 		, aspectRatio(800.0f / 600.0f)
 		, nearZ(0.1f)
 		, farZ(100.0f)
+		, view()
 		, projection(glm::perspective(fov, aspectRatio, nearZ, farZ))
 		//, projection(glm::ortho(0.0f, 5.0f, 0.0f, 4.0f, nearZ, farZ))
 	{
@@ -25,16 +30,57 @@ namespace PEngine
 		return new Camera(*this);
 	}
 
-	const Mat4 Camera::GetView() const
+	void Camera::Update(float dt)
 	{
 		Transform* transform = gameObject->GetComponent<Transform>();
+		Quat cameraOrientation = Quat(Vec3(pitch, yaw, 0.0f));
 		
-		return glm::lookAt(transform->GetPosition(), transform->GetPosition() + transform->ToForwardVec(), worldUp);
+		forwardVec = Maths::ToForwardVec(transform->GetOrientation() * cameraOrientation);
+		upVec = Maths::ToUpVec(transform->GetOrientation() * cameraOrientation);
+		rightVec = Maths::ToRightVec(transform->GetOrientation() * cameraOrientation);
+
+		view = glm::lookAt(transform->GetPosition(), transform->GetPosition() + forwardVec, upVec);
 	}
 
-	const Mat4& Camera::GetProjection() const
+	void Camera::AddPitchAndYaw(float pitchAmount, float yawAmount)
 	{
-		return projection;
+		pitch += pitchAmount;
+		yaw += yawAmount;
+
+		// TOOD: Don't think we need?
+		//if (pitch < -Maths::Pi())
+		//{
+		//	pitch = pitch + Maths::TwoPi();
+		//}
+		//else if (pitch > Maths::Pi())
+		//{
+		//	pitch = pitch - Maths::TwoPi();
+		//}
+
+		// TOOD: Don't think we need?
+		//if (yaw < -Maths::Pi())
+		//{
+		//	yaw = yaw + Maths::TwoPi();
+		//}
+		//else if (yaw > Maths::Pi())
+		//{
+		//	yaw = yaw - Maths::TwoPi();
+		//}
+	}
+
+	Vec3 Camera::GetForwardVec() const
+	{
+		return forwardVec;
+	}
+
+	Vec3 Camera::GetUpVec() const
+	{
+		return upVec;
+	}
+
+	Vec3 Camera::GetRightVec() const
+	{
+		return rightVec;
 	}
 
 	void Camera::SetFov(float newFov)
@@ -59,6 +105,16 @@ namespace PEngine
 	{
 		farZ = newFarZ;
 		projection = glm::perspective(fov, aspectRatio, nearZ, farZ);
+	}
+
+	const Mat4& Camera::GetView() const
+	{
+		return view;
+	}
+
+	const Mat4& Camera::GetProjection() const
+	{
+		return projection;
 	}
 
 	std::string Camera::GetComponentName() const
