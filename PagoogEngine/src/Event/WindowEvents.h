@@ -11,7 +11,7 @@ namespace PEngine
 
 		virtual const char* GetName() const override
 		{
-			return "WindowCloseEvent";
+			return STRINGIFY(WindowCloseEvent);
 		}
 	};
 
@@ -28,13 +28,36 @@ namespace PEngine
 
 		virtual const char* GetName() const override
 		{
-			return "WindowSizeEvent";
+			return STRINGIFY(WindowSizeEvent);
 		}
 
 		virtual std::string ToString() const override
 		{ 
 			std::stringstream ss;
 			ss << GetName() << ": " << width << ", " << height;
+			return ss.str();
+		}
+	};
+
+	class WindowFocusEvent : public Event
+	{
+	public:
+		bool hasFocus;
+
+		WindowFocusEvent(bool hasFocus)
+			: hasFocus(hasFocus)
+		{
+		}
+
+		virtual const char* GetName() const override
+		{
+			return STRINGIFY(WindowFocusEvent);
+		}
+
+		virtual std::string ToString() const override
+		{
+			std::stringstream ss;
+			ss << GetName() << ": " << hasFocus;
 			return ss.str();
 		}
 	};

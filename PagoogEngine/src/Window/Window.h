@@ -22,12 +22,15 @@ namespace PEngine
 		virtual void SetFullscreen(bool fullscreen) = 0;
 		virtual void ToggleFullscreen() = 0;
 
+		virtual bool HasFocus() const = 0;
+
 		virtual bool HasCursor() const = 0;
 		virtual void SetCursorMode(bool cursor) = 0;
 		virtual void ToggleCursorMode() = 0;
 
 		virtual bool HandleWindowCloseEvent(WindowCloseEvent& e) = 0;
 		virtual bool HandleWindowSizeEvent(WindowSizeEvent& e) = 0;
+		virtual bool HandleWindowFocusEvent(WindowFocusEvent& e) = 0;
 
 		virtual void SetEventCallback(EventCallback eventCallback) = 0;
 

@@ -20,6 +20,7 @@ namespace PEngine
 		: window(nullptr)
 		, shouldClose(false)
 		, fullscreen(false)
+		, hasFocus(true)
 		, cursor(true)
 	{
 	}
@@ -92,11 +93,23 @@ namespace PEngine
 
 		glfwSetWindowSizeCallback(window, [](GLFWwindow* window, int width, int height)
 			{
-				WindowData& windowData = GetWindowData(window);
-				windowData.width = width;
-				windowData.height = height;
+				if (width != 0 && height != 0)
+				{
+					WindowData& windowData = GetWindowData(window);
+					windowData.width = width;
+					windowData.height = height;
 
-				WindowSizeEvent e(width, height);
+					WindowSizeEvent e(width, height);
+					windowData.eventCallback(e);
+				}
+			});
+
+		glfwSetWindowFocusCallback(window, [](GLFWwindow* window, int hasFocus)
+			{
+				WindowData& windowData = GetWindowData(window);
+				windowData.hasFocus = hasFocus;
+
+				WindowFocusEvent e(hasFocus);
 				windowData.eventCallback(e);
 			});
 
@@ -112,8 +125,16 @@ namespace PEngine
 			{
 				WindowData& windowData = GetWindowData(window);
 
-				MouseMoveEvent e(static_cast<float>(posX), static_cast<float>(posY));
-				windowData.eventCallback(e);
+				if (windowData.hasFocus)
+				{
+					MouseMoveEvent e(static_cast<float>(posX), static_cast<float>(posY));
+					windowData.eventCallback(e);
+				}
+				else
+				{
+					Input::DeltaMouseX = 0.0f;
+					Input::DeltaMouseY = 0.0f;
+				}
 			});
 	}
 
@@ -163,6 +184,11 @@ namespace PEngine
 		Input::DeltaMouseY = 0.0f;
 	}
 
+	bool WindowsWindow::HasFocus() const
+	{
+		return hasFocus;
+	}
+
 	bool WindowsWindow::HasCursor() const
 	{
 		return cursor;
@@ -187,6 +213,8 @@ namespace PEngine
 
 	bool WindowsWindow::HandleWindowCloseEvent(WindowCloseEvent& e)
 	{
+		PG_INFO(e);
+
 		shouldClose = true;
 
 		return true;
@@ -194,9 +222,38 @@ namespace PEngine
 
 	bool WindowsWindow::HandleWindowSizeEvent(WindowSizeEvent& e)
 	{
+		PG_INFO(e);
+
 		glfwSetWindowSize(window, e.width, e.height);
 		glViewport(0, 0, e.width, e.height);
 		Camera::MainCamera->SetAspectRatio(static_cast<float>(e.width) / e.height);
+
+		return true;
+	}
+
+	bool WindowsWindow::HandleWindowFocusEvent(WindowFocusEvent& e)
+	{
+		PG_INFO(e);
+
+		static bool wasFullscreen = false;
+		
+		if (e.hasFocus)
+		{
+			if (wasFullscreen)
+			{
+				SetFullscreen(true);
+			}
+		}
+		else
+		{
+			if (IsFullscreen())
+			{
+				wasFullscreen = true;
+				SetFullscreen(false);
+			}
+		}
+
+		hasFocus = e.hasFocus;
 
 		return true;
 	}

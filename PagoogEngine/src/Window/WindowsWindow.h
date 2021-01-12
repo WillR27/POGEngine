@@ -12,6 +12,7 @@ namespace PEngine
 		struct WindowData
 		{
 			int width = 0, height = 0;
+			bool hasFocus;
 			Window::EventCallback eventCallback;
 		};
 
@@ -28,12 +29,15 @@ namespace PEngine
 		virtual void SetFullscreen(bool fullscreen) override;
 		virtual void ToggleFullscreen() override;
 
+		virtual bool HasFocus() const override;
+
 		virtual bool HasCursor() const override;
 		virtual void SetCursorMode(bool cursor) override;
 		virtual void ToggleCursorMode() override;
 
 		virtual bool HandleWindowCloseEvent(WindowCloseEvent& e) override;
 		virtual bool HandleWindowSizeEvent(WindowSizeEvent& e) override;
+		virtual bool HandleWindowFocusEvent(WindowFocusEvent& e) override;
 
 		virtual void SetEventCallback(EventCallback eventCallback) override;
 
@@ -46,6 +50,7 @@ namespace PEngine
 
 		bool shouldClose;
 		bool fullscreen;
+		bool hasFocus;
 		bool cursor;
 
 		void InitWindow();

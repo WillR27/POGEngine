@@ -76,17 +76,20 @@ namespace PEngine
 				spiralOfDeathPreventer += 0.2f;
 			}
 
-			deltaTimeFrame += deltaTime;
-			if (deltaTimeFrame >= Time::TimeUntilFrame)
+			if (window->HasFocus() || !window->IsFullscreen())
 			{
-				//PG_WARN((1.0f / deltaTimeFrame));
-				window->FrameUpdate();
+				deltaTimeFrame += deltaTime;
+				if (deltaTimeFrame >= Time::TimeUntilFrame)
+				{
+					//PG_WARN((1.0f / deltaTimeFrame));
+					window->FrameUpdate();
 
-				activeScene->FrameUpdate(deltaTimeUpdate / Time::TimeUntilUpdate);
+					activeScene->FrameUpdate(deltaTimeUpdate / Time::TimeUntilUpdate);
 
-				window->SwapBuffers();
+					window->SwapBuffers();
 
-				deltaTimeFrame = 0.0f;
+					deltaTimeFrame = 0.0f;
+				}
 			}
 		}
 	}
@@ -94,8 +97,11 @@ namespace PEngine
 	void Application::HandleEvent(Event& e)
 	{
 		EventDispatcher ed(e);
+
 		ed.Dispatch<WindowCloseEvent>(PG_BIND_FN(window->HandleWindowCloseEvent));
 		ed.Dispatch<WindowSizeEvent>(PG_BIND_FN(window->HandleWindowSizeEvent));
+		ed.Dispatch<WindowFocusEvent>(PG_BIND_FN(window->HandleWindowFocusEvent));
+
 		ed.Dispatch<KeyEvent>(PG_BIND_FN(inputManager.HandleKeyEvent));
 		ed.Dispatch<MouseMoveEvent>(PG_BIND_FN(inputManager.HandleMouseMoveEvent));
 
