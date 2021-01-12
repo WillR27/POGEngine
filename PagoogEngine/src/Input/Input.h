@@ -146,9 +146,14 @@ namespace PEngine
 		friend class WindowsWindow;
 
 	private:
+		static bool ShouldResetMouseMovement;
 		static float MouseX, MouseY;
 		static float PrevMouseX, PrevMouseY;
 		static float DeltaMouseX, DeltaMouseY;
+
+		static void ResetMouseMovement();
+		static void ResetMouseDeltas();
+		static void SetMouseXY(float x, float y);
 
 	public:
 		static float GetMouseX();

@@ -32,8 +32,7 @@ namespace PEngine
 
 	void WindowsWindow::InputUpdate()
 	{
-		Input::DeltaMouseX = 0;
-		Input::DeltaMouseY = 0;
+		Input::ResetMouseDeltas();
 		glfwPollEvents();
 	}
 
@@ -125,16 +124,8 @@ namespace PEngine
 			{
 				WindowData& windowData = GetWindowData(window);
 
-				if (windowData.hasFocus)
-				{
-					MouseMoveEvent e(static_cast<float>(posX), static_cast<float>(posY));
-					windowData.eventCallback(e);
-				}
-				else
-				{
-					Input::DeltaMouseX = 0.0f;
-					Input::DeltaMouseY = 0.0f;
-				}
+				MouseMoveEvent e(static_cast<float>(posX), static_cast<float>(posY));
+				windowData.eventCallback(e);
 			});
 	}
 
@@ -160,6 +151,8 @@ namespace PEngine
 		static int width, height, x, y;
 		this->fullscreen = fullscreen;
 
+		Input::ResetMouseMovement();
+
 		if (fullscreen)
 		{
 			width = windowData.width;
@@ -180,8 +173,6 @@ namespace PEngine
 	void WindowsWindow::ToggleFullscreen()
 	{
 		SetFullscreen(!fullscreen);
-		Input::DeltaMouseX = 0.0f;
-		Input::DeltaMouseY = 0.0f;
 	}
 
 	bool WindowsWindow::HasFocus() const
@@ -226,7 +217,9 @@ namespace PEngine
 
 		glfwSetWindowSize(window, e.width, e.height);
 		glViewport(0, 0, e.width, e.height);
+
 		Camera::MainCamera->SetAspectRatio(static_cast<float>(e.width) / e.height);
+		Input::ResetMouseMovement();
 
 		return true;
 	}

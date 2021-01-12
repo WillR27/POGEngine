@@ -36,23 +36,7 @@ namespace PEngine
 	public:
 		MouseMoveEvent(float mouseX, float mouseY)
 		{
-			if (Input::MouseX == -1.0f)
-			{
-				Input::PrevMouseX = mouseX;
-				Input::PrevMouseY = mouseY;
-				Input::MouseX = mouseX;
-				Input::MouseY = mouseY;
-			}
-			else
-			{
-				Input::PrevMouseX = Input::MouseX;
-				Input::PrevMouseY = Input::MouseY;
-				Input::MouseX = mouseX;
-				Input::MouseY = mouseY;
-			}
-
-			Input::DeltaMouseX += Input::PrevMouseX - Input::MouseX;
-			Input::DeltaMouseY += Input::PrevMouseY - Input::MouseY;
+			Input::SetMouseXY(mouseX, mouseY);
 		}
 
 		virtual const char* GetName() const override
