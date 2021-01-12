@@ -45,6 +45,10 @@ namespace PEngine
 				{
 					ActiveLayer->boxColliders[index] = reinterpret_cast<BoxCollider*>(component);
 				}
+				else if (T::ComponentName() == Camera::ComponentName())
+				{
+					ActiveLayer->cameras[index] = reinterpret_cast<Camera*>(component);
+				}
 				else if (T::ComponentName() == MeshRenderer::ComponentName())
 				{
 					ActiveLayer->meshRenderers[index] = reinterpret_cast<MeshRenderer*>(component);

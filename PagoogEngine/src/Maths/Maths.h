@@ -59,11 +59,8 @@ namespace PEngine
 
 		T operator[](unsigned int index) const
 		{
-			if (index >= D)
-			{
-				PG_ASSERT(false, "Tried to access a dimension that didn't exist!");
-			}
-
+			PG_ASSERT(index < D, "Tried to access a dimension [{0}] that didn't exist for Size with {1} dimensions!", index, D);
+		
 			return values[index];
 		}
 

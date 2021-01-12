@@ -33,7 +33,7 @@ namespace PEngine
 
 	private:
 		template<typename T>
-		T* _GetComponent()
+		T* _GetComponent(bool warn = true)
 		{
 			try
 			{
@@ -41,40 +41,44 @@ namespace PEngine
 			}
 			catch (std::exception ex)
 			{
-				//PG_WARN("Component does not exist! The component \"{0}\" does not exist for the game object \"{1}\".", T::ComponentName(), this->name);
+				if (warn)
+				{
+					PG_WARN("The component '{0}' does not exist for the game object '{1}'.", T::ComponentName(), this->name);
+				}
+
 				return nullptr;
 			}
 		}
 
 	public:
 		template<typename T>
-		T* GetComponent()
+		T* GetComponent(bool warn = true)
 		{
-			return _GetComponent<T>();
+			return _GetComponent<T>(warn);
 		}
 
 		template<>
-		BoxCollider* GetComponent<BoxCollider>()
+		BoxCollider* GetComponent<BoxCollider>(bool warn)
 		{
-			return boxCollider != nullptr ? boxCollider : boxCollider = _GetComponent<BoxCollider>();
+			return boxCollider != nullptr ? boxCollider : boxCollider = _GetComponent<BoxCollider>(warn);
 		}
 
 		template<>
-		MeshRenderer* GetComponent<MeshRenderer>()
+		MeshRenderer* GetComponent<MeshRenderer>(bool warn)
 		{
-			return meshRenderer != nullptr ? meshRenderer : meshRenderer = _GetComponent<MeshRenderer>();
+			return meshRenderer != nullptr ? meshRenderer : meshRenderer = _GetComponent<MeshRenderer>(warn);
 		}
 
 		template<>
-		RigidBody* GetComponent<RigidBody>()
+		RigidBody* GetComponent<RigidBody>(bool warn)
 		{
-			return rigidBody != nullptr ? rigidBody : rigidBody = _GetComponent<RigidBody>();
+			return rigidBody != nullptr ? rigidBody : rigidBody = _GetComponent<RigidBody>(warn);
 		}
 
 		template<>
-		Transform* GetComponent<Transform>()
+		Transform* GetComponent<Transform>(bool warn)
 		{
-			return transform != nullptr ? transform : transform = _GetComponent<Transform>();
+			return transform != nullptr ? transform : transform = _GetComponent<Transform>(warn);
 		}
 
 		template<typename T, typename... Args>

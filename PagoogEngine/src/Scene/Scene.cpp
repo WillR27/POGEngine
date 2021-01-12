@@ -12,11 +12,11 @@ namespace PEngine
 	void Scene::AddGameObject(GameObject* gameObject)
 	{
 		ActiveLayer->gameObjects.push_back(gameObject);
-		ActiveLayer->boxColliders.push_back(gameObject->GetComponent<BoxCollider>());
-		ActiveLayer->cameras.push_back(gameObject->GetComponent<Camera>());
-		ActiveLayer->meshRenderers.push_back(gameObject->GetComponent<MeshRenderer>());
-		ActiveLayer->rigidBodies.push_back(gameObject->GetComponent<RigidBody>());
-		ActiveLayer->transforms.push_back(gameObject->GetComponent<Transform>());
+		ActiveLayer->boxColliders.push_back(gameObject->GetComponent<BoxCollider>(false));
+		ActiveLayer->cameras.push_back(gameObject->GetComponent<Camera>(false));
+		ActiveLayer->meshRenderers.push_back(gameObject->GetComponent<MeshRenderer>(false));
+		ActiveLayer->rigidBodies.push_back(gameObject->GetComponent<RigidBody>(false));
+		ActiveLayer->transforms.push_back(gameObject->GetComponent<Transform>(false));
 
 		gameObject->inScene = true;
 		gameObject->Init();

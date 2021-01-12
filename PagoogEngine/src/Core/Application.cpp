@@ -65,7 +65,7 @@ namespace PEngine
 			float spiralOfDeathPreventer = 1.0f;
 			while (deltaTimeUpdate >= Time::TimeUntilUpdate)
 			{
-				//PG_TRACE((1.0f / deltaTimeUpdate));
+				PG_TRACE((1.0f / deltaTimeUpdate));
 				window->InputUpdate();
 				inputManager.Send(deltaTimeUpdate);
 
@@ -81,7 +81,7 @@ namespace PEngine
 				deltaTimeFrame += deltaTime;
 				if (deltaTimeFrame >= Time::TimeUntilFrame)
 				{
-					//PG_WARN((1.0f / deltaTimeFrame));
+					PG_WARN((1.0f / deltaTimeFrame));
 					window->FrameUpdate();
 
 					activeScene->FrameUpdate(deltaTimeUpdate / Time::TimeUntilUpdate);

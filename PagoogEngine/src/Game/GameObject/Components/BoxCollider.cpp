@@ -20,9 +20,7 @@ namespace PEngine
 	void BoxCollider::CollideWith(BoxCollider& boxCollider)
 	{
 		Transform& transform1 = *gameObject->GetComponent<Transform>();
-		PG_ASSERT(&transform1, gameObject->GetName() + " has a box collider component but no transform component!");
 		Transform& transform2 = *boxCollider.gameObject->GetComponent<Transform>();
-		PG_ASSERT(&transform2, boxCollider.gameObject->GetName() + " has a box collider component but no transform component!");
 
 		const AABB<3>& aabb1 = GetTransformedAABB(transform1);
 		const AABB<3>& aabb2 = boxCollider.GetTransformedAABB(transform2);
@@ -108,7 +106,8 @@ namespace PEngine
 
 	void BoxCollider::SetStickiness(float newStickiness)
 	{
-		PG_ASSERT((newStickiness >= 0.0f && newStickiness <= 1.0f), "Tried to set a box collider's stickiness to a value outside the range 0-1!");
+		PG_ASSERT(newStickiness >= 0.0f && newStickiness <= 1.0f, "Tried to set a box collider's stickiness to '{0}', which is outside the range 0-1!", newStickiness);
+
 		this->stickiness = newStickiness;
 	}
 

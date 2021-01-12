@@ -32,7 +32,7 @@ namespace PEngine
 
 	void RigidBody::SetMass(float newMass)
 	{
-		PG_ASSERT((newMass > 0.0f), "Tried to set mass to a value not greater than 0!");
+		PG_ASSERT(newMass > 0.0f, "Tried to set the mass of '{0}' to {1}!", gameObject->GetName(), newMass);
 
 		this->mass = newMass;
 	}
