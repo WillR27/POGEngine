@@ -28,13 +28,18 @@ namespace PEngine
 
 		if (index != -1)
 		{
-			Layer::ActiveLayer->gameObjects		.erase(Layer::ActiveLayer->gameObjects		.begin() + index);
-			Layer::ActiveLayer->boxColliders	.erase(Layer::ActiveLayer->boxColliders		.begin() + index);
-			Layer::ActiveLayer->cameras			.erase(Layer::ActiveLayer->cameras			.begin() + index);
-			Layer::ActiveLayer->meshRenderers	.erase(Layer::ActiveLayer->meshRenderers	.begin() + index);
-			Layer::ActiveLayer->rigidBodies		.erase(Layer::ActiveLayer->rigidBodies		.begin() + index);
-			Layer::ActiveLayer->transforms		.erase(Layer::ActiveLayer->transforms		.begin() + index);
+			Layer::ActiveLayer->gameObjects.erase(Layer::ActiveLayer->gameObjects.begin() + index);
+			Layer::ActiveLayer->boxColliders.erase(Layer::ActiveLayer->boxColliders.begin() + index);
+			Layer::ActiveLayer->cameras.erase(Layer::ActiveLayer->cameras.begin() + index);
+			Layer::ActiveLayer->meshRenderers.erase(Layer::ActiveLayer->meshRenderers.begin() + index);
+			Layer::ActiveLayer->rigidBodies.erase(Layer::ActiveLayer->rigidBodies.begin() + index);
+			Layer::ActiveLayer->transforms.erase(Layer::ActiveLayer->transforms.begin() + index);
 		}
+	}
+
+	void Scene::DeleteGameObject(GameObject* gameObject)
+	{
+		RemoveGameObject(gameObject);
 
 		delete gameObject;
 	}

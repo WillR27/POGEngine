@@ -65,10 +65,41 @@ namespace PEngine
 			}
 		}
 
+		template <typename T>
+		static void RemoveComponent(T* component)
+		{
+			int index = IndexOf(Layer::ActiveLayer->gameObjects, component->gameObject);
+
+			if (index != -1)
+			{
+				if (T::ComponentName() == BoxCollider::ComponentName())
+				{
+					Layer::ActiveLayer->boxColliders[index] = nullptr;
+				}
+				else if (T::ComponentName() == Camera::ComponentName())
+				{
+					Layer::ActiveLayer->cameras[index] = nullptr;
+				}
+				else if (T::ComponentName() == MeshRenderer::ComponentName())
+				{
+					Layer::ActiveLayer->meshRenderers[index] = nullptr;
+				}
+				else if (T::ComponentName() == RigidBody::ComponentName())
+				{
+					Layer::ActiveLayer->rigidBodies[index] = nullptr;
+				}
+				else if (T::ComponentName() == Transform::ComponentName())
+				{
+					Layer::ActiveLayer->transforms[index] = nullptr;
+				}
+			}
+		}
+
 		static void AddGameObject(GameObject* gameObject);
 		
 	public:
 		static void RemoveGameObject(GameObject* gameObject);
+		static void DeleteGameObject(GameObject* gameObject);
 
 		static GameObject* RayCast(Vec3 position, Vec3 direction, const GameObject& objectToIgnore);
 

@@ -29,8 +29,10 @@ namespace Pagoog
 			
 			if (obj != nullptr)
 			{
-				Scene::RemoveGameObject(obj);
+				Scene::DeleteGameObject(obj);
 			}
+
+			RemoveComponent<BoxCollider>();
 		}
 
 		float moveSpeed = 1.0f;

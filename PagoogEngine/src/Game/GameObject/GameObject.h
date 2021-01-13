@@ -113,6 +113,28 @@ namespace PEngine
 			return component;
 		}
 
+		template<typename T>
+		bool RemoveComponent()
+		{
+			auto it = components.find(T::ComponentName());
+
+			if (it != components.end())
+			{
+				if (inScene)
+				{
+					Scene::RemoveComponent(static_cast<T*>((*it).second));
+				}
+
+				delete static_cast<T*>((*it).second);
+
+				components.erase(it);
+
+				return true;
+			}
+
+			return false;
+		}
+
 		void SetName(std::string name);
 		std::string GetName() const;
 
