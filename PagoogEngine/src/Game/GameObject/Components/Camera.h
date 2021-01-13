@@ -5,7 +5,7 @@
 
 namespace PEngine
 {
-	class Camera : public Component
+	class Camera : public _Component
 	{
 	public:
 		static Camera* MainCamera;
@@ -13,7 +13,7 @@ namespace PEngine
 		Camera();
 		virtual ~Camera() override = default;
 
-		virtual Component* Clone() const override;
+		virtual _Component* Clone() const override;
 
 		void Update(float dt);
 

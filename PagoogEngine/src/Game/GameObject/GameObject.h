@@ -68,7 +68,7 @@ namespace PEngine
 		}
 
 		template<typename T>
-		T* GetComponent()
+		Component<T> GetComponent()
 		{
 			return _GetComponent<T>();
 		}
@@ -80,7 +80,7 @@ namespace PEngine
 		}
 
 		template<>
-		BoxCollider* GetComponent<BoxCollider>()
+		Component<BoxCollider> GetComponent<BoxCollider>()
 		{
 			if (boxCollider == nullptr)
 			{
@@ -97,7 +97,7 @@ namespace PEngine
 		}
 		
 		template<>
-		MeshRenderer* GetComponent<MeshRenderer>()
+		Component<MeshRenderer> GetComponent<MeshRenderer>()
 		{
 			if (meshRenderer == nullptr)
 			{
@@ -114,7 +114,7 @@ namespace PEngine
 		}
 
 		template<>
-		RigidBody* GetComponent<RigidBody>()
+		Component<RigidBody> GetComponent<RigidBody>()
 		{
 			if (rigidBody == nullptr)
 			{
@@ -131,7 +131,7 @@ namespace PEngine
 		}
 
 		template<>
-		Transform* GetComponent<Transform>()
+		Component<Transform> GetComponent<Transform>()
 		{
 			if (transform == nullptr)
 			{
@@ -147,7 +147,7 @@ namespace PEngine
 			T* component = new T(std::forward<Args>(args)...);
 			component->gameObject = this;
 
-			Component* componentBase = static_cast<Component*>(component);
+			_Component* componentBase = static_cast<_Component*>(component);
 			components[T::ComponentName()] = componentBase;
 
 			if      (T::ComponentName() == BoxCollider::ComponentName())  boxCollider = static_cast<BoxCollider*>(componentBase);
@@ -169,7 +169,7 @@ namespace PEngine
 			T* component = new T(initList);
 			component->gameObject = this;
 
-			Component* componentBase = static_cast<Component*>(component);
+			_Component* componentBase = static_cast<_Component*>(component);
 			components[T::ComponentName()] = componentBase;
 
 			if      (T::ComponentName() == BoxCollider::ComponentName())  boxCollider = static_cast<BoxCollider*>(componentBase);
@@ -221,7 +221,7 @@ namespace PEngine
 	private:
 		std::string name;
 
-		std::unordered_map<std::string, Component*> components;
+		std::unordered_map<std::string, _Component*> components;
 
 		bool inScene;
 

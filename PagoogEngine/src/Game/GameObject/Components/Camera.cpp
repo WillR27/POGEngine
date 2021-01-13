@@ -25,14 +25,14 @@ namespace PEngine
 	{
 	}
 
-	Component* Camera::Clone() const
+	_Component* Camera::Clone() const
 	{
 		return new Camera(*this);
 	}
 
 	void Camera::Update(float dt)
 	{
-		Transform* transform = gameObject->GetComponent<Transform>();
+		auto transform = gameObject->GetComponent<Transform>();
 		Quat cameraOrientation = Quat(Vec3(pitch, yaw, 0.0f));
 		
 		forwardVec = Maths::ToForwardVec(transform->GetOrientation() * cameraOrientation);

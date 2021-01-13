@@ -148,11 +148,11 @@ void main()
 		player = Scene::CreateGameObject<Player>();
 		player->GetComponent<MeshRenderer>()->SetMaterial(material1);
 		//player->GetComponent<MeshRenderer>()->SetMesh(mesh2);
-		Transform& transform = *player->GetComponent<Transform>();
-		transform.SetPosition(Vec3(0.0f, 0.0f, 10.0f));
+		auto transform = player->GetComponent<Transform>();
+		transform->SetPosition(Vec3(0.0f, 0.0f, 10.0f));
 
-		Camera* camera = player->GetComponent<Camera>();
-		Camera::MainCamera = camera;
+		auto camera = player->GetComponent<Camera>();
+		Camera::MainCamera = &camera;
 	}
 
 	void WorldLayer::CollisionsUpdate(float dt)

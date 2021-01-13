@@ -34,7 +34,7 @@ namespace PEngine
 	{
 		for (auto componentPair : gameObject.components)
 		{
-			Component* component = componentPair.second->Clone();
+			_Component* component = componentPair.second->Clone();
 			component->gameObject = this;
 			components[componentPair.first] = component;
 
