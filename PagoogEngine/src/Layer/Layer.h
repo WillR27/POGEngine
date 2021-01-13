@@ -34,6 +34,8 @@ namespace PEngine
 		InputManager inputManager;
 
 	private:
+		static Layer* ActiveLayer;
+
 		std::vector<GameObject*> gameObjects;
 		std::vector<BoxCollider*> boxColliders;
 		std::vector<Camera*> cameras;

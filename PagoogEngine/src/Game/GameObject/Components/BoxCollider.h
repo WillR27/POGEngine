@@ -19,6 +19,7 @@ namespace PEngine
 
 		AABB<3> GetAABB() const;
 		AABB<3> GetTransformedAABB(const Transform& transform) const;
+		AABB<3> GetTransformedAABB() const;
 
 		float GetStickiness() const;
 		void SetStickiness(float newStickiness);

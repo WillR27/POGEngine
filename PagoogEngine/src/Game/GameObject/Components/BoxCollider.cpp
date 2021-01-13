@@ -99,6 +99,11 @@ namespace PEngine
 		return AABB<3>(min, max);
 	}
 
+	AABB<3> BoxCollider::GetTransformedAABB() const
+	{
+		return GetTransformedAABB(*gameObject->GetComponent<Transform>());
+	}
+
 	float BoxCollider::GetStickiness() const
 	{
 		return stickiness;

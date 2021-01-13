@@ -19,8 +19,9 @@ namespace Pagoog
 
 	void Player::ActionCallback(InputPackage& inputPackage, float dt)
 	{
-		RigidBody* rigidBody = GetComponent<RigidBody>();
 		Camera* camera = GetComponent<Camera>();
+		RigidBody* rigidBody = GetComponent<RigidBody>();
+		Transform* transform = GetComponent<Transform>();
 
 		float moveSpeed = 1.0f;
 		float lookSpeed = 0.1f;

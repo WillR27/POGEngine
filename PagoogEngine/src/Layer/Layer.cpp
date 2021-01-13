@@ -5,6 +5,8 @@
 
 namespace PEngine
 {
+	Layer* Layer::ActiveLayer = nullptr;
+
 	Layer::Layer(const char* name)
 		: name(name)
 		, inputManager()

@@ -7,19 +7,24 @@
 
 namespace PEngine
 {
-	Layer* Scene::ActiveLayer = nullptr;
+	Scene* Scene::ActiveScene = nullptr;
 
 	void Scene::AddGameObject(GameObject* gameObject)
 	{
-		ActiveLayer->gameObjects.push_back(gameObject);
-		ActiveLayer->boxColliders.push_back(gameObject->GetComponent<BoxCollider>(false));
-		ActiveLayer->cameras.push_back(gameObject->GetComponent<Camera>(false));
-		ActiveLayer->meshRenderers.push_back(gameObject->GetComponent<MeshRenderer>(false));
-		ActiveLayer->rigidBodies.push_back(gameObject->GetComponent<RigidBody>(false));
-		ActiveLayer->transforms.push_back(gameObject->GetComponent<Transform>(false));
+		Layer::ActiveLayer->gameObjects.push_back(gameObject);
+		Layer::ActiveLayer->boxColliders.push_back(gameObject->GetComponent<BoxCollider>(false));
+		Layer::ActiveLayer->cameras.push_back(gameObject->GetComponent<Camera>(false));
+		Layer::ActiveLayer->meshRenderers.push_back(gameObject->GetComponent<MeshRenderer>(false));
+		Layer::ActiveLayer->rigidBodies.push_back(gameObject->GetComponent<RigidBody>(false));
+		Layer::ActiveLayer->transforms.push_back(gameObject->GetComponent<Transform>(false));
 
 		gameObject->inScene = true;
 		gameObject->Init();
+	}
+
+	GameObject* Scene::RayCast(Vec3 position, Vec3 direction, const GameObject& objectToIgnore)
+	{
+		return ActiveScene->_RayCast(position, direction, objectToIgnore);
 	}
 
 	Scene::Scene(std::string name)
@@ -39,7 +44,7 @@ namespace PEngine
 	{
 		for (Layer* layer : layers)
 		{
-			ActiveLayer = layer;
+			Layer::ActiveLayer = layer;
 			layer->Init();
 		}
 	}
@@ -48,13 +53,13 @@ namespace PEngine
 	{
 		for (Layer* layer : layers)
 		{
-			ActiveLayer = layer;
+			Layer::ActiveLayer = layer;
 			layer->InputUpdate(dt);
 		}
 
 		for (Layer* layer : layers)
 		{
-			ActiveLayer = layer;
+			Layer::ActiveLayer = layer;
 			layer->CollisionsPreUpdate(dt);
 			layer->CollisionsUpdate(dt);
 			layer->CollisionsPostUpdate(dt);
@@ -62,7 +67,7 @@ namespace PEngine
 
 		for (Layer* layer : layers)
 		{
-			ActiveLayer = layer;
+			Layer::ActiveLayer = layer;
 			layer->PreUpdate(dt);
 			layer->Update(dt);
 			layer->PostUpdate(dt);
@@ -73,7 +78,7 @@ namespace PEngine
 	{
 		for (Layer* layer : layers)
 		{
-			ActiveLayer = layer;
+			Layer::ActiveLayer = layer;
 			layer->PreFrameUpdate(alpha);
 			layer->FrameUpdate(alpha);
 			layer->PostFrameUpdate(alpha);
@@ -96,5 +101,35 @@ namespace PEngine
 	void Scene::AddLayer(Layer* layer)
 	{
 		layers.push_back(layer);
+	}
+
+	GameObject* Scene::_RayCast(Vec3 position, Vec3 direction, const GameObject& objectToIgnore) const
+	{
+		const float step = 0.1f;
+		const float limit = 100.0f;
+
+		GameObject* hitObject = nullptr;
+		float totalDistance = 0.0f;
+
+		Vec3 newPosition = position;
+
+		while (totalDistance < limit && hitObject == nullptr)
+		{
+			newPosition += direction * step;
+			totalDistance += step;
+
+			for (BoxCollider* boxCollider : Layer::ActiveLayer->boxColliders)
+			{
+				if (boxCollider != nullptr && boxCollider->gameObject != &objectToIgnore)
+				{
+					if (boxCollider->GetTransformedAABB().IsCollidingWith(newPosition))
+					{
+						hitObject = boxCollider->gameObject;
+					}
+				}
+			}
+		}
+
+		return hitObject;
 	}
 }

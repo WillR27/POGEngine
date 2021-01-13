@@ -30,8 +30,6 @@ namespace PEngine
 		Window* window;
 
 	private:
-		Scene* activeScene;
-
 		std::vector<Scene*> scenes;
 	};
 

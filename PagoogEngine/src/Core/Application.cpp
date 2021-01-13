@@ -12,7 +12,6 @@ namespace PEngine
 	Application::Application()
 		: window(nullptr)
 		, inputManager()
-		, activeScene(nullptr)
 	{
 		PG_INFO("Creating application!");
 	}
@@ -45,7 +44,7 @@ namespace PEngine
 
 	void Application::PostInit()
 	{
-		activeScene->Init();
+		Scene::ActiveScene->Init();
 	}
 
 	void Application::Run()
@@ -65,11 +64,11 @@ namespace PEngine
 			float spiralOfDeathPreventer = 1.0f;
 			while (deltaTimeUpdate >= Time::TimeUntilUpdate)
 			{
-				PG_TRACE((1.0f / deltaTimeUpdate));
+				//PG_TRACE((1.0f / deltaTimeUpdate));
 				window->InputUpdate();
 				inputManager.Send(deltaTimeUpdate);
 
-				activeScene->Update(Time::TimeUntilUpdate);
+				Scene::ActiveScene->Update(Time::TimeUntilUpdate);
 				
 				deltaTimeUpdate -= (Time::TimeUntilUpdate * spiralOfDeathPreventer);
 
@@ -81,10 +80,10 @@ namespace PEngine
 				deltaTimeFrame += deltaTime;
 				if (deltaTimeFrame >= Time::TimeUntilFrame)
 				{
-					PG_WARN((1.0f / deltaTimeFrame));
+					//PG_WARN((1.0f / deltaTimeFrame));
 					window->FrameUpdate();
 
-					activeScene->FrameUpdate(deltaTimeUpdate / Time::TimeUntilUpdate);
+					Scene::ActiveScene->FrameUpdate(deltaTimeUpdate / Time::TimeUntilUpdate);
 
 					window->SwapBuffers();
 
@@ -107,7 +106,7 @@ namespace PEngine
 
 		if (!e.IsHandled())
 		{
-			activeScene->HandleEvent(e);
+			Scene::ActiveScene->HandleEvent(e);
 		}
 	}
 
@@ -118,6 +117,6 @@ namespace PEngine
 	void Application::AddScene(Scene* scene)
 	{
 		scenes.push_back(scene);
-		activeScene = scene;
+		Scene::ActiveScene = scene;
 	}
 }

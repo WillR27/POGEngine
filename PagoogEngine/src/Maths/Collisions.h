@@ -49,6 +49,19 @@ namespace PEngine
 			size = Size(sizeVec);
 		}
 
+		bool IsCollidingWith(Vec3 point) const // TODO: Replace Vec3 with template Vec<D>?
+		{
+			for (int d = 0; d < D; d++)
+			{
+				if (GetMin()[d] > point[d] || GetMax()[d] < point[d])
+				{
+					return false;
+				}
+			}
+
+			return true;
+		}
+
 		bool IsCollidingWith(const AABB<D>& aabb) const
 		{
 			for (int d = 0; d < D; d++)
@@ -60,6 +73,52 @@ namespace PEngine
 			}
 
 			return true;
+		}
+
+		Shared<Hit> IsCollidingWith2(Vec3 point) const
+		{
+			float dy = point.y - this->center.y;
+			float py = this->radii.y - abs(dy);
+			if (py <= 0.0f) return nullptr;
+
+			float dx = point.x - this->center.x;
+			float px = this->radii.x - abs(dx);
+			if (px <= 0.0f) return nullptr;
+
+			float dz = point.z - this->center.z;
+			float pz = this->radii.z - abs(dz);
+			if (pz <= 0.0f) return nullptr;
+
+			Hit hit;
+			if (py < px && py < pz)
+			{
+				int sy = Maths::Sign(dy);
+				hit.overlap.y = py * sy;
+				hit.surfaceNormal.y = static_cast<float>(sy);
+				hit.contactPoint.x = aabb.center.x;
+				hit.contactPoint.y = this->center.y + (this->radii.y * sy);
+				hit.contactPoint.z = aabb.center.z;
+			}
+			else if (px < py && px < pz)
+			{
+				int sx = Maths::Sign(dx);
+				hit.overlap.x = px * sx;
+				hit.surfaceNormal.x = static_cast<float>(sx);
+				hit.contactPoint.x = this->center.x + (this->radii.x * sx);
+				hit.contactPoint.y = aabb.center.y;
+				hit.contactPoint.z = aabb.center.z;
+			}
+			else
+			{
+				int sz = Maths::Sign(dz);
+				hit.overlap.z = pz * sz;
+				hit.surfaceNormal.z = static_cast<float>(sz);
+				hit.contactPoint.x = aabb.center.x;
+				hit.contactPoint.y = aabb.center.y;
+				hit.contactPoint.z = this->center.z + (this->radii.z * sz);
+			}
+
+			return MakeShared<Hit>(hit);
 		}
 
 		Shared<Hit> IsCollidingWith2(const AABB<D>& aabb) const

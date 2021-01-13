@@ -11,6 +11,7 @@ namespace PEngine
 	class Scene
 	{
 	public:
+		friend class Application;
 		friend class GameObject;
 
 		template <typename T>
@@ -37,29 +38,29 @@ namespace PEngine
 		template <typename T>
 		static void AddComponent(T* component)
 		{
-			int index = IndexOf(ActiveLayer->gameObjects, component->gameObject);
+			int index = IndexOf(Layer::ActiveLayer->gameObjects, component->gameObject);
 
 			if (index != -1)
 			{
 				if (T::ComponentName() == BoxCollider::ComponentName())
 				{
-					ActiveLayer->boxColliders[index] = reinterpret_cast<BoxCollider*>(component);
+					Layer::ActiveLayer->boxColliders[index] = reinterpret_cast<BoxCollider*>(component);
 				}
 				else if (T::ComponentName() == Camera::ComponentName())
 				{
-					ActiveLayer->cameras[index] = reinterpret_cast<Camera*>(component);
+					Layer::ActiveLayer->cameras[index] = reinterpret_cast<Camera*>(component);
 				}
 				else if (T::ComponentName() == MeshRenderer::ComponentName())
 				{
-					ActiveLayer->meshRenderers[index] = reinterpret_cast<MeshRenderer*>(component);
+					Layer::ActiveLayer->meshRenderers[index] = reinterpret_cast<MeshRenderer*>(component);
 				}
 				else if (T::ComponentName() == RigidBody::ComponentName())
 				{
-					ActiveLayer->rigidBodies[index] = reinterpret_cast<RigidBody*>(component);
+					Layer::ActiveLayer->rigidBodies[index] = reinterpret_cast<RigidBody*>(component);
 				}
 				else if (T::ComponentName() == Transform::ComponentName())
 				{
-					ActiveLayer->transforms[index] = reinterpret_cast<Transform*>(component);
+					Layer::ActiveLayer->transforms[index] = reinterpret_cast<Transform*>(component);
 				}
 			}
 		}
@@ -67,6 +68,8 @@ namespace PEngine
 		static void AddGameObject(GameObject* gameObject);
 
 	public:
+		static GameObject* RayCast(Vec3 position, Vec3 direction, const GameObject& objectToIgnore);
+
 		Scene(std::string name);
 		~Scene();
 
@@ -80,11 +83,13 @@ namespace PEngine
 		void AddLayer(Layer* layer);
 
 	private:
-		static Layer* ActiveLayer;
+		static Scene* ActiveScene;
 
 		std::string name;
 
 		std::vector<Layer*> layers;
+
+		GameObject* _RayCast(Vec3 position, Vec3 direction, const GameObject& objectToIgnore) const;
 	};
 }
 
