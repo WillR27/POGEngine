@@ -60,25 +60,25 @@ namespace PEngine
 		template<>
 		BoxCollider* GetComponent<BoxCollider>(bool warn)
 		{
-			return boxCollider != nullptr ? boxCollider : boxCollider = _GetComponent<BoxCollider>(warn);
+			return boxCollider;
 		}
 
 		template<>
 		MeshRenderer* GetComponent<MeshRenderer>(bool warn)
 		{
-			return meshRenderer != nullptr ? meshRenderer : meshRenderer = _GetComponent<MeshRenderer>(warn);
+			return meshRenderer;
 		}
 
 		template<>
 		RigidBody* GetComponent<RigidBody>(bool warn)
 		{
-			return rigidBody != nullptr ? rigidBody : rigidBody = _GetComponent<RigidBody>(warn);
+			return rigidBody;
 		}
 
 		template<>
 		Transform* GetComponent<Transform>(bool warn)
 		{
-			return transform != nullptr ? transform : transform = _GetComponent<Transform>(warn);
+			return transform;
 		}
 
 		template<typename T, typename... Args>
@@ -87,7 +87,13 @@ namespace PEngine
 			T* component = new T(std::forward<Args>(args)...);
 			component->gameObject = this;
 
-			components[T::ComponentName()] = static_cast<Component*>(component);
+			Component* componentBase = static_cast<Component*>(component);
+			components[T::ComponentName()] = componentBase;
+
+			if      (T::ComponentName() == BoxCollider::ComponentName())  boxCollider = static_cast<BoxCollider*>(componentBase);
+			else if (T::ComponentName() == MeshRenderer::ComponentName()) meshRenderer = static_cast<MeshRenderer*>(componentBase);
+			else if (T::ComponentName() == RigidBody::ComponentName())    rigidBody = static_cast<RigidBody*>(componentBase);
+			else if (T::ComponentName() == Transform::ComponentName())    transform = static_cast<Transform*>(componentBase);
 
 			if (inScene)
 			{
@@ -103,7 +109,13 @@ namespace PEngine
 			T* component = new T(initList);
 			component->gameObject = this;
 
-			components[T::ComponentName()] = static_cast<Component*>(component);
+			Component* componentBase = static_cast<Component*>(component);
+			components[T::ComponentName()] = componentBase;
+
+			if      (T::ComponentName() == BoxCollider::ComponentName())  boxCollider = static_cast<BoxCollider*>(componentBase);
+			else if (T::ComponentName() == MeshRenderer::ComponentName()) meshRenderer = static_cast<MeshRenderer*>(componentBase);
+			else if (T::ComponentName() == RigidBody::ComponentName())    rigidBody = static_cast<RigidBody*>(componentBase);
+			else if (T::ComponentName() == Transform::ComponentName())    transform = static_cast<Transform*>(componentBase);
 
 			if (inScene)
 			{

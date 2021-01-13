@@ -37,6 +37,11 @@ namespace PEngine
 			Component* component = componentPair.second->Clone();
 			component->gameObject = this;
 			components[componentPair.first] = component;
+
+			if      (component->GetComponentName() == BoxCollider::ComponentName())  boxCollider = static_cast<BoxCollider*>(component);
+			else if (component->GetComponentName() == MeshRenderer::ComponentName()) meshRenderer = static_cast<MeshRenderer*>(component);
+			else if (component->GetComponentName() == RigidBody::ComponentName())    rigidBody = static_cast<RigidBody*>(component);
+			else if (component->GetComponentName() == Transform::ComponentName())    transform = static_cast<Transform*>(component);
 		}
 	}
 

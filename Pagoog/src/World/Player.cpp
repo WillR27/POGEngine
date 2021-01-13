@@ -31,8 +31,6 @@ namespace Pagoog
 			{
 				Scene::DeleteGameObject(obj);
 			}
-
-			RemoveComponent<BoxCollider>();
 		}
 
 		float moveSpeed = 1.0f;
