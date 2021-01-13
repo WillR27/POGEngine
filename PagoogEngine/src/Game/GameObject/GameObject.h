@@ -33,7 +33,7 @@ namespace PEngine
 
 	private:
 		template<typename T>
-		T* _GetComponent(bool warn = true)
+		T* _GetComponentNoWarning()
 		{
 			try
 			{
@@ -41,10 +41,20 @@ namespace PEngine
 			}
 			catch (std::exception ex)
 			{
-				if (warn)
-				{
-					PG_WARN("The component '{0}' does not exist for the game object '{1}'.", T::ComponentName(), this->name);
-				}
+				return nullptr;
+			}
+		}
+
+		template<typename T>
+		T* _GetComponent()
+		{
+			try
+			{
+				return static_cast<T*>(components.at(T::ComponentName()));
+			}
+			catch (std::exception ex)
+			{
+				PG_WARN("The component '{0}' does not exist for the game object '{1}'.", T::ComponentName(), this->name);
 
 				return nullptr;
 			}
@@ -52,32 +62,82 @@ namespace PEngine
 
 	public:
 		template<typename T>
-		T* GetComponent(bool warn = true)
+		T* GetComponentNoWarning()
 		{
-			return _GetComponent<T>(warn);
+			return _GetComponentNoWarning<T>();
+		}
+
+		template<typename T>
+		T* GetComponent()
+		{
+			return _GetComponent<T>();
 		}
 
 		template<>
-		BoxCollider* GetComponent<BoxCollider>(bool warn)
+		BoxCollider* GetComponentNoWarning<BoxCollider>()
 		{
 			return boxCollider;
 		}
 
 		template<>
-		MeshRenderer* GetComponent<MeshRenderer>(bool warn)
+		BoxCollider* GetComponent<BoxCollider>()
 		{
+			if (boxCollider == nullptr)
+			{
+				PG_WARN("The component '{0}' does not exist for the game object '{1}'.", BoxCollider::ComponentName(), this->name);
+			}
+
+			return boxCollider;
+		}
+
+		template<>
+		MeshRenderer* GetComponentNoWarning<MeshRenderer>()
+		{
+			return meshRenderer;
+		}
+		
+		template<>
+		MeshRenderer* GetComponent<MeshRenderer>()
+		{
+			if (meshRenderer == nullptr)
+			{
+				PG_WARN("The component '{0}' does not exist for the game object '{1}'.", MeshRenderer::ComponentName(), this->name);
+			}
+
 			return meshRenderer;
 		}
 
 		template<>
-		RigidBody* GetComponent<RigidBody>(bool warn)
+		RigidBody* GetComponentNoWarning<RigidBody>()
 		{
 			return rigidBody;
 		}
 
 		template<>
-		Transform* GetComponent<Transform>(bool warn)
+		RigidBody* GetComponent<RigidBody>()
 		{
+			if (rigidBody == nullptr)
+			{
+				PG_WARN("The component '{0}' does not exist for the game object '{1}'.", RigidBody::ComponentName(), this->name);
+			}
+
+			return rigidBody;
+		}
+
+		template<>
+		Transform* GetComponentNoWarning<Transform>()
+		{
+			return transform;
+		}
+
+		template<>
+		Transform* GetComponent<Transform>()
+		{
+			if (transform == nullptr)
+			{
+				PG_WARN("The component '{0}' does not exist for the game object '{1}'.", Transform::ComponentName(), this->name);
+			}
+
 			return transform;
 		}
 
