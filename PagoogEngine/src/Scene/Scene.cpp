@@ -9,7 +9,7 @@ namespace PEngine
 {
 	Scene* Scene::ActiveScene = nullptr;
 
-	void Scene::AddGameObject(GameObject* gameObject)
+	void Scene::_AddGameObject(GameObject* gameObject)
 	{
 		Layer::ActiveLayer->gameObjects		.push_back(gameObject);
 		Layer::ActiveLayer->boxColliders	.push_back(gameObject->GetComponentNoWarning<BoxCollider>());
@@ -35,6 +35,8 @@ namespace PEngine
 			Layer::ActiveLayer->rigidBodies.erase(Layer::ActiveLayer->rigidBodies.begin() + index);
 			Layer::ActiveLayer->transforms.erase(Layer::ActiveLayer->transforms.begin() + index);
 		}
+
+		gameObject->inScene = false;
 	}
 
 	void Scene::DeleteGameObject(GameObject* gameObject)
@@ -42,6 +44,11 @@ namespace PEngine
 		RemoveGameObject(gameObject);
 
 		delete gameObject;
+	}
+
+	bool Scene::IsInScene(GameObject* gameObject)
+	{
+		return IndexOf(Layer::ActiveLayer->gameObjects, gameObject) != -1;
 	}
 
 	GameObject* Scene::RayCast(Vec3 position, Vec3 direction, const GameObject& objectToIgnore)

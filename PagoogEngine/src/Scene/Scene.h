@@ -15,23 +15,23 @@ namespace PEngine
 		friend class GameObject;
 
 		template <typename T>
-		static T* CreateGameObject(const T& gameObject) // TODO: Rename to add
+		static T* AddGameObject(const T& gameObject) // TODO: Rename to add
 		{
 			T* newGameObject = new T(gameObject);
 
-			AddGameObject(newGameObject);
+			_AddGameObject(newGameObject);
 
 			return newGameObject;
 		}
 
 		template <typename T, typename... Args>
-		static T& AddGameObject(Args... args)
+		static T* CreateGameObject(Args... args)
 		{
 			T* newGameObject = new T(std::forward(args)...);
 
-			AddGameObject(newGameObject);
+			_AddGameObject(newGameObject);
 
-			return *newGameObject;
+			return newGameObject;
 		}
 
 	private:
@@ -95,11 +95,13 @@ namespace PEngine
 			}
 		}
 
-		static void AddGameObject(GameObject* gameObject);
+		static void _AddGameObject(GameObject* gameObject);
 		
 	public:
 		static void RemoveGameObject(GameObject* gameObject);
 		static void DeleteGameObject(GameObject* gameObject);
+
+		static bool IsInScene(GameObject* gameObject);
 
 		static GameObject* RayCast(Vec3 position, Vec3 direction, const GameObject& objectToIgnore);
 

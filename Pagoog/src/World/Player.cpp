@@ -23,7 +23,7 @@ namespace Pagoog
 		RigidBody* rigidBody = GetComponent<RigidBody>();
 		Transform* transform = GetComponent<Transform>();
 
-		if (inputPackage.HasActionOccurred("Fire"))
+		if (inputPackage.HasActionOccurred("Left"))
 		{
 			GameObject* obj = Scene::RayCast(transform->GetPosition(), camera->GetForwardVec(), *this);
 			

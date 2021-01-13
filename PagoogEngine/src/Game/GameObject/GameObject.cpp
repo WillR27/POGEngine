@@ -55,7 +55,7 @@ namespace PEngine
 		return name;
 	}
 
-	bool GameObject::InScene() const
+	bool GameObject::IsInScene() const
 	{
 		return inScene;
 	}

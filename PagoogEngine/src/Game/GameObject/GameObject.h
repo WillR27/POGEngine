@@ -210,7 +210,7 @@ namespace PEngine
 		void SetName(std::string name);
 		std::string GetName() const;
 
-		bool InScene() const;
+		bool IsInScene() const;
 
 	protected:
 		virtual void Init();
