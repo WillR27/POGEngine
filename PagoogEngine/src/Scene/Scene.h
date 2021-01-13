@@ -66,8 +66,10 @@ namespace PEngine
 		}
 
 		static void AddGameObject(GameObject* gameObject);
-
+		
 	public:
+		static void RemoveGameObject(GameObject* gameObject);
+
 		static GameObject* RayCast(Vec3 position, Vec3 direction, const GameObject& objectToIgnore);
 
 		Scene(std::string name);

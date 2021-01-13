@@ -11,15 +11,32 @@ namespace PEngine
 
 	void Scene::AddGameObject(GameObject* gameObject)
 	{
-		Layer::ActiveLayer->gameObjects.push_back(gameObject);
-		Layer::ActiveLayer->boxColliders.push_back(gameObject->GetComponent<BoxCollider>(false));
-		Layer::ActiveLayer->cameras.push_back(gameObject->GetComponent<Camera>(false));
-		Layer::ActiveLayer->meshRenderers.push_back(gameObject->GetComponent<MeshRenderer>(false));
-		Layer::ActiveLayer->rigidBodies.push_back(gameObject->GetComponent<RigidBody>(false));
-		Layer::ActiveLayer->transforms.push_back(gameObject->GetComponent<Transform>(false));
+		Layer::ActiveLayer->gameObjects		.push_back(gameObject);
+		Layer::ActiveLayer->boxColliders	.push_back(gameObject->GetComponent<BoxCollider>(false));
+		Layer::ActiveLayer->cameras			.push_back(gameObject->GetComponent<Camera>(false));
+		Layer::ActiveLayer->meshRenderers	.push_back(gameObject->GetComponent<MeshRenderer>(false));
+		Layer::ActiveLayer->rigidBodies		.push_back(gameObject->GetComponent<RigidBody>(false));
+		Layer::ActiveLayer->transforms		.push_back(gameObject->GetComponent<Transform>(false));
 
 		gameObject->inScene = true;
 		gameObject->Init();
+	}
+
+	void Scene::RemoveGameObject(GameObject* gameObject)
+	{
+		int index = IndexOf(Layer::ActiveLayer->gameObjects, gameObject);
+
+		if (index != -1)
+		{
+			Layer::ActiveLayer->gameObjects		.erase(Layer::ActiveLayer->gameObjects		.begin() + index);
+			Layer::ActiveLayer->boxColliders	.erase(Layer::ActiveLayer->boxColliders		.begin() + index);
+			Layer::ActiveLayer->cameras			.erase(Layer::ActiveLayer->cameras			.begin() + index);
+			Layer::ActiveLayer->meshRenderers	.erase(Layer::ActiveLayer->meshRenderers	.begin() + index);
+			Layer::ActiveLayer->rigidBodies		.erase(Layer::ActiveLayer->rigidBodies		.begin() + index);
+			Layer::ActiveLayer->transforms		.erase(Layer::ActiveLayer->transforms		.begin() + index);
+		}
+
+		delete gameObject;
 	}
 
 	GameObject* Scene::RayCast(Vec3 position, Vec3 direction, const GameObject& objectToIgnore)

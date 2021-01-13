@@ -25,7 +25,12 @@ namespace Pagoog
 
 		if (inputPackage.HasActionOccurred("Fire"))
 		{
-			PG_TRACE(Scene::RayCast(transform->GetPosition(), camera->GetForwardVec(), *this) != nullptr);
+			GameObject* obj = Scene::RayCast(transform->GetPosition(), camera->GetForwardVec(), *this);
+			
+			if (obj != nullptr)
+			{
+				Scene::RemoveGameObject(obj);
+			}
 		}
 
 		float moveSpeed = 1.0f;
