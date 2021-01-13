@@ -51,4 +51,29 @@ namespace PEngine
 			return ss.str();
 		}
 	};
+
+	class MouseButtonEvent : public Event
+	{
+	public:
+		int button, action, mods;
+
+		MouseButtonEvent(int button, int action, int mods)
+			: button(button)
+			, action(action)
+			, mods(mods)
+		{
+		}
+
+		virtual const char* GetName() const override
+		{
+			return STRINGIFY(MouseButtonEvent);
+		}
+
+		virtual std::string ToString() const override
+		{
+			std::stringstream ss;
+			ss << GetName() << ": " << "BUTTON:" << button << ", ACTION: " << action << ", MODS: " << mods;
+			return ss.str();
+		}
+	};
 }

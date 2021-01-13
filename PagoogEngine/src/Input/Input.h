@@ -128,6 +128,19 @@
 #define PG_KEY_PRESS          	  1
 #define PG_KEY_REPEAT  			  2
 
+#define PG_MOUSE_BUTTON_1         0
+#define PG_MOUSE_BUTTON_2         1
+#define PG_MOUSE_BUTTON_3         2
+#define PG_MOUSE_BUTTON_4         3
+#define PG_MOUSE_BUTTON_5         4
+#define PG_MOUSE_BUTTON_6         5
+#define PG_MOUSE_BUTTON_7         6
+#define PG_MOUSE_BUTTON_8         7
+#define PG_MOUSE_BUTTON_LAST      PG_MOUSE_BUTTON_8
+#define PG_MOUSE_BUTTON_LEFT      PG_MOUSE_BUTTON_1
+#define PG_MOUSE_BUTTON_RIGHT     PG_MOUSE_BUTTON_2
+#define PG_MOUSE_BUTTON_MIDDLE    PG_MOUSE_BUTTON_3
+
 #define PG_MOD_ANY               -0x0001
 #define PG_MOD_NONE               0x0000
 #define PG_MOD_SHIFT              0x0001

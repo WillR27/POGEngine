@@ -28,8 +28,8 @@ namespace Pagoog
 
 			AddScene(scene);
 
-			inputManager.AddAction("Quit", InputInfo(PG_KEY_ESCAPE, PG_KEY_RELEASE, PG_MOD_ANY));
-			inputManager.AddAction("Fullscreen", InputInfo(PG_KEY_F11, PG_KEY_RELEASE, PG_MOD_ANY));
+			inputManager.AddAction("Quit", InputInfo(InputType::Keyboard, PG_KEY_ESCAPE, PG_KEY_RELEASE, PG_MOD_ANY));
+			inputManager.AddAction("Fullscreen", InputInfo(InputType::Keyboard, PG_KEY_F11, PG_KEY_RELEASE, PG_MOD_ANY));
 		}
 
 		virtual void ActionCallback(InputPackage& inputPackage, float dt) override

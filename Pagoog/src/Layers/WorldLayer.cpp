@@ -30,25 +30,27 @@ namespace Pagoog
 
 	void WorldLayer::Init()
 	{
-		inputManager.AddAction("Jump", InputInfo(PG_KEY_SPACE, PG_KEY_RELEASE, PG_MOD_ANY));
+		inputManager.AddAction("Fire", InputInfo(InputType::Mouse, PG_MOUSE_BUTTON_LEFT, PG_KEY_RELEASE, PG_MOD_ANY));
+		
+		inputManager.AddAction("Jump", InputInfo(InputType::Keyboard, PG_KEY_SPACE, PG_KEY_RELEASE, PG_MOD_ANY));
 		
 		inputManager.AddAxis("Fly", 
-			InputInfo(PG_KEY_LEFT_CONTROL, PG_KEY_PRESS, PG_MOD_ANY), 
-			InputInfo(PG_KEY_LEFT_CONTROL, PG_KEY_RELEASE, PG_MOD_ANY), 
-			InputInfo(PG_KEY_SPACE, PG_KEY_PRESS, PG_MOD_ANY), 
-			InputInfo(PG_KEY_SPACE, PG_KEY_RELEASE, PG_MOD_ANY));
+			InputInfo(InputType::Keyboard, PG_KEY_LEFT_CONTROL, PG_KEY_PRESS, PG_MOD_ANY), 
+			InputInfo(InputType::Keyboard, PG_KEY_LEFT_CONTROL, PG_KEY_RELEASE, PG_MOD_ANY), 
+			InputInfo(InputType::Keyboard, PG_KEY_SPACE, PG_KEY_PRESS, PG_MOD_ANY), 
+			InputInfo(InputType::Keyboard, PG_KEY_SPACE, PG_KEY_RELEASE, PG_MOD_ANY));
 		
 		inputManager.AddAxis("Horizontal", 
-			InputInfo(PG_KEY_A, PG_KEY_PRESS, PG_MOD_ANY), 
-			InputInfo(PG_KEY_A, PG_KEY_RELEASE, PG_MOD_ANY), 
-			InputInfo(PG_KEY_D, PG_KEY_PRESS, PG_MOD_ANY), 
-			InputInfo(PG_KEY_D, PG_KEY_RELEASE, PG_MOD_ANY));
+			InputInfo(InputType::Keyboard, PG_KEY_A, PG_KEY_PRESS, PG_MOD_ANY), 
+			InputInfo(InputType::Keyboard, PG_KEY_A, PG_KEY_RELEASE, PG_MOD_ANY), 
+			InputInfo(InputType::Keyboard, PG_KEY_D, PG_KEY_PRESS, PG_MOD_ANY), 
+			InputInfo(InputType::Keyboard, PG_KEY_D, PG_KEY_RELEASE, PG_MOD_ANY));
 		
 		inputManager.AddAxis("Vertical", 
-			InputInfo(PG_KEY_S, PG_KEY_PRESS, PG_MOD_ANY), 
-			InputInfo(PG_KEY_S, PG_KEY_RELEASE, PG_MOD_ANY), 
-			InputInfo(PG_KEY_W, PG_KEY_PRESS, PG_MOD_ANY), 
-			InputInfo(PG_KEY_W, PG_KEY_RELEASE, PG_MOD_ANY));
+			InputInfo(InputType::Keyboard, PG_KEY_S, PG_KEY_PRESS, PG_MOD_ANY), 
+			InputInfo(InputType::Keyboard, PG_KEY_S, PG_KEY_RELEASE, PG_MOD_ANY), 
+			InputInfo(InputType::Keyboard, PG_KEY_W, PG_KEY_PRESS, PG_MOD_ANY), 
+			InputInfo(InputType::Keyboard, PG_KEY_W, PG_KEY_RELEASE, PG_MOD_ANY));
 		
 		inputManager.AddInputPackageCallback(PG_BIND_FN(ActionCallback));
 		inputManager.AddInputPackageCallback(PG_BIND_FN(player->ActionCallback));

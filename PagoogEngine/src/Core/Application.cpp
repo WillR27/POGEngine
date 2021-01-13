@@ -103,6 +103,7 @@ namespace PEngine
 
 		ed.Dispatch<KeyEvent>(PG_BIND_FN(inputManager.HandleKeyEvent));
 		ed.Dispatch<MouseMoveEvent>(PG_BIND_FN(inputManager.HandleMouseMoveEvent));
+		ed.Dispatch<MouseButtonEvent>(PG_BIND_FN(inputManager.HandleMouseButtonEvent));
 
 		if (!e.IsHandled())
 		{

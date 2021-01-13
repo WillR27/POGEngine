@@ -8,12 +8,20 @@
 
 namespace PEngine
 {
+	enum class InputType
+	{
+		Keyboard,
+		Mouse
+	};
+
 	struct InputInfo
 	{
-		int key, action, mods;
+		InputType type;
+		int keyOrButton, action, mods;
 
-		InputInfo(int key, int action, int mods)
-			: key(key)
+		InputInfo(InputType type, int key, int action, int mods)
+			: type(type)
+			, keyOrButton(key)
 			, action(action)
 			, mods(mods)
 		{
@@ -21,7 +29,7 @@ namespace PEngine
 
 		bool operator==(const InputInfo& rhs) const
 		{
-			return key == rhs.key && action == rhs.action && (mods == PG_MOD_ANY || rhs.mods == PG_MOD_ANY || mods == rhs.mods);
+			return type == rhs.type && keyOrButton == rhs.keyOrButton && action == rhs.action && (mods == PG_MOD_ANY || rhs.mods == PG_MOD_ANY || mods == rhs.mods);
 		}
 	};
 
@@ -37,6 +45,7 @@ namespace PEngine
 
 		bool HandleKeyEvent(KeyEvent& e);
 		bool HandleMouseMoveEvent(MouseMoveEvent& e);
+		bool HandleMouseButtonEvent(MouseButtonEvent& e);
 
 		void AddInputPackageCallback(InputPackageCallback actionCallback);
 

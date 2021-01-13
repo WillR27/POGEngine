@@ -23,6 +23,11 @@ namespace Pagoog
 		RigidBody* rigidBody = GetComponent<RigidBody>();
 		Transform* transform = GetComponent<Transform>();
 
+		if (inputPackage.HasActionOccurred("Fire"))
+		{
+			PG_TRACE(Scene::RayCast(transform->GetPosition(), camera->GetForwardVec(), *this) != nullptr);
+		}
+
 		float moveSpeed = 1.0f;
 		float lookSpeed = 0.1f;
 

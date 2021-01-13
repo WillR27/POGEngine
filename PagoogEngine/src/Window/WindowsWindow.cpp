@@ -127,6 +127,14 @@ namespace PEngine
 				MouseMoveEvent e(static_cast<float>(posX), static_cast<float>(posY));
 				windowData.eventCallback(e);
 			});
+
+		glfwSetMouseButtonCallback(window, [](GLFWwindow* window, int button, int action, int mods)
+			{
+				WindowData& windowData = GetWindowData(window);
+
+				MouseButtonEvent e(button, action, mods);
+				windowData.eventCallback(e);
+			});
 	}
 
 	void WindowsWindow::FrameUpdate()
