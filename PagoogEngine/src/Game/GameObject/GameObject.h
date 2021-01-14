@@ -145,20 +145,8 @@ namespace PEngine
 		T* AddComponent(Args&&... args)
 		{
 			T* component = new T(std::forward<Args>(args)...);
-			component->gameObject = this;
-
-			Component* componentBase = static_cast<Component*>(component);
-			components[T::ComponentName()] = componentBase;
-
-			if      (T::ComponentName() == BoxCollider::ComponentName())  boxCollider = static_cast<BoxCollider*>(componentBase);
-			else if (T::ComponentName() == MeshRenderer::ComponentName()) meshRenderer = static_cast<MeshRenderer*>(componentBase);
-			else if (T::ComponentName() == RigidBody::ComponentName())    rigidBody = static_cast<RigidBody*>(componentBase);
-			else if (T::ComponentName() == Transform::ComponentName())    transform = static_cast<Transform*>(componentBase);
-
-			if (inScene)
-			{
-				Scene::AddComponent(component);
-			}
+			
+			AddComponentCommon(component);
 
 			return component;
 		}
@@ -167,12 +155,22 @@ namespace PEngine
 		T* AddComponent(std::initializer_list<U> initList)
 		{
 			T* component = new T(initList);
+
+			AddComponentCommon(component);
+
+			return component;
+		}
+
+	private:
+		template<typename T>
+		void AddComponentCommon(T* component)
+		{
 			component->gameObject = this;
 
 			Component* componentBase = static_cast<Component*>(component);
 			components[T::ComponentName()] = componentBase;
 
-			if      (T::ComponentName() == BoxCollider::ComponentName())  boxCollider = static_cast<BoxCollider*>(componentBase);
+			if (T::ComponentName() == BoxCollider::ComponentName())  boxCollider = static_cast<BoxCollider*>(componentBase);
 			else if (T::ComponentName() == MeshRenderer::ComponentName()) meshRenderer = static_cast<MeshRenderer*>(componentBase);
 			else if (T::ComponentName() == RigidBody::ComponentName())    rigidBody = static_cast<RigidBody*>(componentBase);
 			else if (T::ComponentName() == Transform::ComponentName())    transform = static_cast<Transform*>(componentBase);
@@ -181,10 +179,9 @@ namespace PEngine
 			{
 				Scene::AddComponent(component);
 			}
-
-			return component;
 		}
 
+	public:
 		template<typename T>
 		bool RemoveComponent()
 		{
