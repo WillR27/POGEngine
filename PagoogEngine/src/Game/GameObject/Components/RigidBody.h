@@ -6,13 +6,13 @@
 
 namespace PEngine
 {
-	class RigidBody : public _Component
+	class RigidBody : public Component
 	{
 	public:
 		RigidBody();
 		virtual ~RigidBody() = default;
 
-		virtual _Component* Clone() const override;
+		virtual Component* Clone() const override;
 
 		void Update(float dt);
 
@@ -42,6 +42,8 @@ namespace PEngine
 		float dragCoef;
 		Vec3 force;
 		Vec3 velocity;
+
+		Transform& ToTransform();
 	};
 }
 

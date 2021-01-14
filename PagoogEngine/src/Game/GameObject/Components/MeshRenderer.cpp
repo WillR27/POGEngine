@@ -27,7 +27,7 @@ namespace PEngine
 		}
 	}
 
-	_Component* MeshRenderer::Clone() const
+	Component* MeshRenderer::Clone() const
 	{
 		return new MeshRenderer(*this);
 	}

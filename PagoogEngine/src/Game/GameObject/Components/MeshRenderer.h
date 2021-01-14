@@ -6,13 +6,13 @@
 
 namespace PEngine
 {
-	class MeshRenderer : public _Component
+	class MeshRenderer : public Component
 	{
 	public:
 		MeshRenderer();
 		virtual ~MeshRenderer();
 
-		virtual _Component* Clone() const override;
+		virtual Component* Clone() const override;
 
 		void FrameUpdate(float dt);
 

@@ -5,7 +5,7 @@
 
 namespace PEngine
 {
-	_Component::~_Component()
+	Component::~Component()
 	{
 	}
 }

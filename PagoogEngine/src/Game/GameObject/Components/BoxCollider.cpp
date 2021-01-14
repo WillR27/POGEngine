@@ -12,39 +12,39 @@ namespace PEngine
     {
     }
 
-	_Component* BoxCollider::Clone() const
+	Component* BoxCollider::Clone() const
 	{
 		return new BoxCollider(*this);
 	}
 
 	void BoxCollider::CollideWith(BoxCollider& boxCollider)
 	{
-		auto transform1 = gameObject->GetComponent<Transform>();
-		auto transform2 = boxCollider.gameObject->GetComponent<Transform>();
+		Transform& transform1 = *gameObject->GetComponent<Transform>();
+		Transform& transform2 = *boxCollider.gameObject->GetComponent<Transform>();
 
-		const AABB<3>& aabb1 = GetTransformedAABB(*transform1);
-		const AABB<3>& aabb2 = boxCollider.GetTransformedAABB(*transform2);
+		const AABB<3>& aabb1 = GetTransformedAABB(transform1);
+		const AABB<3>& aabb2 = boxCollider.GetTransformedAABB(transform2);
 
 		Shared<Hit> hit = aabb1.IsCollidingWith2(aabb2);
 
 		if (hit)
 		{
-			transform1->Translate(-hit->overlap);
+			transform1.Translate(-hit->overlap);
 
-			auto rigidBody1 = gameObject->GetComponent<RigidBody>();
-			if (!rigidBody1.Exists())
+			RigidBody* rigidBody1 = gameObject->GetComponent<RigidBody>();
+			if (rigidBody1 == nullptr)
 			{
 				return;
 			}
 
-			auto rigidBody2 = boxCollider.gameObject->GetComponent<RigidBody>();
-			if (!rigidBody2.Exists())
+			RigidBody* rigidBody2 = boxCollider.gameObject->GetComponent<RigidBody>();
+			if (rigidBody2 == nullptr)
 			{
 				return;
 			}
 
-			Vec3 position1 = transform1->GetPosition();
-			Vec3 position2 = transform2->GetPosition();
+			Vec3 position1 = transform1.GetPosition();
+			Vec3 position2 = transform2.GetPosition();
 
 			Vec3 velocity1 = rigidBody1->GetVelocity();
 			Vec3 velocity2 = rigidBody2->GetVelocity();

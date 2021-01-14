@@ -7,13 +7,13 @@ namespace PEngine
 {
 	class Transform;
 
-	class BoxCollider : public _Component
+	class BoxCollider : public Component
 	{
 	public:
 		BoxCollider(std::initializer_list<float> dimensions = { 1.0f, 1.0f, 1.0f });
 		virtual ~BoxCollider() override = default;
 
-		virtual _Component* Clone() const override;
+		virtual Component* Clone() const override;
 
 		void CollideWith(BoxCollider& boxCollider);
 

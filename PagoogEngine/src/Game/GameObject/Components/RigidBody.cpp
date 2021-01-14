@@ -13,7 +13,7 @@ namespace PEngine
 	{
 	}
 
-	_Component* RigidBody::Clone() const
+	Component* RigidBody::Clone() const
 	{
 		return new RigidBody(*this);
 	}

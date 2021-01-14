@@ -5,13 +5,13 @@
 
 namespace PEngine
 {
-	class Transform : public _Component
+	class Transform : public Component
 	{
 	public:
 		Transform(Vec3 position = Vec3(0.0f, 0.0f, 0.0f), Quat orientation = Quat(Vec3(0.0f, 0.0f, 0.0f)), Vec3 scale = Vec3(1.0f, 1.0f, 1.0f));
 		virtual ~Transform() = default;
 
-		virtual _Component* Clone() const override;
+		virtual Component* Clone() const override;
 
 		void PreInputUpdate();
 

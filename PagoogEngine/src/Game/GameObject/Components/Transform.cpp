@@ -18,7 +18,7 @@ namespace PEngine
 		SetPosition(position + translation);
 	}
 
-	_Component* Transform::Clone() const
+	Component* Transform::Clone() const
 	{
 		return new Transform(*this);
 	}

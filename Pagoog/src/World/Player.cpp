@@ -19,9 +19,9 @@ namespace Pagoog
 
 	void Player::ActionCallback(InputPackage& inputPackage, float dt)
 	{
-		auto camera = GetComponent<Camera>();
-		auto rigidBody = GetComponent<RigidBody>();
-		auto transform = GetComponent<Transform>();
+		Camera* camera = GetComponent<Camera>();
+		RigidBody* rigidBody = GetComponent<RigidBody>();
+		Transform* transform = GetComponent<Transform>();
 
 		if (inputPackage.HasActionOccurred("Left"))
 		{
