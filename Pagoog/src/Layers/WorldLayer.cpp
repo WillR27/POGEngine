@@ -19,7 +19,7 @@ namespace Pagoog
 		, mesh4(&meshSet)
 		, material1("Material1")
 		, templateBlock()
-		, controllableBlock(nullptr)
+		, block()
 		, player(nullptr)
 	{
 	}
@@ -121,11 +121,12 @@ void main()
 		templateBlock.GetComponent<MeshRenderer>()->SetMaterial(material1);
 		templateBlock.GetComponent<MeshRenderer>()->SetMesh(mesh4);
 
-		controllableBlock = Scene::AddGameObject(templateBlock);
-		controllableBlock->GetComponent<Transform>()->SetPosition(Vec3(-4.0f, 0.0f, 0.0f));
-		controllableBlock->GetComponent<RigidBody>()->SetMass(0.5f);
+		templateBlock.SetName("0000000000");
+		block = SafeGameObject(Scene::AddGameObject(templateBlock));
+		block->GetComponent<Transform>()->SetPosition(Vec3(-4.0f, 0.0f, 0.0f));
+		block->GetComponent<RigidBody>()->SetMass(0.5f);
 
-		templateBlock.SetName("111111111");
+		templateBlock.SetName("1111111111");
 		Block* staticBlock = Scene::AddGameObject(templateBlock);
 		staticBlock->GetComponent<Transform>()->SetPosition(Vec3(0.0f, 0.0f, 0.0f));
 		staticBlock->GetComponent<RigidBody>()->SetDragCoef(3.0f);
@@ -135,12 +136,12 @@ void main()
 		staticBlock->GetComponent<Transform>()->SetPosition(Vec3(-10.0f, 1.0f, 10.0f));
 		staticBlock->GetComponent<RigidBody>()->SetDragCoef(3.0f);
 
-		templateBlock.SetName("333333333");
+		templateBlock.SetName("3333333333");
 		staticBlock = Scene::AddGameObject(templateBlock);
 		staticBlock->GetComponent<Transform>()->SetPosition(Vec3(10.0f, -1.0f, 10.0f));
 		staticBlock->GetComponent<RigidBody>()->SetDragCoef(3.0f);
 
-		templateBlock.SetName("444444444");
+		templateBlock.SetName("4444444444");
 		staticBlock = Scene::AddGameObject(templateBlock);
 		staticBlock->GetComponent<Transform>()->SetPosition(Vec3(00.0f, 1.0f, 20.0f));
 		staticBlock->GetComponent<RigidBody>()->SetDragCoef(3.0f);
@@ -161,9 +162,9 @@ void main()
 
 	void WorldLayer::Update(float dt)
 	{
-		if (Scene::IsInScene(controllableBlock))
+		if (block.Exists())
 		{
-			controllableBlock->GetComponent<Transform>()->Rotate(Quat(Vec3(0.002f, 0.001f, 0.003f)));
+			block->GetComponent<Transform>()->Rotate(Quat(Vec3(0.002f, 0.001f, 0.003f)));
 		}
 	}
 
@@ -182,9 +183,9 @@ void main()
 	{
 		if (inputPackage.HasActionOccurred("Jump"))
 		{
-			if (Scene::IsInScene(controllableBlock))
+			if (block.Exists())
 			{
-				controllableBlock->GetComponent<Transform>()->Rotate(Quat(Vec3(0.2f, 0.1f, 0.3f)));
+				block->GetComponent<Transform>()->Rotate(Quat(Vec3(0.2f, 0.1f, 0.3f)));
 			}
 		}
 

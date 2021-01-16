@@ -101,8 +101,6 @@ namespace PEngine
 		static void RemoveGameObject(GameObject* gameObject);
 		static void DeleteGameObject(GameObject* gameObject);
 
-		static bool IsInScene(GameObject* gameObject);
-
 		static GameObject* RayCast(Vec3 position, Vec3 direction, const GameObject& objectToIgnore);
 
 		Scene(std::string name);

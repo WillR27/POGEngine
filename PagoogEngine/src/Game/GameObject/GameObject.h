@@ -10,6 +10,7 @@ namespace PEngine
 	public:
 		friend class Layer;
 		friend class Scene;
+		friend class SafeGameObject;
 
 		GameObject(std::string name = "Game Object");
 		virtual ~GameObject();
@@ -175,7 +176,7 @@ namespace PEngine
 			else if (T::ComponentName() == RigidBody::ComponentName())    rigidBody = static_cast<RigidBody*>(componentBase);
 			else if (T::ComponentName() == Transform::ComponentName())    transform = static_cast<Transform*>(componentBase);
 
-			if (inScene)
+			if (*exists)
 			{
 				Scene::AddComponent(component);
 			}
@@ -189,7 +190,7 @@ namespace PEngine
 
 			if (it != components.end())
 			{
-				if (inScene)
+				if (*exists)
 				{
 					Scene::RemoveComponent(static_cast<T*>((*it).second));
 				}
@@ -207,8 +208,6 @@ namespace PEngine
 		void SetName(std::string name);
 		std::string GetName() const;
 
-		bool IsInScene() const;
-
 	protected:
 		virtual void Init();
 
@@ -220,12 +219,101 @@ namespace PEngine
 
 		std::unordered_map<std::string, Component*> components;
 
-		bool inScene;
+		bool* exists;
+		int* refCount;
 
 		// Commonly accessed components that we can cache
 		BoxCollider* boxCollider;
 		MeshRenderer* meshRenderer;
 		RigidBody* rigidBody;
 		Transform* transform;
+	};
+
+	class SafeGameObject
+	{
+	public:
+		SafeGameObject(GameObject* gameObject = nullptr)
+			: gameObject(gameObject)
+			, exists(nullptr)
+			, refCount(nullptr)
+		{
+			if (gameObject != nullptr)
+			{
+				exists = gameObject->exists;
+				refCount = gameObject->refCount;
+				(*refCount)++;
+			}
+			else
+			{
+				exists = nullptr;
+				refCount = nullptr;
+			}
+		}
+
+		SafeGameObject(SafeGameObject& safeGameObject)
+			: gameObject(safeGameObject.gameObject)
+			, exists(safeGameObject.exists)
+			, refCount(safeGameObject.refCount)
+		{
+			if (refCount != nullptr)
+			{
+				(*refCount)++;
+			}
+		}
+
+		~SafeGameObject()
+		{
+			TryShrink();
+		}
+
+		SafeGameObject& operator=(SafeGameObject& safeGameObject)
+		{
+			TryShrink();
+
+			gameObject = safeGameObject.gameObject;
+			exists = safeGameObject.exists;
+			refCount = safeGameObject.refCount;
+			
+			if (refCount != nullptr)
+			{
+				(*refCount)++;
+			}
+
+			return *this;
+		}
+
+		GameObject* operator->()
+		{
+			return gameObject;
+		}
+
+		bool Exists()
+		{
+			return exists != nullptr && *exists;
+		}
+
+		template <typename T>
+		T& To()
+		{
+			return static_cast<T&>(*gameObject);
+		}
+
+	private:
+		void TryShrink()
+		{
+			if (refCount != nullptr)
+			{
+				(*refCount)--;
+				if ((*refCount) == 0)
+				{
+					delete exists;
+					delete refCount;
+				}
+			}
+		}
+
+		GameObject* gameObject;
+		bool* exists;
+		int* refCount;
 	};
 }

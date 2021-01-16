@@ -6,7 +6,8 @@ namespace PEngine
 	GameObject::GameObject(std::string name)
 		: name(name)
 		, components()
-		, inScene(false)
+		, exists(new bool(false))
+		, refCount(new int(1))
 		, boxCollider(nullptr)
 		, meshRenderer(nullptr)
 		, rigidBody(nullptr)
@@ -17,6 +18,13 @@ namespace PEngine
 
 	GameObject::~GameObject()
 	{
+		(*refCount)--;
+		if ((*refCount) == 0)
+		{
+			delete exists;
+			delete refCount;
+		}
+
 		for (auto componentPair : components)
 		{
 			delete componentPair.second;
@@ -26,7 +34,8 @@ namespace PEngine
 	GameObject::GameObject(const GameObject& gameObject)
 		: name(gameObject.name)
 		, components()
-		, inScene(false)
+		, exists(new bool(false))
+		, refCount(new int(1))
 		, boxCollider(nullptr)
 		, meshRenderer(nullptr)
 		, rigidBody(nullptr)
@@ -53,11 +62,6 @@ namespace PEngine
 	std::string GameObject::GetName() const
 	{
 		return name;
-	}
-
-	bool GameObject::IsInScene() const
-	{
-		return inScene;
 	}
 
 	void GameObject::Init()

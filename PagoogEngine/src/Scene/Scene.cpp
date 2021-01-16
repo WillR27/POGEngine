@@ -18,7 +18,7 @@ namespace PEngine
 		Layer::ActiveLayer->rigidBodies		.push_back(gameObject->GetComponentNoWarning<RigidBody>());
 		Layer::ActiveLayer->transforms		.push_back(gameObject->GetComponentNoWarning<Transform>());
 
-		gameObject->inScene = true;
+		(*gameObject->exists) = true;
 		gameObject->Init();
 	}
 
@@ -36,7 +36,7 @@ namespace PEngine
 			Layer::ActiveLayer->transforms.erase(Layer::ActiveLayer->transforms.begin() + index);
 		}
 
-		gameObject->inScene = false;
+		(*gameObject->exists) = false;
 	}
 
 	void Scene::DeleteGameObject(GameObject* gameObject)
@@ -44,11 +44,6 @@ namespace PEngine
 		RemoveGameObject(gameObject);
 
 		delete gameObject;
-	}
-
-	bool Scene::IsInScene(GameObject* gameObject)
-	{
-		return IndexOf(Layer::ActiveLayer->gameObjects, gameObject) != -1;
 	}
 
 	GameObject* Scene::RayCast(Vec3 position, Vec3 direction, const GameObject& objectToIgnore)
