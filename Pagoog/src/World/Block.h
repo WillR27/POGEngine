@@ -12,6 +12,11 @@ namespace Pagoog
 		virtual ~Block() = default;
 
 		virtual void Init() override;
+
+		void asdasd()
+		{
+
+		}
 	};
 }
 

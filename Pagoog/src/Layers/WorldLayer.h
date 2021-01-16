@@ -43,7 +43,7 @@ namespace Pagoog
 		Shader shader;
 
 		Block templateBlock;
-		SafeGameObject block;
+		Safe<Block> block;
 
 		Player* player;
 	};

@@ -122,9 +122,14 @@ void main()
 		templateBlock.GetComponent<MeshRenderer>()->SetMesh(mesh4);
 
 		templateBlock.SetName("0000000000");
-		block = SafeGameObject(Scene::AddGameObject(templateBlock));
+		block = Safe<Block>(Scene::AddGameObject(templateBlock));
 		block->GetComponent<Transform>()->SetPosition(Vec3(-4.0f, 0.0f, 0.0f));
 		block->GetComponent<RigidBody>()->SetMass(0.5f);
+
+		Safe<GameObject> asdasdasd = block;
+		Safe<Block> asdaasdasd = asdasdasd;
+		Safe<GameObject> asdasdasasdd(asdaasdasd);
+		Safe<Block> asdaasdasdaaasd(asdasdasasdd);
 
 		templateBlock.SetName("1111111111");
 		Block* staticBlock = Scene::AddGameObject(templateBlock);
