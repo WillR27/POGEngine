@@ -1,18 +1,16 @@
 #pragma once
 
+#include "Core/Safe.h"
 #include "Game/GameObject/Components/Components.h"
 #include "Scene/Scene.h"
 
 namespace PEngine
 {
-	class GameObject
+	class GameObject : public ISafe
 	{
 	public:
 		friend class Layer;
 		friend class Scene;
-
-		template <typename T>
-		friend class Safe;
 
 		GameObject(std::string name = "Game Object");
 		virtual ~GameObject();
@@ -173,7 +171,7 @@ namespace PEngine
 			Component* componentBase = static_cast<Component*>(component);
 			components[T::ComponentName()] = componentBase;
 
-			if (T::ComponentName() == BoxCollider::ComponentName())  boxCollider = static_cast<BoxCollider*>(componentBase);
+			if      (T::ComponentName() == BoxCollider::ComponentName())  boxCollider = static_cast<BoxCollider*>(componentBase);
 			else if (T::ComponentName() == MeshRenderer::ComponentName()) meshRenderer = static_cast<MeshRenderer*>(componentBase);
 			else if (T::ComponentName() == RigidBody::ComponentName())    rigidBody = static_cast<RigidBody*>(componentBase);
 			else if (T::ComponentName() == Transform::ComponentName())    transform = static_cast<Transform*>(componentBase);
@@ -221,249 +219,10 @@ namespace PEngine
 
 		std::unordered_map<std::string, Component*> components;
 
-		bool* exists;
-		int* refCount;
-
 		// Commonly accessed components that we can cache
 		BoxCollider* boxCollider;
 		MeshRenderer* meshRenderer;
 		RigidBody* rigidBody;
 		Transform* transform;
-	};
-
-	template <typename T>
-	class Safe
-	{
-		typedef typename std::enable_if<std::is_base_of<GameObject, T>::value>::type check;
-
-	public:
-		friend class Safe<GameObject>;
-
-		Safe(T* gameObject = nullptr)
-			: gameObject(gameObject)
-			, exists(nullptr)
-			, refCount(nullptr)
-		{
-			if (gameObject != nullptr)
-			{
-				exists = gameObject->exists;
-				refCount = gameObject->refCount;
-				(*refCount)++;
-			}
-			else
-			{
-				exists = nullptr;
-				refCount = nullptr;
-			}
-		}
-
-		Safe(GameObject* gameObject)
-			: gameObject(static_cast<T*>(gameObject))
-			, exists(nullptr)
-			, refCount(nullptr)
-		{
-			if (gameObject != nullptr)
-			{
-				exists = gameObject->exists;
-				refCount = gameObject->refCount;
-				(*refCount)++;
-			}
-			else
-			{
-				exists = nullptr;
-				refCount = nullptr;
-			}
-		}
-
-		Safe(Safe<T>& safeGameObject)
-			: gameObject(safeGameObject.gameObject)
-			, exists(safeGameObject.exists)
-			, refCount(safeGameObject.refCount)
-		{
-			if (refCount != nullptr)
-			{
-				(*refCount)++;
-			}
-		}
-
-		Safe(Safe<GameObject>& safeGameObject)
-			: gameObject(static_cast<T*>(safeGameObject.gameObject))
-			, exists(safeGameObject.exists)
-			, refCount(safeGameObject.refCount)
-		{
-			if (refCount != nullptr)
-			{
-				(*refCount)++;
-			}
-		}
-
-		~Safe()
-		{
-			TryShrink();
-		}
-
-		Safe<T>& operator=(Safe<T>& safeGameObject)
-		{
-			TryShrink();
-
-			gameObject = safeGameObject.gameObject;
-			exists = safeGameObject.exists;
-			refCount = safeGameObject.refCount;
-			
-			if (refCount != nullptr)
-			{
-				(*refCount)++;
-			}
-
-			return *this;
-		}
-
-		Safe<T>& operator=(Safe<GameObject>& safeGameObject)
-		{
-			TryShrink();
-
-			gameObject = static_cast<T*>(safeGameObject.gameObject);
-			exists = safeGameObject.exists;
-			refCount = safeGameObject.refCount;
-
-			if (refCount != nullptr)
-			{
-				(*refCount)++;
-			}
-
-			return *this;
-		}
-
-		T& operator*()
-		{
-			return *gameObject;
-		}
-
-		T* operator->()
-		{
-			return gameObject;
-		}
-
-		bool Exists()
-		{
-			return exists != nullptr && *exists;
-		}
-
-	private:
-		void TryShrink()
-		{
-			if (refCount != nullptr)
-			{
-				(*refCount)--;
-				if ((*refCount) == 0)
-				{
-					delete exists;
-					delete refCount;
-				}
-			}
-		}
-
-		T* gameObject;
-		bool* exists;
-		int* refCount;
-	};
-
-	template <>
-	class Safe<GameObject> // TODO: Reduce copypasta?
-	{
-	public:
-		template <typename T>
-		friend class Safe;
-
-		Safe(GameObject* gameObject = nullptr)
-			: gameObject(gameObject)
-			, exists(nullptr)
-			, refCount(nullptr)
-		{
-			if (gameObject != nullptr)
-			{
-				exists = gameObject->exists;
-				refCount = gameObject->refCount;
-				(*refCount)++;
-			}
-			else
-			{
-				exists = nullptr;
-				refCount = nullptr;
-			}
-		}
-
-		template <typename T>
-		Safe(Safe<T>& safeGameObject)
-			: gameObject(safeGameObject.gameObject)
-			, exists(safeGameObject.exists)
-			, refCount(safeGameObject.refCount)
-		{
-			if (refCount != nullptr)
-			{
-				(*refCount)++;
-			}
-		}
-
-		~Safe()
-		{
-			TryShrink();
-		}
-
-		template <typename T>
-		Safe<GameObject>& operator=(Safe<T>& safeGameObject)
-		{
-			TryShrink();
-
-			gameObject = safeGameObject.gameObject;
-			exists = safeGameObject.exists;
-			refCount = safeGameObject.refCount;
-
-			if (refCount != nullptr)
-			{
-				(*refCount)++;
-			}
-
-			return *this;
-		}
-
-		GameObject* operator->()
-		{
-			return gameObject;
-		}
-
-		GameObject& operator*()
-		{
-			return *gameObject;
-		}
-
-		bool Exists()
-		{
-			return exists != nullptr && *exists;
-		}
-
-		template <typename T>
-		T& To()
-		{
-			return static_cast<T&>(*gameObject);
-		}
-
-	private:
-		void TryShrink()
-		{
-			if (refCount != nullptr)
-			{
-				(*refCount)--;
-				if ((*refCount) == 0)
-				{
-					delete exists;
-					delete refCount;
-				}
-			}
-		}
-
-		GameObject* gameObject;
-		bool* exists;
-		int* refCount;
 	};
 }
