@@ -3,6 +3,7 @@
 #include "Core/Application.h"
 #include "Core/EntryPoint.h"
 
+#include "Layers/ECSLayer.h"
 #include "Layers/WorldLayer.h"
 
 #include "Input/Input.h"
@@ -24,7 +25,8 @@ namespace Pagoog
 		virtual void Init() override
 		{
 			Scene* scene = new Scene("Main Scene");
-			scene->AddLayer(new WorldLayer());
+			scene->AddLayer(new ECSLayer());
+			//scene->AddLayer(new WorldLayer());
 
 			AddScene(scene);
 
