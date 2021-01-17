@@ -57,14 +57,16 @@ namespace PEngine
 
 		while (!window->ShouldClose())
 		{
+			//PG_SCOPED_PROFILE("App");
 			deltaTime = Time::DeltaTime();
-
 			deltaTimeUpdate += deltaTime;
+			deltaTimeUpdate = deltaTimeUpdate > 10.0f ? 10.0f : deltaTimeUpdate;
 
+			//PG_START_SCOPED_PROFILE("Update");
 			float spiralOfDeathPreventer = 1.0f;
 			while (deltaTimeUpdate >= Time::TimeUntilUpdate)
 			{
-				//PG_TRACE((1.0f / deltaTimeUpdate));
+				//PG_INFO((1.0f / deltaTimeUpdate));
 				window->InputUpdate();
 				inputManager.Send(deltaTimeUpdate);
 
@@ -74,7 +76,9 @@ namespace PEngine
 
 				spiralOfDeathPreventer += 0.2f;
 			}
+			//PG_END_SCOPED_PROFILE();
 
+			//PG_START_SCOPED_PROFILE("Frame");
 			if (window->HasFocus() || !window->IsFullscreen())
 			{
 				deltaTimeFrame += deltaTime;
@@ -90,6 +94,7 @@ namespace PEngine
 					deltaTimeFrame = 0.0f;
 				}
 			}
+			//PG_END_SCOPED_PROFILE();
 		}
 	}
 

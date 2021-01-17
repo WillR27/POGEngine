@@ -10,7 +10,9 @@ namespace PEngine
 
 	void Log::Init()
 	{
-		spdlog::set_pattern("%^[%T] [%s] [%!] [Line %#] %v%$");
+		//spdlog::set_pattern("%^[%T] %v%$");
+		spdlog::set_pattern("%^[%T] [%!:%#] %v%$");
+		//spdlog::set_pattern("%^[%T] [%s] [%!] [Line %#] %v%$");
 		spdlog::stdout_logger_mt("console");
 		spdlog::set_level(spdlog::level::trace);
 

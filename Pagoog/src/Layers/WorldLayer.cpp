@@ -126,11 +126,6 @@ void main()
 		block->GetComponent<Transform>()->SetPosition(Vec3(-4.0f, 0.0f, 0.0f));
 		block->GetComponent<RigidBody>()->SetMass(0.5f);
 
-		Safe<GameObject> asdasdasd = block;
-		Safe<Block> asdaasdasd = asdasdasd;
-		Safe<GameObject> asdasdasasdd(asdaasdasd);
-		Safe<Block> asdaasdasdaaasd(asdasdasasdd);
-
 		templateBlock.SetName("1111111111");
 		Block* staticBlock = Scene::AddGameObject(templateBlock);
 		staticBlock->GetComponent<Transform>()->SetPosition(Vec3(0.0f, 0.0f, 0.0f));

@@ -21,3 +21,5 @@
 
 #include "Core/Core.h"
 #include "Debug/Log/Log.h"
+#include "Debug/Debug.h"
+#include "Debug/Profile.h"
