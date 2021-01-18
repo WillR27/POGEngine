@@ -5,8 +5,71 @@
 
 #include "Game/GameObject/Components/Components.h"
 
+#include "ECS/ECSCoordinator.h"
+#include "ECS/Component/Components.h"
+
 namespace PEngine
 {
+	class TransformSystem : public System
+	{
+	public:
+		static Signature GetSignature(ECSCoordinator& coordinator)
+		{
+			Signature signature;
+			signature.set(coordinator.GetComponentType<ECSTransform>());
+
+			return signature;
+		}
+
+		void Update(float dt, ECSCoordinator& coordinator);
+	};
+
+	class PhysicsSystem : public System
+	{
+	public:
+		static Signature GetSignature(ECSCoordinator& coordinator)
+		{
+			Signature signature;
+			signature.set(coordinator.GetComponentType<ECSTransform>());
+			signature.set(coordinator.GetComponentType<ECSRigidBody>());
+
+			return signature;
+		}
+
+		void Update(float dt, ECSCoordinator& coordinator);
+	};
+
+	class CollisionsSystem : public System
+	{
+	public:
+		static Signature GetSignature(ECSCoordinator& coordinator)
+		{
+			Signature signature;
+			signature.set(coordinator.GetComponentType<ECSTransform>());
+			signature.set(coordinator.GetComponentType<ECSRigidBody>());
+			signature.set(coordinator.GetComponentType<ECSBoxCollider>());
+
+			return signature;
+		}
+
+		void Update(float dt, ECSCoordinator& coordinator);
+	};
+
+	class MeshRendererSystem : public System
+	{
+	public:
+		static Signature GetSignature(ECSCoordinator& coordinator)
+		{
+			Signature signature;
+			signature.set(coordinator.GetComponentType<ECSTransform>());
+			signature.set(coordinator.GetComponentType<ECSMeshRenderer>());
+
+			return signature;
+		}
+
+		void FrameUpdate(float alpha, ECSCoordinator& coordinator);
+	};
+
 	class GameObject;
 
 	class Layer
@@ -33,6 +96,8 @@ namespace PEngine
 
 		InputManager inputManager;
 
+		ECSCoordinator coordinator;
+
 	private:
 		static Layer* ActiveLayer;
 
@@ -53,6 +118,11 @@ namespace PEngine
 
 		void PreFrameUpdate(float dt);
 		void PostFrameUpdate(float dt);
+
+		Shared<TransformSystem> transformSystem;
+		Shared<PhysicsSystem> physicsSystem;
+		Shared<CollisionsSystem> collisionsSystem;
+		Shared<MeshRendererSystem> meshRendererSystem;
 	};
 }
 

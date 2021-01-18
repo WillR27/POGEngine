@@ -20,7 +20,7 @@ namespace PEngine
 	{
 		auto now = timer.now();
 		
-		float deltaTime = std::chrono::duration_cast<std::chrono::duration<float, std::nano>>(now - prev).count() / 100000000.0f;
+		float deltaTime = std::chrono::duration_cast<std::chrono::duration<float, std::nano>>(now - prev).count() / 1000000000.0f;
 
 		prev = now;
 

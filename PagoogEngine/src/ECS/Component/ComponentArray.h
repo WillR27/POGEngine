@@ -3,6 +3,7 @@
 #include <unordered_map>
 
 #include "Debug/Debug.h"
+#include "Debug/Profile.h"
 #include "ECS/ECS.h"
 
 namespace PEngine

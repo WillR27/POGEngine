@@ -10,8 +10,6 @@ namespace Pagoog
 {
 	ECSLayer::ECSLayer()
 		: Layer::Layer("ECS")
-		, coordinator()
-		, physicsSystem()
 		, meshSet()
 		, mesh(&meshSet)
 		, mesh2(&meshSet)
@@ -116,23 +114,73 @@ void main()
 
 
 
+		/*std::vector<Entity> entities(20);
+
+		for (Entity& entity : entities)
+		{
+			entity = coordinator.CreateEntity();
+
+			coordinator.AddComponent(entity, ECSTransform
+				{
+					.position = Vec3(0.0f, 0.0f, 0.0f),
+					.orientation = Quat(Vec3(0.0f, 0.0f, 0.0f)),
+					.scale = Vec3(1.0f, 1.0f, 1.0f)
+				});
+
+			coordinator.AddComponent(entity, ECSRigidBody
+				{
+					.force = Vec3(0.0f, 0.0f, 0.0f),
+					.velocity = Vec3(0.0f, 0.0f, 0.0f),
+					.mass = 1.0f,
+					.dragCoef = 1.0f
+				});
+
+			coordinator.AddComponent(entity, ECSBoxCollider
+				{
+					.aabb = AABB<3>({ 2.0f, 2.0f, 2.0f }),
+					.stickiness = 0.5f
+				});
+
+			coordinator.AddComponent(entity, ECSMeshRenderer
+				{
+					.mesh = &mesh4,
+					.material = &material1
+				});
+		}*/
 
 
 
-		coordinator.Init();
+		player = coordinator.CreateEntity();
 
-		coordinator.RegisterComponent<ECSTransform>();
-		physicsSystem = coordinator.RegisterSystem<PhysicsSystem>();
-
-		Signature signature;
-		signature.set(coordinator.GetComponentType<ECSTransform>());
-		coordinator.SetSystemSignature<PhysicsSystem>(signature);
-
-		Entity entity = coordinator.CreateEntity();
-		coordinator.AddComponent(entity, ECSTransform
+		coordinator.AddComponent(player, ECSTransform
 			{
-				.position = Vec3(0.0f, 0.0f, 0.0f)
+				.position = Vec3(0.0f, 0.0f, 0.0f),
+				.orientation = Quat(Vec3(0.0f, 0.0f, 0.0f)),
+				.scale = Vec3(1.0f, 1.0f, 1.0f)
 			});
+
+		coordinator.AddComponent(player, ECSRigidBody
+			{
+				.force = Vec3(0.0f, 0.0f, 0.0f),
+				.velocity = Vec3(0.0f, 0.0f, 0.0f),
+				.mass = 1.0f,
+				.dragCoef = 1.0f
+			});
+
+		coordinator.AddComponent(player, ECSBoxCollider
+			{
+				.aabb = AABB<3>({ 2.0f, 2.0f, 2.0f }),
+				.stickiness = 0.5f
+			});
+
+
+
+		player2 = Scene::CreateGameObject<Player>();
+		Transform& transform = *player2->GetComponent<Transform>();
+		transform.SetPosition(Vec3(0.0f, 0.0f, 10.0f));
+		Camera* camera = player2->GetComponent<Camera>();
+		Camera::MainCamera = camera;
+		inputManager.AddInputPackageCallback(PG_BIND_FN(player2->ActionCallback));
 	}
 
 	void ECSLayer::CollisionsUpdate(float dt)
@@ -141,7 +189,7 @@ void main()
 
 	void ECSLayer::Update(float dt)
 	{
-		physicsSystem->Update(dt, coordinator);
+		//PG_TRACE(coordinator.GetComponent<ECSTransform>(0).position.ToString());
 	}
 
 	void ECSLayer::FrameUpdate(float alpha)
@@ -156,5 +204,36 @@ void main()
 
 	void ECSLayer::ActionCallback(InputPackage& inputPackage, float dt)
 	{
+		if (inputPackage.HasActionOccurred("Right"))
+		{
+			Entity entity = coordinator.CreateEntity();
+
+			coordinator.AddComponent(entity, ECSTransform
+				{
+					.position = player2->GetComponent<Transform>()->GetPosition(),
+					.orientation = Quat(Vec3(0.0f, 0.0f, 0.0f)),
+					.scale = Vec3(1.0f, 1.0f, 1.0f)
+				});
+
+			coordinator.AddComponent(entity, ECSRigidBody
+				{
+					.force = Vec3(0.0f, 0.0f, 0.0f),
+					.velocity = Vec3(0.0f, 0.0f, 0.0f),
+					.mass = 1.0f,
+					.dragCoef = 1.0f
+				});
+
+			coordinator.AddComponent(entity, ECSBoxCollider
+				{
+					.aabb = AABB<3>({ 2.0f, 2.0f, 2.0f }),
+					.stickiness = 0.5f
+				});
+
+			coordinator.AddComponent(entity, ECSMeshRenderer
+				{
+					.mesh = &mesh4,
+					.material = &material1
+				});
+		}
 	}
 }

@@ -10,24 +10,12 @@
 #include "Render/Mesh/StaticMeshSet.h"
 #include "Render/Material/Material.h"
 
-#include "ECS/ECSCoordinator.h"
+#include "World/Player.h"
+
 #include "ECS/Component/Components.h"
 
 namespace Pagoog
 {
-	class PhysicsSystem : public System
-	{
-	public:
-		void PhysicsSystem::Update(float dt, ECSCoordinator& coordinator)
-		{
-			for (const auto& entity : entities)
-			{
-				ECSTransform& transform = coordinator.GetComponent<ECSTransform>(entity);
-				transform.position.x += 0.001f;
-			}
-		}
-	};
-
 	class ECSLayer : public Layer
 	{
 	public:
@@ -45,13 +33,13 @@ namespace Pagoog
 		void ActionCallback(InputPackage& inputPackage, float dt);
 
 	private:
-		ECSCoordinator coordinator;
-		Shared<PhysicsSystem> physicsSystem;
-
 		StaticMeshSet meshSet;
 		Mesh mesh, mesh2, mesh3, mesh4;
 
 		Material material1;
 		Shader shader;
+
+		Entity player;
+		Player* player2;
 	};
 }
