@@ -207,7 +207,7 @@ void main()
 		if (inputPackage.HasActionOccurred("Right"))
 		{
 			Entity entity = coordinator.CreateEntity();
-
+			PG_TRACE(player2->GetComponent<Transform>()->GetPosition().ToString());
 			coordinator.AddComponent(entity, ECSTransform
 				{
 					.position = player2->GetComponent<Transform>()->GetPosition(),

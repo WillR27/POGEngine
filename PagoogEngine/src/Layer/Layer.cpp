@@ -190,6 +190,7 @@ namespace PEngine
 	void CollisionsSystem::Update(float dt, ECSCoordinator& coordinator)
 	{
 		//PG_SCOPED_PROFILE("Collision");
+		// (n^2 + n) / 2 checks
 		for (auto& it1 = entities.begin(); it1 != entities.end(); it1++)
 		{
 			for (auto& it2 = std::next(it1, 1); it2 != entities.end(); it2++)
@@ -202,7 +203,7 @@ namespace PEngine
 
 				ECSTransform& transform1 = coordinator.GetComponent<ECSTransform>(entity1);
 				ECSTransform& transform2 = coordinator.GetComponent<ECSTransform>(entity2);
-
+				
 				AABB<3>& aabb1 = boxCollider1.aabb;
 				Vec3 min1(transform1.position);
 				min1.x -= aabb1.GetRadii()[0];
@@ -258,7 +259,7 @@ namespace PEngine
 
 					if (speedAfterCollision <= 0.0f)
 					{
-						return;
+						continue;
 					}
 
 					float impulse = speedAfterCollision / (mass1 + mass2);
