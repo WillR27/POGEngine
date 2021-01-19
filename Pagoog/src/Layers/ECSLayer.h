@@ -16,6 +16,51 @@
 
 namespace Pagoog
 {
+	class PlayerMoveSystem : public System
+	{
+	public:
+		static Signature GetSignature(ECSCoordinator& coordinator)
+		{
+			Signature signature;
+			signature.set(coordinator.GetComponentType<ECSRigidBody>());
+			signature.set(coordinator.GetComponentType<ECSCamera>());
+
+			return signature;
+		}
+
+		void InputUpdate(ECSCoordinator& coordinator, float speedX, float speedY, float speedZ);
+	};
+
+	class PlayerCameraSystem : public System
+	{
+	public:
+		static Signature GetSignature(ECSCoordinator& coordinator)
+		{
+			Signature signature;
+			signature.set(coordinator.GetComponentType<ECSTransform>());
+			signature.set(coordinator.GetComponentType<ECSCamera>());
+
+			return signature;
+		}
+
+		void InputUpdate(ECSCoordinator& coordinator, float dt);
+	};
+
+	class PlayerInteractSystem : public System
+	{
+	public:
+		static Signature GetSignature(ECSCoordinator& coordinator)
+		{
+			Signature signature;
+			signature.set(coordinator.GetComponentType<ECSTransform>());
+			signature.set(coordinator.GetComponentType<ECSCamera>());
+
+			return signature;
+		}
+
+		void InputUpdate(ECSCoordinator& coordinator, bool left, bool right, Mesh& mesh, Material& material);
+	};
+
 	class ECSLayer : public Layer
 	{
 	public:
@@ -33,6 +78,10 @@ namespace Pagoog
 		void ActionCallback(InputPackage& inputPackage, float dt);
 
 	private:
+		Shared<PlayerMoveSystem> playerMoveSystem;
+		Shared<PlayerCameraSystem> playerCameraSystem;
+		Shared<PlayerInteractSystem> playerInteractSystem;
+
 		StaticMeshSet meshSet;
 		Mesh mesh, mesh2, mesh3, mesh4;
 

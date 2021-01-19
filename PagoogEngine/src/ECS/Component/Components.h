@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Maths/Maths.h"
+#include "Maths/Collisions.h"
 
 #include "Render/Mesh/Mesh.h"
 #include "Render/Material/Material.h"
@@ -38,8 +39,9 @@ namespace PEngine
 		Material* material = nullptr;
 	};
 
+	class CameraNew;
 	struct ECSCamera
 	{
-
+		Shared<CameraNew> camera;
 	};
 }

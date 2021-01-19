@@ -55,6 +55,21 @@ namespace PEngine
 		void Update(float dt, ECSCoordinator& coordinator);
 	};
 
+	class CameraUpdateViewSystem : public System
+	{
+	public:
+		static Signature GetSignature(ECSCoordinator& coordinator)
+		{
+			Signature signature;
+			signature.set(coordinator.GetComponentType<ECSTransform>());
+			signature.set(coordinator.GetComponentType<ECSCamera>());
+
+			return signature;
+		}
+
+		void UpdateView(ECSCoordinator& coordinator);
+	};
+
 	class MeshRendererSystem : public System
 	{
 	public:
@@ -123,6 +138,7 @@ namespace PEngine
 		Shared<PhysicsSystem> physicsSystem;
 		Shared<CollisionsSystem> collisionsSystem;
 		Shared<MeshRendererSystem> meshRendererSystem;
+		Shared<CameraUpdateViewSystem> cameraUpdateViewSystem;
 	};
 }
 

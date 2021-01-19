@@ -4,6 +4,8 @@
 #include "Game/GameObject/GameObject.h"
 #include "Util/Timer.h"
 
+#include "Scene/CameraNew.h"
+
 namespace PEngine
 {
 	Layer* Layer::ActiveLayer = nullptr;
@@ -39,6 +41,9 @@ namespace PEngine
 
 		meshRendererSystem = coordinator.RegisterSystem<MeshRendererSystem>();
 		coordinator.SetSystemSignature<MeshRendererSystem>(MeshRendererSystem::GetSignature(coordinator));
+
+		cameraUpdateViewSystem = coordinator.RegisterSystem<CameraUpdateViewSystem>();
+		coordinator.SetSystemSignature<CameraUpdateViewSystem>(CameraUpdateViewSystem::GetSignature(coordinator));
 	}
 
 	Layer::~Layer()
@@ -114,6 +119,8 @@ namespace PEngine
 		}
 
 		collisionsSystem->Update(dt, coordinator);
+
+		cameraUpdateViewSystem->UpdateView(coordinator);
 	}
 
 	void Layer::PreFrameUpdate(float alpha)
@@ -294,12 +301,23 @@ namespace PEngine
 				Vec3 scale = Maths::Lerp(transform.prevScale, transform.scale, alpha);
 
 				Shader& shader = material->GetShader();
-				shader.SetMatrix4fv("view", 1, false, Camera::MainCamera->GetView());
-				shader.SetMatrix4fv("projection", 1, false, Camera::MainCamera->GetProjection());
+				shader.SetMatrix4fv("view", 1, false, CameraNew::MainCamera->GetView());
+				shader.SetMatrix4fv("projection", 1, false, CameraNew::MainCamera->GetProjection());
 				shader.SetMatrix4fv("model", 1, false, Maths::ToModelMatrix(position, orientation, scale));
 
 				mesh->Render();
 			}
+		}
+	}
+
+	void CameraUpdateViewSystem::UpdateView(ECSCoordinator& coordinator)
+	{
+		for (const auto& entity : entities)
+		{
+			auto& transform = coordinator.GetComponent<ECSTransform>(entity);
+			auto& camera = coordinator.GetComponent<ECSCamera>(entity);
+
+			camera.camera->UpdateView(transform.position, transform.orientation);
 		}
 	}
 }

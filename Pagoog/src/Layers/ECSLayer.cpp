@@ -6,6 +6,8 @@
 #include "Render/Mesh/StaticMeshSet.h"
 #include "Render/Mesh/Primitives/Primitives.h"
 
+#include "Scene/CameraNew.h"
+
 namespace Pagoog
 {
 	ECSLayer::ECSLayer()
@@ -25,6 +27,15 @@ namespace Pagoog
 
 	void ECSLayer::Init()
 	{
+		playerMoveSystem = coordinator.RegisterSystem<PlayerMoveSystem>();
+		coordinator.SetSystemSignature<PlayerMoveSystem>(PlayerMoveSystem::GetSignature(coordinator));
+
+		playerCameraSystem = coordinator.RegisterSystem<PlayerCameraSystem>();
+		coordinator.SetSystemSignature<PlayerCameraSystem>(PlayerCameraSystem::GetSignature(coordinator));
+
+		playerInteractSystem = coordinator.RegisterSystem<PlayerInteractSystem>();
+		coordinator.SetSystemSignature<PlayerInteractSystem>(PlayerInteractSystem::GetSignature(coordinator));
+
 		inputManager.AddAction("Left", InputInfo(InputType::Mouse, PG_MOUSE_BUTTON_LEFT, PG_KEY_RELEASE, PG_MOD_ANY));
 		inputManager.AddAction("Right", InputInfo(InputType::Mouse, PG_MOUSE_BUTTON_RIGHT, PG_KEY_RELEASE, PG_MOD_ANY));
 
@@ -154,7 +165,7 @@ void main()
 
 		coordinator.AddComponent(player, ECSTransform
 			{
-				.position = Vec3(0.0f, 0.0f, 0.0f),
+				.position = Vec3(0.0f, 0.0f, 10.0f),
 				.orientation = Quat(Vec3(0.0f, 0.0f, 0.0f)),
 				.scale = Vec3(1.0f, 1.0f, 1.0f)
 			});
@@ -173,14 +184,22 @@ void main()
 				.stickiness = 0.5f
 			});
 
+		// Create a new camera
+		CameraNew::MainCamera = MakeShared<CameraNew>();
+
+		// Add it to the player
+		coordinator.AddComponent(player, ECSCamera
+			{
+				.camera = CameraNew::MainCamera
+			});
 
 
-		player2 = Scene::CreateGameObject<Player>();
-		Transform& transform = *player2->GetComponent<Transform>();
-		transform.SetPosition(Vec3(0.0f, 0.0f, 10.0f));
-		Camera* camera = player2->GetComponent<Camera>();
-		Camera::MainCamera = camera;
-		inputManager.AddInputPackageCallback(PG_BIND_FN(player2->ActionCallback));
+		//player2 = Scene::CreateGameObject<Player>();
+		//Transform& transform = *player2->GetComponent<Transform>();
+		//transform.SetPosition(Vec3(0.0f, 0.0f, 10.0f));
+		//Camera* camera = player2->GetComponent<Camera>();
+		//Camera::MainCamera = camera;
+		//inputManager.AddInputPackageCallback(PG_BIND_FN(player2->ActionCallback));
 	}
 
 	void ECSLayer::CollisionsUpdate(float dt)
@@ -189,7 +208,7 @@ void main()
 
 	void ECSLayer::Update(float dt)
 	{
-		//PG_TRACE(coordinator.GetComponent<ECSTransform>(0).position.ToString());
+		
 	}
 
 	void ECSLayer::FrameUpdate(float alpha)
@@ -204,13 +223,55 @@ void main()
 
 	void ECSLayer::ActionCallback(InputPackage& inputPackage, float dt)
 	{
-		if (inputPackage.HasActionOccurred("Right"))
+		playerMoveSystem->InputUpdate(coordinator, inputPackage.GetAxisValue("Horizontal"), inputPackage.GetAxisValue("Fly"), inputPackage.GetAxisValue("Vertical"));
+
+		if (inputPackage.HasMouseMoved())
+		{
+			playerCameraSystem->InputUpdate(coordinator, dt);
+		}
+
+		playerInteractSystem->InputUpdate(coordinator, inputPackage.HasActionOccurred("Left"), inputPackage.HasActionOccurred("Right"), mesh4, material1);
+	}
+
+	void PlayerMoveSystem::InputUpdate(ECSCoordinator& coordinator, float speedX, float speedY, float speedZ)
+	{
+		for (const auto& entity : entities)
+		{
+			auto& rigidBody = coordinator.GetComponent<ECSRigidBody>(entity);
+			auto& camera = coordinator.GetComponent<ECSCamera>(entity);
+
+			const float moveSpeed = 3.0f;
+
+			rigidBody.velocity = 
+				  (((camera.camera->GetForwardVec() * static_cast<float>(speedZ)) +
+					(camera.camera->GetRightVec()   * static_cast<float>(speedX))) +
+					 Vec3(0.0f, speedY, 0.0f)) * moveSpeed;
+		}
+	}
+
+	void PlayerCameraSystem::InputUpdate(ECSCoordinator& coordinator, float dt)
+	{
+		for (const auto& entity : entities)
+		{
+			auto& transform = coordinator.GetComponent<ECSTransform>(entity);
+			auto& camera = coordinator.GetComponent<ECSCamera>(entity);
+
+			const float lookSpeed = 0.2f;
+			camera.camera->AddPitchAndYaw(Input::GetDeltaMouseY() * dt * lookSpeed, Input::GetDeltaMouseX() * dt * lookSpeed);
+		}
+	}
+
+	void PlayerInteractSystem::InputUpdate(ECSCoordinator& coordinator, bool left, bool right, Mesh& mesh, Material& material)
+	{
+		Entity player = *entities.begin();
+
+		if (right)
 		{
 			Entity entity = coordinator.CreateEntity();
-			PG_TRACE(player2->GetComponent<Transform>()->GetPosition().ToString());
+
 			coordinator.AddComponent(entity, ECSTransform
 				{
-					.position = player2->GetComponent<Transform>()->GetPosition(),
+					.position = coordinator.GetComponent<ECSTransform>(player).position,
 					.orientation = Quat(Vec3(0.0f, 0.0f, 0.0f)),
 					.scale = Vec3(1.0f, 1.0f, 1.0f)
 				});
@@ -231,8 +292,8 @@ void main()
 
 			coordinator.AddComponent(entity, ECSMeshRenderer
 				{
-					.mesh = &mesh4,
-					.material = &material1
+					.mesh = &mesh,
+					.material = &material
 				});
 		}
 	}
