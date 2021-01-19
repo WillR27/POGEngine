@@ -16,7 +16,7 @@ namespace PEngine
 			, livingEntityCount(0)
 		{
 			// Initialise the queue of all possible entity IDs
-			for (Entity entity = 0; entity < MaxEntities; entity++)
+			for (Entity entity = 1; entity < MaxEntities; entity++)
 			{
 				availableEntities.push(entity);
 			}

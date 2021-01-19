@@ -85,6 +85,21 @@ namespace PEngine
 		void FrameUpdate(float alpha, ECSCoordinator& coordinator);
 	};
 
+	class RayCastSystem : public System
+	{
+	public:
+		static Signature GetSignature(ECSCoordinator& coordinator)
+		{
+			Signature signature;
+			signature.set(coordinator.GetComponentType<ECSTransform>());
+			signature.set(coordinator.GetComponentType<ECSBoxCollider>());
+
+			return signature;
+		}
+
+		Entity RayCast(ECSCoordinator& coordinator, Vec3 position, Vec3 direction, Entity entityToIgnore);
+	};
+
 	class GameObject;
 
 	class Layer
@@ -112,6 +127,8 @@ namespace PEngine
 		InputManager inputManager;
 
 		ECSCoordinator coordinator;
+
+		Shared<RayCastSystem> rayCastSystem;
 
 	private:
 		static Layer* ActiveLayer;

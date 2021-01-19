@@ -167,6 +167,23 @@ namespace PEngine
 			return MakeShared<Hit>(hit);
 		}
 
+		AABB<D> CreateTransformedAABB(Vec<D> position) const
+		{
+			Vec3 min(position);
+			for (int d = 0; d < D; d++)
+			{
+				min[d] -= GetRadii()[d];
+			}
+
+			Vec3 max(position);
+			for (int d = 0; d < D; d++)
+			{
+				max[d] += GetRadii()[d];
+			}
+
+			return AABB<D>(min, max);
+		}
+
 		Size<D> GetSize() const
 		{
 			return size;

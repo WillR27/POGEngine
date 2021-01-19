@@ -56,7 +56,7 @@ namespace Pagoog
 			return signature;
 		}
 
-		void InputUpdate(ECSCoordinator& coordinator, bool left, bool right, Mesh& mesh, Material& material);
+		void InputUpdate(ECSCoordinator& coordinator, bool left, bool right, Mesh& mesh, Material& material, RayCastSystem& rayCastSystem);
 	};
 
 	class ECSLayer : public Layer
@@ -86,6 +86,6 @@ namespace Pagoog
 		Material material1;
 		Shader shader;
 
-		Entity player
+		Entity player;
 	};
 }

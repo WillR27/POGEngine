@@ -179,14 +179,14 @@ void main()
 
 	void ECSLayer::ActionCallback(InputPackage& inputPackage, float dt)
 	{
-		playerMoveSystem->InputUpdate(coordinator, inputPackage.GetAxisValue("Horizontal"), inputPackage.GetAxisValue("Fly"), inputPackage.GetAxisValue("Vertical"));
+		playerMoveSystem->InputUpdate(coordinator, static_cast<float>(inputPackage.GetAxisValue("Horizontal")), static_cast<float>(inputPackage.GetAxisValue("Fly")), static_cast<float>(inputPackage.GetAxisValue("Vertical")));
 
 		if (inputPackage.HasMouseMoved())
 		{
 			playerCameraSystem->InputUpdate(coordinator, dt);
 		}
 
-		playerInteractSystem->InputUpdate(coordinator, inputPackage.HasActionOccurred("Left"), inputPackage.HasActionOccurred("Right"), mesh4, material1);
+		playerInteractSystem->InputUpdate(coordinator, inputPackage.HasActionOccurred("Left"), inputPackage.HasActionOccurred("Right"), mesh4, material1, *rayCastSystem);
 	}
 
 	void PlayerMoveSystem::InputUpdate(ECSCoordinator& coordinator, float speedX, float speedY, float speedZ)
@@ -196,11 +196,11 @@ void main()
 			auto& rigidBody = coordinator.GetComponent<ECSRigidBody>(entity);
 			auto& camera = coordinator.GetComponent<ECSCamera>(entity);
 
-			const float moveSpeed = 3.0f;
+			const float moveSpeed = 10.0f;
 
 			rigidBody.velocity = 
-				  (((camera.camera->GetForwardVec() * static_cast<float>(speedZ)) +
-					(camera.camera->GetRightVec()   * static_cast<float>(speedX))) +
+				  (((camera.camera->GetForwardVec() * speedZ) +
+					(camera.camera->GetRightVec()   * speedX)) +
 					 Vec3(0.0f, speedY, 0.0f)) * moveSpeed;
 		}
 	}
@@ -217,9 +217,22 @@ void main()
 		}
 	}
 
-	void PlayerInteractSystem::InputUpdate(ECSCoordinator& coordinator, bool left, bool right, Mesh& mesh, Material& material)
+	void PlayerInteractSystem::InputUpdate(ECSCoordinator& coordinator, bool left, bool right, Mesh& mesh, Material& material, RayCastSystem& rayCastSystem)
 	{
 		Entity player = *entities.begin();
+
+		auto& playerTransform = coordinator.GetComponent<ECSTransform>(player);
+		auto& playerCamera = coordinator.GetComponent<ECSCamera>(player);
+
+		if (left)
+		{
+			Entity hitEntity = rayCastSystem.RayCast(coordinator, playerTransform.position, playerCamera.camera->GetForwardVec(), player);
+
+			if (hitEntity != NullEntity)
+			{
+				coordinator.DestroyEntity(hitEntity);
+			}
+		}
 
 		if (right)
 		{
@@ -227,7 +240,7 @@ void main()
 
 			coordinator.AddComponent(entity, ECSTransform
 				{
-					.position = coordinator.GetComponent<ECSTransform>(player).position,
+					.position = playerTransform.position,
 					.orientation = Quat(Vec3(0.0f, 0.0f, 0.0f)),
 					.scale = Vec3(1.0f, 1.0f, 1.0f)
 				});

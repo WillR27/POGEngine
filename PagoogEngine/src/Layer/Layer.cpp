@@ -44,6 +44,9 @@ namespace PEngine
 
 		cameraUpdateViewSystem = coordinator.RegisterSystem<CameraUpdateViewSystem>();
 		coordinator.SetSystemSignature<CameraUpdateViewSystem>(CameraUpdateViewSystem::GetSignature(coordinator));
+
+		rayCastSystem = coordinator.RegisterSystem<RayCastSystem>();
+		coordinator.SetSystemSignature<RayCastSystem>(RayCastSystem::GetSignature(coordinator));
 	}
 
 	Layer::~Layer()
@@ -104,6 +107,7 @@ namespace PEngine
 
 	void Layer::CollisionsPostUpdate(float dt)
 	{
+		//PG_START_SCOPED_PROFILE("Collisions GO");
 		if (boxColliders.size() > 1)
 		{
 			for (int i = 0; i < boxColliders.size(); i++)
@@ -117,8 +121,11 @@ namespace PEngine
 				}
 			}
 		}
+		//PG_END_SCOPED_PROFILE();
 
+		//PG_START_SCOPED_PROFILE("Collisions ECS");
 		collisionsSystem->Update(dt, coordinator);
+		//PG_END_SCOPED_PROFILE();
 
 		cameraUpdateViewSystem->UpdateView(coordinator);
 	}
@@ -202,6 +209,7 @@ namespace PEngine
 		{
 			for (auto& it2 = std::next(it1, 1); it2 != entities.end(); it2++)
 			{
+				PG_START_SCOPED_PROFILE("Collisions ECS");
 				Entity entity1 = *it1;
 				Entity entity2 = *it2;
 				
@@ -211,36 +219,17 @@ namespace PEngine
 				ECSTransform& transform1 = coordinator.GetComponent<ECSTransform>(entity1);
 				ECSTransform& transform2 = coordinator.GetComponent<ECSTransform>(entity2);
 				
-				AABB<3>& aabb1 = boxCollider1.aabb;
-				Vec3 min1(transform1.position);
-				min1.x -= aabb1.GetRadii()[0];
-				min1.y -= aabb1.GetRadii()[1];
-				min1.z -= aabb1.GetRadii()[2];
-				Vec3 max1(transform1.position);
-				max1.x += aabb1.GetRadii()[0];
-				max1.y += aabb1.GetRadii()[1];
-				max1.z += aabb1.GetRadii()[2];
-				aabb1 = AABB<3>(min1, max1);
+				ECSRigidBody& rigidBody1 = coordinator.GetComponent<ECSRigidBody>(entity1);
+				ECSRigidBody& rigidBody2 = coordinator.GetComponent<ECSRigidBody>(entity2);
 
-				AABB<3>& aabb2 = boxCollider2.aabb;
-				Vec3 min2(transform2.position);
-				min2.x -= aabb2.GetRadii()[0];
-				min2.y -= aabb2.GetRadii()[1];
-				min2.z -= aabb2.GetRadii()[2];
-				Vec3 max2(transform2.position);
-				max2.x += aabb2.GetRadii()[0];
-				max2.y += aabb2.GetRadii()[1];
-				max2.z += aabb2.GetRadii()[2];
-				aabb2 = AABB<3>(min2, max2);
+				AABB<3>& aabb1 = boxCollider1.aabb.CreateTransformedAABB(transform1.position);
+				AABB<3>& aabb2 = boxCollider2.aabb.CreateTransformedAABB(transform2.position);
 
 				Shared<Hit> hit = aabb1.IsCollidingWith2(aabb2);
 
 				if (hit)
 				{
 					transform1.position += -hit->overlap;
-
-					ECSRigidBody& rigidBody1 = coordinator.GetComponent<ECSRigidBody>(entity1);
-					ECSRigidBody& rigidBody2 = coordinator.GetComponent<ECSRigidBody>(entity2);
 
 					Vec3 position1 = transform1.position;
 					Vec3 position2 = transform2.position;
@@ -276,6 +265,7 @@ namespace PEngine
 					rigidBody1.velocity += changeInVelocity1;
 					rigidBody2.velocity += changeInVelocity2;
 				}
+				PG_END_SCOPED_PROFILE();
 			}
 		}
 	}
@@ -319,5 +309,41 @@ namespace PEngine
 
 			camera.camera->UpdateView(transform.position, transform.orientation);
 		}
+	}
+
+	Entity RayCastSystem::RayCast(ECSCoordinator& coordinator, Vec3 position, Vec3 direction, Entity entityToIgnore)
+	{
+		const float step = 0.1f;
+		const float limit = 100.0f;
+
+		Entity hitEntity = NullEntity;
+		float totalDistance = 0.0f;
+
+		Vec3 newPosition = position;
+
+		while (totalDistance < limit && hitEntity == 0)
+		{
+			newPosition += direction * step;
+			totalDistance += step;
+
+			for (const Entity& entity : entities)
+			{
+				if (entity == entityToIgnore)
+				{
+					continue;
+				}
+
+				auto& transform = coordinator.GetComponent<ECSTransform>(entity);
+				auto& boxCollider = coordinator.GetComponent<ECSBoxCollider>(entity);
+
+				if (boxCollider.aabb.CreateTransformedAABB(transform.position).IsCollidingWith(newPosition))
+				{
+					hitEntity = entity;
+					break;
+				}
+			}
+		}
+
+		return hitEntity;
 	}
 }

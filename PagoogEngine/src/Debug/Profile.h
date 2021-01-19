@@ -40,10 +40,10 @@ namespace PEngine
 	};
 }
 
-#define PG_SCOPED_PROFILE(msg) ScopedProfile<Unit::Milliseconds> scopedProfile(__FUNCTION__, __LINE__, msg)
+#define PG_SCOPED_PROFILE(msg) ScopedProfile<Unit::Microseconds> scopedProfile(__FUNCTION__, __LINE__, msg)
 //#define PG_SCOPED_PROFILE_NO_MSG() ScopedProfile<> scopedProfile(__FUNCTION__, __LINE__)
 
-#define PG_START_SCOPED_PROFILE(msg) { ScopedProfile<Unit::Milliseconds> scopedProfile(__FUNCTION__, __LINE__, msg)
+#define PG_START_SCOPED_PROFILE(msg) { ScopedProfile<Unit::Microseconds> scopedProfile(__FUNCTION__, __LINE__, msg)
 //#define PG_START_SCOPED_PROFILE_NO_MSG() { ScopedProfile<> scopedProfile(__FUNCTION__, __LINE__)
 #define PG_END_SCOPED_PROFILE() }
 

@@ -33,7 +33,7 @@ namespace Pagoog
 			}
 		}
 
-		float moveSpeed = 1.0f;
+		float moveSpeed = 10.0f;
 		float lookSpeed = 0.1f;
 
 		rigidBody->SetVelocity(

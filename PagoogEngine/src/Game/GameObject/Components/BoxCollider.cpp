@@ -22,6 +22,19 @@ namespace PEngine
 		Transform& transform1 = *gameObject->GetComponent<Transform>();
 		Transform& transform2 = *boxCollider.gameObject->GetComponent<Transform>();
 
+		RigidBody* rigidBody1 = gameObject->GetComponent<RigidBody>();
+		if (rigidBody1 == nullptr)
+		{
+			return;
+		}
+
+		RigidBody* rigidBody2 = boxCollider.gameObject->GetComponent<RigidBody>();
+		if (rigidBody2 == nullptr)
+		{
+			return;
+		}
+
+		PG_START_SCOPED_PROFILE("Collisions GO");
 		const AABB<3>& aabb1 = GetTransformedAABB(transform1);
 		const AABB<3>& aabb2 = boxCollider.GetTransformedAABB(transform2);
 
@@ -30,18 +43,6 @@ namespace PEngine
 		if (hit)
 		{
 			transform1.Translate(-hit->overlap);
-
-			RigidBody* rigidBody1 = gameObject->GetComponent<RigidBody>();
-			if (rigidBody1 == nullptr)
-			{
-				return;
-			}
-
-			RigidBody* rigidBody2 = boxCollider.gameObject->GetComponent<RigidBody>();
-			if (rigidBody2 == nullptr)
-			{
-				return;
-			}
 
 			Vec3 position1 = transform1.GetPosition();
 			Vec3 position2 = transform2.GetPosition();
@@ -77,6 +78,7 @@ namespace PEngine
 			rigidBody1->AddVelocity(changeInVelocity1);
 			rigidBody2->AddVelocity(changeInVelocity2);
 		}
+		PG_END_SCOPED_PROFILE();
 	}
 
 	AABB<3> BoxCollider::GetAABB() const
