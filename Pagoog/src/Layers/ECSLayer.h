@@ -10,8 +10,6 @@
 #include "Render/Mesh/StaticMeshSet.h"
 #include "Render/Material/Material.h"
 
-#include "World/Player.h"
-
 #include "ECS/Component/Components.h"
 
 namespace Pagoog
@@ -88,7 +86,6 @@ namespace Pagoog
 		Material material1;
 		Shader shader;
 
-		Entity player;
-		Player* player2;
+		Entity player
 	};
 }
