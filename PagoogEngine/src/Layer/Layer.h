@@ -5,99 +5,146 @@
 
 #include "Game/GameObject/Components/Components.h"
 
-#include "ECS/ECSCoordinator.h"
-#include "ECS/Component/Components.h"
+#include "ECS/ECS.h"
 
 namespace PEngine
 {
 	class TransformSystem : public System
 	{
 	public:
-		static Signature GetSignature(ECSCoordinator& coordinator)
+		TransformSystem(ECSManager& ecsManager)
+			: ecsManager(ecsManager)
+		{
+		}
+
+		void Update(float dt);
+
+		static Signature GetSignature(ECSManager& ecsManager)
 		{
 			Signature signature;
-			signature.set(coordinator.GetComponentType<ECSTransform>());
-
+			signature.set(ecsManager.GetComponentTypeId<ECSTransform>());
 			return signature;
 		}
 
-		void Update(float dt, ECSCoordinator& coordinator);
+	private:
+		ECSManager& ecsManager;
 	};
 
 	class PhysicsSystem : public System
 	{
 	public:
-		static Signature GetSignature(ECSCoordinator& coordinator)
+		PhysicsSystem(ECSManager& ecsManager)
+			: ecsManager(ecsManager)
+		{
+		}
+
+		void Update(float dt);
+
+		static Signature GetSignature(ECSManager& ecsManager)
 		{
 			Signature signature;
-			signature.set(coordinator.GetComponentType<ECSTransform>());
-			signature.set(coordinator.GetComponentType<ECSRigidBody>());
-
+			signature.set(ecsManager.GetComponentTypeId<ECSTransform>());
+			signature.set(ecsManager.GetComponentTypeId<ECSRigidBody>());
 			return signature;
 		}
 
-		void Update(float dt, ECSCoordinator& coordinator);
+	private:
+		ECSManager& ecsManager;
 	};
 
 	class CollisionsSystem : public System
 	{
 	public:
-		static Signature GetSignature(ECSCoordinator& coordinator)
+		CollisionsSystem(ECSManager& ecsManager)
+			: ecsManager(ecsManager)
+		{
+		}
+
+		void Update(float dt);
+
+		static Signature GetSignature(ECSManager& ecsManager)
 		{
 			Signature signature;
-			signature.set(coordinator.GetComponentType<ECSTransform>());
-			signature.set(coordinator.GetComponentType<ECSRigidBody>());
-			signature.set(coordinator.GetComponentType<ECSBoxCollider>());
-
+			signature.set(ecsManager.GetComponentTypeId<ECSTransform>());
+			signature.set(ecsManager.GetComponentTypeId<ECSRigidBody>());
+			signature.set(ecsManager.GetComponentTypeId<ECSBoxCollider>());
 			return signature;
 		}
 
-		void Update(float dt, ECSCoordinator& coordinator);
+	private:
+		ECSManager& ecsManager;
 	};
 
 	class CameraUpdateViewSystem : public System
 	{
 	public:
-		static Signature GetSignature(ECSCoordinator& coordinator)
+		CameraUpdateViewSystem(ECSManager& ecsManager)
+			: ecsManager(ecsManager)
+		{
+		}
+
+		void UpdateView();
+
+		static Signature GetSignature(ECSManager& ecsManager)
 		{
 			Signature signature;
-			signature.set(coordinator.GetComponentType<ECSTransform>());
-			signature.set(coordinator.GetComponentType<ECSCamera>());
-
+			signature.set(ecsManager.GetComponentTypeId<ECSTransform>());
+			signature.set(ecsManager.GetComponentTypeId<ECSCamera>());
 			return signature;
 		}
 
-		void UpdateView(ECSCoordinator& coordinator);
+	private:
+		ECSManager& ecsManager;
 	};
 
 	class MeshRendererSystem : public System
 	{
 	public:
-		static Signature GetSignature(ECSCoordinator& coordinator)
+		MeshRendererSystem(ECSManager& ecsManager)
+			: ecsManager(ecsManager)
+		{
+		}
+
+		void FrameUpdate(float alpha);
+
+		static Signature GetSignature(ECSManager& ecsManager)
 		{
 			Signature signature;
-			signature.set(coordinator.GetComponentType<ECSTransform>());
-			signature.set(coordinator.GetComponentType<ECSMeshRenderer>());
-
+			signature.set(ecsManager.GetComponentTypeId<ECSTransform>());
+			signature.set(ecsManager.GetComponentTypeId<ECSMeshRenderer>());
 			return signature;
 		}
 
-		void FrameUpdate(float alpha, ECSCoordinator& coordinator);
+	private:
+		ECSManager& ecsManager;
+	};
+
+	struct RayCastResult
+	{
+		bool hit = false;
+		EntityId entityId = 0;
 	};
 
 	class RayCastSystem : public System
 	{
 	public:
-		static Signature GetSignature(ECSCoordinator& coordinator)
+		RayCastSystem(ECSManager& ecsManager)
+			: ecsManager(ecsManager)
+		{
+		}
+
+		RayCastResult RayCast(Vec3 position, Vec3 direction, EntityId entityIdToIgnore);
+
+		static Signature GetSignature(ECSManager& ecsManager)
 		{
 			Signature signature;
-			signature.set(coordinator.GetComponentType<ECSTransform>());
-			signature.set(coordinator.GetComponentType<ECSBoxCollider>());
-
+			signature.set(ecsManager.GetComponentTypeId<ECSTransform>());
+			signature.set(ecsManager.GetComponentTypeId<ECSBoxCollider>());
 			return signature;
 		}
 
-		Entity RayCast(ECSCoordinator& coordinator, Vec3 position, Vec3 direction, Entity entityToIgnore);
+	private:
+		ECSManager& ecsManager;
 	};
 
 	class GameObject;
@@ -126,7 +173,7 @@ namespace PEngine
 
 		InputManager inputManager;
 
-		ECSCoordinator coordinator;
+		ECSManager ecsManager;
 
 		Shared<RayCastSystem> rayCastSystem;
 
@@ -139,6 +186,8 @@ namespace PEngine
 		std::vector<MeshRenderer*> meshRenderers;
 		std::vector<RigidBody*> rigidBodies;
 		std::vector<Transform*> transforms;
+
+		void PreInit();
 
 		void InputUpdate(float dt);
 

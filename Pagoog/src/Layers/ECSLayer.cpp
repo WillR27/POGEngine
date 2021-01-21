@@ -8,6 +8,9 @@
 
 #include "Scene/CameraNew.h"
 
+#include "ECS/ECS.h"
+#include "ECS/Components.h"
+
 namespace Pagoog
 {
 	ECSLayer::ECSLayer()
@@ -27,15 +30,6 @@ namespace Pagoog
 
 	void ECSLayer::Init()
 	{
-		playerMoveSystem = coordinator.RegisterSystem<PlayerMoveSystem>();
-		coordinator.SetSystemSignature<PlayerMoveSystem>(PlayerMoveSystem::GetSignature(coordinator));
-
-		playerCameraSystem = coordinator.RegisterSystem<PlayerCameraSystem>();
-		coordinator.SetSystemSignature<PlayerCameraSystem>(PlayerCameraSystem::GetSignature(coordinator));
-
-		playerInteractSystem = coordinator.RegisterSystem<PlayerInteractSystem>();
-		coordinator.SetSystemSignature<PlayerInteractSystem>(PlayerInteractSystem::GetSignature(coordinator));
-
 		inputManager.AddAction("Left", InputInfo(InputType::Mouse, PG_MOUSE_BUTTON_LEFT, PG_KEY_RELEASE, PG_MOD_ANY));
 		inputManager.AddAction("Right", InputInfo(InputType::Mouse, PG_MOUSE_BUTTON_RIGHT, PG_KEY_RELEASE, PG_MOD_ANY));
 
@@ -125,16 +119,17 @@ void main()
 
 
 
-		player = coordinator.CreateEntity();
+		// Create a player
+		player = ecsManager.CreateEntity();
 
-		coordinator.AddComponent(player, ECSTransform
+		ecsManager.AddComponent(player.id, ECSTransform
 			{
 				.position = Vec3(0.0f, 0.0f, 10.0f),
 				.orientation = Quat(Vec3(0.0f, 0.0f, 0.0f)),
 				.scale = Vec3(1.0f, 1.0f, 1.0f)
 			});
 
-		coordinator.AddComponent(player, ECSRigidBody
+		ecsManager.AddComponent(player.id, ECSRigidBody
 			{
 				.force = Vec3(0.0f, 0.0f, 0.0f),
 				.velocity = Vec3(0.0f, 0.0f, 0.0f),
@@ -142,7 +137,7 @@ void main()
 				.dragCoef = 1.0f
 			});
 
-		coordinator.AddComponent(player, ECSBoxCollider
+		ecsManager.AddComponent(player.id, ECSBoxCollider
 			{
 				.aabb = AABB<3>({ 2.0f, 2.0f, 2.0f }),
 				.stickiness = 0.5f
@@ -152,7 +147,7 @@ void main()
 		CameraNew::MainCamera = MakeShared<CameraNew>();
 
 		// Add it to the player
-		coordinator.AddComponent(player, ECSCamera
+		ecsManager.AddComponent(player.id, ECSCamera
 			{
 				.camera = CameraNew::MainCamera
 			});
@@ -179,73 +174,48 @@ void main()
 
 	void ECSLayer::ActionCallback(InputPackage& inputPackage, float dt)
 	{
-		playerMoveSystem->InputUpdate(coordinator, static_cast<float>(inputPackage.GetAxisValue("Horizontal")), static_cast<float>(inputPackage.GetAxisValue("Fly")), static_cast<float>(inputPackage.GetAxisValue("Vertical")));
+		auto& playerTransform = ecsManager.GetComponent<ECSTransform>(player.id);
+		auto& playerRigidBody = ecsManager.GetComponent<ECSRigidBody>(player.id);
+		auto& playerCamera = ecsManager.GetComponent<ECSCamera>(player.id);
 
 		if (inputPackage.HasMouseMoved())
 		{
-			playerCameraSystem->InputUpdate(coordinator, dt);
-		}
-
-		playerInteractSystem->InputUpdate(coordinator, inputPackage.HasActionOccurred("Left"), inputPackage.HasActionOccurred("Right"), mesh4, material1, *rayCastSystem);
-	}
-
-	void PlayerMoveSystem::InputUpdate(ECSCoordinator& coordinator, float speedX, float speedY, float speedZ)
-	{
-		for (const auto& entity : entities)
-		{
-			auto& rigidBody = coordinator.GetComponent<ECSRigidBody>(entity);
-			auto& camera = coordinator.GetComponent<ECSCamera>(entity);
-
-			const float moveSpeed = 10.0f;
-
-			rigidBody.velocity = 
-				  (((camera.camera->GetForwardVec() * speedZ) +
-					(camera.camera->GetRightVec()   * speedX)) +
-					 Vec3(0.0f, speedY, 0.0f)) * moveSpeed;
-		}
-	}
-
-	void PlayerCameraSystem::InputUpdate(ECSCoordinator& coordinator, float dt)
-	{
-		for (const auto& entity : entities)
-		{
-			auto& transform = coordinator.GetComponent<ECSTransform>(entity);
-			auto& camera = coordinator.GetComponent<ECSCamera>(entity);
-
 			const float lookSpeed = 0.2f;
-			camera.camera->AddPitchAndYaw(Input::GetDeltaMouseY() * dt * lookSpeed, Input::GetDeltaMouseX() * dt * lookSpeed);
+			playerCamera.camera->AddPitchAndYaw(Input::GetDeltaMouseY() * dt * lookSpeed, Input::GetDeltaMouseX() * dt * lookSpeed);
 		}
-	}
 
-	void PlayerInteractSystem::InputUpdate(ECSCoordinator& coordinator, bool left, bool right, Mesh& mesh, Material& material, RayCastSystem& rayCastSystem)
-	{
-		Entity player = *entities.begin();
+		const float moveSpeed = 10.0f;
+		playerRigidBody.velocity =
+				(((playerCamera.camera->GetForwardVec() * static_cast<float>(inputPackage.GetAxisValue("Vertical"))) +
+				(playerCamera.camera->GetRightVec()   * static_cast<float>(inputPackage.GetAxisValue("Horizontal")))) +
+				Vec3(0.0f, static_cast<float>(inputPackage.GetAxisValue("Fly")), 0.0f)) * moveSpeed;
 
-		auto& playerTransform = coordinator.GetComponent<ECSTransform>(player);
-		auto& playerCamera = coordinator.GetComponent<ECSCamera>(player);
-
-		if (left)
+		if (inputPackage.HasActionOccurred("Left"))
 		{
-			Entity hitEntity = rayCastSystem.RayCast(coordinator, playerTransform.position, playerCamera.camera->GetForwardVec(), player);
+			RayCastResult rayCastResult = rayCastSystem->RayCast(playerTransform.position, playerCamera.camera->GetForwardVec(), player.id);
 
-			if (hitEntity != NullEntity)
+			if (rayCastResult.hit)
 			{
-				coordinator.DestroyEntity(hitEntity);
+				ecsManager.DestroyEntity(rayCastResult.entityId);
 			}
 		}
 
-		if (right)
+		if (inputPackage.HasActionOccurred("Right"))
 		{
-			Entity entity = coordinator.CreateEntity();
+			Entity entity = ecsManager.CreateEntity();
 
-			coordinator.AddComponent(entity, ECSTransform
+			ecsManager.AddComponent(entity.id, ECSTransform
 				{
 					.position = playerTransform.position,
 					.orientation = Quat(Vec3(0.0f, 0.0f, 0.0f)),
-					.scale = Vec3(1.0f, 1.0f, 1.0f)
+					.scale = Vec3(1.0f, 1.0f, 1.0f),
+
+					.prevPosition = playerTransform.position,
+					.prevOrientation = Quat(Vec3(0.0f, 0.0f, 0.0f)),
+					.prevScale = Vec3(1.0f, 1.0f, 1.0f)
 				});
 
-			coordinator.AddComponent(entity, ECSRigidBody
+			ecsManager.AddComponent(entity.id, ECSRigidBody
 				{
 					.force = Vec3(0.0f, 0.0f, 0.0f),
 					.velocity = Vec3(0.0f, 0.0f, 0.0f),
@@ -253,16 +223,16 @@ void main()
 					.dragCoef = 1.0f
 				});
 
-			coordinator.AddComponent(entity, ECSBoxCollider
+			ecsManager.AddComponent(entity.id, ECSBoxCollider
 				{
 					.aabb = AABB<3>({ 2.0f, 2.0f, 2.0f }),
 					.stickiness = 0.5f
 				});
 
-			coordinator.AddComponent(entity, ECSMeshRenderer
+			ecsManager.AddComponent(entity.id, ECSMeshRenderer
 				{
-					.mesh = &mesh,
-					.material = &material
+					.mesh = &mesh4,
+					.material = &material1
 				});
 		}
 	}

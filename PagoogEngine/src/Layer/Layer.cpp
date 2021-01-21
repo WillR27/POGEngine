@@ -13,7 +13,7 @@ namespace PEngine
 	Layer::Layer(const char* name)
 		: name(name)
 		, inputManager()
-		, coordinator()
+		, ecsManager()
 		, gameObjects()
 		, boxColliders()
 		, cameras()
@@ -21,32 +21,6 @@ namespace PEngine
 		, rigidBodies()
 		, transforms()
 	{
-		// TODO: Move to Init()
-		coordinator.Init();
-
-		coordinator.RegisterComponent<ECSTransform>();
-		coordinator.RegisterComponent<ECSRigidBody>();
-		coordinator.RegisterComponent<ECSBoxCollider>();
-		coordinator.RegisterComponent<ECSMeshRenderer>();
-		coordinator.RegisterComponent<ECSCamera>();
-
-		transformSystem = coordinator.RegisterSystem<TransformSystem>();
-		coordinator.SetSystemSignature<TransformSystem>(TransformSystem::GetSignature(coordinator));
-
-		physicsSystem = coordinator.RegisterSystem<PhysicsSystem>();
-		coordinator.SetSystemSignature<PhysicsSystem>(PhysicsSystem::GetSignature(coordinator));
-
-		collisionsSystem = coordinator.RegisterSystem<CollisionsSystem>();
-		coordinator.SetSystemSignature<CollisionsSystem>(CollisionsSystem::GetSignature(coordinator));
-
-		meshRendererSystem = coordinator.RegisterSystem<MeshRendererSystem>();
-		coordinator.SetSystemSignature<MeshRendererSystem>(MeshRendererSystem::GetSignature(coordinator));
-
-		cameraUpdateViewSystem = coordinator.RegisterSystem<CameraUpdateViewSystem>();
-		coordinator.SetSystemSignature<CameraUpdateViewSystem>(CameraUpdateViewSystem::GetSignature(coordinator));
-
-		rayCastSystem = coordinator.RegisterSystem<RayCastSystem>();
-		coordinator.SetSystemSignature<RayCastSystem>(RayCastSystem::GetSignature(coordinator));
 	}
 
 	Layer::~Layer()
@@ -55,6 +29,24 @@ namespace PEngine
 		{
 			delete gameObject;
 		}
+	}
+
+	void Layer::PreInit()
+	{
+		ecsManager.Init();
+
+		ecsManager.RegisterComponent<ECSTransform>();
+		ecsManager.RegisterComponent<ECSRigidBody>();
+		ecsManager.RegisterComponent<ECSBoxCollider>();
+		ecsManager.RegisterComponent<ECSMeshRenderer>();
+		ecsManager.RegisterComponent<ECSCamera>();
+
+		transformSystem = ecsManager.RegisterSystem<TransformSystem>();
+		physicsSystem = ecsManager.RegisterSystem<PhysicsSystem>();
+		collisionsSystem = ecsManager.RegisterSystem<CollisionsSystem>();
+		meshRendererSystem = ecsManager.RegisterSystem<MeshRendererSystem>();
+		cameraUpdateViewSystem = ecsManager.RegisterSystem<CameraUpdateViewSystem>();
+		rayCastSystem = ecsManager.RegisterSystem<RayCastSystem>();
 	}
 
 	void Layer::InputUpdate(float dt)
@@ -67,7 +59,7 @@ namespace PEngine
 			}
 		}
 
-		transformSystem->Update(dt, coordinator);
+		transformSystem->Update(dt);
 
 		inputManager.Send(dt);
 	}
@@ -90,7 +82,7 @@ namespace PEngine
 			}
 		}
 
-		physicsSystem->Update(dt, coordinator);
+		physicsSystem->Update(dt);
 
 		for (Camera* camera : cameras)
 		{
@@ -124,10 +116,10 @@ namespace PEngine
 		//PG_END_SCOPED_PROFILE();
 
 		//PG_START_SCOPED_PROFILE("Collisions ECS");
-		collisionsSystem->Update(dt, coordinator);
+		collisionsSystem->Update(dt);
 		//PG_END_SCOPED_PROFILE();
 
-		cameraUpdateViewSystem->UpdateView(coordinator);
+		cameraUpdateViewSystem->UpdateView();
 	}
 
 	void Layer::PreFrameUpdate(float alpha)
@@ -148,7 +140,7 @@ namespace PEngine
 			}
 		}
 
-		meshRendererSystem->FrameUpdate(alpha, coordinator);
+		meshRendererSystem->FrameUpdate(alpha);
 	}
 
 	void Layer::PreHandleEvent(Event& e)
@@ -169,26 +161,26 @@ namespace PEngine
 		return name;
 	}
 
-	void TransformSystem::Update(float dt, ECSCoordinator& coordinator)
+	void TransformSystem::Update(float dt)
 	{
 		//PG_SCOPED_PROFILE("Transform");
-		for (const auto& entity : entities)
+		for (EntityId entityId : entityIds)
 		{
-			ECSTransform& transform = coordinator.GetComponent<ECSTransform>(entity);
+			auto& transform = ecsManager.GetComponent<ECSTransform>(entityId);
 			transform.prevPosition = transform.position;
 			transform.prevOrientation = transform.orientation;
 			transform.prevScale = transform.scale;
 		}
 	}
 
-	void PhysicsSystem::Update(float dt, ECSCoordinator& coordinator)
+	void PhysicsSystem::Update(float dt)
 	{
 		//PG_SCOPED_PROFILE("Physics");
-		for (const auto& entity : entities)
+		for (EntityId entityId : entityIds)
 		{
-			ECSTransform& transform = coordinator.GetComponent<ECSTransform>(entity);
-			ECSRigidBody& rigidBody = coordinator.GetComponent<ECSRigidBody>(entity);
-
+			ECSTransform& transform = ecsManager.GetComponent<ECSTransform>(entityId);
+			ECSRigidBody& rigidBody = ecsManager.GetComponent<ECSRigidBody>(entityId);
+			
 			Vec3 drag = rigidBody.dragCoef * Maths::Vec3MultiplyPreserveSigns(rigidBody.velocity, rigidBody.velocity);
 			Vec3 acceleration = (rigidBody.force - drag) / rigidBody.mass;
 
@@ -201,27 +193,27 @@ namespace PEngine
 		}
 	}
 
-	void CollisionsSystem::Update(float dt, ECSCoordinator& coordinator)
+	void CollisionsSystem::Update(float dt)
 	{
 		//PG_SCOPED_PROFILE("Collision");
 		// (n^2 + n) / 2 checks
-		for (auto& it1 = entities.begin(); it1 != entities.end(); it1++)
+		for (auto& it1 = entityIds.begin(); it1 != entityIds.end(); it1++)
 		{
-			for (auto& it2 = std::next(it1, 1); it2 != entities.end(); it2++)
+			for (auto& it2 = std::next(it1, 1); it2 != entityIds.end(); it2++)
 			{
-				PG_START_SCOPED_PROFILE("Collisions ECS");
-				Entity entity1 = *it1;
-				Entity entity2 = *it2;
+				EntityId entityId1 = *it1;
+				EntityId entityId2 = *it2;
 				
-				ECSBoxCollider& boxCollider1 = coordinator.GetComponent<ECSBoxCollider>(entity1);
-				ECSBoxCollider& boxCollider2 = coordinator.GetComponent<ECSBoxCollider>(entity2);
+				ECSBoxCollider& boxCollider1 = ecsManager.GetComponent<ECSBoxCollider>(entityId1);
+				ECSBoxCollider& boxCollider2 = ecsManager.GetComponent<ECSBoxCollider>(entityId2);
 
-				ECSTransform& transform1 = coordinator.GetComponent<ECSTransform>(entity1);
-				ECSTransform& transform2 = coordinator.GetComponent<ECSTransform>(entity2);
+				ECSTransform& transform1 = ecsManager.GetComponent<ECSTransform>(entityId1);
+				ECSTransform& transform2 = ecsManager.GetComponent<ECSTransform>(entityId2);
 				
-				ECSRigidBody& rigidBody1 = coordinator.GetComponent<ECSRigidBody>(entity1);
-				ECSRigidBody& rigidBody2 = coordinator.GetComponent<ECSRigidBody>(entity2);
+				ECSRigidBody& rigidBody1 = ecsManager.GetComponent<ECSRigidBody>(entityId1);
+				ECSRigidBody& rigidBody2 = ecsManager.GetComponent<ECSRigidBody>(entityId2);
 
+				//PG_START_SCOPED_PROFILE("Collisions ECS");
 				AABB<3>& aabb1 = boxCollider1.aabb.CreateTransformedAABB(transform1.position);
 				AABB<3>& aabb2 = boxCollider2.aabb.CreateTransformedAABB(transform2.position);
 
@@ -265,18 +257,18 @@ namespace PEngine
 					rigidBody1.velocity += changeInVelocity1;
 					rigidBody2.velocity += changeInVelocity2;
 				}
-				PG_END_SCOPED_PROFILE();
+				//PG_END_SCOPED_PROFILE();
 			}
 		}
 	}
 
-	void MeshRendererSystem::FrameUpdate(float alpha, ECSCoordinator& coordinator)
+	void MeshRendererSystem::FrameUpdate(float alpha)
 	{
 		//PG_SCOPED_PROFILE("Render");
-		for (const auto& entity : entities)
+		for (EntityId entityId : entityIds)
 		{
-			ECSMeshRenderer& meshRenderer = coordinator.GetComponent<ECSMeshRenderer>(entity);
-			ECSTransform& transform = coordinator.GetComponent<ECSTransform>(entity);
+			ECSMeshRenderer& meshRenderer = ecsManager.GetComponent<ECSMeshRenderer>(entityId);
+			ECSTransform& transform = ecsManager.GetComponent<ECSTransform>(entityId);
 
 			Mesh* mesh = meshRenderer.mesh;
 			Material* material = meshRenderer.material;
@@ -300,50 +292,51 @@ namespace PEngine
 		}
 	}
 
-	void CameraUpdateViewSystem::UpdateView(ECSCoordinator& coordinator)
+	void CameraUpdateViewSystem::UpdateView()
 	{
-		for (const auto& entity : entities)
+		for (EntityId entityId : entityIds)
 		{
-			auto& transform = coordinator.GetComponent<ECSTransform>(entity);
-			auto& camera = coordinator.GetComponent<ECSCamera>(entity);
+			auto& transform = ecsManager.GetComponent<ECSTransform>(entityId);
+			auto& camera = ecsManager.GetComponent<ECSCamera>(entityId);
 
 			camera.camera->UpdateView(transform.position, transform.orientation);
 		}
 	}
 
-	Entity RayCastSystem::RayCast(ECSCoordinator& coordinator, Vec3 position, Vec3 direction, Entity entityToIgnore)
+	RayCastResult RayCastSystem::RayCast(Vec3 position, Vec3 direction, EntityId entityIdToIgnore)
 	{
 		const float step = 0.1f;
 		const float limit = 100.0f;
 
-		Entity hitEntity = NullEntity;
+		RayCastResult rayCastResult;
 		float totalDistance = 0.0f;
 
 		Vec3 newPosition = position;
 
-		while (totalDistance < limit && hitEntity == 0)
+		while (totalDistance < limit && rayCastResult.entityId == 0)
 		{
 			newPosition += direction * step;
 			totalDistance += step;
 
-			for (const Entity& entity : entities)
+			for (EntityId entityId : entityIds)
 			{
-				if (entity == entityToIgnore)
+				if (entityId == entityIdToIgnore)
 				{
 					continue;
 				}
 
-				auto& transform = coordinator.GetComponent<ECSTransform>(entity);
-				auto& boxCollider = coordinator.GetComponent<ECSBoxCollider>(entity);
+				auto& transform = ecsManager.GetComponent<ECSTransform>(entityId);
+				auto& boxCollider = ecsManager.GetComponent<ECSBoxCollider>(entityId);
 
 				if (boxCollider.aabb.CreateTransformedAABB(transform.position).IsCollidingWith(newPosition))
 				{
-					hitEntity = entity;
+					rayCastResult.hit = true;
+					rayCastResult.entityId = entityId;
 					break;
 				}
 			}
 		}
 
-		return hitEntity;
+		return rayCastResult;
 	}
 }

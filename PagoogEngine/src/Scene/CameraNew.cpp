@@ -1,8 +1,6 @@
 #include "pgepch.h"
 #include "CameraNew.h"
 
-#include "ECS/Component/Components.h"
-
 namespace PEngine
 {
 	Shared<CameraNew> CameraNew::MainCamera = MakeShared<CameraNew>();

@@ -69,6 +69,7 @@ namespace PEngine
 		for (Layer* layer : layers)
 		{
 			Layer::ActiveLayer = layer;
+			layer->PreInit();
 			layer->Init();
 		}
 	}
