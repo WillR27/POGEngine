@@ -15,6 +15,29 @@
 
 namespace PEngine
 {
+	constexpr size_t Hash(const char* str) 
+	{
+		static_assert(sizeof(size_t) == 8 || sizeof(size_t) == 4);
+
+		size_t h = 0;
+		if constexpr (sizeof(size_t) == 8) 
+		{
+			h = 1125899906842597L; // prime
+		}
+		else 
+		{
+			h = 4294967291L;
+		}
+
+		int i = 0;
+		while (str[i] != 0) 
+		{
+			h = 31 * h + str[i++];
+		}
+
+		return h;
+	}
+
 	template <typename T, T capacity, T maxValue>
 	class SparseSet
 	{
@@ -274,7 +297,7 @@ namespace PEngine
 		void RegisterComponent()
 		{
 			// Get the hash id for this component
-			ComponentTypeHashId hashId = HashId<T>();
+			const ComponentTypeHashId hashId = HashId<T>();
 
 			// Check the component doesn't already exist
 			PG_ASSERT(componentTypeIds.find(hashId) == componentTypeIds.end(), "Tried to register a component that already exists: {0}.", STRINGIFY(T));
@@ -293,14 +316,13 @@ namespace PEngine
 		Shared<ComponentArray<T>> GetComponentArray()
 		{
 			// Get the hash id for this component
-			ComponentTypeHashId hashId = HashId<T>();
+			const ComponentTypeHashId hashId = HashId<T>();
 
 			// Find the corresponding component id index
-			auto& it = componentTypeIds.find(hashId);
-			PG_ASSERT(it != componentTypeIds.end(), "Tried to access a component array that didn't exist: {0}.", STRINGIFY(T));
+			PG_ASSERT(componentTypeIds.find(hashId) != componentTypeIds.end(), "Tried to access a component array that didn't exist: {0}.", STRINGIFY(T));
 
 			// Return the component array at this index
-			return std::static_pointer_cast<ComponentArray<T>>(componentArrays[(*it).second]);
+			return std::static_pointer_cast<ComponentArray<T>>(componentArrays[componentTypeIds[hashId]]);
 		}
 
 		template <typename T>
@@ -347,10 +369,9 @@ namespace PEngine
 
 		// Returns a hash id for the given component type
 		template <typename Type>
-		static ComponentTypeHashId HashId() // TODO: Make constexpr with custom hash function
+		static constexpr ComponentTypeHashId HashId()
 		{
-			auto hash = std::hash<std::string>();
-			return hash(std::string(__FUNCSIG__));
+			return Hash(__FUNCSIG__);
 		}
 	};
 
@@ -459,9 +480,7 @@ namespace PEngine
 		template <typename T>
 		T& GetComponent(EntityId entityId)
 		{
-			PG_START_SCOPED_PROFILE("GET");
 			return componentManager.GetComponent<T>(entityId);
-			PG_END_SCOPED_PROFILE();
 		}
 
 		template <typename T>
