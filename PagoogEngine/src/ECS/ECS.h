@@ -158,6 +158,8 @@ namespace PEngine
 		EntityVersion version;
 	};
 
+	class System;
+
 	class EntityManager
 	{
 	public:
@@ -187,6 +189,9 @@ namespace PEngine
 
 			// Increment the version for this entity id
 			currentEntityVersions[entityId]++;
+
+			// Reset the signature for this entity
+			entitySignatures[entityId].reset();
 		}
 
 		Signature GetEntitySignature(EntityId entityId)
@@ -197,6 +202,23 @@ namespace PEngine
 		void SetEntitySignature(EntityId entityId, Signature newSignature)
 		{
 			entitySignatures[entityId] = newSignature;
+		}
+
+		template <typename T>
+		void OnSystemRegistered(Shared<T> system)
+		{
+			// Check if any entities' signature match
+			for (int i = 0; i < MaxEntities; i++)
+			{
+				Signature entitySignature = entitySignatures[i];
+				Signature systemSignature = T::GetSignature();
+
+				// If the signatures match, add the entity id
+				if ((systemSignature & entitySignature) == systemSignature)
+				{
+					system->entityIds.insert(entityId);
+				}
+			}
 		}
 
 	private:
@@ -421,12 +443,12 @@ namespace PEngine
 				Shared<System> system = systems[i];
 				Signature& systemSignature = signatures[i];
 
-				// If the signatures match, add the entityId
+				// If the signatures match, add the entity id
 				if ((systemSignature & entitySignature) == systemSignature)
 				{
 					system->entityIds.insert(entityId);
 				}
-				// Otherwise, remove the entityId
+				// Otherwise, remove the entity id
 				else
 				{
 					system->entityIds.erase(entityId);

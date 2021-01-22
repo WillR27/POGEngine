@@ -199,22 +199,23 @@ namespace PEngine
 		// (n^2 + n) / 2 checks
 		for (auto& it1 = entityIds.begin(); it1 != entityIds.end(); it1++)
 		{
+			EntityId entityId1 = *it1;
+
+			ECSBoxCollider& boxCollider1 = ecsManager.GetComponent<ECSBoxCollider>(entityId1);
+			ECSTransform& transform1 = ecsManager.GetComponent<ECSTransform>(entityId1);
+			ECSRigidBody& rigidBody1 = ecsManager.GetComponent<ECSRigidBody>(entityId1);
+
+			AABB<3>& aabb1 = boxCollider1.aabb.CreateTransformedAABB(transform1.position);
+
 			for (auto& it2 = std::next(it1, 1); it2 != entityIds.end(); it2++)
 			{
-				EntityId entityId1 = *it1;
 				EntityId entityId2 = *it2;
-				
-				ECSBoxCollider& boxCollider1 = ecsManager.GetComponent<ECSBoxCollider>(entityId1);
-				ECSBoxCollider& boxCollider2 = ecsManager.GetComponent<ECSBoxCollider>(entityId2);
 
-				ECSTransform& transform1 = ecsManager.GetComponent<ECSTransform>(entityId1);
+				ECSBoxCollider& boxCollider2 = ecsManager.GetComponent<ECSBoxCollider>(entityId2);
 				ECSTransform& transform2 = ecsManager.GetComponent<ECSTransform>(entityId2);
-				
-				ECSRigidBody& rigidBody1 = ecsManager.GetComponent<ECSRigidBody>(entityId1);
 				ECSRigidBody& rigidBody2 = ecsManager.GetComponent<ECSRigidBody>(entityId2);
 
 				//PG_START_SCOPED_PROFILE("Collisions ECS");
-				AABB<3>& aabb1 = boxCollider1.aabb.CreateTransformedAABB(transform1.position);
 				AABB<3>& aabb2 = boxCollider2.aabb.CreateTransformedAABB(transform2.position);
 
 				Shared<Hit> hit = aabb1.IsCollidingWith2(aabb2);
