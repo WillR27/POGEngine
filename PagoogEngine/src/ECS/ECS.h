@@ -150,7 +150,7 @@ namespace PEngine
 	using ComponentTypeHashId = size_t;
 	using Signature = std::bitset<MaxComponentTypes>;
 
-	struct Entity
+	struct EntityInfo
 	{
 		EntityId id;
 		EntityVersion version;
@@ -163,14 +163,17 @@ namespace PEngine
 	public:
 		void Init()
 		{
-			// Add all possible ids to the queue
-			for (int i = 0; i < MaxEntities; i++)
+			for (EntityId i = 0; i < MaxEntities; i++)
 			{
+				// Add all possible ids to the queue
 				availableEntityIds.push(i);
+
+				// Set all entity versions to start at 1
+				currentEntityVersions[i] = 1;
 			}
 		}
 
-		Entity Create()
+		EntityInfo Create()
 		{
 			// Get the entity id at the front of the queue
 			EntityId entityId = availableEntityIds.front();
@@ -192,14 +195,14 @@ namespace PEngine
 			entitySignatures[entityId].reset();
 		}
 
-		EntityVersion GetVersion(EntityId entityId)
+		EntityVersion GetVersion(EntityId entityId) const
 		{
 			return currentEntityVersions[entityId];
 		}
 
-		bool IsEntityValid(Entity entity)
+		bool IsEntityValid(EntityInfo entityInfo) const
 		{
-			return entity.version == GetVersion(entity.id);
+			return entityInfo.version == GetVersion(entityInfo.id);
 		}
 
 		Signature GetEntitySignature(EntityId entityId)
@@ -272,7 +275,7 @@ namespace PEngine
 			return components[index];
 		}
 
-		void AddComponent(EntityId entityId, T component)
+		T& AddComponent(EntityId entityId, const T& component)
 		{
 			// Get the count before adding the new entity id
 			EntityId count = entityIds.Count();
@@ -282,6 +285,9 @@ namespace PEngine
 
 			// Now add the component to the components at the same index
 			components[count] = component;
+
+			// Return a reference to the copied component
+			return components[count];
 		}
 
 		void RemoveComponent(EntityId entityId)
@@ -362,9 +368,9 @@ namespace PEngine
 		}
 
 		template <typename T>
-		void AddComponent(EntityId entityId, T component)
+		T& AddComponent(EntityId entityId, const T& component)
 		{
-			GetComponentArray<T>()->AddComponent(entityId, component);
+			return GetComponentArray<T>()->AddComponent(entityId, component);
 		}
 
 		template <typename T>
@@ -477,6 +483,38 @@ namespace PEngine
 
 
 
+	class ECSManager;
+
+	class Entity
+	{
+	public:
+		Entity(EntityInfo entityInfo = { 0, 0 }, ECSManager* ecsManager = { nullptr })
+			: entityInfo(entityInfo)
+			, ecsManager(ecsManager)
+		{
+		}
+
+		template <typename T>
+		T& GetComponent();
+
+		template <typename T>
+		T& AddComponent(const T& component);
+
+		template <typename T>
+		void RemoveComponent();
+
+		bool IsValid() const;
+
+		EntityId Id() const { return entityInfo.id; }
+		EntityVersion Version() const { return entityInfo.version; }
+
+	private:
+		EntityInfo entityInfo;
+		ECSManager* ecsManager;
+	};
+
+
+
 	class ECSManager
 	{
 	public:
@@ -487,7 +525,7 @@ namespace PEngine
 
 		Entity CreateEntity()
 		{
-			return entityManager.Create();
+			return { entityManager.Create(), this};
 		}
 
 		void DestroyEntity(EntityId entityId)
@@ -498,14 +536,14 @@ namespace PEngine
 			systemManager.OnEntityDestroyed(entityId);
 		}
 
-		EntityVersion GetVersion(EntityId entityId)
+		EntityVersion GetVersion(EntityId entityId) const
 		{
 			return entityManager.GetVersion(entityId);
 		}
 
-		bool IsEntityValid(Entity entity)
+		bool IsEntityValid(EntityInfo entityInfo) const
 		{
-			return entityManager.IsEntityValid(entity);
+			return entityManager.IsEntityValid(entityInfo);
 		}
 
 		template <typename T>
@@ -527,15 +565,16 @@ namespace PEngine
 		}
 
 		template <typename T>
-		void AddComponent(EntityId entityId, T component)
+		T& AddComponent(EntityId entityId, const T& component)
 		{
-			componentManager.AddComponent(entityId, component);
+			T& copiedComponent = componentManager.AddComponent(entityId, component);
 
 			Signature entitySignature = entityManager.GetEntitySignature(entityId);
 			entitySignature.set(componentManager.GetComponentTypeId<T>(), true);
 			entityManager.SetEntitySignature(entityId, entitySignature);
-
 			systemManager.OnEntitySignatureChanged(entityId, entitySignature);
+
+			return copiedComponent;
 		}
 
 		template <typename T>
@@ -567,6 +606,31 @@ namespace PEngine
 		ComponentManager componentManager;
 		SystemManager systemManager;
 	};
+
+
+
+	template <typename T>
+	inline T& Entity::GetComponent()
+	{
+		return ecsManager->GetComponent<T>(Id());
+	}
+
+	template <typename T>
+	inline T& Entity::AddComponent(const T& component)
+	{
+		return ecsManager->AddComponent(Id(), component);
+	}
+
+	template <typename T>
+	inline void Entity::RemoveComponent()
+	{
+		ecsManager->RemoveComponent<T>(Id());
+	}
+
+	inline bool Entity::IsValid() const 
+	{ 
+		return ecsManager->IsEntityValid(entityInfo); 
+	}
 }
 
 #include "Components.h"

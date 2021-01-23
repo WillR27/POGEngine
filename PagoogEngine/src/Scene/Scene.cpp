@@ -21,10 +21,6 @@ namespace PEngine
 
 	Scene::~Scene()
 	{
-		for (Layer* layer : layers)
-		{
-			delete layer;
-		}
 	}
 
 	void Scene::PreInit()
@@ -46,10 +42,6 @@ namespace PEngine
 
 	void Scene::PostInit()
 	{
-		for (Layer* layer : layers)
-		{
-			layer->Init();
-		}
 	}
 
 	void Scene::PreUpdate(float dt)
@@ -59,16 +51,6 @@ namespace PEngine
 
 	void Scene::PostUpdate(float dt)
 	{
-		for (Layer* layer : layers)
-		{
-			layer->InputUpdate(dt);
-		}
-
-		for (Layer* layer : layers)
-		{
-			layer->Update(dt);
-		}
-
 		physicsSystem->Update(dt);
 		collisionsSystem->Update(dt);
 		transformSystem->Update(dt);
@@ -82,10 +64,6 @@ namespace PEngine
 
 	void Scene::PostFrameUpdate(float alpha)
 	{
-		for (Layer* layer : layers)
-		{
-			layer->FrameUpdate(alpha);
-		}
 	}
 
 	void Scene::PreHandleEvent(Event& e)
@@ -103,19 +81,5 @@ namespace PEngine
 
 	void Scene::PostHandleEvent(Event& e)
 	{
-		for (Layer* layer : layers)
-		{
-			if (e.IsHandled())
-			{
-				break;
-			}
-
-			layer->HandleEvent(e);
-		}
-	}
-
-	void Scene::AddLayer(Layer* layer)
-	{
-		layers.push_back(layer);
 	}
 }

@@ -15,9 +15,7 @@ namespace PEngine
 		virtual void Init();
 
 		virtual void InputUpdate(float dt);
-
 		virtual void Update(float dt);
-
 		virtual void FrameUpdate(float alpha);
 
 		virtual void HandleEvent(Event& e);

@@ -32,6 +32,10 @@ namespace Pagoog
 
 		Shared<MeshRendererSystem> meshRendererSystem;
 
+
+
+
+
 		StaticMeshSet meshSet;
 		Mesh mesh1, mesh2, mesh3, mesh4;
 

@@ -2,9 +2,10 @@
 #include "WorldScene.h"
 
 #include "ECS/ECS.h"
+#include "Render/Core/Render.h"
 #include "Scene/Camera.h"
 
-#include "Layers/WorldLayer.h"
+#include "Entities/Player.h"
 
 namespace Pagoog
 {
@@ -120,40 +121,11 @@ void main()
 		material1.SetColour("colourIn", Vec4((float)(sin(std::chrono::system_clock::to_time_t(std::chrono::system_clock::now())) + 1.0f) / 2.0f, (float)(sin(std::chrono::system_clock::to_time_t(std::chrono::system_clock::now()) * 0.9f) + 1.0f) / 2.0f, (float)(sin(std::chrono::system_clock::to_time_t(std::chrono::system_clock::now()) * 1.1f) + 1.0f) / 2.0f, 1.0f));
 
 		// Create a player
-		player = ecsManager.CreateEntity();
+		player = Player::Create(ecsManager);
 
-		ecsManager.AddComponent(player.id, ECSTransform
-			{
-				.position = Vec3(0.0f, 0.0f, 10.0f),
-				.orientation = Quat(Vec3(0.0f, 0.0f, 0.0f)),
-				.scale = Vec3(1.0f, 1.0f, 1.0f)
-			});
+		// Set the main camera
+		Camera::MainCamera = player.GetComponent<ECSCamera>().camera;
 
-		ecsManager.AddComponent(player.id, ECSRigidBody
-			{
-				.force = Vec3(0.0f, 0.0f, 0.0f),
-				.velocity = Vec3(0.0f, 0.0f, 0.0f),
-				.mass = 1.0f,
-				.dragCoef = 1.0f
-			});
-
-		ecsManager.AddComponent(player.id, ECSBoxCollider
-			{
-				.aabb = AABB<3>({ 2.0f, 2.0f, 2.0f }),
-				.stickiness = 0.5f
-			});
-
-		// Create a new camera
-		//Camera::MainCamera = MakeShared<Camera>();
-
-		// Add it to the player
-		ecsManager.AddComponent(player.id, ECSCamera
-			{
-				.camera = Camera::MainCamera
-			});
-
-		AddLayer(new WorldLayer());
-		
 		world.Init();
 	}
 
@@ -176,9 +148,9 @@ void main()
 
 	void WorldScene::ActionCallback(InputPackage& inputPackage, float dt)
 	{
-		auto& playerTransform = ecsManager.GetComponent<ECSTransform>(player.id);
-		auto& playerRigidBody = ecsManager.GetComponent<ECSRigidBody>(player.id);
-		auto& playerCamera = ecsManager.GetComponent<ECSCamera>(player.id);
+		auto& playerTransform = ecsManager.GetComponent<ECSTransform>(player.Id());
+		auto& playerRigidBody = ecsManager.GetComponent<ECSRigidBody>(player.Id());
+		auto& playerCamera = ecsManager.GetComponent<ECSCamera>(player.Id());
 
 		if (inputPackage.HasMouseMoved())
 		{
@@ -194,7 +166,7 @@ void main()
 
 		if (inputPackage.HasActionOccurred("Left"))
 		{
-			RayCastResult rayCastResult = rayCastSystem->RayCast(playerTransform.position, playerCamera.camera->GetForwardVec(), player.id);
+			RayCastResult rayCastResult = rayCastSystem->RayCast(playerTransform.position, playerCamera.camera->GetForwardVec(), player.Id());
 
 			if (rayCastResult.hit)
 			{
@@ -206,7 +178,7 @@ void main()
 		{
 			Entity entity = ecsManager.CreateEntity();
 
-			ecsManager.AddComponent(entity.id, ECSTransform
+			ecsManager.AddComponent(entity.Id(), ECSTransform
 				{
 					.position = playerTransform.position,
 					.orientation = Quat(Vec3(0.0f, 0.0f, 0.0f)),
@@ -217,7 +189,7 @@ void main()
 					.prevScale = Vec3(1.0f, 1.0f, 1.0f)
 				});
 
-			ecsManager.AddComponent(entity.id, ECSRigidBody
+			ecsManager.AddComponent(entity.Id(), ECSRigidBody
 				{
 					.force = Vec3(0.0f, 0.0f, 0.0f),
 					.velocity = Vec3(0.0f, 0.0f, 0.0f),
@@ -225,13 +197,13 @@ void main()
 					.dragCoef = 1.0f
 				});
 
-			ecsManager.AddComponent(entity.id, ECSBoxCollider
+			ecsManager.AddComponent(entity.Id(), ECSBoxCollider
 				{
 					.aabb = AABB<3>({ 2.0f, 2.0f, 2.0f }),
 					.stickiness = 0.5f
 				});
 
-			ecsManager.AddComponent(entity.id, ECSMeshRenderer
+			ecsManager.AddComponent(entity.Id(), ECSMeshRenderer
 				{
 					.mesh = &mesh4,
 					.material = &material1

@@ -30,8 +30,6 @@ namespace PEngine
 		virtual void HandleEvent(Event& e) = 0;
 		void PostHandleEvent(Event& e);
 
-		void AddLayer(Layer* layer);
-
 		std::string GetName() const { return name; }
 		
 	protected:
@@ -39,8 +37,6 @@ namespace PEngine
 		ECSManager ecsManager;
 
 		Shared<RayCastSystem> rayCastSystem;
-
-		std::vector<Layer*> layers;
 
 	private:
 		static Scene* ActiveScene;
