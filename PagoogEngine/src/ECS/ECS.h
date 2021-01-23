@@ -483,37 +483,7 @@ namespace PEngine
 
 
 
-	class ECSManager;
-
-	class Entity
-	{
-	public:
-		Entity(EntityInfo entityInfo = { 0, 0 }, ECSManager* ecsManager = { nullptr })
-			: entityInfo(entityInfo)
-			, ecsManager(ecsManager)
-		{
-		}
-
-		template <typename T>
-		T& GetComponent();
-
-		template <typename T>
-		T& AddComponent(const T& component);
-
-		template <typename T>
-		void RemoveComponent();
-
-		bool IsValid() const;
-
-		EntityId Id() const { return entityInfo.id; }
-		EntityVersion Version() const { return entityInfo.version; }
-
-	private:
-		EntityInfo entityInfo;
-		ECSManager* ecsManager;
-	};
-
-
+	class Entity;
 
 	class ECSManager
 	{
@@ -523,10 +493,10 @@ namespace PEngine
 			entityManager.Init();
 		}
 
-		Entity CreateEntity()
-		{
-			return { entityManager.Create(), this};
-		}
+		Entity CreateEntity();
+
+		template <typename T, typename... Args>
+		T CreateEntity(Args&&... args);
 
 		void DestroyEntity(EntityId entityId)
 		{
@@ -609,27 +579,72 @@ namespace PEngine
 
 
 
-	template <typename T>
-	inline T& Entity::GetComponent()
+	class Entity
 	{
-		return ecsManager->GetComponent<T>(Id());
+	public:
+		Entity(EntityInfo entityInfo = { 0, 0 }, ECSManager* ecsManager = { nullptr })
+			: entityInfo(entityInfo)
+			, ecsManager(ecsManager)
+		{
+		}
+
+		Entity(EntityInfo entityInfo, ECSManager& ecsManager)
+			: entityInfo(entityInfo)
+			, ecsManager(&ecsManager)
+		{
+		}
+
+		virtual void OnCreate() { }
+
+		template <typename T>
+		T& GetComponent()
+		{
+			return ecsManager->GetComponent<T>(Id());
+		}
+
+		template <typename T>
+		T& AddComponent(const T& component)
+		{
+			return ecsManager->AddComponent(Id(), component);
+		}
+
+		template <typename T>
+		void RemoveComponent()
+		{
+			ecsManager->RemoveComponent<T>(Id());
+		}
+
+		bool IsValid() const
+		{
+			return ecsManager->IsEntityValid(entityInfo);
+		}
+
+		EntityId Id() const { return entityInfo.id; }
+		EntityVersion Version() const { return entityInfo.version; }
+
+	private:
+		EntityInfo entityInfo;
+		ECSManager* ecsManager;
+	};
+
+
+
+	inline Entity ECSManager::CreateEntity()
+	{
+		return { entityManager.Create(), this };
 	}
 
-	template <typename T>
-	inline T& Entity::AddComponent(const T& component)
+	template <typename T, typename... Args>
+	inline T ECSManager::CreateEntity(Args&&... args)
 	{
-		return ecsManager->AddComponent(Id(), component);
-	}
+		// Create and construct the new entity from the give class
+		T entity(entityManager.Create(), *this, std::forward<Args>(args)...);
 
-	template <typename T>
-	inline void Entity::RemoveComponent()
-	{
-		ecsManager->RemoveComponent<T>(Id());
-	}
+		// Call the on create function
+		entity.OnCreate();
 
-	inline bool Entity::IsValid() const 
-	{ 
-		return ecsManager->IsEntityValid(entityInfo); 
+		// Return the entity
+		return entity;
 	}
 }
 

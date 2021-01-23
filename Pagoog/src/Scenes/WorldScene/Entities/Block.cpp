@@ -1,22 +1,24 @@
 #include "pgpch.h"
-#include "Player.h"
+#include "Block.h"
 
-#include "Scene/Camera.h"
-
-namespace PEngine
+namespace Pagoog
 {
-	Player::Player(EntityInfo entityInfo, ECSManager& ecsManager)
+	Block::Block(EntityInfo entityInfo, ECSManager& ecsManager)
 		: Entity::Entity(entityInfo, ecsManager)
 	{
 	}
 
-	void Player::OnCreate()
-    {
+	void Block::OnCreate()
+	{
 		AddComponent(ECSTransform
 			{
-				.position = Vec3(0.0f, 0.0f, 10.0f),
+				.position = Vec3(0.0f, 0.0f, 0.0f),
 				.orientation = Quat(Vec3(0.0f, 0.0f, 0.0f)),
-				.scale = Vec3(1.0f, 1.0f, 1.0f)
+				.scale = Vec3(1.0f, 1.0f, 1.0f),
+
+				.prevPosition = Vec3(0.0f, 0.0f, 0.0f),
+				.prevOrientation = Quat(Vec3(0.0f, 0.0f, 0.0f)),
+				.prevScale = Vec3(1.0f, 1.0f, 1.0f)
 			});
 
 		AddComponent(ECSRigidBody
@@ -33,9 +35,10 @@ namespace PEngine
 				.stickiness = 0.5f
 			});
 
-		AddComponent(ECSCamera
+		AddComponent(ECSMeshRenderer
 			{
-				.camera = Camera::MainCamera
+				.mesh = nullptr,
+				.material = nullptr
 			});
-    }
+	}
 }

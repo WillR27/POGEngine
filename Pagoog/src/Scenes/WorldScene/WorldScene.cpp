@@ -5,13 +5,13 @@
 #include "Render/Core/Render.h"
 #include "Scene/Camera.h"
 
+#include "Entities/Block.h"
 #include "Entities/Player.h"
 
 namespace Pagoog
 {
 	WorldScene::WorldScene()
 		: Scene::Scene("World")
-		, world(ecsManager)
 		, meshSet()
 		, mesh1(&meshSet)
 		, mesh2(&meshSet)
@@ -121,17 +121,14 @@ void main()
 		material1.SetColour("colourIn", Vec4((float)(sin(std::chrono::system_clock::to_time_t(std::chrono::system_clock::now())) + 1.0f) / 2.0f, (float)(sin(std::chrono::system_clock::to_time_t(std::chrono::system_clock::now()) * 0.9f) + 1.0f) / 2.0f, (float)(sin(std::chrono::system_clock::to_time_t(std::chrono::system_clock::now()) * 1.1f) + 1.0f) / 2.0f, 1.0f));
 
 		// Create a player
-		player = Player::Create(ecsManager);
+		player = ecsManager.CreateEntity<Player>();
 
 		// Set the main camera
 		Camera::MainCamera = player.GetComponent<ECSCamera>().camera;
-
-		world.Init();
 	}
 
 	void WorldScene::Update(float dt)
 	{
-		world.Update(dt);
 	}
 
 	void WorldScene::FrameUpdate(float alpha)
@@ -176,38 +173,12 @@ void main()
 
 		if (inputPackage.HasActionOccurred("Right"))
 		{
-			Entity entity = ecsManager.CreateEntity();
-
-			ecsManager.AddComponent(entity.Id(), ECSTransform
-				{
-					.position = playerTransform.position,
-					.orientation = Quat(Vec3(0.0f, 0.0f, 0.0f)),
-					.scale = Vec3(1.0f, 1.0f, 1.0f),
-
-					.prevPosition = playerTransform.position,
-					.prevOrientation = Quat(Vec3(0.0f, 0.0f, 0.0f)),
-					.prevScale = Vec3(1.0f, 1.0f, 1.0f)
-				});
-
-			ecsManager.AddComponent(entity.Id(), ECSRigidBody
-				{
-					.force = Vec3(0.0f, 0.0f, 0.0f),
-					.velocity = Vec3(0.0f, 0.0f, 0.0f),
-					.mass = 1.0f,
-					.dragCoef = 1.0f
-				});
-
-			ecsManager.AddComponent(entity.Id(), ECSBoxCollider
-				{
-					.aabb = AABB<3>({ 2.0f, 2.0f, 2.0f }),
-					.stickiness = 0.5f
-				});
-
-			ecsManager.AddComponent(entity.Id(), ECSMeshRenderer
-				{
-					.mesh = &mesh4,
-					.material = &material1
-				});
+			Block block = ecsManager.CreateEntity<Block>();
+			
+			block.GetComponent<ECSTransform>().position = playerTransform.position;
+			block.GetComponent<ECSTransform>().prevPosition = playerTransform.prevPosition;
+			block.GetComponent<ECSMeshRenderer>().material = &material1;
+			block.GetComponent<ECSMeshRenderer>().mesh = &mesh4;
 		}
 	}
 }

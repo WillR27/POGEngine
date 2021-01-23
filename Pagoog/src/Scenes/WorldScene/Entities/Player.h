@@ -4,13 +4,14 @@
 
 namespace PEngine
 {
-	class Player
+	class Player : public Entity
 	{
 	public:
 		Player() = default;
+		Player(EntityInfo entityInfo, ECSManager& ecsManager);
 		~Player() = default;
 
-		static Entity Create(ECSManager& ecsManager);
+		virtual void OnCreate() override;
 	private:
 
 	};
