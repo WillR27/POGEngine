@@ -3,7 +3,7 @@
 #include "Core/Application.h"
 #include "Core/EntryPoint.h"
 #include "Input/Input.h"
-#include "Layers/WorldLayer.h"
+#include "Scenes/WorldScene/WorldScene.h"
 
 namespace Pagoog
 {
@@ -21,10 +21,7 @@ namespace Pagoog
 
 		virtual void Init() override
 		{
-			Scene* scene = new Scene("Main Scene");
-			scene->AddLayer(new WorldLayer());
-
-			AddScene(scene);
+			AddScene(new WorldScene());
 
 			inputManager.AddAction("Quit", InputInfo(InputType::Keyboard, PG_KEY_ESCAPE, PG_KEY_RELEASE, PG_MOD_ANY));
 			inputManager.AddAction("Fullscreen", InputInfo(InputType::Keyboard, PG_KEY_F11, PG_KEY_RELEASE, PG_MOD_ANY));

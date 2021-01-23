@@ -10,24 +10,25 @@ namespace PEngine
 	public:
 		friend class Application;
 
-		Scene(std::string name);
-		~Scene();
+		Scene(std::string name = "Scene");
+		virtual ~Scene();
 
-		void Init();
+		virtual void Init();
 
-		void Update(float dt);
-		void FrameUpdate(float dt);
+		virtual void Update(float dt);
+		virtual void FrameUpdate(float alpha);
 
-		void HandleEvent(Event& e);
+		virtual void HandleEvent(Event& e);
 
 		void AddLayer(Layer* layer);
+		
+	protected:
+		std::vector<Layer*> layers;
 
 	private:
 		static Scene* ActiveScene;
 
 		std::string name;
-
-		std::vector<Layer*> layers;
 	};
 }
 

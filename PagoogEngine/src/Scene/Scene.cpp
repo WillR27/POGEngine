@@ -26,47 +26,42 @@ namespace PEngine
 		{
 			layer->PreInit();
 			layer->Init();
+			layer->PostInit();
 		}
 	}
 
 	void Scene::Update(float dt)
 	{
-		//PG_START_SCOPED_PROFILE("Input");
 		for (Layer* layer : layers)
 		{
+			layer->PreInputUpdate(dt);
 			layer->InputUpdate(dt);
+			layer->PostInputUpdate(dt);
 		}
-		//PG_END_SCOPED_PROFILE();
 
-		//PG_START_SCOPED_PROFILE("Collisions");
 		for (Layer* layer : layers)
 		{
 			layer->CollisionsPreUpdate(dt);
 			layer->CollisionsUpdate(dt);
 			layer->CollisionsPostUpdate(dt);
 		}
-		//PG_END_SCOPED_PROFILE();
 
-		//PG_START_SCOPED_PROFILE("Update");
 		for (Layer* layer : layers)
 		{
 			layer->PreUpdate(dt);
 			layer->Update(dt);
 			layer->PostUpdate(dt);
 		}
-		//PG_END_SCOPED_PROFILE();
 	}
 
 	void Scene::FrameUpdate(float alpha)
 	{
-		//PG_START_SCOPED_PROFILE("Frame");
 		for (Layer* layer : layers)
 		{
 			layer->PreFrameUpdate(alpha);
 			layer->FrameUpdate(alpha);
 			layer->PostFrameUpdate(alpha);
 		}
-		//PG_END_SCOPED_PROFILE();
 	}
 
 	void Scene::HandleEvent(Event & e)
