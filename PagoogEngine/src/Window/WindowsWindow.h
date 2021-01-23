@@ -1,8 +1,8 @@
 #pragma once
 
-#include "Window.h"
-
 #include <GLFW/glfw3.h>
+
+#include "Window.h"
 
 namespace PEngine
 {
@@ -25,13 +25,13 @@ namespace PEngine
 
 		virtual void SwapBuffers() override;
 
-		virtual bool IsFullscreen() const override;
+		virtual bool IsFullscreen() const override { return fullscreen; }
 		virtual void SetFullscreen(bool fullscreen) override;
 		virtual void ToggleFullscreen() override;
 
-		virtual bool HasFocus() const override;
+		virtual bool HasFocus() const override { return hasFocus; }
 
-		virtual bool HasCursor() const override;
+		virtual bool HasCursor() const override { return cursor; }
 		virtual void SetCursorMode(bool cursor) override;
 		virtual void ToggleCursorMode() override;
 
@@ -41,7 +41,7 @@ namespace PEngine
 
 		virtual void SetEventCallback(EventCallback eventCallback) override;
 
-		virtual bool ShouldClose() const override;
+		virtual bool ShouldClose() const override { return shouldClose; }
 
 	private:
 		WindowData windowData;

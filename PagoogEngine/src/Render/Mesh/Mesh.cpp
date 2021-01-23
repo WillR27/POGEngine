@@ -83,16 +83,6 @@ namespace PEngine
 		vertexDataArray = newVertexDataArray;
 	}
 
-	const void* Mesh::GetVertexData() const
-	{
-		return vertexDataArray;
-	}
-
-	const Position::ValueType* Mesh::GetPositionData() const
-	{
-		return positionDataAray;
-	}
-
 	void Mesh::SetPositionData(const Position::ValueType* positionDataToBeCopied, int size)
 	{
 		if (positionDataAray == nullptr)
@@ -101,16 +91,10 @@ namespace PEngine
 		}
 
 		delete[] positionDataAray;
-#pragma warning(suppress: 4267) // Ignore warning about loss of data
-		int numberOfValues = size / sizeof(Position::ValueType);
+		int numberOfValues = size / static_cast<int>(sizeof(Position::ValueType));
 		numberOfVertices = numberOfValues / Position::Count; 
 		positionDataAray = new Position::ValueType[numberOfValues];
 		memcpy(positionDataAray, positionDataToBeCopied, size);
-	}
-
-	const Colour::ValueType* Mesh::GetColourData() const
-	{
-		return colourDataArray;
 	}
 
 	void Mesh::SetColourData(const Colour::ValueType* colourDataToBeCopied, int size)
@@ -125,16 +109,6 @@ namespace PEngine
 		memcpy(colourDataArray, colourDataToBeCopied, size);
 	}
 
-	int Mesh::GetAdditionalStride(int index) const
-	{
-		return additionalDataStrides[index];
-	}
-
-	const void* Mesh::GetAdditionalData(int index) const
-	{
-		return additionalDataArrays[index];
-	}
-
 	void Mesh::AddAdditionalData(const void* dataToBeCopied, int size, int stride)
 	{
 		this->stride += stride;
@@ -145,42 +119,11 @@ namespace PEngine
 		additionalDataStrides.push_back(stride);
 	}
 
-	const unsigned int* Mesh::GetIndexData() const
-	{
-		return indexDataArray;
-	}
-
 	void Mesh::SetIndexData(const unsigned int* indexDataToBeCopied, int size)
 	{
 		delete[] indexDataArray;
-#pragma warning(suppress: 4267) // Ignore warning about loss of data
-		numberOfIndices = size / sizeof(unsigned int);
+		numberOfIndices = size / static_cast<int>(sizeof(unsigned int));
 		indexDataArray = new unsigned int[numberOfIndices];
 		memcpy(indexDataArray, indexDataToBeCopied, size);
-	}
-
-	int Mesh::Count() const
-	{
-		return numberOfVertices;
-	}
-
-	int Mesh::Size() const
-	{
-		return numberOfVertices * stride;
-	}
-
-	int Mesh::IndexCount() const
-	{
-		return numberOfIndices;
-	}
-
-	int Mesh::IndexSize() const
-	{
-		return IndexCount() * sizeof(unsigned int);
-	}
-
-	bool Mesh::HasMeshSet() const
-	{
-		return meshSet != nullptr;
 	}
 }

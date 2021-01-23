@@ -22,19 +22,9 @@ namespace PEngine
 		}
 	}
 
-	Shader& Material::GetShader() const
-	{
-		return *shader;
-	}
-
 	void Material::SetShader(Shader& shader)
 	{
 		this->shader = &shader;
-	}
-
-	const std::map<std::string, Vec4> Material::GetColours() const
-	{
-		return colours;
 	}
 
 	void Material::AddColour(std::string name, Vec4 colour)

@@ -58,10 +58,7 @@ namespace PEngine
 
 	void Layer::CollisionsPostUpdate(float dt)
 	{
-		//PG_START_SCOPED_PROFILE("Collisions GO");
-		//PG_END_SCOPED_PROFILE();
-
-		//PG_START_SCOPED_PROFILE("Collisions ECS");
+		//PG_START_SCOPED_PROFILE("Collisions");
 		collisionsSystem->Update(dt);
 		//PG_END_SCOPED_PROFILE();
 
@@ -88,11 +85,6 @@ namespace PEngine
 		{
 			this->HandleEvent(e);
 		}
-	}
-
-	const char* Layer::GetName() const
-	{
-		return name;
 	}
 
 	void TransformSystem::Update(float dt)

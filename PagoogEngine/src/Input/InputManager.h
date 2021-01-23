@@ -1,10 +1,9 @@
 #pragma once
 
+#include "Event/InputEvents.h"
 #include "Input.h"
 #include "InputTypes.h"
 #include "InputPackage.h"
-
-#include "Event/InputEvents.h"
 
 namespace PEngine
 {

@@ -1,10 +1,9 @@
 #pragma once
 
+#include "Mesh.h"
 #include "Render/Core/Objects/IndexBuffer.h"
 #include "Render/Core/Objects/VertexArray.h"
 #include "Render/Core/Objects/VertexBuffer.h"
-
-#include "Mesh.h"
 
 namespace PEngine
 {
@@ -25,14 +24,12 @@ namespace PEngine
 	protected:
 		MeshSet();
 
-		/// <summary>
-		/// Adds a mesh to the set. To be used to render, mesh must not go out scope.
-		/// </summary>
+		// Adds a mesh to the set. To be used to render, mesh must not go out scope.
 		virtual void AddMesh(Mesh& mesh) = 0;
 
-		VertexBuffer& GetVBO();
-		IndexBuffer& GetIBO();
-		VertexArray& GetVAO();
+		VertexBuffer& GetVBO() { return vbo; }
+		IndexBuffer& GetIBO() { return ibo; }
+		VertexArray& GetVAO() { return vao; }
 
 	private:
 		VertexBuffer vbo;

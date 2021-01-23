@@ -1,11 +1,10 @@
 #include "pgepch.h"
 #include "Application.h"
 
-#include "Time.h"
-
 #include "Event/InputEvents.h"
-#include "Render/Core/Render.h"
 #include "Input/Input.h"
+#include "Render/Core/Render.h"
+#include "Time.h"
 
 namespace PEngine
 {

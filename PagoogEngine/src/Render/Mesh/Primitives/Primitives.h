@@ -19,6 +19,5 @@ namespace PEngine
 	extern const float cubePositions3[24];
 	extern const float cubeColours3[24];
 	extern const unsigned int cubeIndices3[36];
-
 }
 

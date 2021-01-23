@@ -103,33 +103,50 @@ namespace PEngine
 			return (T(0) < val) - (val < T(0));
 		}
 
+		// Coverts degrees to radians. Does not normalise.
 		static float ToRadians(float degrees);
 
+		// Normalises the given vector.
 		static Vec3 Normalise(Vec3 vector);
+		// Normalises the given quaternion.
 		static Quat Normalise(Quat quaternion);
 
+		// Translates the given matrix by the given translation vector.
 		static Mat4 Translate(Mat4 matrix, Vec3 translation);
 
+		// Rotates the given matrix by the given amounts. Largest absolute value for axisAmount determines axis.
 		static Mat4 Rotate(Mat4 matrix, float radians, Vec3 axisAmount);
+		// Rotates a given matrix by the given quaternion.
 		static Mat4 Rotate(Mat4 matrix, Quat quaternion);
 
+		// Scales the given matrix by the given vector.
 		static Mat4 Scale(Mat4 matrix, Vec3 scale);
 
+		// Linearly interpolates between two vectors.
 		static Vec3 Lerp(Vec3 start, Vec3 end, float a);
+		// Linearly interpolates between two quaternions.
 		static Quat Lerp(Quat  start, Quat end, float a);
 
+		// Converts a quaternion to a matrix.
 		static Mat4 ToMatrix(Quat orientation);
 
+		// Creates a model matrix from the passed parameters. 
 		static Mat4 ToModelMatrix(Vec3 position, Quat orientation, Vec3 scale);
 
+		// Returns the dot product of two vectos.
 		static float DotProduct(Vec3 vec1, Vec3 vec2);
 
+		// Multiplies two vectors together using the absolute values, but preserves the signage.
 		static Vec3 Vec3MultiplyPreserveSigns(Vec3 vec1, Vec3 vec2);
 
+		// Returns the distance squared of the given vector.
 		static float DistanceSq(Vec3 vec);
 
+		// Returns the forward directional vector for the given quaternion.
 		static Vec3 ToForwardVec(const Quat& quat);
+		// Returns the up directional vector for the given quaternion.
 		static Vec3 ToUpVec(const Quat& quat);
+		// Returns the right directional vector for the given quaternion.
 		static Vec3 ToRightVec(const Quat& quat);
 	};
 }

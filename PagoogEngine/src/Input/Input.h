@@ -154,7 +154,6 @@ namespace PEngine
 {
 	class Input
 	{
-	public:
 		friend class MouseMoveEvent;
 		friend class WindowsWindow;
 
@@ -169,12 +168,12 @@ namespace PEngine
 		static void SetMouseXY(float x, float y);
 
 	public:
-		static float GetMouseX();
-		static float GetMouseY();
-		static float GetPrevMouseX();
-		static float GetPrevMouseY();
-		static float GetDeltaMouseX();
-		static float GetDeltaMouseY();
+		static float GetMouseX() { return MouseX; }
+		static float GetMouseY() { return MouseY; }
+		static float GetPrevMouseX() { return PrevMouseX; }
+		static float GetPrevMouseY() { return PrevMouseY; }
+		static float GetDeltaMouseX() { return DeltaMouseX; }
+		static float GetDeltaMouseY() { return DeltaMouseY; }
 	};
 }
 

@@ -37,21 +37,6 @@ namespace PEngine
 		yaw += yawAmount;
 	}
 
-	Vec3 Camera::GetForwardVec() const
-	{
-		return forwardVec;
-	}
-
-	Vec3 Camera::GetUpVec() const
-	{
-		return upVec;
-	}
-
-	Vec3 Camera::GetRightVec() const
-	{
-		return rightVec;
-	}
-
 	void Camera::SetFov(float newFov)
 	{
 		fov = newFov;
@@ -74,15 +59,5 @@ namespace PEngine
 	{
 		farZ = newFarZ;
 		projection = glm::perspective(fov, aspectRatio, nearZ, farZ);
-	}
-
-	const Mat4& Camera::GetView() const
-	{
-		return view;
-	}
-
-	const Mat4& Camera::GetProjection() const
-	{
-		return projection;
 	}
 }

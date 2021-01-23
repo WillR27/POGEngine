@@ -1,7 +1,7 @@
 #include "pgepch.h"
 #include "Shader.h"
 
-#include "glad/glad.h"
+#include <glad/glad.h>
 
 namespace PEngine
 {

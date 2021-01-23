@@ -1,9 +1,8 @@
 #pragma once
 
+#include "ECS/ECS.h"
 #include "Event/Event.h"
 #include "Input/InputManager.h"
-
-#include "ECS/ECS.h"
 
 namespace PEngine
 {
@@ -162,7 +161,7 @@ namespace PEngine
 		void PreHandleEvent(Event& e);
 		virtual void HandleEvent(Event& e) = 0;
 
-		const char* GetName() const;
+		const char* GetName() const { return name; }
 
 	protected:
 		const char* name;

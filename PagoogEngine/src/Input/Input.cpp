@@ -46,34 +46,4 @@ namespace PEngine
 		DeltaMouseX += PrevMouseX - MouseX;
 		DeltaMouseY += PrevMouseY - MouseY;
 	}
-
-	float Input::GetMouseX()
-	{
-		return MouseX;
-	}
-
-	float Input::GetMouseY()
-	{
-		return MouseY;
-	}
-
-	float Input::GetPrevMouseX()
-	{
-		return PrevMouseX;
-	}
-
-	float Input::GetPrevMouseY()
-	{
-		return PrevMouseY;
-	}
-
-	float Input::GetDeltaMouseX()
-	{
-		return DeltaMouseX;
-	}
-
-	float Input::GetDeltaMouseY()
-	{
-		return DeltaMouseY;
-	}
 }

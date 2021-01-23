@@ -149,11 +149,6 @@ namespace PEngine
 		glfwSwapBuffers(window);
 	}
 
-	bool WindowsWindow::IsFullscreen() const
-	{
-		return fullscreen;
-	}
-
 	void WindowsWindow::SetFullscreen(bool fullscreen)
 	{
 		static int width, height, x, y;
@@ -181,16 +176,6 @@ namespace PEngine
 	void WindowsWindow::ToggleFullscreen()
 	{
 		SetFullscreen(!fullscreen);
-	}
-
-	bool WindowsWindow::HasFocus() const
-	{
-		return hasFocus;
-	}
-
-	bool WindowsWindow::HasCursor() const
-	{
-		return cursor;
 	}
 
 	void WindowsWindow::SetCursorMode(bool cursor)
@@ -262,11 +247,6 @@ namespace PEngine
 	void WindowsWindow::SetEventCallback(EventCallback eventCallback)
 	{
 		windowData.eventCallback = eventCallback;
-	}
-
-	bool WindowsWindow::ShouldClose() const
-	{
-		return shouldClose;
 	}
 
 	WindowsWindow::WindowData& WindowsWindow::GetWindowData(GLFWwindow* window)

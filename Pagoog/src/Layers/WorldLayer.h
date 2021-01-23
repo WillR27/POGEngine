@@ -1,7 +1,7 @@
 #pragma once
 
+#include "ECS/ECS.h"
 #include "Layer/Layer.h"
-
 #include "Render/Core/Render.h"
 #include "Render/Core/Objects/VertexBuffer.h"
 #include "Render/Core/Objects/IndexBuffer.h"
@@ -9,8 +9,6 @@
 #include "Render/Core/Shader.h"
 #include "Render/Mesh/StaticMeshSet.h"
 #include "Render/Material/Material.h"
-
-#include "ECS/ECS.h"
 
 namespace Pagoog
 {
