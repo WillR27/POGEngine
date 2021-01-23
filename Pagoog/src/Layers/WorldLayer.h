@@ -20,7 +20,6 @@ namespace Pagoog
 
 		virtual void Init() override;
 
-		virtual void CollisionsUpdate(float dt) override;
 		virtual void Update(float dt) override;
 		virtual void FrameUpdate(float alpha) override;
 

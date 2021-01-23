@@ -147,19 +147,32 @@ namespace PEngine
 	class Layer
 	{
 	public:
-		friend class Scene;
-
 		Layer(const char* name);
 		virtual ~Layer();
 
-		virtual void Init() = 0;
-	
-		virtual void CollisionsUpdate(float dt) = 0;
-		virtual void Update(float dt) = 0;
-		virtual void FrameUpdate(float dt) = 0;
+		virtual void PreInit();
+		virtual void Init();
+		virtual void PostInit();
 
-		void PreHandleEvent(Event& e);
-		virtual void HandleEvent(Event& e) = 0;
+		virtual void PreInputUpdate(float dt);
+		virtual void InputUpdate(float dt);
+		virtual void PostInputUpdate(float dt);
+
+		virtual void PreUpdate(float dt);
+		virtual void Update(float dt);
+		virtual void PostUpdate(float dt);
+
+		virtual void CollisionsPreUpdate(float dt);
+		virtual void CollisionsUpdate(float dt);
+		virtual void CollisionsPostUpdate(float dt);
+
+		virtual void PreFrameUpdate(float alpha);
+		virtual void FrameUpdate(float alpha);
+		virtual void PostFrameUpdate(float alpha);
+
+		virtual void PreHandleEvent(Event& e);
+		virtual void HandleEvent(Event& e);
+		virtual void PostHandleEvent(Event& e);
 
 		const char* GetName() const { return name; }
 
@@ -173,19 +186,6 @@ namespace PEngine
 		Shared<RayCastSystem> rayCastSystem;
 
 	private:
-		void PreInit();
-
-		void InputUpdate(float dt);
-
-		void PreUpdate(float dt);
-		void PostUpdate(float dt);
-
-		void CollisionsPreUpdate(float dt);
-		void CollisionsPostUpdate(float dt);
-
-		void PreFrameUpdate(float dt);
-		void PostFrameUpdate(float dt);
-
 		Shared<TransformSystem> transformSystem;
 		Shared<PhysicsSystem> physicsSystem;
 		Shared<CollisionsSystem> collisionsSystem;

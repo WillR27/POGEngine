@@ -104,17 +104,15 @@ namespace PEngine
 
 	void StaticMeshSet::RenderMesh(const Mesh& mesh)
 	{
-		std::vector<const Mesh*>::iterator it = std::find(meshes.begin(), meshes.end(), &mesh); // TODO: Replace with func/macro
+		int index = IndexOf(meshes, &mesh);
 		
-		if (it == meshes.end())
+		if (index == -1)
 		{
 			PG_ERROR("No matching mesh found!");
 		}
 
 		GetVAO().Bind();
 
-		long long index = std::distance(meshes.begin(), it);
-		
 		if (mesh.IndexCount() == 0)
 		{
 			Render::RenderTrianglesFromArrays(counts[index], mesh.Count());

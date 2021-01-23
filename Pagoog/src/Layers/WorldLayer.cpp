@@ -27,10 +27,16 @@ namespace Pagoog
 
 	void WorldLayer::Init()
 	{
+		Layer::Init();
+
 		inputManager.AddAction("Left", InputInfo(InputType::Mouse, PG_MOUSE_BUTTON_LEFT, PG_KEY_RELEASE, PG_MOD_ANY));
 		inputManager.AddAction("Right", InputInfo(InputType::Mouse, PG_MOUSE_BUTTON_RIGHT, PG_KEY_RELEASE, PG_MOD_ANY));
 
 		inputManager.AddAction("Jump", InputInfo(InputType::Keyboard, PG_KEY_SPACE, PG_KEY_RELEASE, PG_MOD_ANY));
+
+		inputManager.AddState("Sprint",
+			InputInfo(InputType::Keyboard, PG_KEY_LEFT_SHIFT, PG_KEY_PRESS, PG_MOD_ANY),
+			InputInfo(InputType::Keyboard, PG_KEY_LEFT_SHIFT, PG_KEY_RELEASE, PG_MOD_ANY));
 
 		inputManager.AddAxis("Fly",
 			InputInfo(InputType::Keyboard, PG_KEY_LEFT_CONTROL, PG_KEY_PRESS, PG_MOD_ANY),
@@ -150,23 +156,22 @@ void main()
 			});
 	}
 
-	void WorldLayer::CollisionsUpdate(float dt)
-	{
-	}
-
 	void WorldLayer::Update(float dt)
 	{
-		
+		Layer::Update(dt);
 	}
 
 	void WorldLayer::FrameUpdate(float alpha)
 	{
 		Render::SetPolygonMode(PG_FRONT_AND_BACK, PG_FILL);
 		Render::EnableDepthTest(true);
+
+		Layer::FrameUpdate(alpha);
 	}
 
 	void WorldLayer::HandleEvent(Event& e)
 	{
+		Layer::HandleEvent(e);
 	}
 
 	void WorldLayer::ActionCallback(InputPackage& inputPackage, float dt)
@@ -181,7 +186,7 @@ void main()
 			playerCamera.camera->AddPitchAndYaw(Input::GetDeltaMouseY() * dt * lookSpeed, Input::GetDeltaMouseX() * dt * lookSpeed);
 		}
 
-		const float moveSpeed = 10.0f;
+		float moveSpeed = inputPackage.IsStateActive("Sprint") ? 30.0f : 10.0f;
 		playerRigidBody.velocity =
 				(((playerCamera.camera->GetForwardVec() * static_cast<float>(inputPackage.GetAxisValue("Vertical"))) +
 				(playerCamera.camera->GetRightVec()   * static_cast<float>(inputPackage.GetAxisValue("Horizontal")))) +

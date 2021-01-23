@@ -36,32 +36,52 @@ namespace PEngine
 		rayCastSystem = ecsManager.RegisterSystem<RayCastSystem>();
 	}
 
+	void Layer::Init()
+	{
+	}
+
+	void Layer::PostInit()
+	{
+	}
+
+	void Layer::PreInputUpdate(float dt)
+	{
+	}
+
 	void Layer::InputUpdate(float dt)
 	{
-		transformSystem->Update(dt);
-
 		inputManager.Send(dt);
+	}
+
+	void Layer::PostInputUpdate(float dt)
+	{
 	}
 
 	void Layer::PreUpdate(float dt)
 	{
 	}
 
-	void Layer::PostUpdate(float dt)
+	void Layer::Update(float dt)
 	{
 		physicsSystem->Update(dt);
+	}
+
+	void Layer::PostUpdate(float dt)
+	{
 	}
 
 	void Layer::CollisionsPreUpdate(float dt)
 	{
 	}
 
+	void Layer::CollisionsUpdate(float dt)
+	{
+		collisionsSystem->Update(dt);
+	}
+
 	void Layer::CollisionsPostUpdate(float dt)
 	{
-		//PG_START_SCOPED_PROFILE("Collisions");
-		collisionsSystem->Update(dt);
-		//PG_END_SCOPED_PROFILE();
-
+		transformSystem->Update(dt);
 		cameraUpdateViewSystem->UpdateView();
 	}
 
@@ -69,9 +89,13 @@ namespace PEngine
 	{
 	}
 
-	void Layer::PostFrameUpdate(float alpha)
+	void Layer::FrameUpdate(float alpha)
 	{
 		meshRendererSystem->FrameUpdate(alpha);
+	}
+
+	void Layer::PostFrameUpdate(float alpha)
+	{
 	}
 
 	void Layer::PreHandleEvent(Event& e)
@@ -85,6 +109,14 @@ namespace PEngine
 		{
 			this->HandleEvent(e);
 		}
+	}
+
+	void Layer::HandleEvent(Event& e)
+	{
+	}
+
+	void Layer::PostHandleEvent(Event& e)
+	{
 	}
 
 	void TransformSystem::Update(float dt)
