@@ -1,6 +1,14 @@
 #pragma once
 
 #include "Scene/Scene.h"
+#include "World/World.h"
+
+#include "Render/Mesh/Mesh.h"
+#include "Render/Mesh/MeshSet.h"
+#include "Render/Core/Shader.h"
+#include "Render/Material/Material.h"
+#include "Render/Mesh/StaticMeshSet.h"
+#include "Render/Mesh/Primitives/Primitives.h"
 
 namespace Pagoog
 {
@@ -17,7 +25,20 @@ namespace Pagoog
 
 		virtual void HandleEvent(Event& e) override;
 
+		void ActionCallback(InputPackage& inputPackage, float dt);
+
 	private:
+		World world;
+
+		Shared<MeshRendererSystem> meshRendererSystem;
+
+		StaticMeshSet meshSet;
+		Mesh mesh1, mesh2, mesh3, mesh4;
+
+		Material material1;
+		Shader shader;
+
+		Entity player;
 	};
 }
 

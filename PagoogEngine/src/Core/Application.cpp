@@ -43,7 +43,9 @@ namespace PEngine
 
 	void Application::PostInit()
 	{
+		Scene::ActiveScene->PreInit();
 		Scene::ActiveScene->Init();
+		Scene::ActiveScene->PostInit();
 	}
 
 	void Application::Run()
@@ -70,7 +72,9 @@ namespace PEngine
 				window->InputUpdate();
 				inputManager.Send(deltaTimeUpdate);
 
+				Scene::ActiveScene->PreUpdate(Time::TimeUntilUpdate);
 				Scene::ActiveScene->Update(Time::TimeUntilUpdate);
+				Scene::ActiveScene->PostUpdate(Time::TimeUntilUpdate);
 				
 				deltaTimeUpdate -= (Time::TimeUntilUpdate * spiralOfDeathPreventer);
 
@@ -87,7 +91,9 @@ namespace PEngine
 					//PG_WARN((1.0f / deltaTimeFrame));
 					window->FrameUpdate();
 
+					Scene::ActiveScene->PreFrameUpdate(deltaTimeUpdate / Time::TimeUntilUpdate);
 					Scene::ActiveScene->FrameUpdate(deltaTimeUpdate / Time::TimeUntilUpdate);
+					Scene::ActiveScene->PostFrameUpdate(deltaTimeUpdate / Time::TimeUntilUpdate);
 
 					window->SwapBuffers();
 
@@ -112,7 +118,9 @@ namespace PEngine
 
 		if (!e.IsHandled())
 		{
+			Scene::ActiveScene->PreHandleEvent(e);
 			Scene::ActiveScene->HandleEvent(e);
+			Scene::ActiveScene->PostHandleEvent(e);
 		}
 	}
 

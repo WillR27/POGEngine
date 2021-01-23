@@ -2,6 +2,7 @@
 
 #include "Event/Event.h"
 #include "Layer/Layer.h"
+#include "ECS/Systems.h"
 
 namespace PEngine
 {
@@ -13,22 +14,43 @@ namespace PEngine
 		Scene(std::string name = "Scene");
 		virtual ~Scene();
 
-		virtual void Init();
+		void PreInit();
+		virtual void Init() = 0;
+		void PostInit();
 
-		virtual void Update(float dt);
-		virtual void FrameUpdate(float alpha);
+		void PreUpdate(float dt);
+		virtual void Update(float dt) = 0;
+		void PostUpdate(float dt);
 
-		virtual void HandleEvent(Event& e);
+		void PreFrameUpdate(float alpha);
+		virtual void FrameUpdate(float alpha) = 0;
+		void PostFrameUpdate(float alpha);
+
+		void PreHandleEvent(Event& e);
+		virtual void HandleEvent(Event& e) = 0;
+		void PostHandleEvent(Event& e);
 
 		void AddLayer(Layer* layer);
+
+		std::string GetName() const { return name; }
 		
 	protected:
+		InputManager inputManager;
+		ECSManager ecsManager;
+
+		Shared<RayCastSystem> rayCastSystem;
+
 		std::vector<Layer*> layers;
 
 	private:
 		static Scene* ActiveScene;
 
 		std::string name;
+
+		Shared<TransformSystem>	transformSystem;
+		Shared<PhysicsSystem> physicsSystem;
+		Shared<CollisionsSystem> collisionsSystem;
+		Shared<CameraUpdateViewSystem> cameraUpdateViewSystem;
 	};
 }
 

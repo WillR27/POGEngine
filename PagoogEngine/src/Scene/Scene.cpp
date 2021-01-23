@@ -9,6 +9,13 @@ namespace PEngine
 
 	Scene::Scene(std::string name)
 		: name(name)
+		, inputManager()
+		, ecsManager()
+		, transformSystem()
+		, physicsSystem()
+		, collisionsSystem()
+		, cameraUpdateViewSystem()
+		, rayCastSystem()
 	{
 	}
 
@@ -20,51 +27,81 @@ namespace PEngine
 		}
 	}
 
-	void Scene::Init()
+	void Scene::PreInit()
+	{
+		ecsManager.Init();
+
+		ecsManager.RegisterComponent<ECSTransform>();
+		ecsManager.RegisterComponent<ECSRigidBody>();
+		ecsManager.RegisterComponent<ECSBoxCollider>();
+		ecsManager.RegisterComponent<ECSMeshRenderer>();
+		ecsManager.RegisterComponent<ECSCamera>();
+
+		transformSystem			= ecsManager.RegisterSystem<TransformSystem>();
+		physicsSystem			= ecsManager.RegisterSystem<PhysicsSystem>();
+		collisionsSystem		= ecsManager.RegisterSystem<CollisionsSystem>();
+		cameraUpdateViewSystem	= ecsManager.RegisterSystem<CameraUpdateViewSystem>();
+		rayCastSystem			= ecsManager.RegisterSystem<RayCastSystem>();
+	}
+
+	void Scene::PostInit()
 	{
 		for (Layer* layer : layers)
 		{
-			layer->PreInit();
 			layer->Init();
-			layer->PostInit();
 		}
 	}
 
-	void Scene::Update(float dt)
+	void Scene::PreUpdate(float dt)
+	{
+		inputManager.Send(dt);
+	}
+
+	void Scene::PostUpdate(float dt)
 	{
 		for (Layer* layer : layers)
 		{
-			layer->PreInputUpdate(dt);
 			layer->InputUpdate(dt);
-			layer->PostInputUpdate(dt);
 		}
 
 		for (Layer* layer : layers)
 		{
-			layer->CollisionsPreUpdate(dt);
-			layer->CollisionsUpdate(dt);
-			layer->CollisionsPostUpdate(dt);
-		}
-
-		for (Layer* layer : layers)
-		{
-			layer->PreUpdate(dt);
 			layer->Update(dt);
-			layer->PostUpdate(dt);
 		}
+
+		physicsSystem->Update(dt);
+		collisionsSystem->Update(dt);
+		transformSystem->Update(dt);
+
+		cameraUpdateViewSystem->UpdateView();
 	}
 
-	void Scene::FrameUpdate(float alpha)
+	void Scene::PreFrameUpdate(float alpha)
+	{
+	}
+
+	void Scene::PostFrameUpdate(float alpha)
 	{
 		for (Layer* layer : layers)
 		{
-			layer->PreFrameUpdate(alpha);
 			layer->FrameUpdate(alpha);
-			layer->PostFrameUpdate(alpha);
 		}
 	}
 
-	void Scene::HandleEvent(Event & e)
+	void Scene::PreHandleEvent(Event& e)
+	{
+		EventDispatcher ed(e);
+		ed.Dispatch<KeyEvent>(PG_BIND_FN(inputManager.HandleKeyEvent));
+		ed.Dispatch<MouseMoveEvent>(PG_BIND_FN(inputManager.HandleMouseMoveEvent));
+		ed.Dispatch<MouseButtonEvent>(PG_BIND_FN(inputManager.HandleMouseButtonEvent));
+
+		if (!e.IsHandled())
+		{
+			HandleEvent(e);
+		}
+	}
+
+	void Scene::PostHandleEvent(Event& e)
 	{
 		for (Layer* layer : layers)
 		{
@@ -73,7 +110,7 @@ namespace PEngine
 				break;
 			}
 
-			layer->PreHandleEvent(e);
+			layer->HandleEvent(e);
 		}
 	}
 

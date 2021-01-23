@@ -25,15 +25,7 @@ namespace Pagoog
 
 		virtual void HandleEvent(Event& e) override;
 
-		void ActionCallback(InputPackage& inputPackage, float dt);
-
 	private:
-		StaticMeshSet meshSet;
-		Mesh mesh1, mesh2, mesh3, mesh4;
 
-		Material material1;
-		Shader shader;
-
-		Entity player;
 	};
 }
