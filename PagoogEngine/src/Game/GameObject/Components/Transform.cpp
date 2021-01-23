@@ -1,9 +1,8 @@
 #include "pgepch.h"
-#include "Transform.h"
 
 namespace PEngine
 {
-	Transform::Transform(Vec3 position, Quat rotation, Vec3 scale)
+	/*Transform::Transform(Vec3 position, Quat rotation, Vec3 scale)
 		: position(position)
 		, orientation(rotation)
 		, scale(scale)
@@ -153,5 +152,5 @@ namespace PEngine
 	std::string Transform::GetComponentName() const
 	{
 		return ComponentName();
-	}
+	}*/
 }

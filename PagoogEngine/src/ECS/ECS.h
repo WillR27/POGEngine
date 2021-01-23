@@ -11,8 +11,6 @@
 #include "Core/Core.h"
 #include "Debug/Debug.h"
 
-#include "Components.h"
-
 namespace PEngine
 {
 	constexpr size_t Hash(const char* str) 
@@ -194,6 +192,16 @@ namespace PEngine
 			entitySignatures[entityId].reset();
 		}
 
+		EntityVersion GetVersion(EntityId entityId)
+		{
+			return currentEntityVersions[entityId];
+		}
+
+		bool IsEntityValid(Entity entity)
+		{
+			return entity.version == GetVersion(entity.id);
+		}
+
 		Signature GetEntitySignature(EntityId entityId)
 		{
 			return entitySignatures[entityId];
@@ -319,7 +327,7 @@ namespace PEngine
 		void RegisterComponent()
 		{
 			// Get the hash id for this component
-			const ComponentTypeHashId hashId = HashId<T>();
+			static const ComponentTypeHashId hashId = HashId<T>();
 
 			// Check the component doesn't already exist
 			PG_ASSERT(componentTypeIds.find(hashId) == componentTypeIds.end(), "Tried to register a component that already exists: {0}.", STRINGIFY(T));
@@ -338,7 +346,7 @@ namespace PEngine
 		Shared<ComponentArray<T>> GetComponentArray()
 		{
 			// Get the hash id for this component
-			const ComponentTypeHashId hashId = HashId<T>();
+			static const ComponentTypeHashId hashId = HashId<T>();
 
 			// Find the corresponding component id index
 			PG_ASSERT(componentTypeIds.find(hashId) != componentTypeIds.end(), "Tried to access a component array that didn't exist: {0}.", STRINGIFY(T));
@@ -376,7 +384,10 @@ namespace PEngine
 		template <typename T>
 		ComponentTypeId GetComponentTypeId()
 		{
-			return componentTypeIds[HashId<T>()];
+			// Get the hash id for this component
+			static const ComponentTypeHashId hashId = HashId<T>();
+
+			return componentTypeIds[hashId];
 		}
 
 	private:
@@ -390,7 +401,7 @@ namespace PEngine
 		ComponentTypeId count = 0;
 
 		// Returns a hash id for the given component type
-		template <typename Type>
+		template <typename T>
 		static constexpr ComponentTypeHashId HashId()
 		{
 			return Hash(__FUNCSIG__);
@@ -421,7 +432,7 @@ namespace PEngine
 			systems.push_back(system);
 
 			// Add the signature to the vector of signatures
-			signatures.push_back(T::GetSignature(ecsManager));
+			systemSignatures.push_back(T::GetSignature(ecsManager));
 
 			// Return the instance of the system back to the user
 			return system;
@@ -441,7 +452,7 @@ namespace PEngine
 			for (int i = 0; i < systems.size(); i++)
 			{
 				Shared<System> system = systems[i];
-				Signature& systemSignature = signatures[i];
+				Signature& systemSignature = systemSignatures[i];
 
 				// If the signatures match, add the entity id
 				if ((systemSignature & entitySignature) == systemSignature)
@@ -461,7 +472,7 @@ namespace PEngine
 		std::vector<Shared<System>> systems;
 
 		// Vector containing the corresponding system signatures
-		std::vector<Signature> signatures;
+		std::vector<Signature> systemSignatures;
 	};
 
 
@@ -485,6 +496,16 @@ namespace PEngine
 
 			componentManager.OnEntityDestroyed(entityId);
 			systemManager.OnEntityDestroyed(entityId);
+		}
+
+		EntityVersion GetVersion(EntityId entityId)
+		{
+			return entityManager.GetVersion(entityId);
+		}
+
+		bool IsEntityValid(Entity entity)
+		{
+			return entityManager.IsEntityValid(entity);
 		}
 
 		template <typename T>
@@ -547,3 +568,5 @@ namespace PEngine
 		SystemManager systemManager;
 	};
 }
+
+#include "Components.h"

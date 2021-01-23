@@ -1,11 +1,11 @@
 #include "pgepch.h"
-#include "CameraNew.h"
+#include "Camera.h"
 
 namespace PEngine
 {
-	Shared<CameraNew> CameraNew::MainCamera = MakeShared<CameraNew>();
+	Shared<Camera> Camera::MainCamera = MakeShared<Camera>();
 
-	CameraNew::CameraNew()
+	Camera::Camera()
 		: pitch(0.0f)
 		, yaw(0.0f)
 		, forwardVec(0.0f, 0.0f, -1.0f)
@@ -20,7 +20,7 @@ namespace PEngine
 	{
 	}
 
-	void CameraNew::UpdateView(Vec3 parentPosition, Quat parentOrientation)
+	void Camera::UpdateView(Vec3 parentPosition, Quat parentOrientation)
 	{
 		Quat cameraOrientation = Quat(Vec3(pitch, yaw, 0.0f));
 
@@ -31,57 +31,57 @@ namespace PEngine
 		view = glm::lookAt(parentPosition, parentPosition + forwardVec, upVec);
 	}
 
-	void CameraNew::AddPitchAndYaw(float pitchAmount, float yawAmount)
+	void Camera::AddPitchAndYaw(float pitchAmount, float yawAmount)
 	{
 		pitch += pitchAmount;
 		yaw += yawAmount;
 	}
 
-	Vec3 CameraNew::GetForwardVec() const
+	Vec3 Camera::GetForwardVec() const
 	{
 		return forwardVec;
 	}
 
-	Vec3 CameraNew::GetUpVec() const
+	Vec3 Camera::GetUpVec() const
 	{
 		return upVec;
 	}
 
-	Vec3 CameraNew::GetRightVec() const
+	Vec3 Camera::GetRightVec() const
 	{
 		return rightVec;
 	}
 
-	void CameraNew::SetFov(float newFov)
+	void Camera::SetFov(float newFov)
 	{
 		fov = newFov;
 		projection = glm::perspective(fov, aspectRatio, nearZ, farZ);
 	}
 
-	void CameraNew::SetAspectRatio(float newAspectRatio)
+	void Camera::SetAspectRatio(float newAspectRatio)
 	{
 		aspectRatio = newAspectRatio;
 		projection = glm::perspective(fov, aspectRatio, nearZ, farZ);
 	}
 
-	void CameraNew::SetNearZ(float newNearZ)
+	void Camera::SetNearZ(float newNearZ)
 	{
 		nearZ = newNearZ;
 		projection = glm::perspective(fov, aspectRatio, nearZ, farZ);
 	}
 
-	void CameraNew::SetFarZ(float newFarZ)
+	void Camera::SetFarZ(float newFarZ)
 	{
 		farZ = newFarZ;
 		projection = glm::perspective(fov, aspectRatio, nearZ, farZ);
 	}
 
-	const Mat4& CameraNew::GetView() const
+	const Mat4& Camera::GetView() const
 	{
 		return view;
 	}
 
-	const Mat4& CameraNew::GetProjection() const
+	const Mat4& Camera::GetProjection() const
 	{
 		return projection;
 	}

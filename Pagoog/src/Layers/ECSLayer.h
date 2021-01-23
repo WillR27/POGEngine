@@ -14,11 +14,11 @@
 
 namespace Pagoog
 {
-	class ECSLayer : public Layer
+	class WorldLayer : public Layer
 	{
 	public:
-		ECSLayer();
-		virtual ~ECSLayer();
+		WorldLayer();
+		virtual ~WorldLayer();
 
 		virtual void Init() override;
 
@@ -32,7 +32,7 @@ namespace Pagoog
 
 	private:
 		StaticMeshSet meshSet;
-		Mesh mesh, mesh2, mesh3, mesh4;
+		Mesh mesh1, mesh2, mesh3, mesh4;
 
 		Material material1;
 		Shader shader;

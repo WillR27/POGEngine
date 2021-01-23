@@ -4,12 +4,12 @@
 
 namespace PEngine
 {
-	class CameraNew
+	class Camera
 	{
 	public:
-		static Shared<CameraNew> MainCamera;
+		static Shared<Camera> MainCamera;
 
-		CameraNew();
+		Camera();
 
 		void UpdateView(Vec3 parentPosition, Quat parentOrientation);
 		void AddPitchAndYaw(float pitchAmount, float yawAmount);

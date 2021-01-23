@@ -3,8 +3,6 @@
 #include "Event/Event.h"
 #include "Input/InputManager.h"
 
-#include "Game/GameObject/Components/Components.h"
-
 #include "ECS/ECS.h"
 
 namespace PEngine
@@ -147,8 +145,6 @@ namespace PEngine
 		ECSManager& ecsManager;
 	};
 
-	class GameObject;
-
 	class Layer
 	{
 	public:
@@ -178,15 +174,6 @@ namespace PEngine
 		Shared<RayCastSystem> rayCastSystem;
 
 	private:
-		static Layer* ActiveLayer;
-
-		std::vector<GameObject*> gameObjects;
-		std::vector<BoxCollider*> boxColliders;
-		std::vector<Camera*> cameras;
-		std::vector<MeshRenderer*> meshRenderers;
-		std::vector<RigidBody*> rigidBodies;
-		std::vector<Transform*> transforms;
-
 		void PreInit();
 
 		void InputUpdate(float dt);

@@ -1,13 +1,13 @@
 #include "pgepch.h"
 #include "WindowsWindow.h"
 
+#include <glad/glad.h>
+
 #include "Event/WindowEvents.h"
 #include "Event/InputEvents.h"
-#include "Game/GameObject/Components/Camera.h"
 #include "Render/Core/Shader.h"
 #include "Render/Core/Render.h"
-
-#include <glad/glad.h>
+#include "Scene/Camera.h"
 
 namespace PEngine
 {

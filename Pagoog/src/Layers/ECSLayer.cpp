@@ -2,21 +2,18 @@
 #include "ECSLayer.h"
 
 #include "Core/Time.h"
+#include "ECS/ECS.h"
 #include "Input/Input.h"
 #include "Render/Mesh/StaticMeshSet.h"
 #include "Render/Mesh/Primitives/Primitives.h"
-
-#include "Scene/CameraNew.h"
-
-#include "ECS/ECS.h"
-#include "ECS/Components.h"
+#include "Scene/Camera.h"
 
 namespace Pagoog
 {
-	ECSLayer::ECSLayer()
-		: Layer::Layer("ECS")
+	WorldLayer::WorldLayer()
+		: Layer::Layer("World")
 		, meshSet()
-		, mesh(&meshSet)
+		, mesh1(&meshSet)
 		, mesh2(&meshSet)
 		, mesh3(&meshSet)
 		, mesh4(&meshSet)
@@ -24,11 +21,11 @@ namespace Pagoog
 	{
 	}
 
-	ECSLayer::~ECSLayer()
+	WorldLayer::~WorldLayer()
 	{
 	}
 
-	void ECSLayer::Init()
+	void WorldLayer::Init()
 	{
 		inputManager.AddAction("Left", InputInfo(InputType::Mouse, PG_MOUSE_BUTTON_LEFT, PG_KEY_RELEASE, PG_MOD_ANY));
 		inputManager.AddAction("Right", InputInfo(InputType::Mouse, PG_MOUSE_BUTTON_RIGHT, PG_KEY_RELEASE, PG_MOD_ANY));
@@ -55,9 +52,9 @@ namespace Pagoog
 
 		inputManager.AddInputPackageCallback(PG_BIND_FN(ActionCallback));
 
-		mesh.SetPositionData(squarePositions, sizeof(squarePositions));
-		mesh.SetColourData(squareColours, sizeof(squareColours));
-		mesh.Build();
+		mesh1.SetPositionData(squarePositions, sizeof(squarePositions));
+		mesh1.SetColourData(squareColours, sizeof(squareColours));
+		mesh1.Build();
 
 		mesh2.SetPositionData(cubePositions2, sizeof(cubePositions2));
 		mesh2.SetColourData(cubeColours2, sizeof(cubeColours2));
@@ -144,35 +141,35 @@ void main()
 			});
 
 		// Create a new camera
-		CameraNew::MainCamera = MakeShared<CameraNew>();
+		Camera::MainCamera = MakeShared<Camera>();
 
 		// Add it to the player
 		ecsManager.AddComponent(player.id, ECSCamera
 			{
-				.camera = CameraNew::MainCamera
+				.camera = Camera::MainCamera
 			});
 	}
 
-	void ECSLayer::CollisionsUpdate(float dt)
+	void WorldLayer::CollisionsUpdate(float dt)
 	{
 	}
 
-	void ECSLayer::Update(float dt)
+	void WorldLayer::Update(float dt)
 	{
 		
 	}
 
-	void ECSLayer::FrameUpdate(float alpha)
+	void WorldLayer::FrameUpdate(float alpha)
 	{
 		Render::SetPolygonMode(PG_FRONT_AND_BACK, PG_FILL);
 		Render::EnableDepthTest(true);
 	}
 
-	void ECSLayer::HandleEvent(Event& e)
+	void WorldLayer::HandleEvent(Event& e)
 	{
 	}
 
-	void ECSLayer::ActionCallback(InputPackage& inputPackage, float dt)
+	void WorldLayer::ActionCallback(InputPackage& inputPackage, float dt)
 	{
 		auto& playerTransform = ecsManager.GetComponent<ECSTransform>(player.id);
 		auto& playerRigidBody = ecsManager.GetComponent<ECSRigidBody>(player.id);

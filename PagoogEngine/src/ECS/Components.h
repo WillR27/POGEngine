@@ -39,9 +39,9 @@ namespace PEngine
 		Material* material = nullptr;
 	};
 
-	class CameraNew;
+	class Camera;
 	struct ECSCamera
 	{
-		Shared<CameraNew> camera;
+		Shared<Camera> camera;
 	};
 }

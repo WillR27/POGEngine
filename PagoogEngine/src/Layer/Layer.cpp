@@ -1,34 +1,21 @@
 #include "pgepch.h"
 #include "Layer.h"
 
-#include "Game/GameObject/GameObject.h"
+#include "Scene/Camera.h"
 #include "Util/Timer.h"
-
-#include "Scene/CameraNew.h"
 
 namespace PEngine
 {
-	Layer* Layer::ActiveLayer = nullptr;
-
 	Layer::Layer(const char* name)
 		: name(name)
 		, inputManager()
 		, ecsManager()
-		, gameObjects()
-		, boxColliders()
-		, cameras()
-		, meshRenderers()
-		, rigidBodies()
-		, transforms()
 	{
 	}
 
 	Layer::~Layer()
 	{
-		for (GameObject* gameObject : gameObjects)
-		{
-			delete gameObject;
-		}
+
 	}
 
 	void Layer::PreInit()
@@ -51,14 +38,6 @@ namespace PEngine
 
 	void Layer::InputUpdate(float dt)
 	{
-		for (Transform* transform : transforms)
-		{
-			if (transform != nullptr)
-			{
-				transform->PreInputUpdate();
-			}
-		}
-
 		transformSystem->Update(dt);
 
 		inputManager.Send(dt);
@@ -66,31 +45,11 @@ namespace PEngine
 
 	void Layer::PreUpdate(float dt)
 	{
-		for (GameObject* gameObject : gameObjects)
-		{
-			gameObject->Update(dt);
-		}
 	}
 
 	void Layer::PostUpdate(float dt)
 	{
-		for (RigidBody* rigidBody : rigidBodies)
-		{
-			if (rigidBody != nullptr)
-			{
-				rigidBody->Update(dt);
-			}
-		}
-
 		physicsSystem->Update(dt);
-
-		for (Camera* camera : cameras)
-		{
-			if (camera != nullptr)
-			{
-				camera->Update(dt);
-			}
-		}
 	}
 
 	void Layer::CollisionsPreUpdate(float dt)
@@ -100,19 +59,6 @@ namespace PEngine
 	void Layer::CollisionsPostUpdate(float dt)
 	{
 		//PG_START_SCOPED_PROFILE("Collisions GO");
-		if (boxColliders.size() > 1)
-		{
-			for (int i = 0; i < boxColliders.size(); i++)
-			{
-				for (int j = i + 1; j < boxColliders.size(); j++)
-				{
-					if (boxColliders[i] != nullptr && boxColliders[j] != nullptr)
-					{
-						boxColliders[i]->CollideWith(*boxColliders[j]);
-					}
-				}
-			}
-		}
 		//PG_END_SCOPED_PROFILE();
 
 		//PG_START_SCOPED_PROFILE("Collisions ECS");
@@ -124,22 +70,10 @@ namespace PEngine
 
 	void Layer::PreFrameUpdate(float alpha)
 	{
-		for (GameObject* gameObject : gameObjects)
-		{
-			gameObject->FrameUpdate(alpha);
-		}
 	}
 
 	void Layer::PostFrameUpdate(float alpha)
 	{
-		for (MeshRenderer* meshRenderer : meshRenderers)
-		{
-			if (meshRenderer != nullptr)
-			{
-				meshRenderer->FrameUpdate(alpha);
-			}
-		}
-
 		meshRendererSystem->FrameUpdate(alpha);
 	}
 
@@ -178,8 +112,8 @@ namespace PEngine
 		//PG_SCOPED_PROFILE("Physics");
 		for (EntityId entityId : entityIds)
 		{
-			ECSTransform& transform = ecsManager.GetComponent<ECSTransform>(entityId);
-			ECSRigidBody& rigidBody = ecsManager.GetComponent<ECSRigidBody>(entityId);
+			auto& transform = ecsManager.GetComponent<ECSTransform>(entityId);
+			auto& rigidBody = ecsManager.GetComponent<ECSRigidBody>(entityId);
 			
 			Vec3 drag = rigidBody.dragCoef * Maths::Vec3MultiplyPreserveSigns(rigidBody.velocity, rigidBody.velocity);
 			Vec3 acceleration = (rigidBody.force - drag) / rigidBody.mass;
@@ -201,9 +135,9 @@ namespace PEngine
 		{
 			EntityId entityId1 = *it1;
 
-			ECSBoxCollider& boxCollider1 = ecsManager.GetComponent<ECSBoxCollider>(entityId1);
-			ECSTransform& transform1 = ecsManager.GetComponent<ECSTransform>(entityId1);
-			ECSRigidBody& rigidBody1 = ecsManager.GetComponent<ECSRigidBody>(entityId1);
+			auto& boxCollider1 = ecsManager.GetComponent<ECSBoxCollider>(entityId1);
+			auto& transform1 = ecsManager.GetComponent<ECSTransform>(entityId1);
+			auto& rigidBody1 = ecsManager.GetComponent<ECSRigidBody>(entityId1);
 
 			AABB<3>& aabb1 = boxCollider1.aabb.CreateTransformedAABB(transform1.position);
 
@@ -211,9 +145,9 @@ namespace PEngine
 			{
 				EntityId entityId2 = *it2;
 
-				ECSBoxCollider& boxCollider2 = ecsManager.GetComponent<ECSBoxCollider>(entityId2);
-				ECSTransform& transform2 = ecsManager.GetComponent<ECSTransform>(entityId2);
-				ECSRigidBody& rigidBody2 = ecsManager.GetComponent<ECSRigidBody>(entityId2);
+				auto& boxCollider2 = ecsManager.GetComponent<ECSBoxCollider>(entityId2);
+				auto& transform2 = ecsManager.GetComponent<ECSTransform>(entityId2);
+				auto& rigidBody2 = ecsManager.GetComponent<ECSRigidBody>(entityId2);
 
 				//PG_START_SCOPED_PROFILE("Collisions ECS");
 				AABB<3>& aabb2 = boxCollider2.aabb.CreateTransformedAABB(transform2.position);
@@ -268,8 +202,8 @@ namespace PEngine
 		//PG_SCOPED_PROFILE("Render");
 		for (EntityId entityId : entityIds)
 		{
-			ECSMeshRenderer& meshRenderer = ecsManager.GetComponent<ECSMeshRenderer>(entityId);
-			ECSTransform& transform = ecsManager.GetComponent<ECSTransform>(entityId);
+			auto& meshRenderer = ecsManager.GetComponent<ECSMeshRenderer>(entityId);
+			auto& transform = ecsManager.GetComponent<ECSTransform>(entityId);
 
 			Mesh* mesh = meshRenderer.mesh;
 			Material* material = meshRenderer.material;
@@ -284,8 +218,8 @@ namespace PEngine
 				Vec3 scale = Maths::Lerp(transform.prevScale, transform.scale, alpha);
 
 				Shader& shader = material->GetShader();
-				shader.SetMatrix4fv("view", 1, false, CameraNew::MainCamera->GetView());
-				shader.SetMatrix4fv("projection", 1, false, CameraNew::MainCamera->GetProjection());
+				shader.SetMatrix4fv("view", 1, false, Camera::MainCamera->GetView());
+				shader.SetMatrix4fv("projection", 1, false, Camera::MainCamera->GetProjection());
 				shader.SetMatrix4fv("model", 1, false, Maths::ToModelMatrix(position, orientation, scale));
 
 				mesh->Render();
