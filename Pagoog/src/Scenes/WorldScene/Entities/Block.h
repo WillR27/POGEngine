@@ -12,6 +12,7 @@ namespace Pagoog
 		~Block() = default;
 
 		virtual void OnCreate() override;
+
 	private:
 
 	};

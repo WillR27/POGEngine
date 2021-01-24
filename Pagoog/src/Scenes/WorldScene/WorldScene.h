@@ -2,10 +2,10 @@
 
 #include "Render/Mesh/Mesh.h"
 #include "Render/Mesh/MeshSet.h"
-#include "Render/Core/Shader.h"
 #include "Render/Material/Material.h"
 #include "Render/Mesh/StaticMeshSet.h"
 #include "Render/Mesh/Primitives/Primitives.h"
+#include "Render/Shader/Shader.h"
 #include "Scene/Scene.h"
 
 #include "Entities/Player.h"
@@ -32,13 +32,7 @@ namespace Pagoog
 
 		Player player;
 
-
-
-		StaticMeshSet meshSet;
-		Mesh mesh1, mesh2, mesh3, mesh4;
-
-		Material material1;
-		Shader shader;
+		//StaticMeshSet meshSet;
 	};
 }
 

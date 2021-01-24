@@ -14,32 +14,10 @@
 #include "Maths/Collisions.h"
 #include "Render/Mesh/Mesh.h"
 #include "Render/Material/Material.h"
+#include "Util/Hash.h"
 
 namespace PEngine
 {
-	constexpr size_t Hash(const char* str)
-	{
-		static_assert(sizeof(size_t) == 8 || sizeof(size_t) == 4);
-
-		size_t h = 0;
-		if constexpr (sizeof(size_t) == 8)
-		{
-			h = 1125899906842597L; // prime
-		}
-		else
-		{
-			h = 4294967291L;
-		}
-
-		int i = 0;
-		while (str[i] != 0)
-		{
-			h = 31 * h + str[i++];
-		}
-
-		return h;
-	}
-
 	template <typename T, T capacity, T maxValue>
 	class SparseSet
 	{
@@ -276,8 +254,8 @@ namespace PEngine
 
 	struct ECSMeshRenderer
 	{
-		Mesh* mesh = nullptr;
-		Material* material = nullptr;
+		Shared<Mesh> mesh = nullptr;
+		Shared<Material> material = nullptr;
 	};
 
 	class Camera;
@@ -374,7 +352,7 @@ namespace PEngine
 		void RegisterComponent()
 		{
 			// Get the hash id for this component
-			static const ComponentTypeHashId hashId = HashId<T>();
+			static const ComponentTypeHashId hashId = HashId<T, ComponentTypeHashId>();
 
 			// Check the component doesn't already exist
 			PG_ASSERT(componentTypeIds.find(hashId) == componentTypeIds.end(), "Tried to register a component that already exists: {0}.", STRINGIFY(T));
@@ -393,7 +371,7 @@ namespace PEngine
 		Shared<ComponentArray<T>> GetComponentArray()
 		{
 			// Get the hash id for this component
-			static const ComponentTypeHashId hashId = HashId<T>();
+			static const ComponentTypeHashId hashId = HashId<T, ComponentTypeHashId>();
 
 			// Find the corresponding component id index
 			PG_ASSERT(componentTypeIds.find(hashId) != componentTypeIds.end(), "Tried to access a component array that didn't exist: {0}.", STRINGIFY(T));
@@ -432,7 +410,7 @@ namespace PEngine
 		ComponentTypeId GetComponentTypeId()
 		{
 			// Get the hash id for this component
-			static const ComponentTypeHashId hashId = HashId<T>();
+			static const ComponentTypeHashId hashId = HashId<T, ComponentTypeHashId>();
 
 			return componentTypeIds[hashId];
 		}
@@ -446,13 +424,6 @@ namespace PEngine
 
 		// Count of component arrays
 		ComponentTypeId count = 0;
-
-		// Returns a hash id for the given component type
-		template <typename T>
-		static constexpr ComponentTypeHashId HashId()
-		{
-			return Hash(__FUNCSIG__);
-		}
 	};
 
 
@@ -627,6 +598,7 @@ namespace PEngine
 
 
 	class Entity;
+	class Scene;
 
 	class ECSManager
 	{
@@ -636,6 +608,11 @@ namespace PEngine
 		Shared<CollisionsSystem> collisionsSystem;
 		Shared<CameraUpdateViewSystem> cameraUpdateViewSystem;
 		Shared<RayCastSystem> rayCastSystem;
+
+		ECSManager(Scene* scene)
+			: scene(scene)
+		{
+		}
 
 		Entity CreateEntity();
 
@@ -732,10 +709,15 @@ namespace PEngine
 			rayCastSystem = RegisterSystem<RayCastSystem>();
 		}
 
+		Scene& GetScene() const { return *scene; }
+
 	private:
 		EntityManager entityManager;
 		ComponentManager componentManager;
 		SystemManager systemManager;
+
+		// The scene the ecs manager is associated with
+		Scene* scene;
 	};
 
 
@@ -743,8 +725,6 @@ namespace PEngine
 	class Entity
 	{
 	public:
-		ECSManager* ecsManager;
-
 		Entity(EntityInfo entityInfo = { 0, 0 }, ECSManager* ecsManager = { nullptr })
 			: entityInfo(entityInfo)
 			, ecsManager(ecsManager)
@@ -762,19 +742,19 @@ namespace PEngine
 		template <typename T>
 		T& GetComponent()
 		{
-			return ecsManager->GetComponent<T>(Id());
+			return ecsManager->GetComponent<T>(GetId());
 		}
 
 		template <typename T>
 		T& AddComponent(const T& component)
 		{
-			return ecsManager->AddComponent(Id(), component);
+			return ecsManager->AddComponent(GetId(), component);
 		}
 
 		template <typename T>
 		void RemoveComponent()
 		{
-			ecsManager->RemoveComponent<T>(Id());
+			ecsManager->RemoveComponent<T>(GetId());
 		}
 
 		bool IsValid() const
@@ -782,11 +762,15 @@ namespace PEngine
 			return ecsManager->IsEntityValid(entityInfo);
 		}
 
-		EntityId Id() const { return entityInfo.id; }
-		EntityVersion Version() const { return entityInfo.version; }
+		EntityId GetId() const { return entityInfo.id; }
+		EntityVersion GetVersion() const { return entityInfo.version; }
+
+		ECSManager& GetECSManager() const { return *ecsManager; }
+		Scene& GetScene() const { return ecsManager->GetScene(); }
 
 	private:
 		EntityInfo entityInfo;
+		ECSManager* ecsManager;
 	};
 
 

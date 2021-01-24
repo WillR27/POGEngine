@@ -148,25 +148,20 @@ namespace PEngine
 			auto& meshRenderer = ecsManager.GetComponent<ECSMeshRenderer>(entityId);
 			auto& transform = ecsManager.GetComponent<ECSTransform>(entityId);
 
-			Mesh* mesh = meshRenderer.mesh;
-			Material* material = meshRenderer.material;
+			Shared<Material> material = meshRenderer.material;
+			material->GetShader().Use();
+			material->UpdateShaderUniforms();
 
-			if (mesh != nullptr)
-			{
-				material->GetShader().Use();
-				material->UpdateShaderUniforms();
+			Vec3 position = Maths::Lerp(transform.prevPosition, transform.position, alpha);
+			Quat orientation = Maths::Lerp(transform.prevOrientation, transform.orientation, alpha);
+			Vec3 scale = Maths::Lerp(transform.prevScale, transform.scale, alpha);
 
-				Vec3 position = Maths::Lerp(transform.prevPosition, transform.position, alpha);
-				Quat orientation = Maths::Lerp(transform.prevOrientation, transform.orientation, alpha); // TODO: Fix flickering
-				Vec3 scale = Maths::Lerp(transform.prevScale, transform.scale, alpha);
+			Shader& shader = material->GetShader();
+			shader.SetMatrix4fv("view", 1, false, Camera::MainCamera->GetView());
+			shader.SetMatrix4fv("projection", 1, false, Camera::MainCamera->GetProjection());
+			shader.SetMatrix4fv("model", 1, false, Maths::ToModelMatrix(position, orientation, scale));
 
-				Shader& shader = material->GetShader();
-				shader.SetMatrix4fv("view", 1, false, Camera::MainCamera->GetView());
-				shader.SetMatrix4fv("projection", 1, false, Camera::MainCamera->GetProjection());
-				shader.SetMatrix4fv("model", 1, false, Maths::ToModelMatrix(position, orientation, scale));
-
-				mesh->Render();
-			}
+			meshRenderer.mesh->Render();
 		}
 	}
 

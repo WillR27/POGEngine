@@ -9,8 +9,13 @@ namespace PEngine
 	class Mesh
 	{
 	public:
-		Mesh(MeshSet* meshSet);
+		Mesh(MeshSet* meshSet = nullptr);
 		~Mesh();
+
+		//void* operator new(size_t size) { return ::new Mesh(); }
+		//void* operator new[](size_t size) = delete;
+		//void operator delete(void* mesh) { ::delete mesh; }
+		//void operator delete[](void* mesh) = delete;
 
 		void Render();
 

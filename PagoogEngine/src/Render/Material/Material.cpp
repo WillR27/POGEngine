@@ -3,9 +3,8 @@
 
 namespace PEngine
 {
-	Material::Material(std::string name)
-		: name(name)
-		, shader(nullptr)
+	Material::Material()
+		: shader(nullptr)
 		, colours()
 	{
 	}
@@ -22,9 +21,9 @@ namespace PEngine
 		}
 	}
 
-	void Material::SetShader(Shader& shader)
+	void Material::SetShader(Shared<Shader> shader)
 	{
-		this->shader = &shader;
+		this->shader = shader;
 	}
 
 	void Material::AddColour(std::string name, Vec4 colour)

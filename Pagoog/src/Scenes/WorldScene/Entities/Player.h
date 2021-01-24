@@ -9,13 +9,16 @@ namespace Pagoog
 	{
 	public:
 		Player() = default;
-		Player(PEngine::EntityInfo entityInfo, PEngine::ECSManager& ecsManager);
+		Player(PEngine::EntityInfo entityInfo, PEngine::ECSManager& ecsManager, float moveSpeed, float sprintMultiplier, float lookSpeed);
 		~Player() = default;
 
 		virtual void OnCreate() override;
 
 		void InputCallback(PEngine::InputPackage& inputPackage, float dt);
-	private:
 
+	private:
+		float moveSpeed;
+		float sprintMultiplier;
+		float lookSpeed;
 	};
 }

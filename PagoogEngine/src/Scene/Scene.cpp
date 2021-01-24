@@ -10,7 +10,10 @@ namespace PEngine
 	Scene::Scene(std::string name)
 		: name(name)
 		, inputManager()
-		, ecsManager()
+		, ecsManager(this)
+		, meshManager()
+		, materialManager()
+		, shaderManager()
 	{
 	}
 

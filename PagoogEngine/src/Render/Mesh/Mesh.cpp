@@ -2,6 +2,7 @@
 #include "Mesh.h"
 
 #include "MeshSet.h"
+#include "Render/Core/Render.h"
 
 namespace PEngine
 {
@@ -47,7 +48,29 @@ namespace PEngine
 		}
 		else
 		{
-			// TODO: Render a mesh without a mesh set
+			VertexArray vao; // TODO: Create on build?
+			VertexBuffer vbo;
+			IndexBuffer ibo;
+
+			vao.Bind();
+			vbo.Bind();
+			ibo.Bind();
+
+			vbo.SetVertexData(GetVertexData(), Size());
+
+			vao.SetAttribute(0, 3, PG_FLOAT, false, 6 * sizeof(float), (void*)(0));
+			vao.SetAttribute(1, 3, PG_FLOAT, false, 6 * sizeof(float), (void*)(3 * sizeof(float)));
+
+			if (IndexCount() == 0)
+			{
+				Render::RenderTrianglesFromArrays(0, Count());
+			}
+			else
+			{
+				ibo.SetIndexData(GetIndexData(), IndexSize());
+
+				Render::RenderTrianglesFromElements(0, IndexCount());
+			}
 		}
 	}
 

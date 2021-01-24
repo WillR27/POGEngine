@@ -1,8 +1,11 @@
 #pragma once
 
+#include "ECS/Systems.h"
 #include "Event/Event.h"
 #include "Layer/Layer.h"
-#include "ECS/Systems.h"
+#include "Render/Material/MaterialManager.h"
+#include "Render/Mesh/MeshManager.h"
+#include "Render/Shader/ShaderManager.h"
 
 namespace PEngine
 {
@@ -35,6 +38,9 @@ namespace PEngine
 	protected:
 		InputManager inputManager;
 		ECSManager ecsManager;
+		MeshManager meshManager;
+		MaterialManager materialManager;
+		ShaderManager shaderManager;
 
 	private:
 		static Scene* ActiveScene;

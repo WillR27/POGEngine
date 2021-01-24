@@ -6,8 +6,11 @@
 
 namespace Pagoog
 {
-	Player::Player(EntityInfo entityInfo, ECSManager& ecsManager)
+	Player::Player(EntityInfo entityInfo, ECSManager& ecsManager, float moveSpeed, float sprintMultiplier, float lookSpeed)
 		: Entity::Entity(entityInfo, ecsManager)
+		, moveSpeed(moveSpeed)
+		, sprintMultiplier(sprintMultiplier)
+		, lookSpeed(lookSpeed)
 	{
 	}
 
@@ -48,11 +51,10 @@ namespace Pagoog
 
 		if (inputPackage.HasMouseMoved())
 		{
-			const float lookSpeed = 0.2f;
 			playerCamera.camera->AddPitchAndYaw(Input::GetDeltaMouseY() * dt * lookSpeed, Input::GetDeltaMouseX() * dt * lookSpeed);
 		}
 
-		float moveSpeed = inputPackage.IsStateActive("Sprint") ? 30.0f : 10.0f;
+		float moveSpeed = inputPackage.IsStateActive("Sprint") ? this->moveSpeed * sprintMultiplier : this->moveSpeed;
 		playerRigidBody.velocity =
 			(((playerCamera.camera->GetForwardVec() * static_cast<float>(inputPackage.GetAxisValue("Vertical"))) +
 				(playerCamera.camera->GetRightVec() * static_cast<float>(inputPackage.GetAxisValue("Horizontal")))) +
@@ -60,11 +62,11 @@ namespace Pagoog
 
 		if (inputPackage.HasActionOccurred("Left"))
 		{
-			RayCastResult rayCastResult = ecsManager->rayCastSystem->RayCast(playerTransform.position, playerCamera.camera->GetForwardVec(), Id());
+			RayCastResult rayCastResult = GetECSManager().rayCastSystem->RayCast(playerTransform.position, playerCamera.camera->GetForwardVec(), GetId());
 
 			if (rayCastResult.hit)
 			{
-				ecsManager->DestroyEntity(rayCastResult.entityId);
+				GetECSManager().DestroyEntity(rayCastResult.entityId);
 			}
 		}
 	}

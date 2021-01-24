@@ -12,12 +12,7 @@ namespace Pagoog
 {
 	WorldScene::WorldScene()
 		: Scene::Scene("World")
-		, meshSet()
-		, mesh1(&meshSet)
-		, mesh2(&meshSet)
-		, mesh3(&meshSet)
-		, mesh4(&meshSet)
-		, material1("Material1")
+		//, meshSet()
 	{
 	}
 
@@ -58,27 +53,31 @@ namespace Pagoog
 
 		meshRendererSystem = ecsManager.RegisterSystem<MeshRendererSystem>();
 
-		mesh1.SetPositionData(squarePositions, sizeof(squarePositions));
-		mesh1.SetColourData(squareColours, sizeof(squareColours));
-		mesh1.Build();
+		Shared<Mesh> mesh = meshManager.CreateAndAddMesh("Mesh1");
+		mesh->SetPositionData(squarePositions, sizeof(squarePositions));
+		mesh->SetColourData(squareColours, sizeof(squareColours));
+		mesh->Build();
 
-		mesh2.SetPositionData(cubePositions2, sizeof(cubePositions2));
-		mesh2.SetColourData(cubeColours2, sizeof(cubeColours2));
-		mesh2.Build();
+		mesh = meshManager.CreateAndAddMesh("Mesh2");
+		mesh->SetPositionData(cubePositions2, sizeof(cubePositions2));
+		mesh->SetColourData(cubeColours2, sizeof(cubeColours2));
+		mesh->Build();
+		 
+		mesh = meshManager.CreateAndAddMesh("Mesh3");
+		mesh->SetPositionData(squarePositions2, sizeof(squarePositions2));
+		mesh->SetColourData(squareColours2, sizeof(squareColours2));
+		mesh->SetIndexData(squareIndices2, sizeof(squareIndices2));
+		mesh->Build();
 
-		mesh3.SetPositionData(squarePositions2, sizeof(squarePositions2));
-		mesh3.SetColourData(squareColours2, sizeof(squareColours2));
-		mesh3.SetIndexData(squareIndices2, sizeof(squareIndices2));
-		mesh3.Build();
+		mesh = meshManager.CreateAndAddMesh("Mesh4");
+		mesh->SetPositionData(cubePositions3, sizeof(cubePositions3));
+		mesh->SetColourData(cubeColours3, sizeof(cubeColours3));
+		mesh->SetIndexData(cubeIndices3, sizeof(cubeIndices3));
+		mesh->Build();
 
-		mesh4.SetPositionData(cubePositions3, sizeof(cubePositions3));
-		mesh4.SetColourData(cubeColours3, sizeof(cubeColours3));
-		mesh4.SetIndexData(cubeIndices3, sizeof(cubeIndices3));
-		mesh4.Build();
-
-		meshSet.Build();
-		meshSet.SetAttribute(0, 3, PG_FLOAT, false, 6 * sizeof(float), (void*)(0));
-		meshSet.SetAttribute(1, 3, PG_FLOAT, false, 6 * sizeof(float), (void*)(3 * sizeof(float)));
+		//meshSet.Build();
+		//meshSet.SetAttribute(0, 3, PG_FLOAT, false, 6 * sizeof(float), (void*)(0));
+		//meshSet.SetAttribute(1, 3, PG_FLOAT, false, 6 * sizeof(float), (void*)(3 * sizeof(float)));
 
 		const char* vertexShaderSource = R"(
 #version 330 core
@@ -113,15 +112,15 @@ void main()
 } 
 )";
 
-		shader.Init(vertexShaderSource, fragmentShaderSource);
+		Shared<Shader> shader = shaderManager.CreateAndAddShader("Shader1");
+		shader->Init(vertexShaderSource, fragmentShaderSource);
 
-		material1.AddColour("colourIn", Vec4(1.0f, 0.0f, 0.0f, 1.0f));
-		material1.SetShader(shader);
-
-		material1.SetColour("colourIn", Vec4((float)(sin(std::chrono::system_clock::to_time_t(std::chrono::system_clock::now())) + 1.0f) / 2.0f, (float)(sin(std::chrono::system_clock::to_time_t(std::chrono::system_clock::now()) * 0.9f) + 1.0f) / 2.0f, (float)(sin(std::chrono::system_clock::to_time_t(std::chrono::system_clock::now()) * 1.1f) + 1.0f) / 2.0f, 1.0f));
+		Shared<Material> material = materialManager.CreateAndAddMaterial("Material1");
+		material->AddColour("colourIn", Vec4(1.0f, 0.0f, 0.0f, 1.0f));
+		material->SetShader(shaderManager.FindShader("Shader1"));
 
 		// Create a player
-		player = ecsManager.CreateEntity<Player>();
+		player = ecsManager.CreateEntity<Player>(10.0f, 3.0f, 0.2f);
 		inputManager.AddInputCallback(PG_BIND_FN(player.InputCallback));
 
 		// Set the main camera
@@ -149,11 +148,11 @@ void main()
 		if (inputPackage.HasActionOccurred("Right"))
 		{
 			Block block = ecsManager.CreateEntity<Block>();
-
+			
 			block.GetComponent<ECSTransform>().position = player.GetComponent<ECSTransform>().position;
 			block.GetComponent<ECSTransform>().prevPosition = player.GetComponent<ECSTransform>().prevPosition;
-			block.GetComponent<ECSMeshRenderer>().material = &material1;
-			block.GetComponent<ECSMeshRenderer>().mesh = &mesh4;
+			block.GetComponent<ECSMeshRenderer>().mesh = meshManager.FindMesh("Mesh4");
+			block.GetComponent<ECSMeshRenderer>().material = materialManager.FindMaterial("Material1");
 		}
 	}
 }

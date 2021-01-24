@@ -5,8 +5,8 @@
 
 #include "Event/WindowEvents.h"
 #include "Event/InputEvents.h"
-#include "Render/Core/Shader.h"
 #include "Render/Core/Render.h"
+#include "Render/Shader/Shader.h"
 #include "Scene/Camera.h"
 
 namespace PEngine

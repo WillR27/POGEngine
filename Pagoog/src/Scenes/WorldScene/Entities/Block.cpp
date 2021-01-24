@@ -1,6 +1,8 @@
 #include "pgpch.h"
 #include "Block.h"
 
+#include "Render/Mesh/MeshManager.h"
+
 namespace Pagoog
 {
 	Block::Block(EntityInfo entityInfo, ECSManager& ecsManager)
