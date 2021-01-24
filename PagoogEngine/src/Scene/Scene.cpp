@@ -11,11 +11,6 @@ namespace PEngine
 		: name(name)
 		, inputManager()
 		, ecsManager()
-		, transformSystem()
-		, physicsSystem()
-		, collisionsSystem()
-		, cameraUpdateViewSystem()
-		, rayCastSystem()
 	{
 	}
 
@@ -26,18 +21,6 @@ namespace PEngine
 	void Scene::PreInit()
 	{
 		ecsManager.Init();
-
-		ecsManager.RegisterComponent<ECSTransform>();
-		ecsManager.RegisterComponent<ECSRigidBody>();
-		ecsManager.RegisterComponent<ECSBoxCollider>();
-		ecsManager.RegisterComponent<ECSMeshRenderer>();
-		ecsManager.RegisterComponent<ECSCamera>();
-
-		transformSystem			= ecsManager.RegisterSystem<TransformSystem>();
-		physicsSystem			= ecsManager.RegisterSystem<PhysicsSystem>();
-		collisionsSystem		= ecsManager.RegisterSystem<CollisionsSystem>();
-		cameraUpdateViewSystem	= ecsManager.RegisterSystem<CameraUpdateViewSystem>();
-		rayCastSystem			= ecsManager.RegisterSystem<RayCastSystem>();
 	}
 
 	void Scene::PostInit()
@@ -51,11 +34,11 @@ namespace PEngine
 
 	void Scene::PostUpdate(float dt)
 	{
-		physicsSystem->Update(dt);
-		collisionsSystem->Update(dt);
-		transformSystem->Update(dt);
+		ecsManager.physicsSystem->Update(dt);
+		ecsManager.collisionsSystem->Update(dt);
+		ecsManager.transformSystem->Update(dt);
 
-		cameraUpdateViewSystem->UpdateView();
+		ecsManager.cameraUpdateViewSystem->UpdateView();
 	}
 
 	void Scene::PreFrameUpdate(float alpha)

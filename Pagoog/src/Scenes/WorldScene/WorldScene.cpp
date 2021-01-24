@@ -54,7 +54,7 @@ namespace Pagoog
 			InputInfo(InputType::Keyboard, PG_KEY_W, PG_KEY_PRESS, PG_MOD_ANY),
 			InputInfo(InputType::Keyboard, PG_KEY_W, PG_KEY_RELEASE, PG_MOD_ANY));
 
-		inputManager.AddInputPackageCallback(PG_BIND_FN(ActionCallback));
+		inputManager.AddInputCallback(PG_BIND_FN(InputCallback));
 
 		meshRendererSystem = ecsManager.RegisterSystem<MeshRendererSystem>();
 
@@ -122,6 +122,7 @@ void main()
 
 		// Create a player
 		player = ecsManager.CreateEntity<Player>();
+		inputManager.AddInputCallback(PG_BIND_FN(player.InputCallback));
 
 		// Set the main camera
 		Camera::MainCamera = player.GetComponent<ECSCamera>().camera;
@@ -143,40 +144,14 @@ void main()
 	{
 	}
 
-	void WorldScene::ActionCallback(InputPackage& inputPackage, float dt)
+	void WorldScene::InputCallback(InputPackage& inputPackage, float dt)
 	{
-		auto& playerTransform = ecsManager.GetComponent<ECSTransform>(player.Id());
-		auto& playerRigidBody = ecsManager.GetComponent<ECSRigidBody>(player.Id());
-		auto& playerCamera = ecsManager.GetComponent<ECSCamera>(player.Id());
-
-		if (inputPackage.HasMouseMoved())
-		{
-			const float lookSpeed = 0.2f;
-			playerCamera.camera->AddPitchAndYaw(Input::GetDeltaMouseY() * dt * lookSpeed, Input::GetDeltaMouseX() * dt * lookSpeed);
-		}
-
-		float moveSpeed = inputPackage.IsStateActive("Sprint") ? 30.0f : 10.0f;
-		playerRigidBody.velocity =
-			(((playerCamera.camera->GetForwardVec() * static_cast<float>(inputPackage.GetAxisValue("Vertical"))) +
-				(playerCamera.camera->GetRightVec() * static_cast<float>(inputPackage.GetAxisValue("Horizontal")))) +
-				Vec3(0.0f, static_cast<float>(inputPackage.GetAxisValue("Fly")), 0.0f)) * moveSpeed;
-
-		if (inputPackage.HasActionOccurred("Left"))
-		{
-			RayCastResult rayCastResult = rayCastSystem->RayCast(playerTransform.position, playerCamera.camera->GetForwardVec(), player.Id());
-
-			if (rayCastResult.hit)
-			{
-				ecsManager.DestroyEntity(rayCastResult.entityId);
-			}
-		}
-
 		if (inputPackage.HasActionOccurred("Right"))
 		{
 			Block block = ecsManager.CreateEntity<Block>();
-			
-			block.GetComponent<ECSTransform>().position = playerTransform.position;
-			block.GetComponent<ECSTransform>().prevPosition = playerTransform.prevPosition;
+
+			block.GetComponent<ECSTransform>().position = player.GetComponent<ECSTransform>().position;
+			block.GetComponent<ECSTransform>().prevPosition = player.GetComponent<ECSTransform>().prevPosition;
 			block.GetComponent<ECSMeshRenderer>().material = &material1;
 			block.GetComponent<ECSMeshRenderer>().mesh = &mesh4;
 		}

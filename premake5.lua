@@ -16,7 +16,7 @@ project "Pagoog"
     location "Pagoog"
 	kind "ConsoleApp"
 	language "C++"
-	cppdialect "C++17"
+	cppdialect "C++latest"
 	staticruntime "On"
 
     targetdir ("Builds/bin/" .. outputdir .. "/%{prj.name}")
@@ -85,7 +85,7 @@ project "PagoogEngine"
     location "PagoogEngine"
     kind "StaticLib"
     language "C++"
-    cppdialect "C++17"
+    cppdialect "C++latest"
     staticruntime "On"
 
     targetdir ("Builds/bin/" .. outputdir .. "/%{prj.name}")

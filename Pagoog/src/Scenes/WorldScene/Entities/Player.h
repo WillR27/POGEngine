@@ -1,19 +1,21 @@
 #pragma once
 
 #include "ECS/ECS.h"
+#include "Input/InputPackage.h"
 
-namespace PEngine
+namespace Pagoog
 {
-	class Player : public Entity
+	class Player : public PEngine::Entity
 	{
 	public:
 		Player() = default;
-		Player(EntityInfo entityInfo, ECSManager& ecsManager);
+		Player(PEngine::EntityInfo entityInfo, PEngine::ECSManager& ecsManager);
 		~Player() = default;
 
 		virtual void OnCreate() override;
+
+		void InputCallback(PEngine::InputPackage& inputPackage, float dt);
 	private:
 
 	};
 }
-

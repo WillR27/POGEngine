@@ -27,7 +27,7 @@ namespace Pagoog
 			inputManager.AddAction("Fullscreen", InputInfo(InputType::Keyboard, PG_KEY_F11, PG_KEY_RELEASE, PG_MOD_ANY));
 		}
 
-		virtual void ActionCallback(InputPackage& inputPackage, float dt) override
+		virtual void InputCallback(InputPackage& inputPackage, float dt) override
 		{
 			if (inputPackage.HasActionOccurred("Quit"))
 			{

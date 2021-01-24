@@ -10,25 +10,29 @@
 
 #include "Core/Core.h"
 #include "Debug/Debug.h"
+#include "Maths/Maths.h"
+#include "Maths/Collisions.h"
+#include "Render/Mesh/Mesh.h"
+#include "Render/Material/Material.h"
 
 namespace PEngine
 {
-	constexpr size_t Hash(const char* str) 
+	constexpr size_t Hash(const char* str)
 	{
 		static_assert(sizeof(size_t) == 8 || sizeof(size_t) == 4);
 
 		size_t h = 0;
-		if constexpr (sizeof(size_t) == 8) 
+		if constexpr (sizeof(size_t) == 8)
 		{
 			h = 1125899906842597L; // prime
 		}
-		else 
+		else
 		{
 			h = 4294967291L;
 		}
 
 		int i = 0;
-		while (str[i] != 0) 
+		while (str[i] != 0)
 		{
 			h = 31 * h + str[i++];
 		}
@@ -71,7 +75,7 @@ namespace PEngine
 			index = sparse[element];
 
 			// If the element in the dense array at the index matches, return true
-			return index < count && dense[index] == element;
+			return index < count&& dense[index] == element;
 		}
 
 		bool Contains(T element) const
@@ -142,7 +146,7 @@ namespace PEngine
 
 	using EntityId = std::uint16_t;
 	const EntityId MaxEntities = 10000; //std::numeric_limits<Entity>::max() - 1;
-	const EntityId MaxEntityId = MaxEntities - 1; 
+	const EntityId MaxEntityId = MaxEntities - 1;
 	using EntityVersion = std::uint16_t;
 
 	using ComponentTypeId = std::uint8_t;
@@ -245,6 +249,43 @@ namespace PEngine
 
 
 
+	struct ECSTransform
+	{
+		Vec3 position = Vec3(0.0f, 0.0f, 0.0f);
+		Quat orientation = Quat(Vec3(0.0f, 0.0f, 0.0f));
+		Vec3 scale = Vec3(1.0f, 1.0f, 1.0f);
+
+		Vec3 prevPosition = Vec3(0.0f, 0.0f, 0.0f);
+		Quat prevOrientation = Quat(Vec3(0.0f, 0.0f, 0.0f));
+		Vec3 prevScale = Vec3(1.0f, 1.0f, 1.0f);
+	};
+
+	struct ECSRigidBody
+	{
+		Vec3 force = Vec3(0.0f, 0.0f, 0.0f);
+		Vec3 velocity = Vec3(0.0f, 0.0f, 0.0f);
+		float mass = 1.0f;
+		float dragCoef = 1.0f;
+	};
+
+	struct ECSBoxCollider
+	{
+		AABB<3> aabb = AABB<3>({ 1.0f, 1.0f, 1.0f });
+		float stickiness = 0.5f;
+	};
+
+	struct ECSMeshRenderer
+	{
+		Mesh* mesh = nullptr;
+		Material* material = nullptr;
+	};
+
+	class Camera;
+	struct ECSCamera
+	{
+		Shared<Camera> camera;
+	};
+
 	class IComponentArray
 	{
 	public:
@@ -337,7 +378,7 @@ namespace PEngine
 
 			// Check the component doesn't already exist
 			PG_ASSERT(componentTypeIds.find(hashId) == componentTypeIds.end(), "Tried to register a component that already exists: {0}.", STRINGIFY(T));
-			
+
 			// Insert the component hash id to the map
 			componentTypeIds[hashId] = count;
 
@@ -481,6 +522,108 @@ namespace PEngine
 		std::vector<Signature> systemSignatures;
 	};
 
+	class TransformSystem : public System
+	{
+	public:
+		TransformSystem(ECSManager& ecsManager)
+			: ecsManager(ecsManager)
+		{
+		}
+
+		static Signature GetSignature(ECSManager& ecsManager);
+
+		void Update(float dt);
+
+	private:
+		ECSManager& ecsManager;
+	};
+
+	class PhysicsSystem : public System
+	{
+	public:
+		PhysicsSystem(ECSManager& ecsManager)
+			: ecsManager(ecsManager)
+		{
+		}
+
+		static Signature GetSignature(ECSManager& ecsManager);
+
+		void Update(float dt);
+
+	private:
+		ECSManager& ecsManager;
+	};
+
+	class CollisionsSystem : public System
+	{
+	public:
+		CollisionsSystem(ECSManager& ecsManager)
+			: ecsManager(ecsManager)
+		{
+		}
+
+		static Signature GetSignature(ECSManager& ecsManager);
+
+		void Update(float dt);
+
+	private:
+		ECSManager& ecsManager;
+	};
+
+	class CameraUpdateViewSystem : public System
+	{
+	public:
+		CameraUpdateViewSystem(ECSManager& ecsManager)
+			: ecsManager(ecsManager)
+		{
+		}
+
+		static Signature GetSignature(ECSManager& ecsManager);
+
+		void UpdateView();
+
+	private:
+		ECSManager& ecsManager;
+	};
+
+	class MeshRendererSystem : public System
+	{
+	public:
+		MeshRendererSystem(ECSManager& ecsManager)
+			: ecsManager(ecsManager)
+		{
+		}
+
+		static Signature GetSignature(ECSManager& ecsManager);
+
+		void FrameUpdate(float alpha);
+
+	private:
+		ECSManager& ecsManager;
+	};
+
+	struct RayCastResult
+	{
+		bool hit = false;
+		EntityId entityId = 0;
+	};
+
+	class RayCastSystem : public System
+	{
+	public:
+		RayCastSystem(ECSManager& ecsManager)
+			: ecsManager(ecsManager)
+		{
+		}
+
+		static Signature GetSignature(ECSManager& ecsManager);
+
+		RayCastResult RayCast(Vec3 position, Vec3 direction, EntityId entityIdToIgnore);
+
+	private:
+		ECSManager& ecsManager;
+	};
+
 
 
 	class Entity;
@@ -488,10 +631,11 @@ namespace PEngine
 	class ECSManager
 	{
 	public:
-		void Init()
-		{
-			entityManager.Init();
-		}
+		Shared<TransformSystem>	transformSystem;
+		Shared<PhysicsSystem> physicsSystem;
+		Shared<CollisionsSystem> collisionsSystem;
+		Shared<CameraUpdateViewSystem> cameraUpdateViewSystem;
+		Shared<RayCastSystem> rayCastSystem;
 
 		Entity CreateEntity();
 
@@ -571,6 +715,23 @@ namespace PEngine
 			return systemManager.RegisterSystem<T>(*this);
 		}
 
+		void Init()
+		{
+			entityManager.Init();
+
+			RegisterComponent<ECSTransform>();
+			RegisterComponent<ECSRigidBody>();
+			RegisterComponent<ECSBoxCollider>();
+			RegisterComponent<ECSMeshRenderer>();
+			RegisterComponent<ECSCamera>();
+
+			transformSystem = RegisterSystem<TransformSystem>();
+			physicsSystem = RegisterSystem<PhysicsSystem>();
+			collisionsSystem = RegisterSystem<CollisionsSystem>();
+			cameraUpdateViewSystem = RegisterSystem<CameraUpdateViewSystem>();
+			rayCastSystem = RegisterSystem<RayCastSystem>();
+		}
+
 	private:
 		EntityManager entityManager;
 		ComponentManager componentManager;
@@ -582,6 +743,8 @@ namespace PEngine
 	class Entity
 	{
 	public:
+		ECSManager* ecsManager;
+
 		Entity(EntityInfo entityInfo = { 0, 0 }, ECSManager* ecsManager = { nullptr })
 			: entityInfo(entityInfo)
 			, ecsManager(ecsManager)
@@ -624,7 +787,6 @@ namespace PEngine
 
 	private:
 		EntityInfo entityInfo;
-		ECSManager* ecsManager;
 	};
 
 
@@ -647,5 +809,3 @@ namespace PEngine
 		return entity;
 	}
 }
-
-#include "Components.h"

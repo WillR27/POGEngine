@@ -35,7 +35,7 @@ namespace PEngine
 	class InputManager
 	{
 	public:
-		typedef std::function<void(InputPackage&, float dt)> InputPackageCallback;
+		typedef std::function<void(InputPackage&, float dt)> InputCallback;
 
 		InputManager();
 		virtual ~InputManager() = default;
@@ -46,14 +46,14 @@ namespace PEngine
 		bool HandleMouseMoveEvent(MouseMoveEvent& e);
 		bool HandleMouseButtonEvent(MouseButtonEvent& e);
 
-		void AddInputPackageCallback(InputPackageCallback actionCallback);
+		void AddInputCallback(InputCallback actionCallback);
 
 		void AddAction(std::string name, InputInfo inputInfo);
 		void AddState(std::string name, InputInfo activeInputInfo, InputInfo inactiveInputInfo);
 		void AddAxis(std::string name, InputInfo activeNegativeInputInfo, InputInfo inactiveNegativeInputInfo, InputInfo activePositiveInputInfo, InputInfo inactivePositiveInputInfo);
 
 	private:
-		std::vector<InputPackageCallback> inputPackageCallbacks;
+		std::vector<InputCallback> inputPackageCallbacks;
 
 		std::vector<InputInfo> actionInfos;
 		std::vector<Action> actions;

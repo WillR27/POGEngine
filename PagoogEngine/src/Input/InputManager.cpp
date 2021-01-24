@@ -28,7 +28,7 @@ namespace PEngine
 			}
 		}
 
-		for (InputPackageCallback inputPackageCallback : inputPackageCallbacks)
+		for (InputCallback inputPackageCallback : inputPackageCallbacks)
 		{
 			inputPackageCallback(inputPackage, dt);
 		}
@@ -225,9 +225,9 @@ namespace PEngine
 		return handled;
 	}
 
-	void InputManager::AddInputPackageCallback(InputPackageCallback actionCallback)
+	void InputManager::AddInputCallback(InputCallback inputCallback)
 	{
-		inputPackageCallbacks.push_back(actionCallback);
+		inputPackageCallbacks.push_back(inputCallback);
 	}
 
 	void InputManager::AddAction(std::string name, InputInfo inputInfo)

@@ -36,7 +36,7 @@ namespace PEngine
 		window->SetEventCallback(PG_BIND_FN(HandleEvent));
 		window->SetCursorMode(false);
 
-		inputManager.AddInputPackageCallback(PG_BIND_FN(ActionCallback));
+		inputManager.AddInputCallback(PG_BIND_FN(InputCallback));
 
 		Render::Init();
 	}
@@ -124,7 +124,7 @@ namespace PEngine
 		}
 	}
 
-	void Application::ActionCallback(InputPackage& inputPackage, float dt)
+	void Application::InputCallback(InputPackage& inputPackage, float dt)
 	{
 	}
 

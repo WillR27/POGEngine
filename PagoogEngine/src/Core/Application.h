@@ -20,7 +20,7 @@ namespace PEngine
 
 		void HandleEvent(Event& e);
 	
-		virtual void ActionCallback(InputPackage& inputPackage, float dt);
+		virtual void InputCallback(InputPackage& inputPackage, float dt);
 
 		void AddScene(Scene* scene);
 

@@ -25,7 +25,7 @@ namespace Pagoog
 
 		virtual void HandleEvent(Event& e) override;
 
-		void ActionCallback(InputPackage& inputPackage, float dt);
+		void InputCallback(InputPackage& inputPackage, float dt);
 
 	private:
 		Shared<MeshRendererSystem> meshRendererSystem;

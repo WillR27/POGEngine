@@ -36,17 +36,10 @@ namespace PEngine
 		InputManager inputManager;
 		ECSManager ecsManager;
 
-		Shared<RayCastSystem> rayCastSystem;
-
 	private:
 		static Scene* ActiveScene;
 
 		std::string name;
-
-		Shared<TransformSystem>	transformSystem;
-		Shared<PhysicsSystem> physicsSystem;
-		Shared<CollisionsSystem> collisionsSystem;
-		Shared<CameraUpdateViewSystem> cameraUpdateViewSystem;
 	};
 }
 

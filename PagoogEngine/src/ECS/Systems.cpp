@@ -1,10 +1,18 @@
 #include "pgepch.h"
 #include "Systems.h"
 
+#include "ECS.h"
 #include "Scene/Camera.h"
 
 namespace PEngine
 {
+	Signature TransformSystem::GetSignature(ECSManager& ecsManager)
+	{
+		Signature signature;
+		signature.set(ecsManager.GetComponentTypeId<ECSTransform>());
+		return signature;
+	}
+
 	void TransformSystem::Update(float dt)
 	{
 		//PG_SCOPED_PROFILE("Transform");
@@ -15,6 +23,14 @@ namespace PEngine
 			transform.prevOrientation = transform.orientation;
 			transform.prevScale = transform.scale;
 		}
+	}
+
+	Signature PhysicsSystem::GetSignature(ECSManager& ecsManager)
+	{
+		Signature signature;
+		signature.set(ecsManager.GetComponentTypeId<ECSTransform>());
+		signature.set(ecsManager.GetComponentTypeId<ECSRigidBody>());
+		return signature;
 	}
 
 	void PhysicsSystem::Update(float dt)
@@ -35,6 +51,15 @@ namespace PEngine
 
 			transform.position += rigidBody.velocity * dt;
 		}
+	}
+
+	Signature CollisionsSystem::GetSignature(ECSManager& ecsManager)
+	{
+		Signature signature;
+		signature.set(ecsManager.GetComponentTypeId<ECSTransform>());
+		signature.set(ecsManager.GetComponentTypeId<ECSRigidBody>());
+		signature.set(ecsManager.GetComponentTypeId<ECSBoxCollider>());
+		return signature;
 	}
 
 	void CollisionsSystem::Update(float dt)
@@ -107,6 +132,14 @@ namespace PEngine
 		}
 	}
 
+	Signature MeshRendererSystem::GetSignature(ECSManager& ecsManager)
+	{
+		Signature signature;
+		signature.set(ecsManager.GetComponentTypeId<ECSTransform>());
+		signature.set(ecsManager.GetComponentTypeId<ECSMeshRenderer>());
+		return signature;
+	}
+
 	void MeshRendererSystem::FrameUpdate(float alpha)
 	{
 		//PG_SCOPED_PROFILE("Render");
@@ -137,6 +170,14 @@ namespace PEngine
 		}
 	}
 
+	Signature CameraUpdateViewSystem::GetSignature(ECSManager& ecsManager)
+	{
+		Signature signature;
+		signature.set(ecsManager.GetComponentTypeId<ECSTransform>());
+		signature.set(ecsManager.GetComponentTypeId<ECSCamera>());
+		return signature;
+	}
+
 	void CameraUpdateViewSystem::UpdateView()
 	{
 		for (EntityId entityId : entityIds)
@@ -146,6 +187,14 @@ namespace PEngine
 
 			camera.camera->UpdateView(transform.position, transform.orientation);
 		}
+	}
+
+	Signature RayCastSystem::GetSignature(ECSManager& ecsManager)
+	{
+		Signature signature;
+		signature.set(ecsManager.GetComponentTypeId<ECSTransform>());
+		signature.set(ecsManager.GetComponentTypeId<ECSBoxCollider>());
+		return signature;
 	}
 
 	RayCastResult RayCastSystem::RayCast(Vec3 position, Vec3 direction, EntityId entityIdToIgnore)
