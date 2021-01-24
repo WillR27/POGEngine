@@ -13,6 +13,7 @@ namespace PEngine
 	{
 	public:
 		friend class Application;
+		friend class ECSManager;
 
 		Scene(std::string name = "Scene");
 		virtual ~Scene();
@@ -34,15 +35,20 @@ namespace PEngine
 		void PostHandleEvent(Event& e);
 
 		std::string GetName() const { return name; }
-		
-	protected:
+
+		InputManager& GetInputManager() { return inputManager; }
+		ECSManager& GetECSManager() { return ecsManager; }
+		MeshManager& GetMeshManager() { return meshManager; }
+		MaterialManager& GetMaterialManager() { return materialManager; }
+		ShaderManager& GetShaderManager() { return shaderManager; }
+
+	private:
 		InputManager inputManager;
 		ECSManager ecsManager;
 		MeshManager meshManager;
 		MaterialManager materialManager;
 		ShaderManager shaderManager;
 
-	private:
 		static Scene* ActiveScene;
 
 		std::string name;

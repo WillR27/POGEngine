@@ -22,54 +22,54 @@ namespace Pagoog
 
 	void WorldScene::Init()
 	{
-		inputManager.AddAction("Left", InputInfo(InputType::Mouse, PG_MOUSE_BUTTON_LEFT, PG_KEY_RELEASE, PG_MOD_ANY));
-		inputManager.AddAction("Right", InputInfo(InputType::Mouse, PG_MOUSE_BUTTON_RIGHT, PG_KEY_RELEASE, PG_MOD_ANY));
+		GetInputManager().AddAction("Left", InputInfo(InputType::Mouse, PG_MOUSE_BUTTON_LEFT, PG_KEY_RELEASE, PG_MOD_ANY));
+		GetInputManager().AddAction("Right", InputInfo(InputType::Mouse, PG_MOUSE_BUTTON_RIGHT, PG_KEY_RELEASE, PG_MOD_ANY));
 
-		inputManager.AddAction("Jump", InputInfo(InputType::Keyboard, PG_KEY_SPACE, PG_KEY_RELEASE, PG_MOD_ANY));
+		GetInputManager().AddAction("Jump", InputInfo(InputType::Keyboard, PG_KEY_SPACE, PG_KEY_RELEASE, PG_MOD_ANY));
 
-		inputManager.AddState("Sprint",
+		GetInputManager().AddState("Sprint",
 			InputInfo(InputType::Keyboard, PG_KEY_LEFT_SHIFT, PG_KEY_PRESS, PG_MOD_ANY),
 			InputInfo(InputType::Keyboard, PG_KEY_LEFT_SHIFT, PG_KEY_RELEASE, PG_MOD_ANY));
 
-		inputManager.AddAxis("Fly",
+		GetInputManager().AddAxis("Fly",
 			InputInfo(InputType::Keyboard, PG_KEY_LEFT_CONTROL, PG_KEY_PRESS, PG_MOD_ANY),
 			InputInfo(InputType::Keyboard, PG_KEY_LEFT_CONTROL, PG_KEY_RELEASE, PG_MOD_ANY),
 			InputInfo(InputType::Keyboard, PG_KEY_SPACE, PG_KEY_PRESS, PG_MOD_ANY),
 			InputInfo(InputType::Keyboard, PG_KEY_SPACE, PG_KEY_RELEASE, PG_MOD_ANY));
 
-		inputManager.AddAxis("Horizontal",
+		GetInputManager().AddAxis("Horizontal",
 			InputInfo(InputType::Keyboard, PG_KEY_A, PG_KEY_PRESS, PG_MOD_ANY),
 			InputInfo(InputType::Keyboard, PG_KEY_A, PG_KEY_RELEASE, PG_MOD_ANY),
 			InputInfo(InputType::Keyboard, PG_KEY_D, PG_KEY_PRESS, PG_MOD_ANY),
 			InputInfo(InputType::Keyboard, PG_KEY_D, PG_KEY_RELEASE, PG_MOD_ANY));
 
-		inputManager.AddAxis("Vertical",
+		GetInputManager().AddAxis("Vertical",
 			InputInfo(InputType::Keyboard, PG_KEY_S, PG_KEY_PRESS, PG_MOD_ANY),
 			InputInfo(InputType::Keyboard, PG_KEY_S, PG_KEY_RELEASE, PG_MOD_ANY),
 			InputInfo(InputType::Keyboard, PG_KEY_W, PG_KEY_PRESS, PG_MOD_ANY),
 			InputInfo(InputType::Keyboard, PG_KEY_W, PG_KEY_RELEASE, PG_MOD_ANY));
 
-		inputManager.AddInputCallback(PG_BIND_FN(InputCallback));
+		GetInputManager().AddInputCallback(PG_BIND_FN(InputCallback));
 
-		meshRendererSystem = ecsManager.RegisterSystem<MeshRendererSystem>();
+		meshRendererSystem = GetECSManager().RegisterSystem<MeshRendererSystem>();
 
-		Shared<Mesh> mesh = meshManager.CreateAndAddMesh("Mesh1");
+		Shared<Mesh> mesh = GetMeshManager().CreateAndAddMesh("Mesh1");
 		mesh->SetPositionData(squarePositions, sizeof(squarePositions));
 		mesh->SetColourData(squareColours, sizeof(squareColours));
 		mesh->Build();
 
-		mesh = meshManager.CreateAndAddMesh("Mesh2");
+		mesh = GetMeshManager().CreateAndAddMesh("Mesh2");
 		mesh->SetPositionData(cubePositions2, sizeof(cubePositions2));
 		mesh->SetColourData(cubeColours2, sizeof(cubeColours2));
 		mesh->Build();
 		 
-		mesh = meshManager.CreateAndAddMesh("Mesh3");
+		mesh = GetMeshManager().CreateAndAddMesh("Mesh3");
 		mesh->SetPositionData(squarePositions2, sizeof(squarePositions2));
 		mesh->SetColourData(squareColours2, sizeof(squareColours2));
 		mesh->SetIndexData(squareIndices2, sizeof(squareIndices2));
 		mesh->Build();
 
-		mesh = meshManager.CreateAndAddMesh("Mesh4");
+		mesh = GetMeshManager().CreateAndAddMesh("Mesh4");
 		mesh->SetPositionData(cubePositions3, sizeof(cubePositions3));
 		mesh->SetColourData(cubeColours3, sizeof(cubeColours3));
 		mesh->SetIndexData(cubeIndices3, sizeof(cubeIndices3));
@@ -112,16 +112,16 @@ void main()
 } 
 )";
 
-		Shared<Shader> shader = shaderManager.CreateAndAddShader("Shader1");
+		Shared<Shader> shader = GetShaderManager().CreateAndAddShader("Shader1");
 		shader->Init(vertexShaderSource, fragmentShaderSource);
 
-		Shared<Material> material = materialManager.CreateAndAddMaterial("Material1");
+		Shared<Material> material = GetMaterialManager().CreateAndAddMaterial("Material1");
 		material->AddColour("colourIn", Vec4(1.0f, 0.0f, 0.0f, 1.0f));
-		material->SetShader(shaderManager.FindShader("Shader1"));
+		material->SetShader(GetShaderManager().FindShader("Shader1"));
 
 		// Create a player
-		player = ecsManager.CreateEntity<Player>(10.0f, 3.0f, 0.2f);
-		inputManager.AddInputCallback(PG_BIND_FN(player.InputCallback));
+		player = GetECSManager().CreateEntity<Player>(10.0f, 3.0f, 0.2f);
+		GetInputManager().AddInputCallback(PG_BIND_FN(player.InputCallback));
 
 		// Set the main camera
 		Camera::MainCamera = player.GetComponent<ECSCamera>().camera;
@@ -145,14 +145,6 @@ void main()
 
 	void WorldScene::InputCallback(InputPackage& inputPackage, float dt)
 	{
-		if (inputPackage.HasActionOccurred("Right"))
-		{
-			Block block = ecsManager.CreateEntity<Block>();
-			
-			block.GetComponent<ECSTransform>().position = player.GetComponent<ECSTransform>().position;
-			block.GetComponent<ECSTransform>().prevPosition = player.GetComponent<ECSTransform>().prevPosition;
-			block.GetComponent<ECSMeshRenderer>().mesh = meshManager.FindMesh("Mesh4");
-			block.GetComponent<ECSMeshRenderer>().material = materialManager.FindMaterial("Material1");
-		}
+		
 	}
 }

@@ -12,8 +12,9 @@
 #include "Debug/Debug.h"
 #include "Maths/Maths.h"
 #include "Maths/Collisions.h"
-#include "Render/Mesh/Mesh.h"
-#include "Render/Material/Material.h"
+#include "Render/Mesh/MeshManager.h"
+#include "Render/Material/MaterialManager.h"
+#include "Render/Shader/ShaderManager.h"
 #include "Util/Hash.h"
 
 namespace PEngine
@@ -767,6 +768,10 @@ namespace PEngine
 
 		ECSManager& GetECSManager() const { return *ecsManager; }
 		Scene& GetScene() const { return ecsManager->GetScene(); }
+
+		MeshManager& GetMeshManager();
+		MaterialManager& GetMaterialManager();
+		ShaderManager& GetShaderManager();
 
 	private:
 		EntityInfo entityInfo;

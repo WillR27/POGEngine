@@ -4,6 +4,8 @@
 #include "Input/Input.h"
 #include "Scene/Camera.h"
 
+#include "Block.h"
+
 namespace Pagoog
 {
 	Player::Player(EntityInfo entityInfo, ECSManager& ecsManager, float moveSpeed, float sprintMultiplier, float lookSpeed)
@@ -68,6 +70,16 @@ namespace Pagoog
 			{
 				GetECSManager().DestroyEntity(rayCastResult.entityId);
 			}
+		}
+
+		if (inputPackage.HasActionOccurred("Right"))
+		{
+			Block block = GetECSManager().CreateEntity<Block>();
+
+			block.GetComponent<ECSTransform>().position = GetComponent<ECSTransform>().position;
+			block.GetComponent<ECSTransform>().prevPosition = GetComponent<ECSTransform>().prevPosition;
+			block.GetComponent<ECSMeshRenderer>().mesh = GetMeshManager().FindMesh("Mesh4");
+			block.GetComponent<ECSMeshRenderer>().material = GetMaterialManager().FindMaterial("Material1");
 		}
 	}
 }
