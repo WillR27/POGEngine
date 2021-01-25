@@ -21,32 +21,32 @@ namespace Pagoog
 
 	void WorldScene::Init()
 	{
-		GetInputManager().AddAction("Left", InputInfo(InputType::Mouse, PG_MOUSE_BUTTON_LEFT, PG_KEY_RELEASE, PG_MOD_ANY));
-		GetInputManager().AddAction("Right", InputInfo(InputType::Mouse, PG_MOUSE_BUTTON_RIGHT, PG_KEY_RELEASE, PG_MOD_ANY));
+		GetInputManager().AddAction("Left", InputInfo(InputType::Mouse, PG_MOUSE_BUTTON_LEFT, PG_KEY_RELEASE));
+		GetInputManager().AddAction("Right", InputInfo(InputType::Mouse, PG_MOUSE_BUTTON_RIGHT, PG_KEY_RELEASE));
 
-		GetInputManager().AddAction("Jump", InputInfo(InputType::Keyboard, PG_KEY_SPACE, PG_KEY_RELEASE, PG_MOD_ANY));
+		GetInputManager().AddAction("Jump", InputInfo(InputType::Keyboard, PG_KEY_SPACE, PG_KEY_RELEASE));
 
 		GetInputManager().AddState("Sprint",
-			InputInfo(InputType::Keyboard, PG_KEY_LEFT_SHIFT, PG_KEY_PRESS, PG_MOD_ANY),
-			InputInfo(InputType::Keyboard, PG_KEY_LEFT_SHIFT, PG_KEY_RELEASE, PG_MOD_ANY));
+			InputInfo(InputType::Keyboard, PG_KEY_LEFT_SHIFT, PG_KEY_PRESS),
+			InputInfo(InputType::Keyboard, PG_KEY_LEFT_SHIFT, PG_KEY_RELEASE));
 
 		GetInputManager().AddAxis("Fly",
-			InputInfo(InputType::Keyboard, PG_KEY_LEFT_CONTROL, PG_KEY_PRESS, PG_MOD_ANY),
-			InputInfo(InputType::Keyboard, PG_KEY_LEFT_CONTROL, PG_KEY_RELEASE, PG_MOD_ANY),
-			InputInfo(InputType::Keyboard, PG_KEY_SPACE, PG_KEY_PRESS, PG_MOD_ANY),
-			InputInfo(InputType::Keyboard, PG_KEY_SPACE, PG_KEY_RELEASE, PG_MOD_ANY));
+			InputInfo(InputType::Keyboard, PG_KEY_LEFT_CONTROL, PG_KEY_PRESS),
+			InputInfo(InputType::Keyboard, PG_KEY_LEFT_CONTROL, PG_KEY_RELEASE),
+			InputInfo(InputType::Keyboard, PG_KEY_SPACE, PG_KEY_PRESS),
+			InputInfo(InputType::Keyboard, PG_KEY_SPACE, PG_KEY_RELEASE));
 
 		GetInputManager().AddAxis("Horizontal",
-			InputInfo(InputType::Keyboard, PG_KEY_A, PG_KEY_PRESS, PG_MOD_ANY),
-			InputInfo(InputType::Keyboard, PG_KEY_A, PG_KEY_RELEASE, PG_MOD_ANY),
-			InputInfo(InputType::Keyboard, PG_KEY_D, PG_KEY_PRESS, PG_MOD_ANY),
-			InputInfo(InputType::Keyboard, PG_KEY_D, PG_KEY_RELEASE, PG_MOD_ANY));
+			InputInfo(InputType::Keyboard, PG_KEY_A, PG_KEY_PRESS),
+			InputInfo(InputType::Keyboard, PG_KEY_A, PG_KEY_RELEASE),
+			InputInfo(InputType::Keyboard, PG_KEY_D, PG_KEY_PRESS),
+			InputInfo(InputType::Keyboard, PG_KEY_D, PG_KEY_RELEASE));
 
 		GetInputManager().AddAxis("Vertical",
-			InputInfo(InputType::Keyboard, PG_KEY_S, PG_KEY_PRESS, PG_MOD_ANY),
-			InputInfo(InputType::Keyboard, PG_KEY_S, PG_KEY_RELEASE, PG_MOD_ANY),
-			InputInfo(InputType::Keyboard, PG_KEY_W, PG_KEY_PRESS, PG_MOD_ANY),
-			InputInfo(InputType::Keyboard, PG_KEY_W, PG_KEY_RELEASE, PG_MOD_ANY));
+			InputInfo(InputType::Keyboard, PG_KEY_S, PG_KEY_PRESS),
+			InputInfo(InputType::Keyboard, PG_KEY_S, PG_KEY_RELEASE),
+			InputInfo(InputType::Keyboard, PG_KEY_W, PG_KEY_PRESS),
+			InputInfo(InputType::Keyboard, PG_KEY_W, PG_KEY_RELEASE));
 
 		GetInputManager().AddInputCallback(PG_BIND_FN(InputCallback));
 

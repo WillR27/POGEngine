@@ -18,7 +18,7 @@ namespace PEngine
 		InputType type;
 		int keyOrButton, action, mods;
 
-		InputInfo(InputType type, int key, int action, int mods)
+		InputInfo(InputType type, int key, int action, int mods = PG_MOD_ANY)
 			: type(type)
 			, keyOrButton(key)
 			, action(action)
