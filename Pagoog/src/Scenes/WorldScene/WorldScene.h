@@ -3,7 +3,6 @@
 #include "Render/Mesh/Mesh.h"
 #include "Render/Mesh/MeshSet.h"
 #include "Render/Material/Material.h"
-#include "Render/Mesh/StaticMeshSet.h"
 #include "Render/Mesh/Primitives/Primitives.h"
 #include "Render/Shader/Shader.h"
 #include "Scene/Scene.h"
@@ -31,8 +30,6 @@ namespace Pagoog
 		Shared<MeshRendererSystem> meshRendererSystem;
 
 		Player player;
-
-		//StaticMeshSet meshSet;
 	};
 }
 

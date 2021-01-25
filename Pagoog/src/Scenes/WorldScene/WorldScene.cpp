@@ -12,7 +12,6 @@ namespace Pagoog
 {
 	WorldScene::WorldScene()
 		: Scene::Scene("World")
-		//, meshSet()
 	{
 	}
 
@@ -75,9 +74,14 @@ namespace Pagoog
 		mesh->SetIndexData(cubeIndices3, sizeof(cubeIndices3));
 		mesh->Build();
 
-		//meshSet.Build();
-		//meshSet.SetAttribute(0, 3, PG_FLOAT, false, 6 * sizeof(float), (void*)(0));
-		//meshSet.SetAttribute(1, 3, PG_FLOAT, false, 6 * sizeof(float), (void*)(3 * sizeof(float)));
+		Shared<MeshSet> meshSet = GetMeshManager().CreateAndAddMeshSet("MeshSet1");
+		meshSet->AddMesh(GetMeshManager().FindMesh("Mesh1"));
+		meshSet->AddMesh(GetMeshManager().FindMesh("Mesh2"));
+		meshSet->AddMesh(GetMeshManager().FindMesh("Mesh3"));
+		meshSet->AddMesh(GetMeshManager().FindMesh("Mesh4"));
+		meshSet->Build();
+		meshSet->SetAttribute(0, 3, PG_FLOAT, false, 6 * sizeof(float), (void*)(0));
+		meshSet->SetAttribute(1, 3, PG_FLOAT, false, 6 * sizeof(float), (void*)(3 * sizeof(float)));
 
 		const char* vertexShaderSource = R"(
 #version 330 core

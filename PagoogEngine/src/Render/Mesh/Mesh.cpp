@@ -6,7 +6,7 @@
 
 namespace PEngine
 {
-	Mesh::Mesh(MeshSet* meshSet)
+	Mesh::Mesh()
 		: stride(0)
 		, numberOfVertices(0)
 		, numberOfIndices(0)
@@ -14,12 +14,8 @@ namespace PEngine
 		, positionDataAray(nullptr)
 		, colourDataArray(nullptr)
 		, indexDataArray(nullptr)
-		, meshSet(meshSet)
+		, meshSet(nullptr)
 	{
-		if (meshSet != nullptr)
-		{
-			meshSet->AddMesh(*this);
-		}
 	}
 
 	Mesh::~Mesh()
@@ -44,7 +40,7 @@ namespace PEngine
 	{
 		if (meshSet != nullptr)
 		{
-			meshSet->RenderMesh(*this);
+			meshSet->RenderMesh(this);
 		}
 		else
 		{

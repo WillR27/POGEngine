@@ -4,12 +4,12 @@
 
 namespace PEngine
 {
-	class MeshSet;
-
 	class Mesh
 	{
+		friend class MeshSet;
+
 	public:
-		Mesh(MeshSet* meshSet = nullptr);
+		Mesh();
 		~Mesh();
 
 		//void* operator new(size_t size) { return ::new Mesh(); }

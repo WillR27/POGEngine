@@ -54,4 +54,62 @@ namespace PEngine
 		// Either way set the mesh
 		meshes[name] = mesh;
 	}
+
+	void MeshManager::RemoveMesh(std::string name)
+	{
+		size_t numberRemoved = meshes.erase(name);
+
+		PG_VERIFY(numberRemoved > 0, "Tried to remove mesh \"{0}\" from the mesh manager but it did not exist!", name);
+	}
+
+	Shared<MeshSet> MeshManager::FindMeshSet(std::string name)
+	{
+		try
+		{
+			return meshSets.at(name);
+		}
+		catch (std::exception ex)
+		{
+			PG_WARN("Mesh set \"{0}\" does not exist!", name);
+			return Shared<MeshSet>(nullptr);
+		}
+	}
+
+	Shared<MeshSet> MeshManager::CreateMeshSet()
+	{
+		return MakeShared<MeshSet>();
+	}
+
+	Shared<MeshSet> MeshManager::CreateAndAddMeshSet(std::string name)
+	{
+		Shared<MeshSet> meshSet = CreateMeshSet();
+
+		AddMeshSet(name, meshSet);
+
+		return meshSet;
+	}
+
+	void MeshManager::AddMeshSet(std::string name, Shared<MeshSet> meshSet)
+	{
+		try
+		{
+			// Check the mesh set doesn't already exist
+			// If it does, warn the user that it is being replaced
+			Shared<MeshSet> meshSet = meshSets.at(name);
+			PG_WARN("Replacing mesh set \"{0}\"!", name);
+		}
+		catch (std::exception ex)
+		{
+		}
+
+		// Either way set the mesh set
+		meshSets[name] = meshSet;
+	}
+
+	void MeshManager::RemoveMeshSet(std::string name)
+	{
+		size_t numberRemoved = meshSets.erase(name);
+
+		PG_VERIFY(numberRemoved > 0, "Tried to remove mesh set \"{0}\" from the mesh manager but it did not exist!", name);
+	}
 }

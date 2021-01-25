@@ -7,35 +7,41 @@
 
 namespace PEngine
 {
-	/// <summary>
-	/// A set of meshes with a common vbo, ibo and vao.
-	/// </summary>
+	// An immutable set of meshes with a common vbo, ibo and vao.
 	class MeshSet
 	{
 		friend class Mesh;
 
 	public:
-		virtual ~MeshSet();
-
-		virtual void Build() = 0;
-
-		virtual void RenderMesh(const Mesh& mesh) = 0;
-
-	protected:
 		MeshSet();
+		~MeshSet();
 
-		// Adds a mesh to the set. To be used to render, mesh must not go out scope.
-		virtual void AddMesh(Mesh& mesh) = 0;
+		void Build();
 
-		VertexBuffer& GetVBO() { return vbo; }
-		IndexBuffer& GetIBO() { return ibo; }
-		VertexArray& GetVAO() { return vao; }
+		void SetAttribute(unsigned int index, unsigned int numberOfComponents, unsigned int type, bool clamped, int stride, void* offset);
+
+		void AddMesh(Shared<Mesh> mesh);
 
 	private:
+		int count;
+		int size;
+		int indexCount;
+		int indexSize;
+
+		std::vector<Shared<Mesh>> meshes;
+		std::vector<int> counts;
+		std::vector<int> sizes;
+		std::vector<int> indexCounts;
+		std::vector<int> indexSizes;
+
 		VertexBuffer vbo;
 		IndexBuffer ibo;
 		VertexArray vao;
+
+		void RenderMesh(Mesh* mesh);
+
+		void SetVertexData(const void* vertexData, int size);
+		void SetIndexData(const unsigned int* indexData, int size);
 	};
 }
-
 
