@@ -9,7 +9,7 @@ namespace PEngine
 	Signature TransformSystem::GetSignature(ECSManager& ecsManager)
 	{
 		Signature signature;
-		signature.set(ecsManager.GetComponentTypeId<ECSTransform>());
+		signature.set(ecsManager.GetComponentTypeId<Transform>());
 		return signature;
 	}
 
@@ -18,7 +18,7 @@ namespace PEngine
 		//PG_SCOPED_PROFILE("Transform");
 		for (EntityId entityId : entityIds)
 		{
-			auto& transform = ecsManager.GetComponent<ECSTransform>(entityId);
+			auto& transform = ecsManager.GetComponent<Transform>(entityId);
 			transform.prevPosition = transform.position;
 			transform.prevOrientation = transform.orientation;
 			transform.prevScale = transform.scale;
@@ -28,8 +28,8 @@ namespace PEngine
 	Signature PhysicsSystem::GetSignature(ECSManager& ecsManager)
 	{
 		Signature signature;
-		signature.set(ecsManager.GetComponentTypeId<ECSTransform>());
-		signature.set(ecsManager.GetComponentTypeId<ECSRigidBody>());
+		signature.set(ecsManager.GetComponentTypeId<Transform>());
+		signature.set(ecsManager.GetComponentTypeId<RigidBody>());
 		return signature;
 	}
 
@@ -38,8 +38,8 @@ namespace PEngine
 		//PG_SCOPED_PROFILE("Physics");
 		for (EntityId entityId : entityIds)
 		{
-			auto& transform = ecsManager.GetComponent<ECSTransform>(entityId);
-			auto& rigidBody = ecsManager.GetComponent<ECSRigidBody>(entityId);
+			auto& transform = ecsManager.GetComponent<Transform>(entityId);
+			auto& rigidBody = ecsManager.GetComponent<RigidBody>(entityId);
 
 			Vec3 drag = rigidBody.dragCoef * Maths::Vec3MultiplyPreserveSigns(rigidBody.velocity, rigidBody.velocity);
 			Vec3 acceleration = (rigidBody.force - drag) / rigidBody.mass;
@@ -56,9 +56,9 @@ namespace PEngine
 	Signature CollisionsSystem::GetSignature(ECSManager& ecsManager)
 	{
 		Signature signature;
-		signature.set(ecsManager.GetComponentTypeId<ECSTransform>());
-		signature.set(ecsManager.GetComponentTypeId<ECSRigidBody>());
-		signature.set(ecsManager.GetComponentTypeId<ECSBoxCollider>());
+		signature.set(ecsManager.GetComponentTypeId<Transform>());
+		signature.set(ecsManager.GetComponentTypeId<RigidBody>());
+		signature.set(ecsManager.GetComponentTypeId<BoxCollider>());
 		return signature;
 	}
 
@@ -70,9 +70,9 @@ namespace PEngine
 		{
 			EntityId entityId1 = *it1;
 
-			auto& boxCollider1 = ecsManager.GetComponent<ECSBoxCollider>(entityId1);
-			auto& transform1 = ecsManager.GetComponent<ECSTransform>(entityId1);
-			auto& rigidBody1 = ecsManager.GetComponent<ECSRigidBody>(entityId1);
+			auto& boxCollider1 = ecsManager.GetComponent<BoxCollider>(entityId1);
+			auto& transform1 = ecsManager.GetComponent<Transform>(entityId1);
+			auto& rigidBody1 = ecsManager.GetComponent<RigidBody>(entityId1);
 
 			AABB<3>& aabb1 = boxCollider1.aabb.CreateTransformedAABB(transform1.position);
 
@@ -80,9 +80,9 @@ namespace PEngine
 			{
 				EntityId entityId2 = *it2;
 
-				auto& boxCollider2 = ecsManager.GetComponent<ECSBoxCollider>(entityId2);
-				auto& transform2 = ecsManager.GetComponent<ECSTransform>(entityId2);
-				auto& rigidBody2 = ecsManager.GetComponent<ECSRigidBody>(entityId2);
+				auto& boxCollider2 = ecsManager.GetComponent<BoxCollider>(entityId2);
+				auto& transform2 = ecsManager.GetComponent<Transform>(entityId2);
+				auto& rigidBody2 = ecsManager.GetComponent<RigidBody>(entityId2);
 
 				//PG_START_SCOPED_PROFILE("Collisions ECS");
 				AABB<3>& aabb2 = boxCollider2.aabb.CreateTransformedAABB(transform2.position);
@@ -135,8 +135,8 @@ namespace PEngine
 	Signature MeshRendererSystem::GetSignature(ECSManager& ecsManager)
 	{
 		Signature signature;
-		signature.set(ecsManager.GetComponentTypeId<ECSTransform>());
-		signature.set(ecsManager.GetComponentTypeId<ECSMeshRenderer>());
+		signature.set(ecsManager.GetComponentTypeId<Transform>());
+		signature.set(ecsManager.GetComponentTypeId<MeshRenderer>());
 		return signature;
 	}
 
@@ -145,8 +145,8 @@ namespace PEngine
 		//PG_SCOPED_PROFILE("Render");
 		for (EntityId entityId : entityIds)
 		{
-			auto& meshRenderer = ecsManager.GetComponent<ECSMeshRenderer>(entityId);
-			auto& transform = ecsManager.GetComponent<ECSTransform>(entityId);
+			auto& meshRenderer = ecsManager.GetComponent<MeshRenderer>(entityId);
+			auto& transform = ecsManager.GetComponent<Transform>(entityId);
 
 			Shared<Material> material = meshRenderer.material;
 			material->GetShader().Use();
@@ -168,8 +168,8 @@ namespace PEngine
 	Signature CameraUpdateViewSystem::GetSignature(ECSManager& ecsManager)
 	{
 		Signature signature;
-		signature.set(ecsManager.GetComponentTypeId<ECSTransform>());
-		signature.set(ecsManager.GetComponentTypeId<ECSCamera>());
+		signature.set(ecsManager.GetComponentTypeId<Transform>());
+		signature.set(ecsManager.GetComponentTypeId<AttachedCamera>());
 		return signature;
 	}
 
@@ -177,8 +177,8 @@ namespace PEngine
 	{
 		for (EntityId entityId : entityIds)
 		{
-			auto& transform = ecsManager.GetComponent<ECSTransform>(entityId);
-			auto& camera = ecsManager.GetComponent<ECSCamera>(entityId);
+			auto& transform = ecsManager.GetComponent<Transform>(entityId);
+			auto& camera = ecsManager.GetComponent<AttachedCamera>(entityId);
 
 			camera.camera->UpdateView(transform.position, transform.orientation);
 		}
@@ -187,8 +187,8 @@ namespace PEngine
 	Signature RayCastSystem::GetSignature(ECSManager& ecsManager)
 	{
 		Signature signature;
-		signature.set(ecsManager.GetComponentTypeId<ECSTransform>());
-		signature.set(ecsManager.GetComponentTypeId<ECSBoxCollider>());
+		signature.set(ecsManager.GetComponentTypeId<Transform>());
+		signature.set(ecsManager.GetComponentTypeId<BoxCollider>());
 		return signature;
 	}
 
@@ -214,8 +214,8 @@ namespace PEngine
 					continue;
 				}
 
-				auto& transform = ecsManager.GetComponent<ECSTransform>(entityId);
-				auto& boxCollider = ecsManager.GetComponent<ECSBoxCollider>(entityId);
+				auto& transform = ecsManager.GetComponent<Transform>(entityId);
+				auto& boxCollider = ecsManager.GetComponent<BoxCollider>(entityId);
 
 				if (boxCollider.aabb.CreateTransformedAABB(transform.position).IsCollidingWith(newPosition))
 				{

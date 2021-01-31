@@ -11,8 +11,6 @@ namespace Pagoog
 		Block(EntityInfo entityInfo, ECSManager& ecsManager);
 		~Block() = default;
 
-		virtual void OnCreate() override;
-
 	private:
 
 	};

@@ -228,7 +228,7 @@ namespace PEngine
 
 
 
-	struct ECSTransform
+	struct Transform
 	{
 		Vec3 position = Vec3(0.0f, 0.0f, 0.0f);
 		Quat orientation = Quat(Vec3(0.0f, 0.0f, 0.0f));
@@ -239,7 +239,7 @@ namespace PEngine
 		Vec3 prevScale = Vec3(1.0f, 1.0f, 1.0f);
 	};
 
-	struct ECSRigidBody
+	struct RigidBody
 	{
 		Vec3 force = Vec3(0.0f, 0.0f, 0.0f);
 		Vec3 velocity = Vec3(0.0f, 0.0f, 0.0f);
@@ -247,23 +247,25 @@ namespace PEngine
 		float dragCoef = 1.0f;
 	};
 
-	struct ECSBoxCollider
+	struct BoxCollider
 	{
 		AABB<3> aabb = AABB<3>({ 1.0f, 1.0f, 1.0f });
 		float stickiness = 0.5f;
 	};
 
-	struct ECSMeshRenderer
+	struct MeshRenderer
 	{
 		Shared<Mesh> mesh = nullptr;
 		Shared<Material> material = nullptr;
 	};
 
 	class Camera;
-	struct ECSCamera
+	struct AttachedCamera
 	{
 		Shared<Camera> camera;
 	};
+
+
 
 	class IComponentArray
 	{
@@ -377,6 +379,10 @@ namespace PEngine
 			// Find the corresponding component id index
 			PG_ASSERT(componentTypeIds.find(hashId) != componentTypeIds.end(), "Tried to access a component array that didn't exist: {0}.", STRINGIFY(T));
 
+			ComponentTypeId asd = componentTypeIds[hashId];
+
+			auto asdsada = componentArrays[asd];
+
 			// Return the component array at this index
 			return std::static_pointer_cast<ComponentArray<T>>(componentArrays[componentTypeIds[hashId]]);
 		}
@@ -429,23 +435,32 @@ namespace PEngine
 
 
 
+	class ECSManager;
+
 	class System
 	{
 	public:
+		System(ECSManager& ecsManager)
+			: ecsManager(ecsManager)
+		{
+		}
+
 		// The set of entity ids that this system relates to
 		std::set<EntityId> entityIds;
-	};
 
-	class ECSManager;
+	protected:
+		// A reference to the ecs manager this system is a part of
+		ECSManager& ecsManager;
+	};
 
 	class SystemManager
 	{
 	public:
-		template <typename T>
-		Shared<T> RegisterSystem(ECSManager& ecsManager)
+		template <typename T, typename... Args>
+		Shared<T> RegisterSystem(ECSManager& ecsManager, Args&&... args)
 		{
 			// Create a new instance of the system
-			Shared<T> system = MakeShared<T>(ecsManager);
+			Shared<T> system = MakeShared<T>(ecsManager, std::forward<Args>(args)...);
 
 			// Add this new system to the vector of active systems
 			systems.push_back(system);
@@ -494,84 +509,71 @@ namespace PEngine
 		std::vector<Signature> systemSignatures;
 	};
 
+
+
 	class TransformSystem : public System
 	{
 	public:
 		TransformSystem(ECSManager& ecsManager)
-			: ecsManager(ecsManager)
+			: System::System(ecsManager)
 		{
 		}
 
 		static Signature GetSignature(ECSManager& ecsManager);
 
 		void Update(float dt);
-
-	private:
-		ECSManager& ecsManager;
 	};
 
 	class PhysicsSystem : public System
 	{
 	public:
 		PhysicsSystem(ECSManager& ecsManager)
-			: ecsManager(ecsManager)
+			: System::System(ecsManager)
 		{
 		}
 
 		static Signature GetSignature(ECSManager& ecsManager);
 
 		void Update(float dt);
-
-	private:
-		ECSManager& ecsManager;
 	};
 
 	class CollisionsSystem : public System
 	{
 	public:
 		CollisionsSystem(ECSManager& ecsManager)
-			: ecsManager(ecsManager)
+			: System::System(ecsManager)
 		{
 		}
 
 		static Signature GetSignature(ECSManager& ecsManager);
 
 		void Update(float dt);
-
-	private:
-		ECSManager& ecsManager;
 	};
 
 	class CameraUpdateViewSystem : public System
 	{
 	public:
 		CameraUpdateViewSystem(ECSManager& ecsManager)
-			: ecsManager(ecsManager)
+			: System::System(ecsManager)
 		{
 		}
 
 		static Signature GetSignature(ECSManager& ecsManager);
 
 		void UpdateView();
-
-	private:
-		ECSManager& ecsManager;
 	};
 
 	class MeshRendererSystem : public System
 	{
 	public:
 		MeshRendererSystem(ECSManager& ecsManager)
-			: ecsManager(ecsManager)
+			: System::System(ecsManager)
 		{
 		}
 
 		static Signature GetSignature(ECSManager& ecsManager);
 
 		void FrameUpdate(float alpha);
-
-	private:
-		ECSManager& ecsManager;
 	};
 
 	struct RayCastResult
@@ -584,16 +586,13 @@ namespace PEngine
 	{
 	public:
 		RayCastSystem(ECSManager& ecsManager)
-			: ecsManager(ecsManager)
+			: System::System(ecsManager)
 		{
 		}
 
 		static Signature GetSignature(ECSManager& ecsManager);
 
 		RayCastResult RayCast(Vec3 position, Vec3 direction, EntityId entityIdToIgnore);
-
-	private:
-		ECSManager& ecsManager;
 	};
 
 
@@ -687,21 +686,21 @@ namespace PEngine
 			return componentManager.GetComponentTypeId<T>();
 		}
 
-		template <typename T>
-		Shared<T> RegisterSystem()
+		template <typename T, typename... Args>
+		Shared<T> RegisterSystem(Args&&... args)
 		{
-			return systemManager.RegisterSystem<T>(*this);
+			return systemManager.RegisterSystem<T>(*this, std::forward<Args>(args)...);
 		}
 
 		void Init()
 		{
 			entityManager.Init();
 
-			RegisterComponent<ECSTransform>();
-			RegisterComponent<ECSRigidBody>();
-			RegisterComponent<ECSBoxCollider>();
-			RegisterComponent<ECSMeshRenderer>();
-			RegisterComponent<ECSCamera>();
+			RegisterComponent<Transform>();
+			RegisterComponent<RigidBody>();
+			RegisterComponent<BoxCollider>();
+			RegisterComponent<MeshRenderer>();
+			RegisterComponent<AttachedCamera>();
 
 			transformSystem = RegisterSystem<TransformSystem>();
 			physicsSystem = RegisterSystem<PhysicsSystem>();
@@ -737,8 +736,6 @@ namespace PEngine
 			, ecsManager(&ecsManager)
 		{
 		}
-
-		virtual void OnCreate() { }
 
 		template <typename T>
 		T& GetComponent()
@@ -790,9 +787,6 @@ namespace PEngine
 	{
 		// Create and construct the new entity from the give class
 		T entity(entityManager.Create(), *this, std::forward<Args>(args)...);
-
-		// Call the on create function
-		entity.OnCreate();
 
 		// Return the entity
 		return entity;

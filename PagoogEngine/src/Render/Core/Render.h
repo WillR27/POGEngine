@@ -45,9 +45,11 @@ namespace PEngine
 
 		static void APIENTRY ErrorCallback(unsigned int source, unsigned int type, unsigned int id, unsigned int severity, int length, const char* message, const void* userParam);
 
-		static void EnableDepthTest(bool enable);
+		static void DepthTest(bool enable);
+		static void FaceCulling(bool enable);
 
 		static void SetPolygonMode(RenderingOption face, RenderingOption type);
+		static void CullFace(RenderingOption face);
 
 		static void RenderArrays(RenderingOption type, unsigned int first, unsigned int count);
 		static void RenderElements(RenderingOption type, unsigned int first, unsigned int count);

@@ -21,6 +21,8 @@ namespace Pagoog
 
 	void WorldScene::Init()
 	{
+		GetECSManager().RegisterComponent<ChunkInfo>();
+
 		GetInputManager().AddAction("Left", InputInfo(InputType::Mouse, PG_MOUSE_BUTTON_LEFT, PG_KEY_RELEASE));
 		GetInputManager().AddAction("Right", InputInfo(InputType::Mouse, PG_MOUSE_BUTTON_RIGHT, PG_KEY_RELEASE));
 
@@ -49,8 +51,6 @@ namespace Pagoog
 			InputInfo(InputType::Keyboard, PG_KEY_W, PG_KEY_RELEASE));
 
 		GetInputManager().AddInputCallback(PG_BIND_FN(InputCallback));
-
-		meshRendererSystem = GetECSManager().RegisterSystem<MeshRendererSystem>();
 
 		Shared<Mesh> mesh = GetMeshManager().CreateAndAddMesh("Mesh1");
 		mesh->SetPositionData(squarePositions, sizeof(squarePositions));
@@ -128,17 +128,23 @@ void main()
 		GetInputManager().AddInputCallback(PG_BIND_FN(player.InputCallback));
 
 		// Set the main camera
-		Camera::MainCamera = player.GetComponent<ECSCamera>().camera;
+		Camera::MainCamera = player.GetComponent<AttachedCamera>().camera;
+
+		chunkSystem = GetECSManager().RegisterSystem<ChunkSystem>(player);
+		meshRendererSystem = GetECSManager().RegisterSystem<MeshRendererSystem>();
 	}
 
 	void WorldScene::Update(float dt)
 	{
+		chunkSystem->Update();
 	}
 
 	void WorldScene::FrameUpdate(float alpha)
 	{
 		Render::SetPolygonMode(PG_FRONT_AND_BACK, PG_FILL);
-		Render::EnableDepthTest(true);
+		Render::FaceCulling(true);
+		Render::CullFace(PG_BACK);
+		Render::DepthTest(true);
 
 		meshRendererSystem->FrameUpdate(alpha);
 	}

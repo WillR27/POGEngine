@@ -22,11 +22,11 @@ namespace PEngine
 		void Build();
 		const void* GetVertexData() const { return vertexDataArray; }
 
-		const Position::ValueType* GetPositionData() const { return positionDataAray; }
-		void SetPositionData(const Position::ValueType* positionDataToBeCopied, int size);
+		const Vertex::Position::ValueType* GetPositionData() const { return positionDataAray; }
+		void SetPositionData(const Vertex::Position::ValueType* positionDataToBeCopied, int size);
 
-		const Colour::ValueType* GetColourData() const { return colourDataArray; }
-		void SetColourData(const Colour::ValueType* colourDataToBeCopied, int size);
+		const Vertex::Colour::ValueType* GetColourData() const { return colourDataArray; }
+		void SetColourData(const Vertex::Colour::ValueType* colourDataToBeCopied, int size);
 
 		int GetAdditionalStride(int index) const { return additionalDataStrides[index]; }
 		const void* GetAdditionalData(int index) const { return additionalDataArrays[index]; }
@@ -57,8 +57,8 @@ namespace PEngine
 
 		void* vertexDataArray;
 
-		Position::ValueType* positionDataAray;
-		Colour::ValueType* colourDataArray;
+		Vertex::Position::ValueType* positionDataAray;
+		Vertex::Colour::ValueType* colourDataArray;
 
 		std::vector<char*> additionalDataArrays;
 		std::vector<int> additionalDataStrides;

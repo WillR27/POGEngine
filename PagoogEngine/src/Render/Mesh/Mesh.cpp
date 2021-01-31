@@ -80,13 +80,13 @@ namespace PEngine
 
 		for (int i = 0; i < numberOfVertices; i++)
 		{
-			dataPos = i * Position::Count;
-			memcpy(&newVertexDataArray[vertexDataPos], &positionDataAray[dataPos], Position::Size);
-			vertexDataPos += Position::Size;
+			dataPos = i * Vertex::Position::Count;
+			memcpy(&newVertexDataArray[vertexDataPos], &positionDataAray[dataPos], Vertex::Position::Size);
+			vertexDataPos += Vertex::Position::Size;
 
-			dataPos = i * Colour::Count;
-			memcpy(&newVertexDataArray[vertexDataPos], &colourDataArray[dataPos], Colour::Size);
-			vertexDataPos += Colour::Size;
+			dataPos = i * Vertex::Colour::Count;
+			memcpy(&newVertexDataArray[vertexDataPos], &colourDataArray[dataPos], Vertex::Colour::Size);
+			vertexDataPos += Vertex::Colour::Size;
 
 			for (int j = 0; j < additionalDataArrays.size(); j++)
 			{
@@ -102,29 +102,29 @@ namespace PEngine
 		vertexDataArray = newVertexDataArray;
 	}
 
-	void Mesh::SetPositionData(const Position::ValueType* positionDataToBeCopied, int size)
+	void Mesh::SetPositionData(const Vertex::Position::ValueType* positionDataToBeCopied, int size)
 	{
 		if (positionDataAray == nullptr)
 		{
-			stride += Position::Size;
+			stride += Vertex::Position::Size;
 		}
 
 		delete[] positionDataAray;
-		int numberOfValues = size / static_cast<int>(sizeof(Position::ValueType));
-		numberOfVertices = numberOfValues / Position::Count; 
-		positionDataAray = new Position::ValueType[numberOfValues];
+		int numberOfValues = size / static_cast<int>(sizeof(Vertex::Position::ValueType));
+		numberOfVertices = numberOfValues / Vertex::Position::Count;
+		positionDataAray = new Vertex::Position::ValueType[numberOfValues];
 		memcpy(positionDataAray, positionDataToBeCopied, size);
 	}
 
-	void Mesh::SetColourData(const Colour::ValueType* colourDataToBeCopied, int size)
+	void Mesh::SetColourData(const Vertex::Colour::ValueType* colourDataToBeCopied, int size)
 	{
 		if (colourDataArray == nullptr)
 		{
-			stride += Colour::Size;
+			stride += Vertex::Colour::Size;
 		}
 
 		delete[] colourDataArray;
-		colourDataArray = new Colour::ValueType[size / sizeof(Colour::ValueType)];
+		colourDataArray = new Vertex::Colour::ValueType[size / sizeof(Vertex::Colour::ValueType)];
 		memcpy(colourDataArray, colourDataToBeCopied, size);
 	}
 

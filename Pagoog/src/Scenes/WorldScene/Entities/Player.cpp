@@ -14,18 +14,14 @@ namespace Pagoog
 		, sprintMultiplier(sprintMultiplier)
 		, lookSpeed(lookSpeed)
 	{
-	}
-
-	void Player::OnCreate()
-	{
-		AddComponent(ECSTransform
+		AddComponent(Transform
 			{
 				.position = Vec3(0.0f, 0.0f, 10.0f),
 				.orientation = Quat(Vec3(0.0f, 0.0f, 0.0f)),
 				.scale = Vec3(1.0f, 1.0f, 1.0f)
 			});
 
-		AddComponent(ECSRigidBody
+		AddComponent(RigidBody
 			{
 				.force = Vec3(0.0f, 0.0f, 0.0f),
 				.velocity = Vec3(0.0f, 0.0f, 0.0f),
@@ -33,13 +29,13 @@ namespace Pagoog
 				.dragCoef = 1.0f
 			});
 
-		AddComponent(ECSBoxCollider
+		AddComponent(BoxCollider
 			{
 				.aabb = AABB<3>({ 2.0f, 2.0f, 2.0f }),
 				.stickiness = 0.5f
 			});
 
-		AddComponent(ECSCamera
+		AddComponent(AttachedCamera
 			{
 				.camera = Camera::MainCamera
 			});
@@ -47,9 +43,9 @@ namespace Pagoog
 
 	void Player::InputCallback(PEngine::InputPackage& inputPackage, float dt)
 	{
-		auto& playerTransform = GetComponent<ECSTransform>();
-		auto& playerRigidBody = GetComponent<ECSRigidBody>();
-		auto& playerCamera = GetComponent<ECSCamera>();
+		auto& playerTransform = GetComponent<Transform>();
+		auto& playerRigidBody = GetComponent<RigidBody>();
+		auto& playerCamera = GetComponent<AttachedCamera>();
 
 		if (inputPackage.HasMouseMoved())
 		{
@@ -76,10 +72,10 @@ namespace Pagoog
 		{
 			Block block = GetECSManager().CreateEntity<Block>();
 
-			block.GetComponent<ECSTransform>().position = GetComponent<ECSTransform>().position;
-			block.GetComponent<ECSTransform>().prevPosition = GetComponent<ECSTransform>().prevPosition;
-			block.GetComponent<ECSMeshRenderer>().mesh = GetMeshManager().FindMesh("Mesh4");
-			block.GetComponent<ECSMeshRenderer>().material = GetMaterialManager().FindMaterial("Material1");
+			block.GetComponent<Transform>().position = GetComponent<Transform>().position;
+			block.GetComponent<Transform>().prevPosition = GetComponent<Transform>().prevPosition;
+			block.GetComponent<MeshRenderer>().mesh = GetMeshManager().FindMesh("Mesh4");
+			block.GetComponent<MeshRenderer>().material = GetMaterialManager().FindMaterial("Material1");
 		}
 	}
 }

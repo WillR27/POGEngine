@@ -22,14 +22,24 @@ namespace PEngine
 		PG_ASSERT(false, "OpenGL error!");
 	}
 
-	void Render::EnableDepthTest(bool enable)
+	void Render::DepthTest(bool enable)
 	{
 		enable ? glEnable(GL_DEPTH_TEST) : glDisable(GL_DEPTH_TEST);
+	}
+
+	void Render::FaceCulling(bool enable)
+	{
+		enable ? glEnable(GL_CULL_FACE) : glDisable(GL_CULL_FACE);
 	}
 
 	void Render::SetPolygonMode(RenderingOption face, RenderingOption type)
 	{
 		glPolygonMode(face, type);
+	}
+
+	void Render::CullFace(RenderingOption face)
+	{
+		glCullFace(face);
 	}
 
 	void Render::RenderArrays(RenderingOption type, unsigned int first, unsigned int count)

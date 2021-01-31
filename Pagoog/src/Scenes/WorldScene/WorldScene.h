@@ -8,6 +8,7 @@
 #include "Scene/Scene.h"
 
 #include "Entities/Player.h"
+#include "World/Chunk/Chunk.h"
 
 namespace Pagoog
 {
@@ -27,6 +28,8 @@ namespace Pagoog
 		void InputCallback(InputPackage& inputPackage, float dt);
 
 	private:
+		Shared<ChunkSystem> chunkSystem;
+
 		Shared<MeshRendererSystem> meshRendererSystem;
 
 		Player player;

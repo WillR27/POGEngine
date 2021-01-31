@@ -12,8 +12,6 @@ namespace Pagoog
 		Player(PEngine::EntityInfo entityInfo, PEngine::ECSManager& ecsManager, float moveSpeed, float sprintMultiplier, float lookSpeed);
 		~Player() = default;
 
-		virtual void OnCreate() override;
-
 		void InputCallback(PEngine::InputPackage& inputPackage, float dt);
 
 	private:

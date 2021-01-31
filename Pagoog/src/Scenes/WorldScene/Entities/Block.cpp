@@ -8,11 +8,7 @@ namespace Pagoog
 	Block::Block(EntityInfo entityInfo, ECSManager& ecsManager)
 		: Entity::Entity(entityInfo, ecsManager)
 	{
-	}
-
-	void Block::OnCreate()
-	{
-		AddComponent(ECSTransform
+		AddComponent(Transform
 			{
 				.position = Vec3(0.0f, 0.0f, 0.0f),
 				.orientation = Quat(Vec3(0.0f, 0.0f, 0.0f)),
@@ -23,7 +19,7 @@ namespace Pagoog
 				.prevScale = Vec3(1.0f, 1.0f, 1.0f)
 			});
 
-		AddComponent(ECSRigidBody
+		AddComponent(RigidBody
 			{
 				.force = Vec3(0.0f, 0.0f, 0.0f),
 				.velocity = Vec3(0.0f, 0.0f, 0.0f),
@@ -31,13 +27,13 @@ namespace Pagoog
 				.dragCoef = 1.0f
 			});
 
-		AddComponent(ECSBoxCollider
+		AddComponent(BoxCollider
 			{
 				.aabb = AABB<3>({ 2.0f, 2.0f, 2.0f }),
 				.stickiness = 0.5f
 			});
 
-		AddComponent(ECSMeshRenderer
+		AddComponent(MeshRenderer
 			{
 				.mesh = nullptr,
 				.material = nullptr
