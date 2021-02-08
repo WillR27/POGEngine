@@ -4,6 +4,9 @@
 #define PG_FRONT                         0x0404 
 #define PG_BACK                          0x0405 
 									     
+#define PG_CW							 0x0900
+#define PG_CCW							 0x0901
+
 #define PG_FILL                          0x1B02
 #define PG_LINE                          0x1B01
 #define PG_POINT                         0x1B00
@@ -50,6 +53,7 @@ namespace PEngine
 
 		static void SetPolygonMode(RenderingOption face, RenderingOption type);
 		static void CullFace(RenderingOption face);
+		static void SetFrontFace(RenderingOption face);
 
 		static void RenderArrays(RenderingOption type, unsigned int first, unsigned int count);
 		static void RenderElements(RenderingOption type, unsigned int first, unsigned int count);

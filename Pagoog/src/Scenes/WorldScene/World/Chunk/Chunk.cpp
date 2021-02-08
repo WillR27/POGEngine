@@ -198,6 +198,7 @@ namespace Pagoog
 		std::vector<Vertex::Position::ValueType> tempVertexPositions;
 		std::vector<Vertex::Colour::ValueType> tempVertexColours;
 		std::vector<Vertex::Index::ValueType> tempVertexIndices;
+
 		int total = 0;
 		for (int x = 0; x < Chunk::Size; x++)
 		{

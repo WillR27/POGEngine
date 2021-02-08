@@ -42,6 +42,11 @@ namespace PEngine
 		glCullFace(face);
 	}
 
+	void Render::SetFrontFace(RenderingOption face)
+	{
+		glFrontFace(face);
+	}
+
 	void Render::RenderArrays(RenderingOption type, unsigned int first, unsigned int count)
 	{
 		glDrawArrays(type, first, count);

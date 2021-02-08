@@ -18,6 +18,8 @@ namespace PEngine
 		Vec3 GetUpVec() const { return upVec; }
 		Vec3 GetRightVec() const { return rightVec; }
 
+		void CalculateProjection();
+
 		void SetFov(float newFov);
 		void SetAspectRatio(float newAspectRatio);
 		void SetNearZ(float newNearZ);

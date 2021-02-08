@@ -83,7 +83,7 @@ namespace PEngine
 
 	Vec3 Maths::ToForwardVec(const Quat& quat)
 	{
-		return glm::rotate(quat, Vec3(0.0f, 0.0f, -1.0f));
+		return glm::rotate(quat, Vec3(0.0f, 0.0f, 1.0f));
 		//return Vec3(2.0f * (quat.x * quat.z - quat.w * quat.y), 2.0f * (quat.y * quat.z + quat.w * quat.x), 1.0f - 2.0f * (quat.x * quat.x + quat.y * quat.y));
 	}
 

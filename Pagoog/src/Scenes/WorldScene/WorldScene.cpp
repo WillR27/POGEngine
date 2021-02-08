@@ -142,6 +142,7 @@ void main()
 	void WorldScene::FrameUpdate(float alpha)
 	{
 		Render::SetPolygonMode(PG_FRONT_AND_BACK, PG_FILL);
+		Render::SetFrontFace(PG_CW);
 		Render::FaceCulling(true);
 		Render::CullFace(PG_BACK);
 		Render::DepthTest(true);

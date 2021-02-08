@@ -32,10 +32,10 @@ namespace PEngine
 			{
 				constexpr std::array<Vertex::Position::ValueType, TotalVertexValuesPlane> positions =
 				{
-					 0.5f,  0.5f, -0.5f,
-					 0.5f, -0.5f, -0.5f,
-					-0.5f, -0.5f, -0.5f,
-					-0.5f,  0.5f, -0.5f
+					 0.5f,  0.5f, 0.5f,
+					 0.5f, -0.5f, 0.5f,
+					-0.5f, -0.5f, 0.5f,
+					-0.5f,  0.5f, 0.5f
 				};
 
 				return positions;
@@ -44,10 +44,10 @@ namespace PEngine
 			{
 				constexpr std::array<Vertex::Position::ValueType, TotalVertexValuesPlane> positions =
 				{
-					 0.5f,  0.5f,  0.5f,
-					 0.5f, -0.5f,  0.5f,
-					-0.5f, -0.5f,  0.5f,
-					-0.5f,  0.5f,  0.5f
+					 0.5f,  0.5f, -0.5f,
+					 0.5f, -0.5f, -0.5f,
+					-0.5f, -0.5f, -0.5f,
+					-0.5f,  0.5f, -0.5f
 				};
 
 				return positions;
@@ -56,10 +56,10 @@ namespace PEngine
 			{
 				constexpr std::array<Vertex::Position::ValueType, TotalVertexValuesPlane> positions =
 				{
-					-0.5f,  0.5f,  0.5f,
-					-0.5f,  0.5f, -0.5f,
-					-0.5f, -0.5f, -0.5f,
-					-0.5f, -0.5f,  0.5f
+					0.5f,  0.5f,  0.5f,
+					0.5f,  0.5f, -0.5f,
+					0.5f, -0.5f, -0.5f,
+					0.5f, -0.5f,  0.5f
 				};
 
 				return positions;
@@ -68,10 +68,10 @@ namespace PEngine
 			{
 				constexpr std::array<Vertex::Position::ValueType, TotalVertexValuesPlane> positions =
 				{
-					0.5f,  0.5f,  0.5f,
-					0.5f,  0.5f, -0.5f,
-					0.5f, -0.5f, -0.5f,
-					0.5f, -0.5f,  0.5f
+					-0.5f,  0.5f,  0.5f,
+					-0.5f,  0.5f, -0.5f,
+					-0.5f, -0.5f, -0.5f,
+					-0.5f, -0.5f,  0.5f
 				};
 
 				return positions;
@@ -134,8 +134,8 @@ namespace PEngine
 			{
 				constexpr std::array<Vertex::Index::ValueType, TotalIndexValuesPlane> indices =
 				{
-					0, 1, 3,
-					1, 2, 3
+					1, 0, 3,
+					2, 1, 3
 				};
 
 				return indices;
@@ -154,8 +154,8 @@ namespace PEngine
 			{
 				constexpr std::array<Vertex::Index::ValueType, TotalIndexValuesPlane> indices =
 				{
-					0, 1, 3,
-					1, 2, 3
+					1, 0, 3,
+					2, 1, 3
 				};
 
 				return indices;
@@ -184,8 +184,8 @@ namespace PEngine
 			{
 				constexpr std::array<Vertex::Index::ValueType, TotalIndexValuesPlane> indices =
 				{
-					0, 1, 3,
-					1, 2, 3
+					1, 0, 3,
+					2, 1, 3
 				};
 
 				return indices;

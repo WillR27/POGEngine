@@ -16,7 +16,7 @@ namespace Pagoog
 	{
 		AddComponent(Transform
 			{
-				.position = Vec3(0.0f, 0.0f, 10.0f),
+				.position = Vec3(0.0f, 0.0f, -10.0f),
 				.orientation = Quat(Vec3(0.0f, 0.0f, 0.0f)),
 				.scale = Vec3(1.0f, 1.0f, 1.0f)
 			});
@@ -57,7 +57,7 @@ namespace Pagoog
 			(((playerCamera.camera->GetForwardVec() * static_cast<float>(inputPackage.GetAxisValue("Vertical"))) +
 				(playerCamera.camera->GetRightVec() * static_cast<float>(inputPackage.GetAxisValue("Horizontal")))) +
 				Vec3(0.0f, static_cast<float>(inputPackage.GetAxisValue("Fly")), 0.0f)) * moveSpeed;
-
+		PG_TRACE(playerTransform.position.ToString());
 		if (inputPackage.HasActionOccurred("Left"))
 		{
 			RayCastResult rayCastResult = GetECSManager().rayCastSystem->RayCast(playerTransform.position, playerCamera.camera->GetForwardVec(), GetId());

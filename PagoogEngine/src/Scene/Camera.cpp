@@ -8,7 +8,7 @@ namespace PEngine
 	Camera::Camera()
 		: pitch(0.0f)
 		, yaw(0.0f)
-		, forwardVec(0.0f, 0.0f, -1.0f)
+		, forwardVec(0.0f, 0.0f, 1.0f)
 		, upVec(0.0f, 1.0f, 0.0f)
 		, rightVec(1.0f, 0.0f, 0.0f)
 		, fov(Maths::ToRadians(60.0f))
@@ -18,6 +18,7 @@ namespace PEngine
 		, view()
 		, projection(glm::perspective(fov, aspectRatio, nearZ, farZ))
 	{
+		CalculateProjection();
 	}
 
 	void Camera::UpdateView(Vec3 parentPosition, Quat parentOrientation)
@@ -33,31 +34,40 @@ namespace PEngine
 
 	void Camera::AddPitchAndYaw(float pitchAmount, float yawAmount)
 	{
-		pitch += pitchAmount;
-		yaw += yawAmount;
+		pitch -= pitchAmount;
+		yaw -= yawAmount;
+	}
+
+	void Camera::CalculateProjection()
+	{
+		projection = glm::perspective(fov, aspectRatio, nearZ, farZ);
+		projection[0].x *= -1;
+		projection[1].x *= -1;
+		projection[2].x *= -1;
+		projection[3].x *= -1;
 	}
 
 	void Camera::SetFov(float newFov)
 	{
 		fov = newFov;
-		projection = glm::perspective(fov, aspectRatio, nearZ, farZ);
+		CalculateProjection();
 	}
 
 	void Camera::SetAspectRatio(float newAspectRatio)
 	{
 		aspectRatio = newAspectRatio;
-		projection = glm::perspective(fov, aspectRatio, nearZ, farZ);
+		CalculateProjection();
 	}
 
 	void Camera::SetNearZ(float newNearZ)
 	{
 		nearZ = newNearZ;
-		projection = glm::perspective(fov, aspectRatio, nearZ, farZ);
+		CalculateProjection();
 	}
 
 	void Camera::SetFarZ(float newFarZ)
 	{
 		farZ = newFarZ;
-		projection = glm::perspective(fov, aspectRatio, nearZ, farZ);
+		CalculateProjection();
 	}
 }
