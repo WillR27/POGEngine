@@ -2,6 +2,8 @@
 
 #include "PagoogCore/Source/Main.h"
 
+#include "PagoogRender/Source/Render.h"
+
 namespace Pagoog
 {
 	class PagoogApplication : public Core::Application
@@ -14,6 +16,7 @@ namespace Pagoog
 
 		void Init() override
 		{
+			Render::Render::SetContextAddressFunc(GetWindow().GetContextAddressFunc());
 		}
 	};
 

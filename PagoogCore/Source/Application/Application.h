@@ -17,6 +17,8 @@ namespace Pagoog::Core
 
 		void Run();
 
+		const Window& GetWindow() { return *window; }
+
 	private:
 		std::unique_ptr<Window> window;
 

@@ -17,6 +17,8 @@
 #include <cwchar>
 #include <exception>
 
+#include "assert.h"
+
 #include "format.h"
 #if !defined(FMT_STATIC_THOUSANDS_SEPARATOR)
 #  include <locale>

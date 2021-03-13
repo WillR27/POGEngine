@@ -17,6 +17,8 @@ namespace Pagoog::Core
 
 		virtual bool ShouldClose() override;
 
+		virtual ContextAddressFunc GetContextAddressFunc() const override;
+
 	private:
 		GLFWwindow* window;
 	};

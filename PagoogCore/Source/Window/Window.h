@@ -15,6 +15,8 @@ namespace Pagoog::Core
 
 		virtual bool ShouldClose() = 0;
 
+		virtual ContextAddressFunc GetContextAddressFunc() const = 0;
+
 		std::string GetName() const { return name; }
 
 	private:

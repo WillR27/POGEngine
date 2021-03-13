@@ -35,4 +35,9 @@ namespace Pagoog::Core
 	{
 		return false;
 	}
+
+	ContextAddressFunc WindowsWindow::GetContextAddressFunc() const
+	{
+		return (ContextAddressFunc)glfwGetProcAddress;
+	}
 }

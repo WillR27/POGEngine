@@ -35,6 +35,7 @@ project "Pagoog"
     includedirs
     {
         "PagoogLog/External/spdlog/include",
+        "Glad/include",
         "%{prj.name}/Source",
 		"",
     }
@@ -381,6 +382,7 @@ project "PagoogRender"
     includedirs
     {
         "PagoogLog/External/spdlog/include",
+        "Glad/include",
         "%{prj.name}/Source",
 		"",
     }
@@ -388,8 +390,10 @@ project "PagoogRender"
     links
     {
 		"PagoogCommon",
+        "PagoogDebug",
+        "PagoogLog",
 		"Glad",
-		"GLFW",
+		"GLFW"
 	}
 
     defines

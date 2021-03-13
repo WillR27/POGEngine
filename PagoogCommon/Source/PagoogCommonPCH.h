@@ -6,4 +6,5 @@
 
 #include "Defines.h"
 #include "Macros.h"
+#include "TypeDefs.h"
 #include "Util/StringsUtil.h"
