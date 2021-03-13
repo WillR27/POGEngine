@@ -13,7 +13,7 @@ outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
 
 project "Pagoog"
-    location "Pagoog"
+    location "Internal/Pagoog"
 	kind "ConsoleApp"
 	language "C++"
 	cppdialect "C++latest"
@@ -23,21 +23,22 @@ project "Pagoog"
     objdir ("Builds/int/" .. outputdir .. "/%{prj.name}")
 
     pchheader "PagoogPCH.h"
-	pchsource "%{prj.name}/Source/PagoogPCH.cpp"
+	pchsource "Internal/%{prj.name}/Source/PagoogPCH.cpp"
 	
     files
     {
-        "%{prj.name}/Source/**.h",
-        "%{prj.name}/Source/**.cpp",
-        "%{prj.name}/Source/**.hpp"
+        "Internal/%{prj.name}/Source/**.h",
+        "Internal/%{prj.name}/Source/**.cpp",
+        "Internal/%{prj.name}/Source/**.hpp",
     }
 
     includedirs
     {
-        "PagoogLog/External/spdlog/include",
+        "Internal/PagoogLog/External/spdlog/include",
         "Glad/include",
-        "%{prj.name}/Source",
-		"",
+        "Internal/%{prj.name}/Source",
+		"External",
+		"Internal",
     }
 
     links
@@ -46,21 +47,13 @@ project "Pagoog"
 		"PagoogCore",
 		"PagoogLog",
 		"PagoogDebug",
-		"PagoogRender"
+		"PagoogRender",
     }
-
-    filter "system:windows"
-        systemversion "latest"
-
-        defines
-        {
-
-        }
 
     flags
     {
         "MultiProcessorCompile",
-        "UndefinedIdentifiers"
+        "UndefinedIdentifiers",
 	}
 
     filter "configurations:Debug"
@@ -84,9 +77,9 @@ project "Pagoog"
 	    }
 
 
-		
+
 project "PagoogCommon"
-    location "PagoogCommon"
+    location "Internal/PagoogCommon"
     kind "StaticLib"
     language "C++"
     cppdialect "C++latest"
@@ -96,19 +89,21 @@ project "PagoogCommon"
     objdir ("Builds/int/" .. outputdir .. "/%{prj.name}")
 
     pchheader "PagoogCommonPCH.h"
-	pchsource "%{prj.name}/Source/PagoogCommonPCH.cpp"
+	pchsource "Internal/%{prj.name}/Source/PagoogCommonPCH.cpp"
 
     files
     {
-        "%{prj.name}/Source/**.h",
-        "%{prj.name}/Source/**.cpp",
-        "%{prj.name}/Source/**.hpp"
+        "Internal/%{prj.name}/Source/**.h",
+        "Internal/%{prj.name}/Source/**.cpp",
+        "Internal/%{prj.name}/Source/**.hpp"
     }
 
     includedirs
     {
-        "PagoogLog/External/spdlog/include",
-        "%{prj.name}/Source",
+        "Internal/PagoogLog/External/spdlog/include",
+        "Internal/%{prj.name}/Source",
+        "External",
+		"Internal",
     }
 
     links
@@ -153,7 +148,7 @@ project "PagoogCommon"
 		
 
 project "PagoogCore"
-    location "PagoogCore"
+    location "Internal/PagoogCore"
     kind "StaticLib"
     language "C++"
     cppdialect "C++latest"
@@ -163,20 +158,21 @@ project "PagoogCore"
     objdir ("Builds/int/" .. outputdir .. "/%{prj.name}")
 
     pchheader "PagoogCorePCH.h"
-	pchsource "%{prj.name}/Source/PagoogCorePCH.cpp"
+	pchsource "Internal/%{prj.name}/Source/PagoogCorePCH.cpp"
 
     files
     {
-        "%{prj.name}/Source/**.h",
-        "%{prj.name}/Source/**.cpp",
-        "%{prj.name}/Source/**.hpp"
+        "Internal/%{prj.name}/Source/**.h",
+        "Internal/%{prj.name}/Source/**.cpp",
+        "Internal/%{prj.name}/Source/**.hpp"
     }
 
     includedirs
     {
-        "PagoogLog/External/spdlog/include",
-        "%{prj.name}/Source",
-		"",
+        "Internal/PagoogLog/External/spdlog/include",
+        "Internal/%{prj.name}/Source",
+		"External",
+		"Internal",
     }
 
     links
@@ -223,7 +219,7 @@ project "PagoogCore"
 		
 		
 project "PagoogDebug"
-    location "PagoogDebug"
+    location "Internal/PagoogDebug"
     kind "StaticLib"
     language "C++"
     cppdialect "C++latest"
@@ -233,20 +229,21 @@ project "PagoogDebug"
     objdir ("Builds/int/" .. outputdir .. "/%{prj.name}")
 
     pchheader "PagoogDebugPCH.h"
-	pchsource "%{prj.name}/Source/PagoogDebugPCH.cpp"
+	pchsource "Internal/%{prj.name}/Source/PagoogDebugPCH.cpp"
 
     files
     {
-        "%{prj.name}/Source/**.h",
-        "%{prj.name}/Source/**.cpp",
-        "%{prj.name}/Source/**.hpp",
+        "Internal/%{prj.name}/Source/**.h",
+        "Internal/%{prj.name}/Source/**.cpp",
+        "Internal/%{prj.name}/Source/**.hpp",
     }
 
     includedirs
     {
-        "PagoogLog/External/spdlog/include",
-        "%{prj.name}/Source",
-		"",
+        "Internal/PagoogLog/External/spdlog/include",
+        "Internal/%{prj.name}/Source",
+		"External",
+		"Internal",
     }
 
     links
@@ -292,7 +289,7 @@ project "PagoogDebug"
 		
 		
 project "PagoogLog"
-    location "PagoogLog"
+    location "Internal/PagoogLog"
     kind "StaticLib"
     language "C++"
     cppdialect "C++latest"
@@ -302,20 +299,21 @@ project "PagoogLog"
     objdir ("Builds/int/" .. outputdir .. "/%{prj.name}")
 
     pchheader "PagoogLogPCH.h"
-	pchsource "%{prj.name}/Source/PagoogLogPCH.cpp"
+	pchsource "Internal/%{prj.name}/Source/PagoogLogPCH.cpp"
 
     files
     {
-        "%{prj.name}/Source/**.h",
-        "%{prj.name}/Source/**.cpp",
-        "%{prj.name}/Source/**.hpp",
+        "Internal/%{prj.name}/Source/**.h",
+        "Internal/%{prj.name}/Source/**.cpp",
+        "Internal/%{prj.name}/Source/**.hpp",
     }
 
     includedirs
     {
-        "%{prj.name}/External/spdlog/include",
-		"%{prj.name}/Source",
-		"",
+        "Internal/%{prj.name}/External/spdlog/include",
+		"Internal/%{prj.name}/Source",
+		"External",
+		"Internal",
     }
 
     links
@@ -360,7 +358,7 @@ project "PagoogLog"
 
 		
 project "PagoogRender"
-    location "PagoogRender"
+    location "Internal/PagoogRender"
     kind "StaticLib"
     language "C++"
     cppdialect "C++latest"
@@ -370,21 +368,22 @@ project "PagoogRender"
     objdir ("Builds/int/" .. outputdir .. "/%{prj.name}")
 
     pchheader "PagoogRenderPCH.h"
-	pchsource "%{prj.name}/Source/PagoogRenderPCH.cpp"
+	pchsource "Internal/%{prj.name}/Source/PagoogRenderPCH.cpp"
 
     files
     {
-        "%{prj.name}/Source/**.h",
-        "%{prj.name}/Source/**.cpp",
-        "%{prj.name}/Source/**.hpp"
+        "Internal/%{prj.name}/Source/**.h",
+        "Internal/%{prj.name}/Source/**.cpp",
+        "Internal/%{prj.name}/Source/**.hpp"
     }
 
     includedirs
     {
-        "PagoogLog/External/spdlog/include",
-        "Glad/include",
-        "%{prj.name}/Source",
-		"",
+        "Internal/PagoogLog/External/spdlog/include",
+        "External/Glad/include",
+        "Internal/%{prj.name}/Source",
+        "External",
+		"Internal",
     }
 
     links
@@ -433,7 +432,7 @@ project "PagoogRender"
 
 
 project "GLFW"
-    location "GLFW"
+    location "External/GLFW"
 	kind "StaticLib"
 	language "C"
 
@@ -442,15 +441,15 @@ project "GLFW"
 
 	files
 	{
-		"%{prj.name}/include/GLFW/glfw3.h",
-		"%{prj.name}/include/GLFW/glfw3native.h",
-		"%{prj.name}/src/glfw_config.h",
-		"%{prj.name}/src/context.c",
-		"%{prj.name}/src/init.c",
-		"%{prj.name}/src/input.c",
-		"%{prj.name}/src/monitor.c",
-		"%{prj.name}/src/vulkan.c",
-		"%{prj.name}/src/window.c"
+		"External/%{prj.name}/include/GLFW/glfw3.h",
+		"External/%{prj.name}/include/GLFW/glfw3native.h",
+		"External/%{prj.name}/src/glfw_config.h",
+		"External/%{prj.name}/src/context.c",
+		"External/%{prj.name}/src/init.c",
+		"External/%{prj.name}/src/input.c",
+		"External/%{prj.name}/src/monitor.c",
+		"External/%{prj.name}/src/vulkan.c",
+		"External/%{prj.name}/src/window.c"
 	}
 
     flags
@@ -465,15 +464,15 @@ project "GLFW"
 
 		files
 		{
-			"%{prj.name}/src/win32_init.c",
-			"%{prj.name}/src/win32_joystick.c",
-			"%{prj.name}/src/win32_monitor.c",
-			"%{prj.name}/src/win32_time.c",
-			"%{prj.name}/src/win32_thread.c",
-			"%{prj.name}/src/win32_window.c",
-			"%{prj.name}/src/wgl_context.c",
-			"%{prj.name}/src/egl_context.c",
-			"%{prj.name}/src/osmesa_context.c"
+			"External/%{prj.name}/src/win32_init.c",
+			"External/%{prj.name}/src/win32_joystick.c",
+			"External/%{prj.name}/src/win32_monitor.c",
+			"External/%{prj.name}/src/win32_time.c",
+			"External/%{prj.name}/src/win32_thread.c",
+			"External/%{prj.name}/src/win32_window.c",
+			"External/%{prj.name}/src/wgl_context.c",
+			"External/%{prj.name}/src/egl_context.c",
+			"External/%{prj.name}/src/osmesa_context.c"
 		}
 
 		defines 
@@ -502,7 +501,7 @@ project "GLFW"
 
 
 project "Glad"
-    location "Glad"
+    location "External/Glad"
 	kind "StaticLib"
 	language "C"
 
@@ -511,14 +510,14 @@ project "Glad"
 
 	files
 	{
-		"%{prj.name}/include/glad/glad.h",
-		"%{prj.name}/include/KHR/khrplatform.h",
-		"%{prj.name}/src/glad.c"
+		"External/%{prj.name}/include/glad/glad.h",
+		"External/%{prj.name}/include/KHR/khrplatform.h",
+		"External/%{prj.name}/src/glad.c"
 	}
 
     includedirs
     {
-        "%{prj.name}/include"
+        "External/%{prj.name}/include"
     }
 
     flags
