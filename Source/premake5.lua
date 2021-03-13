@@ -8,7 +8,11 @@ workspace "Pagoog"
         "Dist"
     }
 
+
+
 outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
+outputbindir = "Builds/Bin/" .. outputdir .. "/%{prj.name}"
+outputintdir = "Builds/Int/" .. outputdir .. "/%{prj.name}"
 
 
 
@@ -19,8 +23,8 @@ project "Pagoog"
 	cppdialect "C++latest"
 	staticruntime "On"
 
-    targetdir ("Builds/bin/" .. outputdir .. "/%{prj.name}")
-    objdir ("Builds/int/" .. outputdir .. "/%{prj.name}")
+    targetdir (outputbindir)
+    objdir (outputintdir)
 
     pchheader "PagoogPCH.h"
 	pchsource "Internal/%{prj.name}/Source/PagoogPCH.cpp"
@@ -34,10 +38,10 @@ project "Pagoog"
 
     includedirs
     {
-        "Internal/PagoogLog/External/spdlog/include",
-        "Glad/include",
-        "Internal/%{prj.name}/Source",
+        "External/SPDLog/include",
+        "External/Glad/include",
 		"External",
+        "Internal/%{prj.name}/Source",
 		"Internal",
     }
 
@@ -85,8 +89,8 @@ project "PagoogCommon"
     cppdialect "C++latest"
     staticruntime "On"
 
-    targetdir ("Builds/bin/" .. outputdir .. "/%{prj.name}")
-    objdir ("Builds/int/" .. outputdir .. "/%{prj.name}")
+    targetdir (outputbindir)
+    objdir (outputintdir)
 
     pchheader "PagoogCommonPCH.h"
 	pchsource "Internal/%{prj.name}/Source/PagoogCommonPCH.cpp"
@@ -100,9 +104,9 @@ project "PagoogCommon"
 
     includedirs
     {
-        "Internal/PagoogLog/External/spdlog/include",
-        "Internal/%{prj.name}/Source",
+        "External/SPDLog/include",
         "External",
+        "Internal/%{prj.name}/Source",
 		"Internal",
     }
 
@@ -154,8 +158,8 @@ project "PagoogCore"
     cppdialect "C++latest"
     staticruntime "On"
 
-    targetdir ("Builds/bin/" .. outputdir .. "/%{prj.name}")
-    objdir ("Builds/int/" .. outputdir .. "/%{prj.name}")
+    targetdir (outputbindir)
+    objdir (outputintdir)
 
     pchheader "PagoogCorePCH.h"
 	pchsource "Internal/%{prj.name}/Source/PagoogCorePCH.cpp"
@@ -169,9 +173,9 @@ project "PagoogCore"
 
     includedirs
     {
-        "Internal/PagoogLog/External/spdlog/include",
-        "Internal/%{prj.name}/Source",
+        "External/SPDLog/include",
 		"External",
+        "Internal/%{prj.name}/Source",
 		"Internal",
     }
 
@@ -225,8 +229,8 @@ project "PagoogDebug"
     cppdialect "C++latest"
     staticruntime "On"
 
-    targetdir ("Builds/bin/" .. outputdir .. "/%{prj.name}")
-    objdir ("Builds/int/" .. outputdir .. "/%{prj.name}")
+    targetdir (outputbindir)
+    objdir (outputintdir)
 
     pchheader "PagoogDebugPCH.h"
 	pchsource "Internal/%{prj.name}/Source/PagoogDebugPCH.cpp"
@@ -240,9 +244,9 @@ project "PagoogDebug"
 
     includedirs
     {
-        "Internal/PagoogLog/External/spdlog/include",
-        "Internal/%{prj.name}/Source",
+        "External/SPDLog/include",
 		"External",
+        "Internal/%{prj.name}/Source",
 		"Internal",
     }
 
@@ -295,8 +299,8 @@ project "PagoogLog"
     cppdialect "C++latest"
     staticruntime "On"
 
-    targetdir ("Builds/bin/" .. outputdir .. "/%{prj.name}")
-    objdir ("Builds/int/" .. outputdir .. "/%{prj.name}")
+    targetdir (outputbindir)
+    objdir (outputintdir)
 
     pchheader "PagoogLogPCH.h"
 	pchsource "Internal/%{prj.name}/Source/PagoogLogPCH.cpp"
@@ -310,9 +314,9 @@ project "PagoogLog"
 
     includedirs
     {
-        "Internal/%{prj.name}/External/spdlog/include",
-		"Internal/%{prj.name}/Source",
+        "External/SPDLog/include",
 		"External",
+		"Internal/%{prj.name}/Source",
 		"Internal",
     }
 
@@ -364,8 +368,8 @@ project "PagoogRender"
     cppdialect "C++latest"
     staticruntime "On"
 
-    targetdir ("Builds/bin/" .. outputdir .. "/%{prj.name}")
-    objdir ("Builds/int/" .. outputdir .. "/%{prj.name}")
+    targetdir (outputbindir)
+    objdir (outputintdir)
 
     pchheader "PagoogRenderPCH.h"
 	pchsource "Internal/%{prj.name}/Source/PagoogRenderPCH.cpp"
@@ -379,10 +383,10 @@ project "PagoogRender"
 
     includedirs
     {
-        "Internal/PagoogLog/External/spdlog/include",
+        "External/SPDLog/include",
         "External/Glad/include",
-        "Internal/%{prj.name}/Source",
         "External",
+        "Internal/%{prj.name}/Source",
 		"Internal",
     }
 
@@ -436,8 +440,8 @@ project "GLFW"
 	kind "StaticLib"
 	language "C"
 
-    targetdir ("Builds/bin/" .. outputdir .. "/%{prj.name}")
-    objdir ("Builds/int/" .. outputdir .. "/%{prj.name}")
+    targetdir (outputbindir)
+    objdir (outputintdir)
 
 	files
 	{
@@ -505,8 +509,8 @@ project "Glad"
 	kind "StaticLib"
 	language "C"
 
-    targetdir ("Builds/bin/" .. outputdir .. "/%{prj.name}")
-    objdir ("Builds/int/" .. outputdir .. "/%{prj.name}")
+    targetdir (outputbindir)
+    objdir (outputintdir)
 
 	files
 	{
