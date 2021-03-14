@@ -31,7 +31,8 @@ jobs:
 
       # Runs a single command using the runners shell
       - name: Run a one-line script
-        run: .\Source\SetupSolution_VS2019.bat
+        run: cd
+             .\Source\SetupSolution_VS2019.bat
         
       - name: Add MSBuild to PATH
         uses: microsoft/setup-msbuild@v1
