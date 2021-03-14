@@ -1,0 +1,51 @@
+name: Release-Minor
+
+env:
+  solution: Pagoog.sln
+
+on:
+  # Create a release whenever we push against a tag
+  push:
+    tags:
+      - 'v*'
+  # Allow us to run the workflow manually
+  workflow_dispatch:
+
+# Build on Windows for x64 machines
+jobs:
+  Dist-Windows-x64:
+    runs-on: windows-latest
+
+    steps:
+      - uses: actions/checkout@v2.3.4
+
+      - name: Add MSBuild to PATH
+        uses: microsoft/setup-msbuild@v1
+
+      - name: Set up projects and solution
+        working-directory: ${{ github.workspace }}\Source
+        run: .\SetupSolution_VS2019.bat
+        
+      - name: Build solution
+        working-directory: ${{ github.workspace }}\Source
+        run: msbuild /v:normal /m /p:Configuration=Dist /p:Platform=x64 ${{ env.solution }}
+        
+      - name: Create release
+        id: create
+        uses: zendesk/action-create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          auto_increment_type: minor
+          tag_schema: semantic
+          draft: false
+          prerelease: true
+          
+      - name: Upload binaries to release
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: ${{ github.workspace }}\Source\Builds\Bin\Dist-windows-x86_64\Pagoog\Pagoog.exe
+          asset_name: Pagoog.exe
+          tag: ${{ steps.create.outputs.current_tag }}
+          
