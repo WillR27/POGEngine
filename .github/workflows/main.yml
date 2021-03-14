@@ -37,7 +37,7 @@ jobs:
         uses: microsoft/setup-msbuild@v1
       
       - name: asd
-        run: echo ${{env.GITHUB_WORKSPACE}}
+        run: echo $GITHUB_WORKSPACE
       
       - name: Build
         working-directory: ${{env.GITHUB_WORKSPACE}}
