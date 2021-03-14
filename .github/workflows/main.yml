@@ -39,7 +39,7 @@ jobs:
       - name: asds
         working-directory: ${{github.workspace}}
         run: 
-          dir /s /b /o:gn
+          dir /s /b
       
       - name: Build
         working-directory: ${{github.workspace}}\Source
