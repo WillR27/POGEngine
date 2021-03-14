@@ -34,6 +34,7 @@ jobs:
         with:
           auto_increment_type: minor
           tag_schema: semantic
+          release_name: Windows-x64
           draft: false
           prerelease: true
           
@@ -41,7 +42,8 @@ jobs:
         uses: svenstaro/upload-release-action@v2
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: ${{ github.workspace }}\Source\Builds\Bin\Dist-windows-x64\Pagoog\Pagoog.exe
+          file: ${{ github.workspace }}\Source\Build\Builds\Bin\Dist-windows-x64\Pagoog\Pagoog.exe
           asset_name: Pagoog.exe
           tag: ${{ steps.create.outputs.current_tag }}
+          release_name: Windows-x64
           
