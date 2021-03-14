@@ -22,9 +22,9 @@ jobs:
         working-directory: ${{ github.workspace }}\Source
         run: .\SetupSolution_VS2019.bat
         
-      #- name: Build solution
-        #working-directory: ${{ github.workspace }}\Source
-        #run: msbuild /v:normal /m /p:Configuration=Dist /p:Platform=x64 ${{ env.solution }}
+      - name: Build solution
+        working-directory: ${{ github.workspace }}\Source
+        run: msbuild /v:normal /m /p:Configuration=Dist /p:Platform=x64 ${{ env.solution }}
         
       - name: Create release
         id: create
@@ -34,7 +34,7 @@ jobs:
         with:
           auto_increment_type: patch
           tag_schema: semantic
-          release_name: Windows-x64 ${{ env.TAG_NAME }}
+          release_name: Windows-x64
           draft: false
           prerelease: true
           
@@ -45,5 +45,5 @@ jobs:
           file: ${{ github.workspace }}\Source\Build\Builds\Bin\Dist-windows-x86_64\Pagoog\Pagoog.exe
           asset_name: Pagoog.exe
           tag: ${{ steps.create.outputs.current_tag }}
-          release_name: Windows-x64 ${{ steps.create.outputs.current_tag }}
+          release_name: Windows-x64
           
