@@ -22,4 +22,4 @@ jobs:
 
       - name: asds
         run: 
-          echo "hello = $GITHUB_WORKSPACE"
+          echo "hello = ${{github.workspace}}"
