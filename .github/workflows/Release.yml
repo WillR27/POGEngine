@@ -40,3 +40,10 @@ jobs:
           draft: false
           prerelease: false
           
+      - name: Add build to release
+        uses: Roang-zero1/github-upload-release-artifacts-action@master
+        with:
+          args: ${{github.workspace}}\Source\Builds
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          
