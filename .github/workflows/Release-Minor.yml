@@ -9,7 +9,7 @@ on:
 
 # Build on Windows for x64 machines
 jobs:
-  Dist-Windows-x64:
+  Windows-x64:
     runs-on: windows-latest
 
     steps:
