@@ -1,0 +1,30 @@
+name: CI
+
+env:
+  solution: Pagoog.sln
+
+on:
+  # Run this workflow whenever a commit is pushed
+  push:
+  # Allow us to run the workflow manually
+  workflow_dispatch:
+
+# Build release on Windows for x64 machines
+jobs:
+  Release-Windows-x64:
+    runs-on: windows-latest
+
+    steps:
+      - uses: actions/checkout@v2.3.4
+
+      - name: Add MSBuild to PATH
+        uses: microsoft/setup-msbuild@v1
+
+      - name: Set up projects and solution
+        working-directory: ${{github.workspace}}\Source
+        run: .\SetupSolution_VS2019.bat
+        
+      - name: Build solution
+        working-directory: ${{github.workspace}}\Source
+        run: msbuild /v:normal /m /p:Configuration=Release /p:Platform=x64 ${{env.solution}}
+        
