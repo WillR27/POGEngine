@@ -25,4 +25,4 @@ jobs:
 
       # Runs a single command using the runners shell
       - name: Run a one-line script
-        run: $GITHUB_WORKSPACE\Source\SetupSolution_VS2019.bat
+        run: .\Source\SetupSolution_VS2019.bat
