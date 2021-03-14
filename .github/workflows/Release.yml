@@ -43,7 +43,7 @@ jobs:
       - name: Add build to release
         uses: Roang-zero1/github-upload-release-artifacts-action@master
         with:
-          args: ${{github.workspace}}\Source\Builds
+          args: ${{github.workspace}}\Source\Pagoog.sln
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           
