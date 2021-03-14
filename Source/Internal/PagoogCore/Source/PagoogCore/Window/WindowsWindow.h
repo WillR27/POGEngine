@@ -1,6 +1,8 @@
 #pragma once
 
-#include <GLFW/include/GLFW/glfw3.h>
+#include <GLFW/glfw3.h>
+
+#include "PagoogCommon.h"
 
 #include "Window.h"
 

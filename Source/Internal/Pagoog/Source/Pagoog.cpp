@@ -1,8 +1,8 @@
 #include "PagoogPCH.h"
 
-#include "PagoogCore/Source/Main.h"
+#include "PagoogRender.h"
 
-#include "PagoogRender/Source/Render.h"
+#include "PagoogCore/Main.h"
 
 namespace Pagoog
 {

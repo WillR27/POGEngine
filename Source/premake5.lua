@@ -40,9 +40,12 @@ project "Pagoog"
     {
         "External/SPDLog/include",
         "External/Glad/include",
-		"External",
         "Internal/%{prj.name}/Source",
-		"Internal",
+        "Internal/PagoogCommon/Source",
+        "Internal/PagoogCore/Source",
+        "Internal/PagoogDebug/Source",
+        "Internal/PagoogLog/Source",
+        "Internal/PagoogRender/Source",
     }
 
     links
@@ -105,9 +108,7 @@ project "PagoogCommon"
     includedirs
     {
         "External/SPDLog/include",
-        "External",
         "Internal/%{prj.name}/Source",
-		"Internal",
     }
 
     links
@@ -173,10 +174,12 @@ project "PagoogCore"
 
     includedirs
     {
+        "External/GLFW/include",
         "External/SPDLog/include",
-		"External",
         "Internal/%{prj.name}/Source",
-		"Internal",
+        "Internal/PagoogCommon/Source",
+        "Internal/PagoogDebug/Source",
+        "Internal/PagoogLog/Source",
     }
 
     links
@@ -245,9 +248,9 @@ project "PagoogDebug"
     includedirs
     {
         "External/SPDLog/include",
-		"External",
         "Internal/%{prj.name}/Source",
-		"Internal",
+        "Internal/PagoogCommon/Source",
+        "Internal/PagoogLog/Source",
     }
 
     links
@@ -315,9 +318,8 @@ project "PagoogLog"
     includedirs
     {
         "External/SPDLog/include",
-		"External",
 		"Internal/%{prj.name}/Source",
-		"Internal",
+        "Internal/PagoogCommon/Source",
     }
 
     links
@@ -383,11 +385,12 @@ project "PagoogRender"
 
     includedirs
     {
-        "External/SPDLog/include",
         "External/Glad/include",
-        "External",
+        "External/SPDLog/include",
         "Internal/%{prj.name}/Source",
-		"Internal",
+        "Internal/PagoogCommon/Source",
+        "Internal/PagoogDebug/Source",
+        "Internal/PagoogLog/Source",
     }
 
     links

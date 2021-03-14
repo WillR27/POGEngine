@@ -1,5 +1,9 @@
 #pragma once
 
+#include <memory>
+#include <stdexcept>
+#include <string>
+
 namespace Pagoog::Common
 {
 	template <typename... Args>

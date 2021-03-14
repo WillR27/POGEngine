@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Window/Window.h"
+#include "PagoogCore.h"
 
 namespace Pagoog::Core
 {

@@ -1,7 +1,7 @@
 #include "PagoogCorePCH.h"
 #include "Application.h"
 
-#include "Window/WindowsWindow.h"
+#include "PagoogLog.h"
 
 namespace Pagoog::Core
 {

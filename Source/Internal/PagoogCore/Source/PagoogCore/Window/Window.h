@@ -1,5 +1,7 @@
 #pragma once
 
+#include "PagoogCommon.h"
+
 namespace Pagoog::Core
 {
 	class Window
