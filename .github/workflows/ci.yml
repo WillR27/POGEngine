@@ -11,7 +11,7 @@ on:
 
 # Build release on Windows for x64 machines
 jobs:
-  Build Release-Windows-x64:
+  Release-Windows-x64:
     runs-on: windows-latest
 
     steps:
