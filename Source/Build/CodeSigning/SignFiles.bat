@@ -1,0 +1,1 @@
+powershell.exe -executionpolicy bypass -file "%~dp0\SignFiles.ps1" %*

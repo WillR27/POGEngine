@@ -8,11 +8,13 @@ workspace "Pagoog"
         "Dist"
     }
 
+    startproject "Pagoog"
+
 
 
 outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
-outputbindir = "Builds/Bin/" .. outputdir .. "/%{prj.name}"
-outputintdir = "Builds/Int/" .. outputdir .. "/%{prj.name}"
+outputbindir = "Build/Builds/Bin/" .. outputdir .. "/%{prj.name}"
+outputintdir = "Build/Builds/Int/" .. outputdir .. "/%{prj.name}"
 
 
 
@@ -82,6 +84,13 @@ project "Pagoog"
         {
             "LinkTimeOptimization"
 	    }
+
+        signexe = select(1, ("\"../../Build/CodeSigning/SignFiles.bat\" \"" .. "%{wks.location}" .. outputbindir .. "/Pagoog.exe\""):gsub("/", "\\"))
+
+        postbuildcommands 
+        { 
+            signexe,
+        }
 
 
 
