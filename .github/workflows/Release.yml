@@ -26,9 +26,9 @@ jobs:
         working-directory: ${{github.workspace}}\Source
         run: .\SetupSolution_VS2019.bat
         
-      #- name: Build solution
-        #working-directory: ${{github.workspace}}\Source
-        #run: msbuild /v:normal /m /p:Configuration=Dist /p:Platform=x64 ${{env.solution}}
+      - name: Build solution
+        working-directory: ${{github.workspace}}\Source
+        run: msbuild /v:normal /m /p:Configuration=Dist /p:Platform=x64 ${{env.solution}}
         
       - name: Create release
         uses: zendesk/action-create-release@v1
