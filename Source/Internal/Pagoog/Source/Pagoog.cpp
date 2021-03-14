@@ -16,7 +16,7 @@ namespace Pagoog
 
 		void Init() override
 		{
-			Render::Render::SetContextAddressFunc(GetWindow().GetContextAddressFunc());
+			Render::Render::StContextAddressFunc(GetWindow().GetContextAddressFunc());
 		}
 	};
 
