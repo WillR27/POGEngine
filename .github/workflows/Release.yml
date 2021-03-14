@@ -4,6 +4,10 @@ env:
   solution: Pagoog.sln
 
 on:
+  # Create a release whenever we push against a tag
+  push:
+    tags:
+      - 'v*'
   # Allow us to run the workflow manually
   workflow_dispatch:
 
@@ -22,17 +26,17 @@ jobs:
         working-directory: ${{github.workspace}}\Source
         run: .\SetupSolution_VS2019.bat
         
-      - name: Build solution
-        working-directory: ${{github.workspace}}\Source
-        run: msbuild /v:normal /m /p:Configuration=Dist /p:Platform=x64 ${{env.solution}}
+      #- name: Build solution
+        #working-directory: ${{github.workspace}}\Source
+        #run: msbuild /v:normal /m /p:Configuration=Dist /p:Platform=x64 ${{env.solution}}
         
       - name: Create release
-        uses: actions/create-release@v1
+        uses: zendesk/action-create-release@v1
         env:
-          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
         with:
-          tag_name: ${{github.ref}}
-          release_name: Release ${{github.ref}}
+          auto_increment_type: major
+          tag_schema: semantic
           draft: false
           prerelease: false
           
