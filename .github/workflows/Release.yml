@@ -31,6 +31,7 @@ jobs:
         #run: msbuild /v:normal /m /p:Configuration=Dist /p:Platform=x64 ${{env.solution}}
         
       - name: Create release
+        id: create
         uses: zendesk/action-create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
@@ -46,5 +47,5 @@ jobs:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           file: ${{github.workspace}}\Source\Pagoog.sln
           asset_name: asd
-          tag: v2.0.0
+          tag: ${{ steps.create.outputs.current_tag }}
           
