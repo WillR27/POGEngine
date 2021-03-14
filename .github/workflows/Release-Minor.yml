@@ -4,10 +4,6 @@ env:
   solution: Pagoog.sln
 
 on:
-  # Create a release whenever we push against a tag
-  push:
-    tags:
-      - 'v*'
   # Allow us to run the workflow manually
   workflow_dispatch:
 
