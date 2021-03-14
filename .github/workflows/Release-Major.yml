@@ -1,13 +1,9 @@
-name: Release
+name: Release-Major
 
 env:
   solution: Pagoog.sln
 
 on:
-  # Create a release whenever we push against a tag
-  push:
-    tags:
-      - 'v*'
   # Allow us to run the workflow manually
   workflow_dispatch:
 
@@ -39,13 +35,13 @@ jobs:
           auto_increment_type: major
           tag_schema: semantic
           draft: false
-          prerelease: false
+          prerelease: true
           
       - name: Upload binaries to release
         uses: svenstaro/upload-release-action@v2
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: ${{github.workspace}}\Source\Builds\Bin\Dist-windows-x86_64\Pagoog\Pagoog.exe
+          file: ${{ github.workspace }}\Source\Builds\Bin\Dist-windows-x86_64\Pagoog\Pagoog.exe
           asset_name: Pagoog.exe
           tag: ${{ steps.create.outputs.current_tag }}
           
