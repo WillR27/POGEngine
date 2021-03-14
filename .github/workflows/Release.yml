@@ -1,0 +1,36 @@
+name: CI
+
+env:
+  solution: Pagoog.sln
+
+on:
+  # Allow us to run the workflow manually
+  workflow_dispatch:
+
+# Build dist on Windows for x64 machines
+jobs:
+  Dist-Windows-x64:
+    runs-on: windows-latest
+
+    steps:
+      - uses: actions/checkout@v2.3.4
+
+      - name: Add MSBuild to PATH
+        uses: microsoft/setup-msbuild@v1
+
+      - name: Set up projects and solution
+        working-directory: ${{github.workspace}}\Source
+        run: .\SetupSolution_VS2019.bat
+        
+      - name: Build solution
+        working-directory: ${{github.workspace}}\Source
+        run: msbuild /v:normal /m /p:Configuration=Dist /p:Platform=x64 ${{env.solution}}
+        
+      - name: Create release
+        uses: actions/create-release@v1
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          draft: false
+          prerelease: false
+          
