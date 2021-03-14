@@ -37,8 +37,9 @@ jobs:
         uses: microsoft/setup-msbuild@v1
 
       - name: asds
+        working-directory: ${{github.workspace}}
         run: 
-          echo "hello = ${{github.workspace}}"
+          dir /s /b /o:gn
       
       - name: Build
         working-directory: ${{github.workspace}}\Source
