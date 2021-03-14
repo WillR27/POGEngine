@@ -36,6 +36,9 @@ jobs:
       - name: Add MSBuild to PATH
         uses: microsoft/setup-msbuild@v1
       
+      - name: asd
+        run: echo ${{env.GITHUB_WORKSPACE}}
+      
       - name: Build
         working-directory: ${{env.GITHUB_WORKSPACE}}
         # Add additional options to the MSBuild command line here (like platform or verbosity level).
