@@ -33,7 +33,7 @@ jobs:
       - name: Run a one-line script
         working-directory: .\Source
         #run: SetupSolution_VS2019.bat
-        run: cd
+        run: echo cd
         
       - name: Add MSBuild to PATH
         uses: microsoft/setup-msbuild@v1
