@@ -39,6 +39,9 @@ jobs:
       - name: asd
         run: 
           echo "${{GITHUB_WORKSPACE}}"
+          
+      - name: asds
+        run: 
           echo "${{env.GITHUB_WORKSPACE}}"
       
       - name: Build
