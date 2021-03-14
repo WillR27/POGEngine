@@ -38,7 +38,7 @@ jobs:
 
       - name: asds
         run: 
-          echo "hello = ${{env.GITHUB_WORKSPACE}}"
+          echo "hello = $GITHUB_ACTION"
       
       - name: Build
         working-directory: ${{env.GITHUB_WORKSPACE}}
