@@ -1,50 +1,30 @@
-# This is a basic workflow to help you get started with Actions
-
 name: CI
 
 env:
-  # Path to the solution file relative to the root of the project.
-  SOLUTION_FILE_PATH: Pagoog.sln
+  solution: Pagoog.sln
 
-  # Configuration type to build.
-  # You can convert this to a build matrix if you need coverage of multiple configuration types.
-  # https://docs.github.com/actions/learn-github-actions/managing-complex-workflows#using-a-build-matrix
-  BUILD_CONFIGURATION: Release
-
-# Controls when the action will run. 
 on:
+  # Run this workflow whenever a commit is pushed
   push:
-  # Allows you to run this workflow manually from the Actions tab
+  # Allow us to run the workflow manually
   workflow_dispatch:
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+# Build release on Windows for x64 machines
 jobs:
-  # This workflow contains a single job called "build"
-  setup:
-    # The type of runner that the job will run on
+  Build [Release-Windows]:
     runs-on: windows-latest
 
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v2.3.4
 
-      # Runs a single command using the runners shell
-      - name: Run a one-line script
-        working-directory: ${{github.workspace}}\Source
-        run: .\SetupSolution_VS2019.bat
-        
       - name: Add MSBuild to PATH
         uses: microsoft/setup-msbuild@v1
 
-      - name: asds
-        run: 
-          tree /f ${{github.workspace}}
-      
-      - name: Build
+      - name: Set up projects and solution
         working-directory: ${{github.workspace}}\Source
-        # Add additional options to the MSBuild command line here (like platform or verbosity level).
-        # See https://docs.microsoft.com/visualstudio/msbuild/msbuild-command-line-reference
-        #run: msbuild /m /p:Configuration=${{env.BUILD_CONFIGURATION}} ${{env.SOLUTION_FILE_PATH}}
-        run: msbuild ${{env.SOLUTION_FILE_PATH}}
+        run: .\SetupSolution_VS2019.bat
+        
+      - name: Build solution
+        working-directory: ${{github.workspace}}\Source
+        #run: msbuild /verbosity:normal /m /p:Configuration=Release;Platform=x64 ${{env.solution}}
         
