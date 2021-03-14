@@ -22,4 +22,4 @@ jobs:
 
       - name: asds
         run: 
-          echo "hello = $GITHUB_ACTION"
+          echo "hello = $GITHUB_WORKSPACE"
