@@ -40,13 +40,15 @@ project "Pagoog"
 
     includedirs
     {
-        "External/SPDLog/include",
         "External/Glad/include",
+        "External/GLM/include",
+        "External/SPDLog/include",
         "Internal/%{prj.name}/Source",
         "Internal/PagoogCommon/Source",
         "Internal/PagoogCore/Source",
         "Internal/PagoogDebug/Source",
         "Internal/PagoogLog/Source",
+        "Internal/PagoogMaths/Source",
         "Internal/PagoogRender/Source",
     }
 
@@ -54,8 +56,9 @@ project "Pagoog"
     {
 		"PagoogCommon",
 		"PagoogCore",
-		"PagoogLog",
 		"PagoogDebug",
+		"PagoogLog",
+		"PagoogMaths",
 		"PagoogRender",
     }
 
@@ -184,6 +187,7 @@ project "PagoogCore"
     includedirs
     {
         "External/GLFW/include",
+        "External/GLM/include",
         "External/SPDLog/include",
         "Internal/%{prj.name}/Source",
         "Internal/PagoogCommon/Source",
@@ -194,8 +198,9 @@ project "PagoogCore"
     links
     {
 		"PagoogCommon",
+		"PagoogDebug",
 		"PagoogLog",
-		"PagoogDebug"
+		"PagoogMaths",
 	}
 
     defines
@@ -276,7 +281,7 @@ project "PagoogDebug"
     flags
     {
         "MultiProcessorCompile",
-        "UndefinedIdentifiers"
+        "UndefinedIdentifiers",
 	}
 
     filter "system:windows"
@@ -344,7 +349,7 @@ project "PagoogLog"
     flags
     {
         "MultiProcessorCompile",
-        "UndefinedIdentifiers"
+        "UndefinedIdentifiers",
 	}
 
     filter "system:windows"
@@ -357,6 +362,74 @@ project "PagoogLog"
 
     filter "configurations:Release"
         defines { "PG_RELEASE", "PG_ENABLE_VERIFY" }
+        runtime "Release"
+        optimize "On"
+
+    filter "configurations:Dist"
+        defines { "PG_DIST" }
+        runtime "Release"
+        optimize "On"
+
+        flags
+        {
+            "LinkTimeOptimization"
+        }
+
+
+
+project "PagoogMaths"
+    location "Internal/PagoogMaths"
+    kind "StaticLib"
+    language "C++"
+    cppdialect "C++latest"
+    staticruntime "On"
+
+    targetdir (outputbindir)
+    objdir (outputintdir)
+
+    pchheader "PagoogMathsPCH.h"
+	pchsource "Internal/%{prj.name}/Source/PagoogMathsPCH.cpp"
+
+    files
+    {
+        "Internal/%{prj.name}/Source/**.h",
+        "Internal/%{prj.name}/Source/**.cpp",
+        "Internal/%{prj.name}/Source/**.hpp",
+    }
+
+    includedirs
+    {
+        "External/GLM/include",
+		"Internal/%{prj.name}/Source",
+        "Internal/PagoogCommon/Source",
+    }
+
+    links
+    {
+		"PagoogCommon",
+	}
+
+    defines
+    {
+
+	}
+
+    flags
+    {
+        "MultiProcessorCompile",
+        "UndefinedIdentifiers",
+	}
+
+    filter "system:windows"
+        systemversion "latest"
+
+    filter "configurations:Debug"
+        defines { "PG_DEBUG" }
+        runtime "Debug"
+        symbols "On"
+
+    filter "configurations:Release"
+        defines { "PG_RELEASE" }
         runtime "Release"
         optimize "On"
 
@@ -389,12 +462,13 @@ project "PagoogRender"
     {
         "Internal/%{prj.name}/Source/**.h",
         "Internal/%{prj.name}/Source/**.cpp",
-        "Internal/%{prj.name}/Source/**.hpp"
+        "Internal/%{prj.name}/Source/**.hpp",
     }
 
     includedirs
     {
         "External/Glad/include",
+        "External/GLM/include",
         "External/SPDLog/include",
         "Internal/%{prj.name}/Source",
         "Internal/PagoogCommon/Source",
@@ -407,8 +481,9 @@ project "PagoogRender"
 		"PagoogCommon",
         "PagoogDebug",
         "PagoogLog",
+        "PagoogMaths",
 		"Glad",
-		"GLFW"
+		"GLFW",
 	}
 
     defines
@@ -419,7 +494,7 @@ project "PagoogRender"
     flags
     {
         "MultiProcessorCompile",
-        "UndefinedIdentifiers"
+        "UndefinedIdentifiers",
 	}
 
     filter "system:windows"
@@ -465,13 +540,13 @@ project "GLFW"
 		"External/%{prj.name}/src/input.c",
 		"External/%{prj.name}/src/monitor.c",
 		"External/%{prj.name}/src/vulkan.c",
-		"External/%{prj.name}/src/window.c"
+		"External/%{prj.name}/src/window.c",
 	}
 
     flags
     {
         "MultiProcessorCompile",
-        "UndefinedIdentifiers"
+        "UndefinedIdentifiers",
 	}
 
 	filter "system:windows"
@@ -488,7 +563,7 @@ project "GLFW"
 			"External/%{prj.name}/src/win32_window.c",
 			"External/%{prj.name}/src/wgl_context.c",
 			"External/%{prj.name}/src/egl_context.c",
-			"External/%{prj.name}/src/osmesa_context.c"
+			"External/%{prj.name}/src/osmesa_context.c",
 		}
 
 		defines 
@@ -528,18 +603,18 @@ project "Glad"
 	{
 		"External/%{prj.name}/include/glad/glad.h",
 		"External/%{prj.name}/include/KHR/khrplatform.h",
-		"External/%{prj.name}/src/glad.c"
+		"External/%{prj.name}/src/glad.c",
 	}
 
     includedirs
     {
-        "External/%{prj.name}/include"
+        "External/%{prj.name}/include",
     }
 
     flags
     {
         "MultiProcessorCompile",
-        "UndefinedIdentifiers"
+        "UndefinedIdentifiers",
 	}
 
 	filter "system:windows"
