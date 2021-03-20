@@ -40,7 +40,6 @@ project "Pagoog"
 
     includedirs
     {
-        "External/Glad/include",
         "External/GLM/include",
         "External/SPDLog/include",
         "Internal/%{prj.name}/Source",
@@ -193,6 +192,7 @@ project "PagoogCore"
         "Internal/PagoogCommon/Source",
         "Internal/PagoogDebug/Source",
         "Internal/PagoogLog/Source",
+        "Internal/PagoogRender/Source",
     }
 
     links
@@ -201,6 +201,7 @@ project "PagoogCore"
 		"PagoogDebug",
 		"PagoogLog",
 		"PagoogMaths",
+		"PagoogRender",
 	}
 
     defines

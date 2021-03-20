@@ -2,8 +2,18 @@
 
 #include "PagoogCommon.h"
 
+#include "PagoogCore/Event/InputEvents.h"
+#include "PagoogCore/Event/WindowEvents.h"
+
 namespace Pagoog::Core
 {
+	struct WindowData
+	{
+		int width = 0, height = 0;
+		bool hasFocus;
+		EventCallback eventCallback;
+	};
+
 	class Window
 	{
 	public:
@@ -15,7 +25,28 @@ namespace Pagoog::Core
 
 		virtual void Init() = 0;
 
-		virtual bool ShouldClose() = 0;
+		virtual void InputUpdate() = 0;
+		virtual void FrameUpdate() = 0;
+
+		virtual void SwapBuffers() = 0;
+
+		virtual bool HandleWindowCloseEvent(WindowCloseEvent& e) = 0;
+		virtual bool HandleWindowSizeEvent(WindowSizeEvent& e) = 0;
+		virtual bool HandleWindowFocusEvent(WindowFocusEvent& e) = 0;
+
+		virtual void SetEventCallback(EventCallback eventCallback) = 0;
+
+		virtual bool IsFullscreen() const = 0;
+		virtual void SetFullscreen(bool fullscreen) = 0;
+		virtual void ToggleFullscreen() = 0;
+
+		virtual bool HasFocus() const = 0;
+
+		virtual bool IsCursorEnabled() const = 0;
+		virtual void SetCursorEnabled(bool cursor) = 0;
+		virtual void ToggleCursorEnabled() = 0;
+
+		virtual bool ShouldClose() const = 0;
 
 		virtual ContextAddressFunc GetContextAddressFunc() const = 0;
 

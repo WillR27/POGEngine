@@ -35,7 +35,9 @@ namespace Pagoog::Core
 
 		while (!window->ShouldClose())
 		{
-
+			window->InputUpdate();
+			window->FrameUpdate();
+			window->SwapBuffers();
 		}
 	}
 }
