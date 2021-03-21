@@ -40,13 +40,13 @@ project "Pagoog"
 
     includedirs
     {
-        "External/GLM/include",
-        "External/SPDLog/include",
         "Internal/%{prj.name}/Source",
         "Internal/PagoogCommon/Source",
         "Internal/PagoogCore/Source",
         "Internal/PagoogDebug/Source",
+        "Internal/PagoogLog/External/SPDLog/include",
         "Internal/PagoogLog/Source",
+        "Internal/PagoogMaths/External/GLM",
         "Internal/PagoogMaths/Source",
         "Internal/PagoogRender/Source",
     }
@@ -118,7 +118,6 @@ project "PagoogCommon"
 
     includedirs
     {
-        "External/SPDLog/include",
         "Internal/%{prj.name}/Source",
     }
 
@@ -186,17 +185,19 @@ project "PagoogCore"
     includedirs
     {
         "External/GLFW/include",
-        "External/GLM/include",
-        "External/SPDLog/include",
         "Internal/%{prj.name}/Source",
         "Internal/PagoogCommon/Source",
         "Internal/PagoogDebug/Source",
+        "Internal/PagoogLog/External/SPDLog/include",
         "Internal/PagoogLog/Source",
+        "Internal/PagoogMaths/External/GLM",
+        "Internal/PagoogMaths/Source",
         "Internal/PagoogRender/Source",
     }
 
     links
     {
+        "GLFW",
 		"PagoogCommon",
 		"PagoogDebug",
 		"PagoogLog",
@@ -262,9 +263,9 @@ project "PagoogDebug"
 
     includedirs
     {
-        "External/SPDLog/include",
         "Internal/%{prj.name}/Source",
         "Internal/PagoogCommon/Source",
+        "Internal/PagoogLog/External/SPDLog/include",
         "Internal/PagoogLog/Source",
     }
 
@@ -332,7 +333,7 @@ project "PagoogLog"
 
     includedirs
     {
-        "External/SPDLog/include",
+        "Internal/%{prj.name}/External/SPDLog/include",
 		"Internal/%{prj.name}/Source",
         "Internal/PagoogCommon/Source",
     }
@@ -400,7 +401,7 @@ project "PagoogMaths"
 
     includedirs
     {
-        "External/GLM/include",
+        "Internal/%{prj.name}/External/GLM",
 		"Internal/%{prj.name}/Source",
         "Internal/PagoogCommon/Source",
     }
@@ -469,12 +470,13 @@ project "PagoogRender"
     includedirs
     {
         "External/Glad/include",
-        "External/GLM/include",
-        "External/SPDLog/include",
         "Internal/%{prj.name}/Source",
         "Internal/PagoogCommon/Source",
         "Internal/PagoogDebug/Source",
+        "Internal/PagoogLog/External/SPDLog/include",
         "Internal/PagoogLog/Source",
+        "Internal/PagoogMaths/External/GLM",
+        "Internal/PagoogMaths/Source",
     }
 
     links
@@ -484,7 +486,6 @@ project "PagoogRender"
         "PagoogLog",
         "PagoogMaths",
 		"Glad",
-		"GLFW",
 	}
 
     defines
@@ -513,6 +514,134 @@ project "PagoogRender"
 
     filter "configurations:Dist"
         defines { "PG_DIST" }
+        runtime "Release"
+        optimize "On"
+
+        flags
+        {
+            "LinkTimeOptimization"
+	    }
+
+
+
+project "PagoogTest"
+    location "Internal/PagoogTest"
+	kind "ConsoleApp"
+	language "C++"
+	cppdialect "C++latest"
+	staticruntime "On"
+
+    targetdir (outputbindir)
+    objdir (outputintdir)
+
+    files
+    {
+        "Internal/%{prj.name}/Source/**.h",
+        "Internal/%{prj.name}/Source/**.cpp",
+        "Internal/%{prj.name}/Source/**.hpp",
+    }
+
+    includedirs
+    {
+        "External/GoogleTest/googletest/include",
+        "External/GoogleTest/googlemock/include",
+        "Internal/%{prj.name}/Source",
+        "Internal/PagoogCommon/Source",
+        "Internal/PagoogCore/Source",
+        "Internal/PagoogDebug/Source",
+        "Internal/PagoogLog/External/SPDLog/include",
+        "Internal/PagoogLog/Source",
+        "Internal/PagoogMaths/External/GLM",
+        "Internal/PagoogMaths/Source",
+        "Internal/PagoogRender/Source",
+    }
+
+    links
+    {
+        "GoogleTest",
+		"PagoogCommon",
+		"PagoogCore",
+		"PagoogDebug",
+		"PagoogLog",
+		"PagoogMaths",
+		"PagoogRender",
+    }
+
+    flags
+    {
+        "MultiProcessorCompile",
+        "UndefinedIdentifiers",
+	}
+
+    filter "configurations:Debug"
+        defines { "PG_DEBUG", "PG_ENABLE_ASSERT" }
+        runtime "Debug"
+        symbols "On"
+
+    filter "configurations:Release"
+        defines { "PG_RELEASE", "PG_ENABLE_VERIFY" }
+        runtime "Release"
+        optimize "On"
+
+    filter "configurations:Dist"
+        defines "PG_DIST"
+        runtime "Release"
+        optimize "On"
+
+        flags
+        {
+            "LinkTimeOptimization"
+	    }
+
+
+
+project "GoogleTest"
+    location "External/GoogleTest"
+	kind "StaticLib"
+	language "C++"
+	cppdialect "C++latest"
+	staticruntime "On"
+
+    targetdir (outputbindir)
+    objdir (outputintdir)
+
+    files
+    {
+        "External/%{prj.name}/googlemock/src/gmock-all.cc",
+        "External/%{prj.name}/googletest/src/gtest-all.cc",
+    }
+
+    includedirs
+    {
+        "External/%{prj.name}/googletest",
+        "External/%{prj.name}/googlemock",
+        "External/%{prj.name}/googletest/include",
+        "External/%{prj.name}/googlemock/include",
+    }
+
+    links
+    {
+
+    }
+
+    flags
+    {
+        "MultiProcessorCompile",
+        "UndefinedIdentifiers",
+	}
+
+    filter "configurations:Debug"
+        defines { "PG_DEBUG", "PG_ENABLE_ASSERT" }
+        runtime "Debug"
+        symbols "On"
+
+    filter "configurations:Release"
+        defines { "PG_RELEASE", "PG_ENABLE_VERIFY" }
+        runtime "Release"
+        optimize "On"
+
+    filter "configurations:Dist"
+        defines "PG_DIST"
         runtime "Release"
         optimize "On"
 
