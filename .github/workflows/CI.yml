@@ -28,3 +28,7 @@ jobs:
         working-directory: ${{ github.workspace }}\Source
         run: msbuild /v:normal /m /p:Configuration=Release /p:Platform=x64 ${{ env.solution }}
         
+      - name: Run tests
+        working-directory: ${{ github.workspace }}\Source\Build\Builds\Release-windows-x86_64\PagoogTest
+        run: .\PagoogTest.exe
+        
