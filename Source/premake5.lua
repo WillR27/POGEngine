@@ -24,7 +24,7 @@ function copy(source, target)
     return "xcopy /y \"" .. select(1, (source .. "\" \"" .. target .. "\""):gsub("/", "\\"))
 end
 
-copydll = copy((outputbindirproj .. "/%{prj.name}.dll"), (outputbindir .. "/Pagoog/%{prj.name}.dll"))
+copydll = copy((outputbindirproj .. "/%{prj.name}.dll"), (outputbindir .. "/Pagoog/"))
 
 
 
