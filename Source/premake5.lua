@@ -13,8 +13,10 @@ workspace "Pagoog"
 
 
 outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
-outputbindir = "Build/Builds/Bin/" .. outputdir .. "/%{prj.name}"
-outputintdir = "Build/Builds/Int/" .. outputdir .. "/%{prj.name}"
+outputbindir = "Build/Builds/Bin/" .. outputdir
+outputintdir = "Build/Builds/Int/" .. outputdir
+outputbindirproj = outputbindir .. "/%{prj.name}"
+outputintdirproj = outputintdir .. "/%{prj.name}"
 
 
 
@@ -25,8 +27,8 @@ project "Pagoog"
 	cppdialect "C++latest"
 	staticruntime "On"
 
-    targetdir (outputbindir)
-    objdir (outputintdir)
+    targetdir (outputbindirproj)
+    objdir (outputintdirproj)
 
     pchheader "PagoogPCH.h"
 	pchsource "Internal/%{prj.name}/Source/PagoogPCH.cpp"
@@ -87,7 +89,7 @@ project "Pagoog"
             "LinkTimeOptimization"
 	    }
 
-        signexe = select(1, ("\"../../Build/CodeSigning/SignFiles.bat\" \"" .. "%{wks.location}" .. outputbindir .. "/Pagoog.exe\""):gsub("/", "\\"))
+        signexe = select(1, ("\"../../Build/CodeSigning/SignFiles.bat\" \"" .. "%{wks.location}" .. outputbindirproj .. "/Pagoog.exe\""):gsub("/", "\\"))
 
         postbuildcommands 
         { 
@@ -103,8 +105,8 @@ project "PagoogCommon"
     cppdialect "C++latest"
     staticruntime "On"
 
-    targetdir (outputbindir)
-    objdir (outputintdir)
+    targetdir (outputbindirproj)
+    objdir (outputintdirproj)
 
     pchheader "PagoogCommonPCH.h"
 	pchsource "Internal/%{prj.name}/Source/PagoogCommonPCH.cpp"
@@ -169,8 +171,8 @@ project "PagoogCore"
     cppdialect "C++latest"
     staticruntime "On"
 
-    targetdir (outputbindir)
-    objdir (outputintdir)
+    targetdir (outputbindirproj)
+    objdir (outputintdirproj)
 
     pchheader "PagoogCorePCH.h"
 	pchsource "Internal/%{prj.name}/Source/PagoogCorePCH.cpp"
@@ -248,8 +250,8 @@ project "PagoogDebug"
     cppdialect "C++latest"
     staticruntime "On"
 
-    targetdir (outputbindir)
-    objdir (outputintdir)
+    targetdir (outputbindirproj)
+    objdir (outputintdirproj)
 
     pchheader "PagoogDebugPCH.h"
 	pchsource "Internal/%{prj.name}/Source/PagoogDebugPCH.cpp"
@@ -318,8 +320,8 @@ project "PagoogLog"
     cppdialect "C++latest"
     staticruntime "On"
 
-    targetdir (outputbindir)
-    objdir (outputintdir)
+    targetdir (outputbindirproj)
+    objdir (outputintdirproj)
 
     pchheader "PagoogLogPCH.h"
 	pchsource "Internal/%{prj.name}/Source/PagoogLogPCH.cpp"
@@ -386,8 +388,8 @@ project "PagoogMaths"
     cppdialect "C++latest"
     staticruntime "On"
 
-    targetdir (outputbindir)
-    objdir (outputintdir)
+    targetdir (outputbindirproj)
+    objdir (outputintdirproj)
 
     pchheader "PagoogMathsPCH.h"
 	pchsource "Internal/%{prj.name}/Source/PagoogMathsPCH.cpp"
@@ -454,8 +456,8 @@ project "PagoogRender"
     cppdialect "C++latest"
     staticruntime "On"
 
-    targetdir (outputbindir)
-    objdir (outputintdir)
+    targetdir (outputbindirproj)
+    objdir (outputintdirproj)
 
     pchheader "PagoogRenderPCH.h"
 	pchsource "Internal/%{prj.name}/Source/PagoogRenderPCH.cpp"
@@ -531,8 +533,8 @@ project "PagoogTest"
 	cppdialect "C++latest"
 	staticruntime "On"
 
-    targetdir (outputbindir)
-    objdir (outputintdir)
+    targetdir (outputbindirproj)
+    objdir (outputintdirproj)
 
     files
     {
@@ -602,8 +604,8 @@ project "GoogleTest"
 	cppdialect "C++latest"
 	staticruntime "On"
 
-    targetdir (outputbindir)
-    objdir (outputintdir)
+    targetdir (outputbindirproj)
+    objdir (outputintdirproj)
 
     files
     {
@@ -657,8 +659,8 @@ project "GLFW"
 	kind "StaticLib"
 	language "C"
 
-    targetdir (outputbindir)
-    objdir (outputintdir)
+    targetdir (outputbindirproj)
+    objdir (outputintdirproj)
 
 	files
 	{
@@ -726,8 +728,8 @@ project "Glad"
 	kind "StaticLib"
 	language "C"
 
-    targetdir (outputbindir)
-    objdir (outputintdir)
+    targetdir (outputbindirproj)
+    objdir (outputintdirproj)
 
 	files
 	{
