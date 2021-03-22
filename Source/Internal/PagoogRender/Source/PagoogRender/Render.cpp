@@ -1,10 +1,10 @@
 #include "PagoogRenderPCH.h"
 #include "Render.h"
 
-#include <glad/glad.h>
-
 #include "PagoogDebug.h"
 #include "PagoogLog.h"
+
+#include <glad/glad.h>
 
 namespace Pagoog::Render
 {

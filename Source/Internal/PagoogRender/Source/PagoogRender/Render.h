@@ -2,9 +2,11 @@
 
 #include "PagoogCommon.h"
 
+#include "PagoogRenderAPI.h"
+
 namespace Pagoog::Render
 {
-	class Render
+	class PG_RENDER_API Render
 	{
 	public:
 		static void ClearColour(float r, float g, float b, float a);

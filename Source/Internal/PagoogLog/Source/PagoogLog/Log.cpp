@@ -12,4 +12,9 @@ namespace Pagoog::Log
 		Log::Logger = std::make_shared<Pagoog::Log::Logger>();
 		Log::Logger->Init();
 	}
+
+	Logger& Log::GetLoggerRef()
+	{
+		return *Logger;
+	}
 }

@@ -27,9 +27,20 @@ namespace Pagoog::Log
 		logSinks[0]->set_pattern("%^[%Y/%m/%d %T] %v%$");
 		//logSinks[1]->set_pattern("[%T] [%l] %n: %v");
 
-		logger = std::make_shared<spdlog::logger>("Pagoog", begin(logSinks), end(logSinks));
+		std::shared_ptr logger = std::make_shared<spdlog::logger>("Pagoog", begin(logSinks), end(logSinks));
 		spdlog::register_logger(logger);
 		logger->set_level(spdlog::level::trace);
 		logger->flush_on(spdlog::level::trace);
+		this->logger = SharedLogger(logger);
+	}
+
+	SharedLogger::SharedLogger(std::shared_ptr<spdlog::logger> logger)
+		: logger(logger)
+	{
+	}
+
+	spdlog::logger& SharedLogger::GetLoggerRef()
+	{
+		return *logger;
 	}
 }

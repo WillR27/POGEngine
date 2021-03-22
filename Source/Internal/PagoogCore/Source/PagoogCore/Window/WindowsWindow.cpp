@@ -5,6 +5,8 @@
 #include "PagoogLog.h"
 #include "PagoogRender.h"
 
+#include <GLFW/glfw3.h>
+
 namespace Pagoog::Core
 {
 	static void GLFWErrorCallback(int error, const char* description)

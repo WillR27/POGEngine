@@ -4,8 +4,13 @@
 #include <stdexcept>
 #include <string>
 
+#include "PagoogCommonAPI.h"
+
 namespace Pagoog::Common
 {
+	// TODO: Just here to get the dll/lib to build
+	PG_COMMON_API void Placeholder();
+
 	template <typename... Args>
 	static std::string Format(const std::string& format, Args... args)
 	{

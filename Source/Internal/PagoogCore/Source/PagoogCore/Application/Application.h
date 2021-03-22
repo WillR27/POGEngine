@@ -1,21 +1,23 @@
 #pragma once
 
-#include "PagoogCore.h"
+#include "PagoogCoreAPI.h"
+
+#include "PagoogCore/Window/Window.h"
 
 namespace Pagoog::Core
 {
 	class Application
 	{
 	public:
-		Application(std::string name = "Pagoog");
+		PG_CORE_API Application(std::string name = "Pagoog");
 
-		virtual ~Application();
+		PG_CORE_API virtual ~Application();
 
-		void PreInit();
-		virtual void Init() = 0;
-		void PostInit();
+		PG_CORE_API void PreInit();
+		PG_CORE_API virtual void Init() = 0;
+		PG_CORE_API void PostInit();
 
-		void Run();
+		PG_CORE_API void Run();
 
 		const Window& GetWindow() { return *window; }
 

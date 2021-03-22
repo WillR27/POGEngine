@@ -10,3 +10,8 @@
 	#define PG_VERIFY(x, ...)
 	#define PG_ASSERT(x, ...)
 #endif
+
+#include "PagoogDebugAPI.h"
+
+// TODO: Just here to get the dll/lib to build
+PG_DEBUG_API void Placeholder();

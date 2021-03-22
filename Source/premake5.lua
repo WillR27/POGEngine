@@ -12,11 +12,19 @@ workspace "Pagoog"
 
 
 
-outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
-outputbindir = "Build/Builds/Bin/" .. outputdir
-outputintdir = "Build/Builds/Int/" .. outputdir
+outputconfigname = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
+outputbindir = "%{wks.location}/Build/Builds/Bin/" .. outputconfigname
+outputintdir = "%{wks.location}/Build/Builds/Int/" .. outputconfigname
 outputbindirproj = outputbindir .. "/%{prj.name}"
 outputintdirproj = outputintdir .. "/%{prj.name}"
+
+
+
+function copy(source, target)
+    return select(1, ("copy \"" .. source .. "\" \"" .. target .. "\""):gsub("/", "\\"))
+end
+
+copydll = copy((outputbindirproj .. "/%{prj.name}.dll"), (outputbindir .. "/Pagoog/%{prj.name}.dll"))
 
 
 
@@ -25,7 +33,7 @@ project "Pagoog"
 	kind "ConsoleApp"
 	language "C++"
 	cppdialect "C++latest"
-	staticruntime "On"
+	staticruntime "Off"
 
     targetdir (outputbindirproj)
     objdir (outputintdirproj)
@@ -89,7 +97,7 @@ project "Pagoog"
             "LinkTimeOptimization"
 	    }
 
-        signexe = select(1, ("\"../../Build/CodeSigning/SignFiles.bat\" \"" .. "%{wks.location}" .. outputbindirproj .. "/Pagoog.exe\""):gsub("/", "\\"))
+        signexe = select(1, ("\"../../Build/CodeSigning/SignFiles.bat\" \"" .. outputbindirproj .. "/Pagoog.exe\""):gsub("/", "\\"))
 
         postbuildcommands 
         { 
@@ -100,10 +108,10 @@ project "Pagoog"
 
 project "PagoogCommon"
     location "Internal/PagoogCommon"
-    kind "StaticLib"
+    kind "SharedLib"
     language "C++"
     cppdialect "C++latest"
-    staticruntime "On"
+    staticruntime "Off"
 
     targetdir (outputbindirproj)
     objdir (outputintdirproj)
@@ -130,7 +138,7 @@ project "PagoogCommon"
 
     defines
     {
-
+		"PG_COMMON_EXPORT"
 	}
 
     flags
@@ -141,6 +149,11 @@ project "PagoogCommon"
 
     filter "system:windows"
         systemversion "latest"
+		
+		postbuildcommands 
+        {
+            copydll,    
+        }
 
     filter "configurations:Debug"
         defines { "PG_DEBUG" }
@@ -166,10 +179,10 @@ project "PagoogCommon"
 
 project "PagoogCore"
     location "Internal/PagoogCore"
-    kind "StaticLib"
+    kind "SharedLib"
     language "C++"
     cppdialect "C++latest"
-    staticruntime "On"
+    staticruntime "Off"
 
     targetdir (outputbindirproj)
     objdir (outputintdirproj)
@@ -209,7 +222,7 @@ project "PagoogCore"
 
     defines
     {
-
+		"PG_CORE_EXPORT",
 	}
 
     flags
@@ -220,6 +233,11 @@ project "PagoogCore"
 
     filter "system:windows"
         systemversion "latest"
+		
+		postbuildcommands 
+        {
+            copydll,    
+        }
 
     filter "configurations:Debug"
         defines { "PG_DEBUG", "PG_ENABLE_ASSERT" }
@@ -245,10 +263,10 @@ project "PagoogCore"
 		
 project "PagoogDebug"
     location "Internal/PagoogDebug"
-    kind "StaticLib"
+    kind "SharedLib"
     language "C++"
     cppdialect "C++latest"
-    staticruntime "On"
+    staticruntime "Off"
 
     targetdir (outputbindirproj)
     objdir (outputintdirproj)
@@ -279,7 +297,7 @@ project "PagoogDebug"
 
     defines
     {
-
+		"PG_DEBUG_EXPORT",
 	}
 
     flags
@@ -290,6 +308,11 @@ project "PagoogDebug"
 
     filter "system:windows"
         systemversion "latest"
+		
+		postbuildcommands 
+        {
+            copydll,    
+        }
 
     filter "configurations:Debug"
         defines { "PG_DEBUG", "PG_ENABLE_ASSERT" }
@@ -315,10 +338,10 @@ project "PagoogDebug"
 		
 project "PagoogLog"
     location "Internal/PagoogLog"
-    kind "StaticLib"
+    kind "SharedLib"
     language "C++"
     cppdialect "C++latest"
-    staticruntime "On"
+    staticruntime "Off"
 
     targetdir (outputbindirproj)
     objdir (outputintdirproj)
@@ -347,7 +370,7 @@ project "PagoogLog"
 
     defines
     {
-
+		"PG_LOG_EXPORT",
 	}
 
     flags
@@ -358,6 +381,11 @@ project "PagoogLog"
 
     filter "system:windows"
         systemversion "latest"
+
+        postbuildcommands 
+        {
+            copydll,    
+        }
 
     filter "configurations:Debug"
         defines { "PG_DEBUG", "PG_ENABLE_ASSERT" }
@@ -383,10 +411,10 @@ project "PagoogLog"
 
 project "PagoogMaths"
     location "Internal/PagoogMaths"
-    kind "StaticLib"
+    kind "SharedLib"
     language "C++"
     cppdialect "C++latest"
-    staticruntime "On"
+    staticruntime "Off"
 
     targetdir (outputbindirproj)
     objdir (outputintdirproj)
@@ -415,7 +443,7 @@ project "PagoogMaths"
 
     defines
     {
-
+		"PG_MATHS_EXPORT",
 	}
 
     flags
@@ -426,6 +454,11 @@ project "PagoogMaths"
 
     filter "system:windows"
         systemversion "latest"
+		
+		postbuildcommands 
+        {
+            copydll,    
+        }
 
     filter "configurations:Debug"
         defines { "PG_DEBUG" }
@@ -451,10 +484,10 @@ project "PagoogMaths"
 		
 project "PagoogRender"
     location "Internal/PagoogRender"
-    kind "StaticLib"
+    kind "SharedLib"
     language "C++"
     cppdialect "C++latest"
-    staticruntime "On"
+    staticruntime "Off"
 
     targetdir (outputbindirproj)
     objdir (outputintdirproj)
@@ -492,7 +525,7 @@ project "PagoogRender"
 
     defines
     {
-		
+		"PG_RENDER_EXPORT"
 	}
 
     flags
@@ -503,6 +536,11 @@ project "PagoogRender"
 
     filter "system:windows"
         systemversion "latest"
+
+        postbuildcommands 
+        {
+            copydll,    
+        }
 
     filter "configurations:Debug"
         defines { "PG_DEBUG", "PG_ENABLE_ASSERT" }
@@ -531,9 +569,9 @@ project "PagoogTest"
 	kind "ConsoleApp"
 	language "C++"
 	cppdialect "C++latest"
-	staticruntime "On"
+	staticruntime "Off"
 
-    targetdir (outputbindirproj)
+    targetdir (outputbindir .. "/Pagoog")
     objdir (outputintdirproj)
 
     files
@@ -574,7 +612,7 @@ project "PagoogTest"
         "MultiProcessorCompile",
         "UndefinedIdentifiers",
 	}
-
+	
     filter "configurations:Debug"
         defines { "PG_DEBUG", "PG_ENABLE_ASSERT" }
         runtime "Debug"
@@ -602,7 +640,7 @@ project "GoogleTest"
 	kind "StaticLib"
 	language "C++"
 	cppdialect "C++latest"
-	staticruntime "On"
+	staticruntime "Off"
 
     targetdir (outputbindirproj)
     objdir (outputintdirproj)
@@ -683,7 +721,7 @@ project "GLFW"
 
 	filter "system:windows"
 		systemversion "latest"
-		staticruntime "On"
+		staticruntime "Off"
 
 		files
 		{
@@ -751,7 +789,7 @@ project "Glad"
 
 	filter "system:windows"
 		systemversion "latest"
-		staticruntime "On"
+		staticruntime "Off"
 
 	filter "configurations:Debug"
 		runtime "Debug"

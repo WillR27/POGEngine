@@ -1,10 +1,11 @@
 #pragma once
 
-#include <GLFW/glfw3.h>
-
 #include "PagoogCommon.h"
 
 #include "Window.h"
+
+// If we include GLFW inside this header then we get APIENTRY redefinitions
+struct GLFWwindow;
 
 namespace Pagoog::Core
 {
