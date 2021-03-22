@@ -21,7 +21,7 @@ outputintdirproj = outputintdir .. "/%{prj.name}"
 
 
 function copy(source, target)
-    return select(1, ("xcopy /S \"" .. source .. "\" \"" .. target .. "\""):gsub("/", "\\"))
+    return "xcopy /y \"" .. select(1, (source .. "\" \"" .. target .. "\""):gsub("/", "\\"))
 end
 
 copydll = copy((outputbindirproj .. "/%{prj.name}.dll"), (outputbindir .. "/Pagoog/%{prj.name}.dll"))
