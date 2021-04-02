@@ -1,4 +1,4 @@
-workspace "Pagoog"
+workspace "POGEngine"
     architecture "x64"
 
     configurations
@@ -8,7 +8,7 @@ workspace "Pagoog"
         "Dist"
     }
 
-    startproject "Pagoog"
+    startproject "Example"
 
 
 
@@ -24,12 +24,12 @@ function copy(source, target)
     return "xcopy /y \"" .. select(1, (source .. "\" \"" .. target .. "\""):gsub("/", "\\"))
 end
 
-copydll = copy((outputbindirproj .. "/%{prj.name}.dll"), (outputbindir .. "/Pagoog/"))
+copydll = copy((outputbindirproj .. "/%{prj.name}.dll"), (outputbindir .. "/Example/"))
 
 
 
-project "Pagoog"
-    location "Internal/Pagoog"
+project "Example"
+    location "Internal/Example"
 	kind "ConsoleApp"
 	language "C++"
 	cppdialect "C++latest"
@@ -38,8 +38,8 @@ project "Pagoog"
     targetdir (outputbindirproj)
     objdir (outputintdirproj)
 
-    pchheader "PagoogPCH.h"
-	pchsource "Internal/%{prj.name}/Source/PagoogPCH.cpp"
+    pchheader "ExamplePCH.h"
+	pchsource "Internal/%{prj.name}/Source/ExamplePCH.cpp"
 	
     files
     {
@@ -51,24 +51,24 @@ project "Pagoog"
     includedirs
     {
         "Internal/%{prj.name}/Source",
-        "Internal/PagoogCommon/Source",
-        "Internal/PagoogCore/Source",
-        "Internal/PagoogDebug/Source",
-        "Internal/PagoogLog/External/SPDLog/include",
-        "Internal/PagoogLog/Source",
-        "Internal/PagoogMaths/External/GLM",
-        "Internal/PagoogMaths/Source",
-        "Internal/PagoogRender/Source",
+        "Internal/POGCommon/Source",
+        "Internal/POGCore/Source",
+        "Internal/POGDebug/Source",
+        "Internal/POGLog/External/SPDLog/include",
+        "Internal/POGLog/Source",
+        "Internal/POGMaths/External/GLM",
+        "Internal/POGMaths/Source",
+        "Internal/POGRender/Source",
     }
 
     links
     {
-		"PagoogCommon",
-		"PagoogCore",
-		"PagoogDebug",
-		"PagoogLog",
-		"PagoogMaths",
-		"PagoogRender",
+		"POGCommon",
+		"POGCore",
+		"POGDebug",
+		"POGLog",
+		"POGMaths",
+		"POGRender",
     }
 
     flags
@@ -78,17 +78,17 @@ project "Pagoog"
 	}
 
     filter "configurations:Debug"
-        defines { "PG_DEBUG", "PG_ENABLE_ASSERT" }
+        defines { "POG_DEBUG", "POG_ENABLE_ASSERT" }
         runtime "Debug"
         symbols "On"
 
     filter "configurations:Release"
-        defines { "PG_RELEASE", "PG_ENABLE_VERIFY" }
+        defines { "POG_RELEASE", "POG_ENABLE_VERIFY" }
         runtime "Release"
         optimize "On"
 
     filter "configurations:Dist"
-        defines "PG_DIST"
+        defines "POG_DIST"
         runtime "Release"
         optimize "On"
 
@@ -97,7 +97,7 @@ project "Pagoog"
             "LinkTimeOptimization"
 	    }
 
-        signexe = select(1, ("\"../../Build/CodeSigning/SignFiles.bat\" \"" .. outputbindirproj .. "/Pagoog.exe\""):gsub("/", "\\"))
+        signexe = select(1, ("\"../../Build/CodeSigning/SignFiles.bat\" \"" .. outputbindirproj .. "/POG.exe\""):gsub("/", "\\"))
 
         postbuildcommands 
         { 
@@ -106,8 +106,8 @@ project "Pagoog"
 
 
 
-project "PagoogCommon"
-    location "Internal/PagoogCommon"
+project "POGCommon"
+    location "Internal/POGCommon"
     kind "SharedLib"
     language "C++"
     cppdialect "C++latest"
@@ -116,8 +116,8 @@ project "PagoogCommon"
     targetdir (outputbindirproj)
     objdir (outputintdirproj)
 
-    pchheader "PagoogCommonPCH.h"
-	pchsource "Internal/%{prj.name}/Source/PagoogCommonPCH.cpp"
+    pchheader "POGCommonPCH.h"
+	pchsource "Internal/%{prj.name}/Source/POGCommonPCH.cpp"
 
     files
     {
@@ -138,7 +138,7 @@ project "PagoogCommon"
 
     defines
     {
-		"PG_COMMON_EXPORT"
+		"POG_COMMON_EXPORT"
 	}
 
     flags
@@ -156,17 +156,17 @@ project "PagoogCommon"
         }
 
     filter "configurations:Debug"
-        defines { "PG_DEBUG" }
+        defines { "POG_DEBUG" }
         runtime "Debug"
         symbols "On"
 
     filter "configurations:Release"
-        defines { "PG_RELEASE" }
+        defines { "POG_RELEASE" }
         runtime "Release"
         optimize "On"
 
     filter "configurations:Dist"
-        defines { "PG_DIST" }
+        defines { "POG_DIST" }
         runtime "Release"
         optimize "On"
 
@@ -177,8 +177,8 @@ project "PagoogCommon"
 		
 		
 
-project "PagoogCore"
-    location "Internal/PagoogCore"
+project "POGCore"
+    location "Internal/POGCore"
     kind "SharedLib"
     language "C++"
     cppdialect "C++latest"
@@ -187,8 +187,8 @@ project "PagoogCore"
     targetdir (outputbindirproj)
     objdir (outputintdirproj)
 
-    pchheader "PagoogCorePCH.h"
-	pchsource "Internal/%{prj.name}/Source/PagoogCorePCH.cpp"
+    pchheader "POGCorePCH.h"
+	pchsource "Internal/%{prj.name}/Source/POGCorePCH.cpp"
 
     files
     {
@@ -201,28 +201,28 @@ project "PagoogCore"
     {
         "External/GLFW/include",
         "Internal/%{prj.name}/Source",
-        "Internal/PagoogCommon/Source",
-        "Internal/PagoogDebug/Source",
-        "Internal/PagoogLog/External/SPDLog/include",
-        "Internal/PagoogLog/Source",
-        "Internal/PagoogMaths/External/GLM",
-        "Internal/PagoogMaths/Source",
-        "Internal/PagoogRender/Source",
+        "Internal/POGCommon/Source",
+        "Internal/POGDebug/Source",
+        "Internal/POGLog/External/SPDLog/include",
+        "Internal/POGLog/Source",
+        "Internal/POGMaths/External/GLM",
+        "Internal/POGMaths/Source",
+        "Internal/POGRender/Source",
     }
 
     links
     {
         "GLFW",
-		"PagoogCommon",
-		"PagoogDebug",
-		"PagoogLog",
-		"PagoogMaths",
-		"PagoogRender",
+		"POGCommon",
+		"POGDebug",
+		"POGLog",
+		"POGMaths",
+		"POGRender",
 	}
 
     defines
     {
-		"PG_CORE_EXPORT",
+		"POG_CORE_EXPORT",
 	}
 
     flags
@@ -240,17 +240,17 @@ project "PagoogCore"
         }
 
     filter "configurations:Debug"
-        defines { "PG_DEBUG", "PG_ENABLE_ASSERT" }
+        defines { "POG_DEBUG", "POG_ENABLE_ASSERT" }
         runtime "Debug"
         symbols "On"
 
     filter "configurations:Release"
-        defines { "PG_RELEASE", "PG_ENABLE_VERIFY" }
+        defines { "POG_RELEASE", "POG_ENABLE_VERIFY" }
         runtime "Release"
         optimize "On"
 
     filter "configurations:Dist"
-        defines { "PG_DIST" }
+        defines { "POG_DIST" }
         runtime "Release"
         optimize "On"
 
@@ -261,8 +261,8 @@ project "PagoogCore"
         		
 		
 		
-project "PagoogDebug"
-    location "Internal/PagoogDebug"
+project "POGDebug"
+    location "Internal/POGDebug"
     kind "SharedLib"
     language "C++"
     cppdialect "C++latest"
@@ -271,8 +271,8 @@ project "PagoogDebug"
     targetdir (outputbindirproj)
     objdir (outputintdirproj)
 
-    pchheader "PagoogDebugPCH.h"
-	pchsource "Internal/%{prj.name}/Source/PagoogDebugPCH.cpp"
+    pchheader "POGDebugPCH.h"
+	pchsource "Internal/%{prj.name}/Source/POGDebugPCH.cpp"
 
     files
     {
@@ -284,20 +284,20 @@ project "PagoogDebug"
     includedirs
     {
         "Internal/%{prj.name}/Source",
-        "Internal/PagoogCommon/Source",
-        "Internal/PagoogLog/External/SPDLog/include",
-        "Internal/PagoogLog/Source",
+        "Internal/POGCommon/Source",
+        "Internal/POGLog/External/SPDLog/include",
+        "Internal/POGLog/Source",
     }
 
     links
     {
-		"PagoogCommon",
-		"PagoogLog",
+		"POGCommon",
+		"POGLog",
 	}
 
     defines
     {
-		"PG_DEBUG_EXPORT",
+		"POG_DEBUG_EXPORT",
 	}
 
     flags
@@ -315,17 +315,17 @@ project "PagoogDebug"
         }
 
     filter "configurations:Debug"
-        defines { "PG_DEBUG", "PG_ENABLE_ASSERT" }
+        defines { "POG_DEBUG", "POG_ENABLE_ASSERT" }
         runtime "Debug"
         symbols "On"
 
     filter "configurations:Release"
-        defines { "PG_RELEASE", "PG_ENABLE_VERIFY" }
+        defines { "POG_RELEASE", "POG_ENABLE_VERIFY" }
         runtime "Release"
         optimize "On"
 
     filter "configurations:Dist"
-        defines { "PG_DIST" }
+        defines { "POG_DIST" }
         runtime "Release"
         optimize "On"
 
@@ -336,8 +336,8 @@ project "PagoogDebug"
 		
 		
 		
-project "PagoogLog"
-    location "Internal/PagoogLog"
+project "POGLog"
+    location "Internal/POGLog"
     kind "SharedLib"
     language "C++"
     cppdialect "C++latest"
@@ -346,8 +346,8 @@ project "PagoogLog"
     targetdir (outputbindirproj)
     objdir (outputintdirproj)
 
-    pchheader "PagoogLogPCH.h"
-	pchsource "Internal/%{prj.name}/Source/PagoogLogPCH.cpp"
+    pchheader "POGLogPCH.h"
+	pchsource "Internal/%{prj.name}/Source/POGLogPCH.cpp"
 
     files
     {
@@ -360,17 +360,17 @@ project "PagoogLog"
     {
         "Internal/%{prj.name}/External/SPDLog/include",
 		"Internal/%{prj.name}/Source",
-        "Internal/PagoogCommon/Source",
+        "Internal/POGCommon/Source",
     }
 
     links
     {
-		"PagoogCommon",
+		"POGCommon",
 	}
 
     defines
     {
-		"PG_LOG_EXPORT",
+		"POG_LOG_EXPORT",
 	}
 
     flags
@@ -388,17 +388,17 @@ project "PagoogLog"
         }
 
     filter "configurations:Debug"
-        defines { "PG_DEBUG", "PG_ENABLE_ASSERT" }
+        defines { "POG_DEBUG", "POG_ENABLE_ASSERT" }
         runtime "Debug"
         symbols "On"
 
     filter "configurations:Release"
-        defines { "PG_RELEASE", "PG_ENABLE_VERIFY" }
+        defines { "POG_RELEASE", "POG_ENABLE_VERIFY" }
         runtime "Release"
         optimize "On"
 
     filter "configurations:Dist"
-        defines { "PG_DIST" }
+        defines { "POG_DIST" }
         runtime "Release"
         optimize "On"
 
@@ -409,8 +409,8 @@ project "PagoogLog"
 
 
 
-project "PagoogMaths"
-    location "Internal/PagoogMaths"
+project "POGMaths"
+    location "Internal/POGMaths"
     kind "SharedLib"
     language "C++"
     cppdialect "C++latest"
@@ -419,8 +419,8 @@ project "PagoogMaths"
     targetdir (outputbindirproj)
     objdir (outputintdirproj)
 
-    pchheader "PagoogMathsPCH.h"
-	pchsource "Internal/%{prj.name}/Source/PagoogMathsPCH.cpp"
+    pchheader "POGMathsPCH.h"
+	pchsource "Internal/%{prj.name}/Source/POGMathsPCH.cpp"
 
     files
     {
@@ -433,17 +433,17 @@ project "PagoogMaths"
     {
         "Internal/%{prj.name}/External/GLM",
 		"Internal/%{prj.name}/Source",
-        "Internal/PagoogCommon/Source",
+        "Internal/POGCommon/Source",
     }
 
     links
     {
-		"PagoogCommon",
+		"POGCommon",
 	}
 
     defines
     {
-		"PG_MATHS_EXPORT",
+		"POG_MATHS_EXPORT",
 	}
 
     flags
@@ -461,17 +461,17 @@ project "PagoogMaths"
         }
 
     filter "configurations:Debug"
-        defines { "PG_DEBUG" }
+        defines { "POG_DEBUG" }
         runtime "Debug"
         symbols "On"
 
     filter "configurations:Release"
-        defines { "PG_RELEASE" }
+        defines { "POG_RELEASE" }
         runtime "Release"
         optimize "On"
 
     filter "configurations:Dist"
-        defines { "PG_DIST" }
+        defines { "POG_DIST" }
         runtime "Release"
         optimize "On"
 
@@ -482,8 +482,8 @@ project "PagoogMaths"
 		
 
 		
-project "PagoogRender"
-    location "Internal/PagoogRender"
+project "POGRender"
+    location "Internal/POGRender"
     kind "SharedLib"
     language "C++"
     cppdialect "C++latest"
@@ -492,8 +492,8 @@ project "PagoogRender"
     targetdir (outputbindirproj)
     objdir (outputintdirproj)
 
-    pchheader "PagoogRenderPCH.h"
-	pchsource "Internal/%{prj.name}/Source/PagoogRenderPCH.cpp"
+    pchheader "POGRenderPCH.h"
+	pchsource "Internal/%{prj.name}/Source/POGRenderPCH.cpp"
 
     files
     {
@@ -506,26 +506,26 @@ project "PagoogRender"
     {
         "External/Glad/include",
         "Internal/%{prj.name}/Source",
-        "Internal/PagoogCommon/Source",
-        "Internal/PagoogDebug/Source",
-        "Internal/PagoogLog/External/SPDLog/include",
-        "Internal/PagoogLog/Source",
-        "Internal/PagoogMaths/External/GLM",
-        "Internal/PagoogMaths/Source",
+        "Internal/POGCommon/Source",
+        "Internal/POGDebug/Source",
+        "Internal/POGLog/External/SPDLog/include",
+        "Internal/POGLog/Source",
+        "Internal/POGMaths/External/GLM",
+        "Internal/POGMaths/Source",
     }
 
     links
     {
-		"PagoogCommon",
-        "PagoogDebug",
-        "PagoogLog",
-        "PagoogMaths",
+		"POGCommon",
+        "POGDebug",
+        "POGLog",
+        "POGMaths",
 		"Glad",
 	}
 
     defines
     {
-		"PG_RENDER_EXPORT"
+		"POG_RENDER_EXPORT"
 	}
 
     flags
@@ -543,17 +543,17 @@ project "PagoogRender"
         }
 
     filter "configurations:Debug"
-        defines { "PG_DEBUG", "PG_ENABLE_ASSERT" }
+        defines { "POG_DEBUG", "POG_ENABLE_ASSERT" }
         runtime "Debug"
         symbols "On"
 
     filter "configurations:Release"
-        defines { "PG_RELEASE", "PG_ENABLE_VERIFY" }
+        defines { "POG_RELEASE", "POG_ENABLE_VERIFY" }
         runtime "Release"
         optimize "On"
 
     filter "configurations:Dist"
-        defines { "PG_DIST" }
+        defines { "POG_DIST" }
         runtime "Release"
         optimize "On"
 
@@ -564,14 +564,14 @@ project "PagoogRender"
 
 
 
-project "PagoogTest"
-    location "Internal/PagoogTest"
+project "POGTest"
+    location "Internal/POGTest"
 	kind "ConsoleApp"
 	language "C++"
 	cppdialect "C++latest"
 	staticruntime "Off"
 
-    targetdir (outputbindir .. "/Pagoog")
+    targetdir (outputbindir .. "/POG")
     objdir (outputintdirproj)
 
     files
@@ -586,25 +586,25 @@ project "PagoogTest"
         "External/GoogleTest/googletest/include",
         "External/GoogleTest/googlemock/include",
         "Internal/%{prj.name}/Source",
-        "Internal/PagoogCommon/Source",
-        "Internal/PagoogCore/Source",
-        "Internal/PagoogDebug/Source",
-        "Internal/PagoogLog/External/SPDLog/include",
-        "Internal/PagoogLog/Source",
-        "Internal/PagoogMaths/External/GLM",
-        "Internal/PagoogMaths/Source",
-        "Internal/PagoogRender/Source",
+        "Internal/POGCommon/Source",
+        "Internal/POGCore/Source",
+        "Internal/POGDebug/Source",
+        "Internal/POGLog/External/SPDLog/include",
+        "Internal/POGLog/Source",
+        "Internal/POGMaths/External/GLM",
+        "Internal/POGMaths/Source",
+        "Internal/POGRender/Source",
     }
 
     links
     {
         "GoogleTest",
-		"PagoogCommon",
-		"PagoogCore",
-		"PagoogDebug",
-		"PagoogLog",
-		"PagoogMaths",
-		"PagoogRender",
+		"POGCommon",
+		"POGCore",
+		"POGDebug",
+		"POGLog",
+		"POGMaths",
+		"POGRender",
     }
 
     flags
@@ -614,17 +614,17 @@ project "PagoogTest"
 	}
 	
     filter "configurations:Debug"
-        defines { "PG_DEBUG", "PG_ENABLE_ASSERT" }
+        defines { "POG_DEBUG", "POG_ENABLE_ASSERT" }
         runtime "Debug"
         symbols "On"
 
     filter "configurations:Release"
-        defines { "PG_RELEASE", "PG_ENABLE_VERIFY" }
+        defines { "POG_RELEASE", "POG_ENABLE_VERIFY" }
         runtime "Release"
         optimize "On"
 
     filter "configurations:Dist"
-        defines "PG_DIST"
+        defines "POG_DIST"
         runtime "Release"
         optimize "On"
 
@@ -671,17 +671,17 @@ project "GoogleTest"
 	}
 
     filter "configurations:Debug"
-        defines { "PG_DEBUG", "PG_ENABLE_ASSERT" }
+        defines { "POG_DEBUG", "POG_ENABLE_ASSERT" }
         runtime "Debug"
         symbols "On"
 
     filter "configurations:Release"
-        defines { "PG_RELEASE", "PG_ENABLE_VERIFY" }
+        defines { "POG_RELEASE", "POG_ENABLE_VERIFY" }
         runtime "Release"
         optimize "On"
 
     filter "configurations:Dist"
-        defines "PG_DIST"
+        defines "POG_DIST"
         runtime "Release"
         optimize "On"
 

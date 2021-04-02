@@ -1,7 +1,7 @@
 name: CI
 
 env:
-  solution: Pagoog.sln
+  solution: Example.sln
 
 on:
   # Run this workflow whenever a commit is pushed
@@ -29,6 +29,6 @@ jobs:
         run: msbuild /v:normal /m /p:Configuration=Release /p:Platform=x64 ${{ env.solution }}
         
       - name: Run tests
-        working-directory: ${{ github.workspace }}\Source\Build\Builds\Bin\Release-windows-x86_64\Pagoog
-        run: ${{ github.workspace }}\Source\Build\Builds\Bin\Release-windows-x86_64\Pagoog\PagoogTest.exe
+        working-directory: ${{ github.workspace }}\Source\Build\Builds\Bin\Release-windows-x86_64\Example
+        run: ${{ github.workspace }}\Source\Build\Builds\Bin\Release-windows-x86_64\Example\POGTest.exe
         

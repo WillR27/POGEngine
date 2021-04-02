@@ -1,7 +1,7 @@
 name: Release-Major
 
 env:
-  solution: Pagoog.sln
+  solution: Example.sln
 
 on:
   # Allow us to run the workflow manually
@@ -42,8 +42,8 @@ jobs:
         uses: svenstaro/upload-release-action@v2
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: ${{ github.workspace }}\Source\Build\Builds\Bin\Dist-windows-x64\Pagoog\Pagoog.exe
-          asset_name: Pagoog.exe
+          file: ${{ github.workspace }}\Source\Build\Builds\Bin\Dist-windows-x64\Example\Example.exe
+          asset_name: Example.exe
           tag: ${{ steps.create.outputs.current_tag }}
           release_name: Windows-x64
           

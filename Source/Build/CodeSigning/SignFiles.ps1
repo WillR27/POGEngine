@@ -9,7 +9,7 @@
 $CodeSigningFolder = $PSScriptRoot
 
 Set-Alias SignTool ($CodeSigningFolder + "\signtool.exe")
-$CertificateFilePath = $CodeSigningFolder + "\PagoogInc.pfx"
+$CertificateFilePath = $CodeSigningFolder + "\POGInc.pfx"
 $TimeStampServer = "http://timestamp.digicert.com"
 
 Write-Host "Signing file(s)..."
