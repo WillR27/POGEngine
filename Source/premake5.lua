@@ -571,7 +571,7 @@ project "POGTest"
 	cppdialect "C++latest"
 	staticruntime "Off"
 
-    targetdir (outputbindir .. "/POG")
+    targetdir (outputbindir .. "/Example")
     objdir (outputintdirproj)
 
     files
