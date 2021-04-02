@@ -1,7 +1,7 @@
 name: CI
 
 env:
-  solution: Example.sln
+  solution: POGEngine.sln
 
 on:
   # Run this workflow whenever a commit is pushed

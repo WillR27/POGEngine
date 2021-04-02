@@ -1,7 +1,7 @@
 name: Release-Major
 
 env:
-  solution: Example.sln
+  solution: POGEngine.sln
 
 on:
   # Allow us to run the workflow manually
