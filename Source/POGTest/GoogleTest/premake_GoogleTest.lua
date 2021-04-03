@@ -1,5 +1,4 @@
 project "GoogleTest"
-    location "External/GoogleTest"
 	kind "StaticLib"
 	language "C++"
 	cppdialect "C++latest"
@@ -10,16 +9,16 @@ project "GoogleTest"
 
     files
     {
-        "External/%{prj.name}/googlemock/src/gmock-all.cc",
-        "External/%{prj.name}/googletest/src/gtest-all.cc",
+        "googlemock/src/gmock-all.cc",
+        "googletest/src/gtest-all.cc",
     }
 
     includedirs
     {
-        "External/%{prj.name}/googletest",
-        "External/%{prj.name}/googlemock",
-        "External/%{prj.name}/googletest/include",
-        "External/%{prj.name}/googlemock/include",
+        "googletest",
+        "googlemock",
+        "googletest/include",
+        "googlemock/include",
     }
 
     links

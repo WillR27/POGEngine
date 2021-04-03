@@ -1,5 +1,4 @@
-project "POGDebug"
-    location "Internal/POGDebug"
+project "POGCommon"
     kind "SharedLib"
     language "C++"
     cppdialect "C++latest"
@@ -8,39 +7,35 @@ project "POGDebug"
     targetdir (outputbindirproj)
     objdir (outputintdirproj)
 
-    pchheader "POGDebugPCH.h"
-	pchsource "Internal/%{prj.name}/Source/POGDebugPCH.cpp"
+    pchheader "POGCommonPCH.h"
+	pchsource "Source/POGCommonPCH.cpp"
 
     files
     {
-        "Internal/%{prj.name}/Source/**.h",
-        "Internal/%{prj.name}/Source/**.cpp",
-        "Internal/%{prj.name}/Source/**.hpp",
+        "Source/**.h",
+        "Source/**.cpp",
+        "Source/**.hpp"
     }
 
     includedirs
     {
-        "Internal/%{prj.name}/Source",
-        "Internal/POGCommon/Source",
-        "Internal/POGLog/External/SPDLog/include",
-        "Internal/POGLog/Source",
+        "Source",
     }
 
     links
     {
-		"POGCommon",
-		"POGLog",
+	
 	}
 
     defines
     {
-		"POG_DEBUG_EXPORT",
+		"POG_COMMON_EXPORT"
 	}
 
     flags
     {
         "MultiProcessorCompile",
-        "UndefinedIdentifiers",
+        "UndefinedIdentifiers"
 	}
 
     filter "system:windows"
@@ -52,12 +47,12 @@ project "POGDebug"
         }
 
     filter "configurations:Debug"
-        defines { "POG_DEBUG", "POG_ENABLE_ASSERT" }
+        defines { "POG_DEBUG" }
         runtime "Debug"
         symbols "On"
 
     filter "configurations:Release"
-        defines { "POG_RELEASE", "POG_ENABLE_VERIFY" }
+        defines { "POG_RELEASE" }
         runtime "Release"
         optimize "On"
 

@@ -1,38 +1,37 @@
-project "POGTest"
-    location "Internal/POGTest"
+project "Example"
 	kind "ConsoleApp"
 	language "C++"
 	cppdialect "C++latest"
 	staticruntime "Off"
 
-    targetdir (outputbindir .. "/Example")
+    targetdir (outputbindirproj)
     objdir (outputintdirproj)
 
+    pchheader "ExamplePCH.h"
+	pchsource "Source/ExamplePCH.cpp"
+	
     files
     {
-        "Internal/%{prj.name}/Source/**.h",
-        "Internal/%{prj.name}/Source/**.cpp",
-        "Internal/%{prj.name}/Source/**.hpp",
+        "Source/**.h",
+        "Source/**.cpp",
+        "Source/**.hpp",
     }
 
     includedirs
     {
-        "External/GoogleTest/googletest/include",
-        "External/GoogleTest/googlemock/include",
-        "Internal/%{prj.name}/Source",
-        "Internal/POGCommon/Source",
-        "Internal/POGCore/Source",
-        "Internal/POGDebug/Source",
-        "Internal/POGLog/External/SPDLog/include",
-        "Internal/POGLog/Source",
-        "Internal/POGMaths/External/GLM",
-        "Internal/POGMaths/Source",
-        "Internal/POGRender/Source",
+        "Source",
+        "../POGCommon/Source",
+        "../POGCore/Source",
+        "../POGDebug/Source",
+        "../POGLog/External/SPDLog/include",
+        "../POGLog/Source",
+        "../POGMaths/External/GLM",
+        "../POGMaths/Source",
+        "../POGRender/Source",
     }
 
     links
     {
-        "GoogleTest",
 		"POGCommon",
 		"POGCore",
 		"POGDebug",
@@ -46,7 +45,7 @@ project "POGTest"
         "MultiProcessorCompile",
         "UndefinedIdentifiers",
 	}
-	
+
     filter "configurations:Debug"
         defines { "POG_DEBUG", "POG_ENABLE_ASSERT" }
         runtime "Debug"
@@ -66,3 +65,10 @@ project "POGTest"
         {
             "LinkTimeOptimization"
 	    }
+
+        signexe = select(1, ("\"../../Build/CodeSigning/SignFiles.bat\" \"" .. outputbindirproj .. "/POG.exe\""):gsub("/", "\\"))
+
+        postbuildcommands 
+        { 
+            signexe,
+        }

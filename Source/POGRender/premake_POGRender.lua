@@ -1,5 +1,4 @@
-project "POGCore"
-    location "Internal/POGCore"
+project "POGRender"
     kind "SharedLib"
     language "C++"
     cppdialect "C++latest"
@@ -8,54 +7,54 @@ project "POGCore"
     targetdir (outputbindirproj)
     objdir (outputintdirproj)
 
-    pchheader "POGCorePCH.h"
-	pchsource "Internal/%{prj.name}/Source/POGCorePCH.cpp"
+    pchheader "POGRenderPCH.h"
+	pchsource "Source/POGRenderPCH.cpp"
 
     files
     {
-        "Internal/%{prj.name}/Source/**.h",
-        "Internal/%{prj.name}/Source/**.cpp",
-        "Internal/%{prj.name}/Source/**.hpp"
+        "Source/**.h",
+        "Source/**.cpp",
+        "Source/**.hpp",
     }
 
     includedirs
     {
-        "External/GLFW/include",
-        "Internal/%{prj.name}/Source",
-        "Internal/POGCommon/Source",
-        "Internal/POGDebug/Source",
-        "Internal/POGLog/External/SPDLog/include",
-        "Internal/POGLog/Source",
-        "Internal/POGMaths/External/GLM",
-        "Internal/POGMaths/Source",
-        "Internal/POGRender/Source",
+        "Glad/include",
+		
+        "Source",
+        "../POGCommon/Source",
+        "../POGDebug/Source",
+        "../POGLog/External/SPDLog/include",
+        "../POGLog/Source",
+        "../POGMaths/External/GLM",
+        "../POGMaths/Source",
     }
 
     links
     {
-        "GLFW",
+		"Glad",
+	
 		"POGCommon",
-		"POGDebug",
-		"POGLog",
-		"POGMaths",
-		"POGRender",
+        "POGDebug",
+        "POGLog",
+        "POGMaths",
 	}
 
     defines
     {
-		"POG_CORE_EXPORT",
+		"POG_RENDER_EXPORT"
 	}
 
     flags
     {
         "MultiProcessorCompile",
-        "UndefinedIdentifiers"
+        "UndefinedIdentifiers",
 	}
 
     filter "system:windows"
         systemversion "latest"
-		
-		postbuildcommands 
+
+        postbuildcommands 
         {
             copydll,    
         }
@@ -78,4 +77,4 @@ project "POGCore"
         flags
         {
             "LinkTimeOptimization"
-        }
+	    }

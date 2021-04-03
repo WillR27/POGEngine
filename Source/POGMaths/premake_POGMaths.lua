@@ -1,5 +1,4 @@
-project "POGLog"
-    location "Internal/POGLog"
+project "POGMaths"
     kind "SharedLib"
     language "C++"
     cppdialect "C++latest"
@@ -8,21 +7,22 @@ project "POGLog"
     targetdir (outputbindirproj)
     objdir (outputintdirproj)
 
-    pchheader "POGLogPCH.h"
-	pchsource "Internal/%{prj.name}/Source/POGLogPCH.cpp"
+    pchheader "POGMathsPCH.h"
+	pchsource "Source/POGMathsPCH.cpp"
 
     files
     {
-        "Internal/%{prj.name}/Source/**.h",
-        "Internal/%{prj.name}/Source/**.cpp",
-        "Internal/%{prj.name}/Source/**.hpp",
+        "Source/**.h",
+        "Source/**.cpp",
+        "Source/**.hpp",
     }
 
     includedirs
     {
-        "Internal/%{prj.name}/External/SPDLog/include",
-		"Internal/%{prj.name}/Source",
-        "Internal/POGCommon/Source",
+        "GLM",
+		
+		"Source",
+        "../POGCommon/Source",
     }
 
     links
@@ -32,7 +32,7 @@ project "POGLog"
 
     defines
     {
-		"POG_LOG_EXPORT",
+		"POG_MATHS_EXPORT",
 	}
 
     flags
@@ -43,19 +43,19 @@ project "POGLog"
 
     filter "system:windows"
         systemversion "latest"
-
-        postbuildcommands 
+		
+		postbuildcommands 
         {
             copydll,    
         }
 
     filter "configurations:Debug"
-        defines { "POG_DEBUG", "POG_ENABLE_ASSERT" }
+        defines { "POG_DEBUG" }
         runtime "Debug"
         symbols "On"
 
     filter "configurations:Release"
-        defines { "POG_RELEASE", "POG_ENABLE_VERIFY" }
+        defines { "POG_RELEASE" }
         runtime "Release"
         optimize "On"
 

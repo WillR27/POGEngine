@@ -1,5 +1,4 @@
 project "Glad"
-    location "External/Glad"
 	kind "StaticLib"
 	language "C"
 
@@ -8,14 +7,14 @@ project "Glad"
 
 	files
 	{
-		"External/%{prj.name}/include/glad/glad.h",
-		"External/%{prj.name}/include/KHR/khrplatform.h",
-		"External/%{prj.name}/src/glad.c",
+		"include/glad/glad.h",
+		"include/KHR/khrplatform.h",
+		"src/glad.c",
 	}
 
     includedirs
     {
-        "External/%{prj.name}/include",
+        "include",
     }
 
     flags

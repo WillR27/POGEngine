@@ -1,5 +1,4 @@
-project "POGRender"
-    location "Internal/POGRender"
+project "POGDebug"
     kind "SharedLib"
     language "C++"
     cppdialect "C++latest"
@@ -8,40 +7,33 @@ project "POGRender"
     targetdir (outputbindirproj)
     objdir (outputintdirproj)
 
-    pchheader "POGRenderPCH.h"
-	pchsource "Internal/%{prj.name}/Source/POGRenderPCH.cpp"
+    pchheader "POGDebugPCH.h"
+	pchsource "Source/POGDebugPCH.cpp"
 
     files
     {
-        "Internal/%{prj.name}/Source/**.h",
-        "Internal/%{prj.name}/Source/**.cpp",
-        "Internal/%{prj.name}/Source/**.hpp",
+        "Source/**.h",
+        "Source/**.cpp",
+        "Source/**.hpp",
     }
 
     includedirs
     {
-        "External/Glad/include",
-        "Internal/%{prj.name}/Source",
-        "Internal/POGCommon/Source",
-        "Internal/POGDebug/Source",
-        "Internal/POGLog/External/SPDLog/include",
-        "Internal/POGLog/Source",
-        "Internal/POGMaths/External/GLM",
-        "Internal/POGMaths/Source",
+        "Source",
+        "../POGCommon/Source",
+        "../POGLog/External/SPDLog/include",
+        "../POGLog/Source",
     }
 
     links
     {
 		"POGCommon",
-        "POGDebug",
-        "POGLog",
-        "POGMaths",
-		"Glad",
+		"POGLog",
 	}
 
     defines
     {
-		"POG_RENDER_EXPORT"
+		"POG_DEBUG_EXPORT",
 	}
 
     flags
@@ -52,8 +44,8 @@ project "POGRender"
 
     filter "system:windows"
         systemversion "latest"
-
-        postbuildcommands 
+		
+		postbuildcommands 
         {
             copydll,    
         }
@@ -76,4 +68,4 @@ project "POGRender"
         flags
         {
             "LinkTimeOptimization"
-	    }
+        }

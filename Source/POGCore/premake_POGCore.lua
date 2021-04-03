@@ -1,5 +1,4 @@
-project "POGCommon"
-    location "Internal/POGCommon"
+project "POGCore"
     kind "SharedLib"
     language "C++"
     cppdialect "C++latest"
@@ -8,29 +7,44 @@ project "POGCommon"
     targetdir (outputbindirproj)
     objdir (outputintdirproj)
 
-    pchheader "POGCommonPCH.h"
-	pchsource "Internal/%{prj.name}/Source/POGCommonPCH.cpp"
+    pchheader "POGCorePCH.h"
+	pchsource "Source/POGCorePCH.cpp"
 
     files
     {
-        "Internal/%{prj.name}/Source/**.h",
-        "Internal/%{prj.name}/Source/**.cpp",
-        "Internal/%{prj.name}/Source/**.hpp"
+        "Source/**.h",
+        "Source/**.cpp",
+        "Source/**.hpp"
     }
 
     includedirs
     {
-        "Internal/%{prj.name}/Source",
+        "GLFW/include",
+		
+        "Source",
+        "../POGCommon/Source",
+        "../POGDebug/Source",
+        "../POGLog/External/SPDLog/include",
+        "../POGLog/Source",
+        "../POGMaths/External/GLM",
+        "../POGMaths/Source",
+        "../POGRender/Source",
     }
 
     links
     {
-	
+        "GLFW",
+		
+		"POGCommon",
+		"POGDebug",
+		"POGLog",
+		"POGMaths",
+		"POGRender",
 	}
 
     defines
     {
-		"POG_COMMON_EXPORT"
+		"POG_CORE_EXPORT",
 	}
 
     flags
@@ -48,12 +62,12 @@ project "POGCommon"
         }
 
     filter "configurations:Debug"
-        defines { "POG_DEBUG" }
+        defines { "POG_DEBUG", "POG_ENABLE_ASSERT" }
         runtime "Debug"
         symbols "On"
 
     filter "configurations:Release"
-        defines { "POG_RELEASE" }
+        defines { "POG_RELEASE", "POG_ENABLE_VERIFY" }
         runtime "Release"
         optimize "On"
 
