@@ -1,31 +1,15 @@
-project "Example"
-	kind "ConsoleApp"
-	language "C++"
-	cppdialect "C++latest"
-	staticruntime "Off"
-
-    targetdir (outputbindirproj)
-    objdir (outputintdirproj)
-
+createbaseprojectcpp("Example", "ConsoleApp")
     pchheader "ExamplePCH.h"
 	pchsource "Source/ExamplePCH.cpp"
 	
-    files
-    {
-        "Source/**.h",
-        "Source/**.cpp",
-        "Source/**.hpp",
-    }
-
     includedirs
     {
-        "Source",
         "../POGCommon/Source",
         "../POGCore/Source",
         "../POGDebug/Source",
-        "../POGLog/External/SPDLog/include",
+        "../POGLog/SPDLog/include",
         "../POGLog/Source",
-        "../POGMaths/External/GLM",
+        "../POGMaths/GLM",
         "../POGMaths/Source",
         "../POGRender/Source",
     }
@@ -40,33 +24,8 @@ project "Example"
 		"POGRender",
     }
 
-    flags
-    {
-        "MultiProcessorCompile",
-        "UndefinedIdentifiers",
-	}
-
-    filter "configurations:Debug"
-        defines { "POG_DEBUG", "POG_ENABLE_ASSERT" }
-        runtime "Debug"
-        symbols "On"
-
-    filter "configurations:Release"
-        defines { "POG_RELEASE", "POG_ENABLE_VERIFY" }
-        runtime "Release"
-        optimize "On"
-
     filter "configurations:Dist"
-        defines "POG_DIST"
-        runtime "Release"
-        optimize "On"
-
-        flags
-        {
-            "LinkTimeOptimization"
-	    }
-
-        signexe = select(1, ("\"../../Build/CodeSigning/SignFiles.bat\" \"" .. outputbindirproj .. "/POG.exe\""):gsub("/", "\\"))
+        signexe = select(1, ("\"%{wks.location}/CodeSigning/SignFiles.bat\" \"" .. outputbindirproj .. "/Example.exe\""):gsub("/", "\\"))
 
         postbuildcommands 
         { 

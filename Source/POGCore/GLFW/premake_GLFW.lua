@@ -1,9 +1,5 @@
-project "GLFW"
-	kind "StaticLib"
+createbaseprojectcpp("GLFW", "StaticLib")
 	language "C"
-
-    targetdir (outputbindirproj)
-    objdir (outputintdirproj)
 
 	files
 	{
@@ -18,15 +14,8 @@ project "GLFW"
 		"src/window.c",
 	}
 
-    flags
-    {
-        "MultiProcessorCompile",
-        "UndefinedIdentifiers",
-	}
-
 	filter "system:windows"
 		systemversion "latest"
-		staticruntime "Off"
 
 		files
 		{
@@ -46,20 +35,3 @@ project "GLFW"
 			"_GLFW_WIN32",
 			"_CRT_SECURE_NO_WARNINGS"
 		}
-
-	filter "configurations:Debug"
-		runtime "Debug"
-		symbols "On"
-
-	filter "configurations:Release"
-		runtime "Release"
-		optimize "On"
-
-    filter "configurations:Dist"
-        runtime "Release"
-        optimize "On"
-
-        flags
-        {
-            "LinkTimeOptimization"
-	    }

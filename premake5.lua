@@ -1,3 +1,6 @@
+include "premake_POGEngineBase.lua"
+
+
 workspace "POGEngine"
     architecture "x64"
 
@@ -9,25 +12,20 @@ workspace "POGEngine"
     }
 
     startproject "Example"
+	
+	solutionitems 
+	{
+		{ ["Workspace Items"] = 
+			{ 
+				".gitignore",
+				"premake5.lua",
+				"premake_Base.lua",
+				"premake_POGEngineBase.lua",
+			} 
+		},
+	}
 
-
-
-outputconfigname = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
-outputbindir = "%{wks.location}/Build/Builds/Bin/" .. outputconfigname
-outputintdir = "%{wks.location}/Build/Builds/Int/" .. outputconfigname
-outputbindirproj = outputbindir .. "/%{prj.name}"
-outputintdirproj = outputintdir .. "/%{prj.name}"
-
-
-
-function copy(source, target)
-    return "xcopy /y \"" .. select(1, (source .. "\" \"" .. target .. "\""):gsub("/", "\\"))
-end
-
-copydll = copy((outputbindirproj .. "/%{prj.name}.dll"), (outputbindir .. "/Example/"))
-
-
-
+	
 group "External Dependencies"
 	include "Source/POGCore/GLFW/premake_GLFW.lua"
 	include "Source/POGRender/Glad/premake_Glad.lua"

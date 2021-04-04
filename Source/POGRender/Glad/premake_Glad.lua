@@ -1,9 +1,5 @@
-project "Glad"
-	kind "StaticLib"
+createbaseprojectcpp("Glad", "StaticLib")
 	language "C"
-
-    targetdir (outputbindirproj)
-    objdir (outputintdirproj)
 
 	files
 	{
@@ -16,26 +12,3 @@ project "Glad"
     {
         "include",
     }
-
-    flags
-    {
-        "MultiProcessorCompile",
-        "UndefinedIdentifiers",
-	}
-
-	filter "system:windows"
-		systemversion "latest"
-		staticruntime "Off"
-
-	filter "configurations:Debug"
-		runtime "Debug"
-		symbols "On"
-
-    filter "configurations:Dist"
-        runtime "Release"
-        optimize "On"
-
-        flags
-        {
-            "LinkTimeOptimization"
-	    }

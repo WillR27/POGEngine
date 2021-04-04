@@ -20,7 +20,7 @@ jobs:
 
       - name: Set up projects and solution
         working-directory: ${{ github.workspace }}\Source
-        run: .\SetupSolution_VS2019.bat
+        run: .\SetupWorkspace_VS2019.bat
         
       - name: Build solution
         working-directory: ${{ github.workspace }}\Source
