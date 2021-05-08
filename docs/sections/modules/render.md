@@ -4,3 +4,5 @@ title: Render
 ---
 
 # Render
+
+[asd](link::Core)
