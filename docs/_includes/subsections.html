@@ -1,0 +1,15 @@
+<ul class="subsections">
+    {% for subsection in parentsection.subsections %}
+        <li>
+            <div class="arrow"></div>
+            <a href="{{ subsection.link | relative_url }}" {% if page.url==subsection.link %}class="current" {% endif %}>
+                {{ subsection.name }}
+            </a>
+
+            {% if subsection.subsections %}
+                {% assign parentsection = subsection %}
+                {% include subsections.html %}
+            {% endif %}
+        </li>
+    {% endfor %}
+</ul>

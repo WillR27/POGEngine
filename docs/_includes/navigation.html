@@ -1,5 +1,5 @@
 <a href="{{ "/" | absolute_url }}" class="title">
-    <img src={{ "/assets/images/icon.png" | relative_url }}>
+    <img src={{ "http://bigboistudios.com/imgs/thicc.png" | relative_url }}>
     POG Docs
 </a>
 
@@ -7,16 +7,11 @@
     {% for section in site.data.navigation.sections %}
         <div class="section">
             <a href="{{ section.link | relative_url }}" class="section-heading{% if page.url==section.link %} current{% endif %}">
-                {{ section.name | upcase }}
+                {{ section.name }}
             </a>
     
-            <div class="subsections">
-                {% for subsection in section.subsections %}
-                <a href="{{ subsection.link | relative_url }}" {% if page.url==subsection.link %}class="current" {% endif %}>
-                    {{ subsection.name }}
-                </a>
-                {% endfor %}
-            </div>
+            {% assign parentsection = section %}
+            {% include subsections.html %}
         </div>
     {% endfor %}
 </nav>

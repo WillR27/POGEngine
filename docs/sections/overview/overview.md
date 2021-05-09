@@ -5,4 +5,4 @@ title: Overview
 
 # Overview
 
-[asd](link::Core)
+[asd](::Core)
