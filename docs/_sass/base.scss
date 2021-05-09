@@ -9,13 +9,17 @@ html, body {
     font-style: normal;
     font-weight: normal;
     font-size: 1em;
-    color: $text-colour;
-    line-height: 1.5em;
-    -webkit-font-smoothing: antialiased;
+    color: $text-colour-shade2;
+    line-height: 1.6em;
 }
 
 body {
     background-color: $error-colour;
     
     display: flex;
+
+    a, a:visited {
+        color: $link-colour;
+        text-decoration: underline;
+    }
 }

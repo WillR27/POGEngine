@@ -3,7 +3,8 @@ code {
 }
 
 .highlight {
-    background-color: #eff9ff;
+    background-color: $code-snipped-background;
+    color: $primary-colour-shade1;
 }
 
 div.highlight {

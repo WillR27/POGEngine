@@ -1,12 +1,12 @@
 $sidebar-width: 350px;
 
 .sidebar {
-    background-color: $base-colour;
+    background-color: $sidebar-background-colour;
     
     width: $sidebar-width;
     height: 100vh;
 
-    box-shadow: 10px 0 10px 0px $base-colour-darker;
+    box-shadow: 10px 0 10px 0px $shadow-colour-shade1;
     
     position: sticky;
     top: 0;
@@ -18,9 +18,9 @@ $sidebar-width: 350px;
     }
 
     .title {
-        background-color: $primary-colour-dark;
+        background-color: $primary-colour-shade1;
 
-        color: $base-colour;
+        color: $primary-colour-shade5;
         font-size: 3em;
 
         padding-top: 20px;
@@ -40,7 +40,7 @@ $sidebar-width: 350px;
         }
 
         > a {
-            color: $text-colour-dark;
+            color: $text-colour-shade1;
             font-size: larger;
             font-weight: 600;
         }
@@ -56,15 +56,17 @@ $sidebar-width: 350px;
         }
     }
     
-    a {
-        color: $text-colour;
+    a, a:visited {
         text-decoration: none;
         display: block;
     }
 
     nav {
+        a, a:visited {
+            color: $text-colour-shade2;
+        }
+
         li {
-            color: $text-colour-light;
             list-style-type: none;
             font-weight: normal;
         }
@@ -75,7 +77,7 @@ $sidebar-width: 350px;
             
             border-top: 7px solid transparent;
             border-bottom: 7px solid transparent;
-            border-left: 7px solid $primary-colour;
+            border-left: 7px solid $primary-colour-shade2;
 
             margin-left: -16px;
             margin-top: 8px;
@@ -91,7 +93,7 @@ $sidebar-width: 350px;
 
             border-left: 7px solid transparent;
             border-right: 7px solid transparent;
-            border-top: 7px solid $primary-colour;
+            border-top: 7px solid $primary-colour-shade2;
 
             margin-left: -20px;
             margin-top: 11px;
@@ -101,7 +103,7 @@ $sidebar-width: 350px;
             width: 8px;
             height: 8px;
 
-            background-color: $primary-colour;
+            background-color: $primary-colour-shade2;
 
             border-left: 0;
             border-top: 0;
@@ -115,7 +117,7 @@ $sidebar-width: 350px;
         }
 
         a:hover {
-            color: $text-colour;
+            text-decoration: underline;
         }
         
         .current {
@@ -125,7 +127,7 @@ $sidebar-width: 350px;
 }
 
 .content {
-    background-color: $base-colour;
+    background-color: $content-background-colour;
     
     width: calc(100% - #{$sidebar-width});
 
@@ -136,13 +138,13 @@ $sidebar-width: 350px;
     }
 
     h1, h2 {
-        color: $text-colour-dark;
+        color: $text-colour-shade1;
     }
 
     h1 {
         margin-top: 50px;
         padding-bottom: 16px;
-        border-bottom: 1px solid $text-colour;
+        border-bottom: 1px solid $text-colour-shade2;
     }
 
     h2 {

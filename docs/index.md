@@ -7,7 +7,7 @@ title: POG Docs
 
 Here you will find all the information required to start developing with the POG Engine.
 
-Example code snippet.
+Example code snippet [and linky](::Core).
 
 ```c++
 int main()

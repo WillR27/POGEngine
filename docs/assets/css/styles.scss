@@ -1,8 +1,18 @@
 ---
 ---
 
-@import 
-    "colours",
+@media (prefers-color-scheme: light) {
+    @import 
+    "light-theme",
     "base",
     "code",
     "main";
+}
+
+@media (prefers-color-scheme: dark) {
+    @import 
+    "dark-theme",
+    "base",
+    "code",
+    "main";
+}
