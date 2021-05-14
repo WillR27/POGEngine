@@ -4,7 +4,7 @@ createbaseprojectcpp("POGRender", "SharedLib")
 
     includedirs
     {
-        "Glad/include",
+        "../../External/Glad/include",
 		
         "../POGCommon/Source",
         "../POGDebug/Source",

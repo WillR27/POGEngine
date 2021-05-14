@@ -1,8 +1,8 @@
 createbaseprojectcpp("POGTest", "ConsoleApp")
 	includedirs
     {
-        "GoogleTest/googletest/include",
-        "GoogleTest/googlemock/include",
+        "../../External/GoogleTest/googletest/include",
+        "../../External/GoogleTest/googlemock/include",
 		
         "../POGCommon/Source",
         "../POGCore/Source",

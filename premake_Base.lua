@@ -4,8 +4,8 @@ end
 
 
 outputconfigname = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
-outputbindir = "%{wks.location}/Builds/Bin/" .. outputconfigname
-outputintdir = "%{wks.location}/Builds/Int/" .. outputconfigname
+outputbindir = "%{wks.location}/Out/Bin/" .. outputconfigname
+outputintdir = "%{wks.location}/Out/Int/" .. outputconfigname
 outputbindirproj = outputbindir .. "/%{prj.name}"
 outputintdirproj = outputintdir .. "/%{prj.name}"
 outputbindirproj = outputbindir

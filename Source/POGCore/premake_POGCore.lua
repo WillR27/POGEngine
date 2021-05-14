@@ -4,7 +4,7 @@ createbaseprojectcpp("POGCore", "SharedLib")
 
     includedirs
     {
-        "GLFW/include",
+        "../../External/GLFW/include",
 		
         "../POGCommon/Source",
         "../POGDebug/Source",

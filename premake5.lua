@@ -27,9 +27,9 @@ workspace "POGEngine"
 
 	
 group "External Dependencies"
-	include "Source/POGCore/GLFW/premake_GLFW.lua"
-	include "Source/POGRender/Glad/premake_Glad.lua"
-	include "Source/POGTest/GoogleTest/premake_GoogleTest.lua"
+	include "External/GLFW/premake_GLFW.lua"
+	include "External/Glad/premake_Glad.lua"
+	include "External/GoogleTest/premake_GoogleTest.lua"
 
 group "POG Engine"
 	include "Source/Example/premake_Example.lua"
