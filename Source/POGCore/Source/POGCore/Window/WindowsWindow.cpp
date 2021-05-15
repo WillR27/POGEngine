@@ -206,7 +206,26 @@ namespace POG::Core
 
 	void WindowsWindow::SetFullscreen(bool isFullscreen)
 	{
+		static int width, height, x, y;
 		this->isFullscreen = isFullscreen;
+
+		if (isFullscreen)
+		{
+			width = windowData.width;
+			height = windowData.height;
+			glfwGetWindowPos(window, &x, &y);
+
+			const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+			glfwSetWindowMonitor(window, glfwGetPrimaryMonitor(), 0, 0, mode->width, mode->height, GLFW_DONT_CARE);
+			WindowSizeEvent e(mode->width, mode->height);
+			HandleWindowSizeEvent(e);
+		}
+		else
+		{
+			glfwSetWindowMonitor(window, nullptr, x, y, width, height, GLFW_DONT_CARE);
+			WindowSizeEvent e(width, height);
+			HandleWindowSizeEvent(e);
+		}
 	}
 
 	void WindowsWindow::ToggleFullscreen()

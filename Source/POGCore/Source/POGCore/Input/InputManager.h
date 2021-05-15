@@ -41,7 +41,7 @@ namespace POG::Core
 		InputManager();
 		virtual ~InputManager() = default;
 
-		void Send(float dt);
+		void Dispatch(float dt);
 
 		bool HandleKeyEvent(KeyEvent& e);
 		bool HandleMouseMoveEvent(MouseMoveEvent& e);

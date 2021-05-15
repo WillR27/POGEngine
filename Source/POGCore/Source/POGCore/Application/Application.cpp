@@ -6,9 +6,13 @@
 namespace POG::Core
 {
 	Application::Application(std::string name)
-		: window(nullptr)
-		, name(name)
+		: name(name)
+		, window(nullptr)
 		, inputManager()
+		, targetUpdatesPerSecond(60.0f)
+		, targetUpdateInterval(1.0f / targetUpdatesPerSecond)
+		, targetFramesPerSecond(120.0f)
+		, targetFrameInterval(1.0f / targetFramesPerSecond)
 	{
 		POG_INFO("Creating application \"{0}\"!", name);
 	}
@@ -25,6 +29,8 @@ namespace POG::Core
 		window = Window::Create(name);
 		window->Init();
 		window->SetEventCallback(POG_BIND_FN(HandleEvent));
+
+		inputManager.AddInputCallback(POG_BIND_FN(Input));
 	}
 
 	void Application::PostInit()
@@ -37,11 +43,6 @@ namespace POG::Core
 
 		timer.Reset();
 		timer.Start();
-
-		float ups = 10.0f;
-		float uInteveral = 1.0f / ups;
-		float fps = 20.0f;
-		float fInterval = 1.0f / fps;
 		
 		const int maxUpdatesPerLoop = 10;
 		float timeBetweenLoops = 0.0f;
@@ -59,24 +60,25 @@ namespace POG::Core
 			timeBetweenFrames += timeBetweenLoops;
 
 			// Try catch up with updates if we are lagging
-			while (timeBetweenUpdates >= uInteveral)
+			while (timeBetweenUpdates >= GetTargetUpdateInterval())
 			{
-				POG_INFO(1.0f / timeBetweenUpdates);
+				//POG_INFO(1.0f / timeBetweenUpdates);
 
 				// Count how many updates we have done this game loop (happens if we are lagging)
 				updatesInCurrentLoop++;
 
 				// Check for inputs each update
 				window->InputUpdate();
+				inputManager.Dispatch(GetTargetUpdateInterval());
 
-				// Set the remaining lag, if we have updated a lot times without rendering just stop updating
-				timeBetweenUpdates = updatesInCurrentLoop >= maxUpdatesPerLoop ? 0.0f : timeBetweenUpdates - uInteveral;
+				// Set the remaining lag, if we have updated a lot of times without rendering just stop updating
+				timeBetweenUpdates = updatesInCurrentLoop >= maxUpdatesPerLoop ? 0.0f : timeBetweenUpdates - GetTargetUpdateInterval();
 			}
 
 			// Render once every game loop
-			if (timeBetweenFrames >= fInterval)
+			if (timeBetweenFrames >= GetTargetFrameInterval())
 			{
-				POG_TRACE(1.0f / timeBetweenFrames);
+				//POG_TRACE(1.0f / timeBetweenFrames);
 
 				window->FrameUpdate();
 				window->SwapBuffers();
@@ -87,6 +89,12 @@ namespace POG::Core
 		}
 
 		window->Close();
+	}
+
+	void Application::Quit()
+	{
+		WindowCloseEvent e;
+		HandleEvent(e);
 	}
 
 	void Application::HandleEvent(Event& e)
@@ -100,5 +108,9 @@ namespace POG::Core
 		ed.Dispatch<KeyEvent>(POG_BIND_FN(inputManager.HandleKeyEvent));
 		ed.Dispatch<MouseMoveEvent>(POG_BIND_FN(inputManager.HandleMouseMoveEvent));
 		ed.Dispatch<MouseButtonEvent>(POG_BIND_FN(inputManager.HandleMouseButtonEvent));
+	}
+
+	void Application::Input(InputPackage& inputPackage, float dt)
+	{
 	}
 }

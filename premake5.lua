@@ -31,8 +31,13 @@ group "External Dependencies"
 	include "External/Glad/premake_Glad.lua"
 	include "External/GoogleTest/premake_GoogleTest.lua"
 
-group "POG Engine"
+group "Examples"
 	include "Source/Example/premake_Example.lua"
+	
+group "POG Editor"
+	include "Source/POGEditor/premake_POGEditor.lua"
+	
+group "POG Engine"
 	include "Source/POGCommon/premake_POGCommon.lua"
 	include "Source/POGCore/premake_POGCore.lua"
 	include "Source/POGDebug/premake_POGDebug.lua"

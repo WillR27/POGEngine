@@ -10,7 +10,7 @@ namespace POG::Core
 	{
 	}
 
-	void InputManager::Send(float dt)
+	void InputManager::Dispatch(float dt)
 	{
 		for (State& state : states)
 		{

@@ -20,17 +20,36 @@ namespace POG::Core
 
 		void Run();
 
+		virtual void Input(InputPackage& inputPackage, float dt);
+
+		float GetTargetUpdatesPerSecond() const { return targetUpdatesPerSecond; }
+		void SetTargetUpdatesPerSecond(float newTarget) { targetUpdatesPerSecond = newTarget; targetUpdateInterval = 1.0f / targetUpdatesPerSecond; }
+		
+		float GetTargetUpdateInterval() const { return targetUpdateInterval; }
+		
+		float GetTargetFramesPerSecond() const { return targetFramesPerSecond; }
+		void SetTargetFramesPerSecond(float newTarget) { targetFramesPerSecond = newTarget; targetFrameInterval = 1.0f / targetFramesPerSecond; }
+
+		float GetTargetFrameInterval() const { return targetFrameInterval; }
+
 	protected:
 		Common::Timer<Common::Time::Unit::Seconds, float, true> timer;
 
 		InputManager inputManager;
 
-		const Window& GetWindow() { return *window; }
+		void Quit();
+
+		Window& GetWindow() { return *window; }
 
 	private:
+		std::string name;
+
 		std::unique_ptr<Window> window;
 
-		std::string name;
+		float targetUpdatesPerSecond;
+		float targetUpdateInterval;
+		float targetFramesPerSecond;
+		float targetFrameInterval;
 
 		void HandleEvent(Event& e);
 	};
