@@ -40,6 +40,12 @@ namespace POG::Core
 		InitCallbacks();
 	}
 
+	void WindowsWindow::Close()
+	{
+		glfwDestroyWindow(window);
+		glfwTerminate();
+	}
+
 	void WindowsWindow::InitWindow()
 	{
 		POG_INFO("Initialising window \"{0}\"!", GetName());
@@ -148,7 +154,7 @@ namespace POG::Core
 
 	bool WindowsWindow::HandleWindowCloseEvent(WindowCloseEvent& e)
 	{
-		//POG_INFO(e);
+		POG_INFO(e.ToString());
 
 		shouldClose = true;
 
@@ -157,7 +163,7 @@ namespace POG::Core
 
 	bool WindowsWindow::HandleWindowSizeEvent(WindowSizeEvent& e)
 	{
-		//POG_INFO(e);
+		POG_INFO(e.ToString());
 
 		glfwSetWindowSize(window, e.width, e.height);
 
@@ -168,7 +174,7 @@ namespace POG::Core
 
 	bool WindowsWindow::HandleWindowFocusEvent(WindowFocusEvent& e)
 	{
-		//POG_INFO(e);
+		POG_INFO(e.ToString());
 
 		static bool wasFullscreen = false;
 
@@ -195,6 +201,7 @@ namespace POG::Core
 
 	void WindowsWindow::SetEventCallback(EventCallback eventCallback)
 	{
+		windowData.eventCallback = eventCallback;
 	}
 
 	void WindowsWindow::SetFullscreen(bool isFullscreen)

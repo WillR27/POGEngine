@@ -1,4 +1,4 @@
-createbaseprojectcpp("POGDebug", "SharedLib")
+createbaseprojectcpp("POGDebug", "StaticLib")
     pchheader "POGDebugPCH.h"
 	pchsource "Source/POGDebugPCH.cpp"
 

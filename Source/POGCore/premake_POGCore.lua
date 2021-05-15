@@ -1,4 +1,4 @@
-createbaseprojectcpp("POGCore", "SharedLib")
+createbaseprojectcpp("POGCore", "StaticLib")
     pchheader "POGCorePCH.h"
 	pchsource "Source/POGCorePCH.cpp"
 

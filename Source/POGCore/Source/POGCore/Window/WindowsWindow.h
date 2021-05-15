@@ -17,6 +17,7 @@ namespace POG::Core
 		virtual ~WindowsWindow();
 
 		virtual void Init() override;
+		virtual void Close() override;
 
 		virtual void InputUpdate() override;
 		virtual void FrameUpdate() override;

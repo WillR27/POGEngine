@@ -6,7 +6,7 @@
 
 namespace POG::Render
 {
-	class POG_RENDER_API Render
+	class Render
 	{
 	public:
 		static void ClearColour(float r, float g, float b, float a);

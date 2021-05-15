@@ -1,4 +1,4 @@
-createbaseprojectcpp("POGMaths", "SharedLib")
+createbaseprojectcpp("POGMaths", "StaticLib")
     pchheader "POGMathsPCH.h"
 	pchsource "Source/POGMathsPCH.cpp"
 

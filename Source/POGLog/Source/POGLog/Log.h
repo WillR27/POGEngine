@@ -13,14 +13,14 @@ namespace POG::Log
 	class Log
 	{
 	public:
-		static POG_LOG_API void Init();
+		static void Init();
 
-		static POG_LOG_API Logger& GetLogger() { return GetLoggerRef(); }
+		static Logger& GetLogger() { return GetLoggerRef(); }
 
 	private:
 		static std::shared_ptr<Logger> Logger;
 
-		static POG_LOG_API POG::Log::Logger& GetLoggerRef();
+		static POG::Log::Logger& GetLoggerRef();
 	};
 }
 

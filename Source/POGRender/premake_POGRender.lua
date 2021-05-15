@@ -1,4 +1,4 @@
-createbaseprojectcpp("POGRender", "SharedLib")
+createbaseprojectcpp("POGRender", "StaticLib")
     pchheader "POGRenderPCH.h"
 	pchsource "Source/POGRenderPCH.cpp"
 

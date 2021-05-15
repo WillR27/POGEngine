@@ -1,4 +1,4 @@
-createbaseprojectcpp("POGLog", "SharedLib")
+createbaseprojectcpp("POGLog", "StaticLib")
     pchheader "POGLogPCH.h"
 	pchsource "Source/POGLogPCH.cpp"
 

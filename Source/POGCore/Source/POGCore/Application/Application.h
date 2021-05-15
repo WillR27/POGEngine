@@ -1,7 +1,8 @@
 #pragma once
 
-#include "POGCoreAPI.h"
+#include "POGCommon.h"
 
+#include "POGCore/Input/InputManager.h"
 #include "POGCore/Window/Window.h"
 
 namespace POG::Core
@@ -9,15 +10,20 @@ namespace POG::Core
 	class Application
 	{
 	public:
-		POG_CORE_API Application(std::string name = "POG");
+		Application(std::string name = "POG Engine");
 
-		POG_CORE_API virtual ~Application();
+		virtual ~Application();
 
-		POG_CORE_API void PreInit();
-		POG_CORE_API virtual void Init() = 0;
-		POG_CORE_API void PostInit();
+		void PreInit();
+		virtual void Init() = 0;
+		void PostInit();
 
-		POG_CORE_API void Run();
+		void Run();
+
+	protected:
+		Common::Timer<Common::Time::Unit::Seconds, float, true> timer;
+
+		InputManager inputManager;
 
 		const Window& GetWindow() { return *window; }
 
@@ -25,6 +31,8 @@ namespace POG::Core
 		std::unique_ptr<Window> window;
 
 		std::string name;
+
+		void HandleEvent(Event& e);
 	};
 
 	std::unique_ptr<Application> CreateApplication();

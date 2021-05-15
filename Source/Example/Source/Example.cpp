@@ -4,24 +4,24 @@
 
 #include "POGCore/Main.h"
 
-namespace POG
+namespace Example
 {
-	class POGApplication : public Core::Application
+	class ExampleApplication : public POG::Core::Application
 	{
 	public:
-		POGApplication()
-			: Application::Application("POG")
+		ExampleApplication()
+			: Application::Application("POG Example")
 		{
 		}
 
 		void Init() override
 		{
-			Render::Render::SetContextAddressFunc(GetWindow().GetContextAddressFunc());
+			POG::Render::Render::SetContextAddressFunc(GetWindow().GetContextAddressFunc());
 		}
 	};
+}
 
-	std::unique_ptr<Core::Application> Core::CreateApplication()
-	{
-		return std::make_unique<POGApplication>();
-	}
+std::unique_ptr<POG::Core::Application> POG::Core::CreateApplication()
+{
+	return std::make_unique<Example::ExampleApplication>();
 }
