@@ -2,16 +2,10 @@ createbaseprojectcpp("POGEditor", "ConsoleApp")
     pchheader "POGEditorPCH.h"
 	pchsource "Source/POGEditorPCH.cpp"
 	
-	files
-	{
-		"ImGui/**.h",
-		"ImGui/**.cpp",
-		"ImGui/**.hpp",
-	}
-	
 	includedirs
     {
-		"ImGui",
+		"../../External/Glad/include",
+		"../../External/ImGui",
 	
         "../POGCommon/Source",
         "../POGCore/Source",
@@ -25,6 +19,8 @@ createbaseprojectcpp("POGEditor", "ConsoleApp")
 
     links
     {
+		"ImGui",
+	
 		"POGCommon",
 		"POGCore",
 		"POGDebug",

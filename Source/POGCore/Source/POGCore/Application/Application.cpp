@@ -9,6 +9,7 @@ namespace POG::Core
 		: name(name)
 		, window(nullptr)
 		, inputManager()
+		, activeScene(nullptr)
 		, targetUpdatesPerSecond(60.0f)
 		, targetUpdateInterval(1.0f / targetUpdatesPerSecond)
 		, targetFramesPerSecond(120.0f)
@@ -35,6 +36,7 @@ namespace POG::Core
 
 	void Application::PostInit()
 	{
+		activeScene->Init();
 	}
 
 	void Application::Run()
@@ -71,6 +73,8 @@ namespace POG::Core
 				window->InputUpdate();
 				inputManager.Dispatch(GetTargetUpdateInterval());
 
+				activeScene->Update(GetTargetUpdateInterval());
+
 				// Set the remaining lag, if we have updated a lot of times without rendering just stop updating
 				timeBetweenUpdates = updatesInCurrentLoop >= maxUpdatesPerLoop ? 0.0f : timeBetweenUpdates - GetTargetUpdateInterval();
 			}
@@ -81,12 +85,17 @@ namespace POG::Core
 				//POG_TRACE(1.0f / timeBetweenFrames);
 
 				window->FrameUpdate();
+
+				activeScene->FrameUpdate(timeBetweenFrames / GetTargetFrameInterval());
+
 				window->SwapBuffers();
 
 				// We don't care about trying to catch up with frames so set to 0
 				timeBetweenFrames = 0.0f;
 			}
 		}
+
+		activeScene->Exit();
 
 		window->Close();
 	}

@@ -3,6 +3,7 @@
 #include "POGCommon.h"
 
 #include "POGCore/Input/InputManager.h"
+#include "POGCore/Scene/Scene.h"
 #include "POGCore/Window/Window.h"
 
 namespace POG::Core
@@ -36,6 +37,8 @@ namespace POG::Core
 		Common::Timer<Common::Time::Unit::Seconds, float, true> timer;
 
 		InputManager inputManager;
+
+		std::unique_ptr<Scene> activeScene;
 
 		void Quit();
 

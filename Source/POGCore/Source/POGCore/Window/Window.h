@@ -53,6 +53,8 @@ namespace POG::Core
 
 		std::string GetName() const { return name; }
 
+		virtual void* GetActualWindow() = 0;
+
 	private:
 		std::string name;
 	};

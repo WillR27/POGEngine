@@ -247,4 +247,9 @@ namespace POG::Core
 	{
 		return (ContextAddressFunc)glfwGetProcAddress;
 	}
+
+	void* WindowsWindow::GetActualWindow()
+	{
+		return window;
+	}
 }

@@ -30,6 +30,7 @@ group "External Dependencies"
 	include "External/GLFW/premake_GLFW.lua"
 	include "External/Glad/premake_Glad.lua"
 	include "External/GoogleTest/premake_GoogleTest.lua"
+	include "External/ImGui/premake_ImGui.lua"
 
 group "Examples"
 	include "Source/Example/premake_Example.lua"

@@ -44,6 +44,8 @@ namespace POG::Core
 
 		virtual ContextAddressFunc GetContextAddressFunc() const override;
 
+		virtual void* GetActualWindow() override;
+
 	private:
 		GLFWwindow* window;
 
