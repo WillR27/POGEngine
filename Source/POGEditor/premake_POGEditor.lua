@@ -19,6 +19,7 @@ createbaseprojectcpp("POGEditor", "ConsoleApp")
 
     links
     {
+		"Glad",
 		"ImGui",
 	
 		"POGCommon",

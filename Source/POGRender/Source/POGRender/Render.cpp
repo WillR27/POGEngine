@@ -8,6 +8,23 @@
 
 namespace POG::Render
 {
+	void Render::ErrorCallback(unsigned int source, unsigned int type, unsigned int id, unsigned int severity, int length, const char* message, const void* userParam)
+	{
+		POG_ERROR("OpenGL error: {0}", message);
+
+		switch (id)
+		{
+		case 2100: POG_ERROR("This can be caused by not having a vbo bound before trying to write to a vao.");
+		}
+
+		POG_ASSERT(false, "OpenGL error!");
+	}
+
+	void Render::Init()
+	{
+		glDebugMessageCallback(Render::ErrorCallback, nullptr);
+	}
+
 	void Render::ClearColour(float r, float g, float b, float a)
 	{
 		glClearColor(r, g, b, a);
