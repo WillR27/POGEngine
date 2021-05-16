@@ -4,7 +4,7 @@
 #define SPDLOG_DEBUG_ON
 #define SPDLOG_TRACE_ON
 
-#include "POGLogAPI.h"
+#include "POGCommon.h"
 
 #include "Logger.h"
 

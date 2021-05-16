@@ -5,11 +5,11 @@
 
 #include "POGCore/Main.h"
 
-#include "glad/glad.h"
+#include <glad/glad.h>
 
-#include "imgui.h"
-#include "imgui_impl_glfw.h"
-#include "imgui_impl_opengl3.h"
+#include <imgui.h>
+#include <imgui_impl_glfw.h>
+#include <imgui_impl_opengl3.h>
 
 namespace POG::Editor
 {
@@ -29,11 +29,33 @@ namespace POG::Editor
 
 			glGenTextures(1, &tex);
 			glBindTexture(GL_TEXTURE_2D, tex);
-			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 800, 600, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1000, 800, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 
 			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, tex, 0);
+
+			const char* vertexShaderSource = R"(
+#version 330 core
+layout (location = 0) in vec3 aPos;
+
+void main()
+{
+    gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);
+}
+)";
+
+			const char* fragmentShaderSource = R"(
+#version 330 core
+out vec4 FragColor;
+
+void main()
+{
+    FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);
+}
+)";
+
+			shader.Init(vertexShaderSource, fragmentShaderSource);
 		}
 
 		void Exit() override
@@ -58,9 +80,24 @@ namespace POG::Editor
 			Render::Render::ClearColourBuffer();
 			Render::Render::ClearDepthBuffer();
 
-			glBindFramebuffer(GL_FRAMEBUFFER, 0);
+			float vertices[] = 
+			{
+				-0.5f, -0.5f, 0.0f,
+				 0.5f, -0.5f, 0.0f,
+				 0.0f,  0.5f, 0.0f
+			};
 
-			
+			vbo.Bind();
+			vbo.SetVertexData(vertices, sizeof(vertices));
+
+			vao.Bind();
+			vao.SetAttribute(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+
+			shader.Use();
+
+			glDrawArrays(GL_TRIANGLES, 0, 3);
+
+			glBindFramebuffer(GL_FRAMEBUFFER, 0);
 			ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 
 			// Start the Dear ImGui frame
@@ -130,6 +167,10 @@ namespace POG::Editor
 		}
 
 	private:
+		Render::Shader shader;
+		Render::VertexBuffer vbo;
+		Render::VertexArray vao;
+
 		unsigned int fbo;
 		unsigned int tex;
 

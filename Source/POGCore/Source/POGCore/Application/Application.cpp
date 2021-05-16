@@ -64,7 +64,7 @@ namespace POG::Core
 			// Try catch up with updates if we are lagging
 			while (timeBetweenUpdates >= GetTargetUpdateInterval())
 			{
-				POG_INFO(1.0f / timeBetweenUpdates);
+				//POG_INFO(1.0f / timeBetweenUpdates);
 
 				// Count how many updates we have done this game loop (happens if we are lagging)
 				updatesInCurrentLoop++;
@@ -82,7 +82,7 @@ namespace POG::Core
 			// Render once every game loop
 			if (timeBetweenFrames >= GetTargetFrameInterval())
 			{
-				POG_TRACE(1.0f / timeBetweenFrames);
+				//POG_TRACE(1.0f / timeBetweenFrames);
 
 				window->FrameUpdate();
 
