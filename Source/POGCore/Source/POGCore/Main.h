@@ -4,6 +4,8 @@
 
 #include "Application/Application.h"
 
+#if defined(POG_STANDALONE) || defined(POG_EDITOR)
+
 int main(int argc, char** argv)
 {
 	POG::Log::Log::Init();
@@ -16,3 +18,9 @@ int main(int argc, char** argv)
 
 	app->Run();
 }
+
+//m #elif
+
+
+
+#endif

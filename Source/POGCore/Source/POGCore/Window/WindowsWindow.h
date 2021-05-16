@@ -41,8 +41,6 @@ namespace POG::Core
 		virtual void SetCursorEnabled(bool cursor) override;
 		virtual void ToggleCursorEnabled() override;
 
-		virtual bool ShouldClose() const override { return shouldClose; }
-
 		virtual ContextAddressFunc GetContextAddressFunc() const override;
 
 		virtual void* GetActualWindow() override;
@@ -55,7 +53,6 @@ namespace POG::Core
 		bool isFullscreen;
 		bool hasFocus;
 		bool isCursorEnabled;
-		bool shouldClose;
 
 		static WindowData& GetWindowData(GLFWwindow* window);
 

@@ -14,6 +14,8 @@ namespace POG::Core
 	public:
 		static Application& GetInstance();
 
+		Window* window;
+
 		Application(std::string name = "POG Engine");
 
 		virtual ~Application();
@@ -24,9 +26,15 @@ namespace POG::Core
 
 		void Run();
 
+		virtual void Loop();
+
+		void Quit();
+
 		void HandleEvent(Event& e);
 
 		virtual void Input(InputPackage& inputPackage, float dt);
+
+		bool ShouldClose() const { return shouldClose; };
 
 		float GetTargetUpdatesPerSecond() const { return targetUpdatesPerSecond; }
 		void SetTargetUpdatesPerSecond(float newTarget) { targetUpdatesPerSecond = newTarget; targetUpdateInterval = 1.0f / targetUpdatesPerSecond; }
@@ -49,8 +57,6 @@ namespace POG::Core
 
 		std::unique_ptr<Scene> activeScene;
 
-		void Quit();
-
 		Window& GetWindow() { return *window; }
 
 	private:
@@ -58,14 +64,18 @@ namespace POG::Core
 
 		std::string name;
 
-		std::unique_ptr<Window> window;
-
 		View view;
+
+		bool shouldClose;
 
 		float targetUpdatesPerSecond;
 		float targetUpdateInterval;
 		float targetFramesPerSecond;
 		float targetFrameInterval;
+
+		float timeBetweenLoops;
+		float timeBetweenUpdates;
+		float timeBetweenFrames;
 
 		bool HandleWindowSizeEvent(WindowSizeEvent& e);
 	};

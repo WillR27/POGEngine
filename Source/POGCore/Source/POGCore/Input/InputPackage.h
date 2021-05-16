@@ -2,6 +2,8 @@
 
 #include "InputTypes.h"
 
+#include <vector>
+
 namespace POG::Core
 {
 	class InputPackage

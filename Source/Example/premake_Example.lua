@@ -1,9 +1,11 @@
-createbaseprojectcpp("Example", "ConsoleApp")
+createbaseprojectcpp("Example", "StaticLib")
     pchheader "ExamplePCH.h"
 	pchsource "Source/ExamplePCH.cpp"
 	
     includedirs
     {
+		"../../External/Glad/include",
+	
         "../POGCommon/Source",
         "../POGCore/Source",
         "../POGDebug/Source",
@@ -16,6 +18,8 @@ createbaseprojectcpp("Example", "ConsoleApp")
 
     links
     {
+		"Glad",
+	
 		"POGCommon",
 		"POGCore",
 		"POGDebug",

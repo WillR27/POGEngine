@@ -18,7 +18,7 @@ namespace POG::Core
 	class Window
 	{
 	public:
-		static std::unique_ptr<Window> Create(std::string name);
+		static Window* Create(std::string name);
 
 		Window(std::string name);
 
@@ -48,8 +48,6 @@ namespace POG::Core
 		virtual bool IsCursorEnabled() const = 0;
 		virtual void SetCursorEnabled(bool cursor) = 0;
 		virtual void ToggleCursorEnabled() = 0;
-
-		virtual bool ShouldClose() const = 0;
 
 		virtual ContextAddressFunc GetContextAddressFunc() const = 0;
 

@@ -28,7 +28,6 @@ namespace POG::Core
 		, isFullscreen(false)
 		, hasFocus(true)
 		, isCursorEnabled(true)
-		, shouldClose(false)
 	{
 	}
 
@@ -158,7 +157,7 @@ namespace POG::Core
 	{
 		POG_INFO(e.ToString());
 
-		shouldClose = true;
+		Application::GetInstance().Quit();
 
 		return true;
 	}

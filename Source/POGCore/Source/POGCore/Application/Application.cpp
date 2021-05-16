@@ -20,16 +20,23 @@ namespace POG::Core
 		, view()
 		, inputManager()
 		, activeScene(nullptr)
+		, shouldClose(false)
 		, targetUpdatesPerSecond(60.0f)
 		, targetUpdateInterval(1.0f / targetUpdatesPerSecond)
 		, targetFramesPerSecond(120.0f)
 		, targetFrameInterval(1.0f / targetFramesPerSecond)
+		, timeBetweenLoops(0)
+		, timeBetweenUpdates(0)
+		, timeBetweenFrames(0)
 	{
-		POG_ASSERT(Instance == nullptr, "Application already created!");
+		//POG_ASSERT(Instance == nullptr, "Application already created!");
 
 		POG_INFO("Creating application \"{0}\"!", name);
 
-		Instance = this;
+		if (!Instance)
+		{
+			Instance = this;
+		}
 	}
 
 	Application::~Application()
@@ -41,9 +48,12 @@ namespace POG::Core
 	{
 		POG_INFO("Initialising application \"{0}\"!", name);
 
-		window = Window::Create(name);
-		window->Init();
-		window->SetEventCallback(POG_BIND_FN(HandleEvent));
+		if (!window)
+		{
+			window = Window::Create(name);
+			window->Init();
+			window->SetEventCallback(POG_BIND_FN(HandleEvent));
+		}
 
 		inputManager.AddInputCallback(POG_BIND_FN(Input));
 
@@ -54,62 +64,18 @@ namespace POG::Core
 	void Application::PostInit()
 	{
 		activeScene->Init();
+
+		timer.Reset();
+		timer.Start();
 	}
 
 	void Application::Run()
 	{
 		POG_INFO("Running application \"{0}!\"", name);
-
-		timer.Reset();
-		timer.Start();
 		
-		const int maxUpdatesPerLoop = 10;
-		float timeBetweenLoops = 0.0f;
-		float timeBetweenUpdates = 0.0f;
-		float timeBetweenFrames = 0.0f;
-
-		while (!window->ShouldClose())
+		while (!ShouldClose())
 		{
-			timeBetweenLoops = timer.Stop();
-			timer.Reset();
-			timer.Start();
-
-			int updatesInCurrentLoop = 0;
-			timeBetweenUpdates += timeBetweenLoops;
-			timeBetweenFrames += timeBetweenLoops;
-
-			// Try catch up with updates if we are lagging
-			while (timeBetweenUpdates >= GetTargetUpdateInterval())
-			{
-				//POG_INFO(1.0f / timeBetweenUpdates);
-
-				// Count how many updates we have done this game loop (happens if we are lagging)
-				updatesInCurrentLoop++;
-
-				// Check for inputs each update
-				window->InputUpdate();
-				inputManager.Dispatch(GetTargetUpdateInterval());
-
-				activeScene->Update(GetTargetUpdateInterval());
-
-				// Set the remaining lag, if we have updated a lot of times without rendering just stop updating
-				timeBetweenUpdates = updatesInCurrentLoop >= maxUpdatesPerLoop ? 0.0f : timeBetweenUpdates - GetTargetUpdateInterval();
-			}
-
-			// Render once every game loop
-			if (timeBetweenFrames >= GetTargetFrameInterval())
-			{
-				//POG_TRACE(1.0f / timeBetweenFrames);
-
-				window->FrameUpdate();
-
-				activeScene->FrameUpdate(timeBetweenFrames / GetTargetFrameInterval());
-
-				window->SwapBuffers();
-
-				// We don't care about trying to catch up with frames so set to 0
-				timeBetweenFrames = 0.0f;
-			}
+			Loop();
 		}
 
 		activeScene->Exit();
@@ -117,10 +83,55 @@ namespace POG::Core
 		window->Close();
 	}
 
+	void Application::Loop()
+	{
+		const int maxUpdatesPerLoop = 10;
+
+		timeBetweenLoops = timer.Stop();
+		timer.Reset();
+		timer.Start();
+
+		int updatesInCurrentLoop = 0;
+		timeBetweenUpdates += timeBetweenLoops;
+		timeBetweenFrames += timeBetweenLoops;
+
+		// Try catch up with updates if we are lagging
+		while (timeBetweenUpdates >= GetTargetUpdateInterval())
+		{
+			//POG_INFO(1.0f / timeBetweenUpdates);
+
+			// Count how many updates we have done this game loop (happens if we are lagging)
+			updatesInCurrentLoop++;
+
+			// Check for inputs each update
+			window->InputUpdate();
+			inputManager.Dispatch(GetTargetUpdateInterval());
+
+			activeScene->Update(GetTargetUpdateInterval());
+
+			// Set the remaining lag, if we have updated a lot of times without rendering just stop updating
+			timeBetweenUpdates = updatesInCurrentLoop >= maxUpdatesPerLoop ? 0.0f : timeBetweenUpdates - GetTargetUpdateInterval();
+		}
+
+		// Render once every game loop
+		if (timeBetweenFrames >= GetTargetFrameInterval())
+		{
+			//POG_TRACE(1.0f / timeBetweenFrames);
+
+			window->FrameUpdate();
+
+			activeScene->FrameUpdate(timeBetweenFrames / GetTargetFrameInterval());
+
+			window->SwapBuffers();
+
+			// We don't care about trying to catch up with frames so set to 0
+			timeBetweenFrames = 0.0f;
+		}
+	}
+
 	void Application::Quit()
 	{
-		WindowCloseEvent e;
-		HandleEvent(e);
+		shouldClose = true;
 	}
 
 	void Application::HandleEvent(Event& e)

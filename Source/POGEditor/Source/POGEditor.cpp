@@ -1,15 +1,18 @@
 #include "POGEditorPCH.h"
 
+#define POG_EDITOR
+#include "POGCore/Main.h"
+
 #include "POGCore.h"
 #include "POGRender.h"
-
-#include "POGCore/Main.h"
 
 #include <glad/glad.h>
 
 #include <imgui.h>
 #include <imgui_impl_glfw.h>
 #include <imgui_impl_opengl3.h>
+
+#include "Example.h"
 
 namespace POG::Editor
 {
@@ -189,12 +192,23 @@ void main()
 		{
 		}
 
+		virtual ~POGEditor()
+		{
+			delete clientApplication;
+		}
+
 		void Init() override
 		{
 			inputManager.AddAction("Quit", Core::InputInfo(Core::InputType::Keyboard, PG_KEY_ESCAPE, PG_KEY_RELEASE, PG_MOD_ANY));
 			inputManager.AddAction("Fullscreen", Core::InputInfo(Core::InputType::Keyboard, PG_KEY_F11, PG_KEY_RELEASE, PG_MOD_ANY));
 
 			activeScene = std::make_unique<POGEditorScene>();
+
+			clientApplication = new Example::ExampleApplication();
+			clientApplication->window = this->window;
+			clientApplication->PreInit();
+			clientApplication->Init();
+			clientApplication->PostInit();
 
 			// Setup Dear ImGui context
 			IMGUI_CHECKVERSION();
@@ -210,6 +224,13 @@ void main()
 			// Setup Platform/Renderer backends
 			ImGui_ImplGlfw_InitForOpenGL(static_cast<GLFWwindow*>(GetWindow().GetActualWindow()), true);
 			ImGui_ImplOpenGL3_Init("#version 150");
+		}
+
+		void Loop() override
+		{
+			Application::Loop();
+
+			clientApplication->Loop();
 		}
 
 		void Input(Core::InputPackage& inputPackage, float dt) override
@@ -228,6 +249,8 @@ void main()
 	private:
 		static Core::Application* clientApplication;
 	};
+
+	Core::Application* POGEditor::clientApplication = nullptr;
 }
 
 std::unique_ptr<POG::Core::Application> POG::Core::CreateApplication()

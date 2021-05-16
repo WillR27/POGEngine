@@ -7,9 +7,9 @@
 
 namespace POG::Core
 {
-    std::unique_ptr<Window> Window::Create(std::string name)
+    Window* Window::Create(std::string name)
     {
-        return std::make_unique<WindowsWindow>(name);
+        return new WindowsWindow(name);
     }
 
     Window::Window(std::string name)

@@ -7,6 +7,8 @@ createbaseprojectcpp("POGEditor", "ConsoleApp")
 		"../../External/Glad/include",
 		"../../External/ImGui",
 	
+		"../Example/Source",
+	
         "../POGCommon/Source",
         "../POGCore/Source",
         "../POGDebug/Source",
@@ -21,6 +23,8 @@ createbaseprojectcpp("POGEditor", "ConsoleApp")
     {
 		"Glad",
 		"ImGui",
+		
+		"Example",
 	
 		"POGCommon",
 		"POGCore",
