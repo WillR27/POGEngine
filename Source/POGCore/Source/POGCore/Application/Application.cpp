@@ -1,13 +1,23 @@
 #include "POGCorePCH.h"
 #include "Application.h"
 
+#include "POGDebug.h"
 #include "POGLog.h"
+#include "POGRender.h"
 
 namespace POG::Core
 {
+	Application* Application::Instance = nullptr;
+
+	Application& Application::GetInstance()
+	{
+		return *Instance;
+	}
+
 	Application::Application(std::string name)
 		: name(name)
 		, window(nullptr)
+		, view()
 		, inputManager()
 		, activeScene(nullptr)
 		, targetUpdatesPerSecond(60.0f)
@@ -15,7 +25,11 @@ namespace POG::Core
 		, targetFramesPerSecond(120.0f)
 		, targetFrameInterval(1.0f / targetFramesPerSecond)
 	{
+		POG_ASSERT(Instance == nullptr, "Application already created!");
+
 		POG_INFO("Creating application \"{0}\"!", name);
+
+		Instance = this;
 	}
 
 	Application::~Application()
@@ -32,6 +46,9 @@ namespace POG::Core
 		window->SetEventCallback(POG_BIND_FN(HandleEvent));
 
 		inputManager.AddInputCallback(POG_BIND_FN(Input));
+
+		POG::Render::Render::SetContextAddressFunc(GetWindow().GetContextAddressFunc());
+		POG::Render::Render::Init();
 	}
 
 	void Application::PostInit()
@@ -111,12 +128,23 @@ namespace POG::Core
 		EventDispatcher ed(e);
 
 		ed.Dispatch<WindowCloseEvent>(POG_BIND_FN(window->HandleWindowCloseEvent));
-		ed.Dispatch<WindowSizeEvent>(POG_BIND_FN(window->HandleWindowSizeEvent));
 		ed.Dispatch<WindowFocusEvent>(POG_BIND_FN(window->HandleWindowFocusEvent));
+		ed.Dispatch<WindowSizeEvent>(POG_BIND_FN(HandleWindowSizeEvent));
 
 		ed.Dispatch<KeyEvent>(POG_BIND_FN(inputManager.HandleKeyEvent));
 		ed.Dispatch<MouseMoveEvent>(POG_BIND_FN(inputManager.HandleMouseMoveEvent));
 		ed.Dispatch<MouseButtonEvent>(POG_BIND_FN(inputManager.HandleMouseButtonEvent));
+	}
+
+	bool Application::HandleWindowSizeEvent(WindowSizeEvent& e)
+	{
+		POG_INFO(e.ToString());
+
+		view.SetDimensions(e.width, e.height);
+
+		window->UpdateView(view);
+
+		return true;
 	}
 
 	void Application::Input(InputPackage& inputPackage, float dt)

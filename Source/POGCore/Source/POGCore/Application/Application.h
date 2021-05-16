@@ -4,6 +4,7 @@
 
 #include "POGCore/Input/InputManager.h"
 #include "POGCore/Scene/Scene.h"
+#include "POGCore/View/View.h"
 #include "POGCore/Window/Window.h"
 
 namespace POG::Core
@@ -11,6 +12,8 @@ namespace POG::Core
 	class Application
 	{
 	public:
+		static Application& GetInstance();
+
 		Application(std::string name = "POG Engine");
 
 		virtual ~Application();
@@ -20,6 +23,8 @@ namespace POG::Core
 		void PostInit();
 
 		void Run();
+
+		void HandleEvent(Event& e);
 
 		virtual void Input(InputPackage& inputPackage, float dt);
 
@@ -33,6 +38,10 @@ namespace POG::Core
 
 		float GetTargetFrameInterval() const { return targetFrameInterval; }
 
+		const View& GetView() const { return view; }
+		int GetWidth() const { return view.GetWidth(); }
+		int GetHeight() const { return view.GetHeight(); }
+
 	protected:
 		Common::Timer<Common::Time::Unit::Seconds, float, true> timer;
 
@@ -45,16 +54,20 @@ namespace POG::Core
 		Window& GetWindow() { return *window; }
 
 	private:
+		static Application* Instance;
+
 		std::string name;
 
 		std::unique_ptr<Window> window;
+
+		View view;
 
 		float targetUpdatesPerSecond;
 		float targetUpdateInterval;
 		float targetFramesPerSecond;
 		float targetFrameInterval;
 
-		void HandleEvent(Event& e);
+		bool HandleWindowSizeEvent(WindowSizeEvent& e);
 	};
 
 	std::unique_ptr<Application> CreateApplication();

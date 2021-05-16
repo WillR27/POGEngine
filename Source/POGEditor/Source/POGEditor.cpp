@@ -22,19 +22,16 @@ namespace POG::Editor
 
 		void Init() override
 		{
-			Render::Render::Init();
-
 			glGenFramebuffers(1, &fbo);
-			glBindFramebuffer(GL_FRAMEBUFFER, fbo);
-
 			glGenTextures(1, &tex);
+
+			glBindFramebuffer(GL_FRAMEBUFFER, fbo);
 			glBindTexture(GL_TEXTURE_2D, tex);
 			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1000, 800, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-
 			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, tex, 0);
-
+			
 			const char* vertexShaderSource = R"(
 #version 330 core
 layout (location = 0) in vec3 aPos;
@@ -75,7 +72,13 @@ void main()
 
 		void FrameUpdate(float alpha) override
 		{
+			Core::Application& app = Core::Application::GetInstance();
 			glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+			glBindTexture(GL_TEXTURE_2D, tex);
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, app.GetWidth(), app.GetHeight(), 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, tex, 0);
 			Render::Render::ClearColour(0.8f, 0.1f, 0.4f, 1.0f);
 			Render::Render::ClearColourBuffer();
 			Render::Render::ClearDepthBuffer();
@@ -99,7 +102,7 @@ void main()
 
 			glBindFramebuffer(GL_FRAMEBUFFER, 0);
 			ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
-
+			
 			// Start the Dear ImGui frame
 			ImGui_ImplOpenGL3_NewFrame();
 			ImGui_ImplGlfw_NewFrame();
@@ -178,18 +181,16 @@ void main()
 		bool show_another_window = false;
 	};
 
-	class POGEditorApplication : public POG::Core::Application
+	class POGEditor : public POG::Core::Application
 	{
 	public:
-		POGEditorApplication()
+		POGEditor()
 			: Application::Application("POG Example")
 		{
 		}
 
 		void Init() override
 		{
-			POG::Render::Render::SetContextAddressFunc(GetWindow().GetContextAddressFunc());
-
 			inputManager.AddAction("Quit", Core::InputInfo(Core::InputType::Keyboard, PG_KEY_ESCAPE, PG_KEY_RELEASE, PG_MOD_ANY));
 			inputManager.AddAction("Fullscreen", Core::InputInfo(Core::InputType::Keyboard, PG_KEY_F11, PG_KEY_RELEASE, PG_MOD_ANY));
 
@@ -223,10 +224,13 @@ void main()
 				GetWindow().ToggleFullscreen();
 			}
 		}
+
+	private:
+		static Core::Application* clientApplication;
 	};
 }
 
 std::unique_ptr<POG::Core::Application> POG::Core::CreateApplication()
 {
-	return std::make_unique<POG::Editor::POGEditorApplication>();
+	return std::make_unique<POG::Editor::POGEditor>();
 }

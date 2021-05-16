@@ -5,6 +5,8 @@
 #include "POGLog.h"
 #include "POGRender.h"
 
+#include "POGCore/Application/Application.h"
+
 #include <GLFW/glfw3.h>
 
 namespace POG::Core
@@ -50,8 +52,8 @@ namespace POG::Core
 	{
 		POG_INFO("Initialising window \"{0}\"!", GetName());
 
-		windowData.width = 1000;
-		windowData.height = 800;
+		windowData.width = Application::GetInstance().GetWidth();
+		windowData.height = Application::GetInstance().GetHeight();
 		windowData.eventCallback = [](Event& e)
 		{
 			POG_WARN("Window event callback has not been set!");
@@ -71,7 +73,7 @@ namespace POG::Core
 #endif
 
 		POG_INFO("Creating window with OpenGL context!");
-		window = glfwCreateWindow(1000, 800, GetName().c_str(), NULL, NULL);
+		window = glfwCreateWindow(windowData.width, windowData.height, GetName().c_str(), NULL, NULL);
 		POG_ASSERT(window, "Window or OpenGL context failed!");
 
 		glfwMakeContextCurrent(window);
@@ -161,17 +163,6 @@ namespace POG::Core
 		return true;
 	}
 
-	bool WindowsWindow::HandleWindowSizeEvent(WindowSizeEvent& e)
-	{
-		POG_INFO(e.ToString());
-
-		glfwSetWindowSize(window, e.width, e.height);
-
-		Render::Render::SetViewport(0, 0, e.width, e.height);
-
-		return true;
-	}
-
 	bool WindowsWindow::HandleWindowFocusEvent(WindowFocusEvent& e)
 	{
 		POG_INFO(e.ToString());
@@ -199,6 +190,13 @@ namespace POG::Core
 		return true;
 	}
 
+	void WindowsWindow::UpdateView(View view)
+	{
+		glfwSetWindowSize(window, view.GetWidth(), view.GetHeight());
+
+		Render::Render::SetViewport(0, 0, view.GetWidth(), view.GetHeight());
+	}
+
 	void WindowsWindow::SetEventCallback(EventCallback eventCallback)
 	{
 		windowData.eventCallback = eventCallback;
@@ -218,13 +216,13 @@ namespace POG::Core
 			const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
 			glfwSetWindowMonitor(window, glfwGetPrimaryMonitor(), 0, 0, mode->width, mode->height, GLFW_DONT_CARE);
 			WindowSizeEvent e(mode->width, mode->height);
-			HandleWindowSizeEvent(e);
+			Application::GetInstance().HandleEvent(e);
 		}
 		else
 		{
 			glfwSetWindowMonitor(window, nullptr, x, y, width, height, GLFW_DONT_CARE);
 			WindowSizeEvent e(width, height);
-			HandleWindowSizeEvent(e);
+			Application::GetInstance().HandleEvent(e);
 		}
 	}
 

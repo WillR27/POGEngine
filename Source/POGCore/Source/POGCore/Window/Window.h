@@ -4,6 +4,7 @@
 
 #include "POGCore/Event/InputEvents.h"
 #include "POGCore/Event/WindowEvents.h"
+#include "POGCore/View/View.h"
 
 namespace POG::Core
 {
@@ -32,8 +33,9 @@ namespace POG::Core
 		virtual void SwapBuffers() = 0;
 
 		virtual bool HandleWindowCloseEvent(WindowCloseEvent& e) = 0;
-		virtual bool HandleWindowSizeEvent(WindowSizeEvent& e) = 0;
 		virtual bool HandleWindowFocusEvent(WindowFocusEvent& e) = 0;
+
+		virtual void UpdateView(View view) = 0;
 
 		virtual void SetEventCallback(EventCallback eventCallback) = 0;
 
@@ -51,9 +53,9 @@ namespace POG::Core
 
 		virtual ContextAddressFunc GetContextAddressFunc() const = 0;
 
-		std::string GetName() const { return name; }
-
 		virtual void* GetActualWindow() = 0;
+
+		std::string GetName() const { return name; }
 
 	private:
 		std::string name;
