@@ -33,3 +33,8 @@ createbaseprojectcpp("POGEditor", "ConsoleApp")
 		"POGMaths",
 		"POGRender",
     }
+	
+	defines
+	{
+		"POG_EDITOR",
+	}

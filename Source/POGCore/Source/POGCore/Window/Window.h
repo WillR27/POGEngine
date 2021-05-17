@@ -27,8 +27,8 @@ namespace POG::Core
 		virtual void Init() = 0;
 		virtual void Close() = 0;
 
-		virtual void InputUpdate() = 0;
-		virtual void FrameUpdate() = 0;
+		virtual void Input() = 0;
+		virtual void Frame() = 0;
 
 		virtual void SwapBuffers() = 0;
 

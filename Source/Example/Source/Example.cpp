@@ -28,15 +28,19 @@ out vec4 FragColor;
 
 void main()
 {
-FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);
+FragColor = vec4(0.0f, 0.2f, 0.9f, 1.0f);
 }
 )";
 
 		shader.Init(vertexShaderSource, fragmentShaderSource);
 	}
 
-	void ExampleScene::Exit()
+	void ExampleScene::Input(POG::Core::InputPackage& inputPackage, float dt)
 	{
+		if (inputPackage.HasActionOccurred("Jump"))
+		{
+			flip = !flip;
+		}
 	}
 
 	void ExampleScene::Update(float dt)
@@ -44,17 +48,40 @@ FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);
 
 	}
 
-	void ExampleScene::FrameUpdate(float alpha)
+	void ExampleScene::Frame(float alpha)
 	{
-		float vertices[] =
+		float r = ((float)rand() / (RAND_MAX)) + 0;
+		float g = ((float)rand() / (RAND_MAX)) + 0;
+		float b = ((float)rand() / (RAND_MAX)) + 0;
+
+		POG::Render::Render::ClearColour(r, g, b, 1.0f);
+		POG::Render::Render::ClearColourBuffer();
+		POG::Render::Render::ClearDepthBuffer();
+
+		if (flip)
 		{
-			-0.5f, -0.5f, 0.0f,
+			float vertices[] =
+			{
+				0.5f, 0.5f, 0.0f,
+				-0.5f, 0.5f, 0.0f,
+				-0.0f, -0.5f, 0.0f
+			};
+
+			vbo.Bind();
+			vbo.SetVertexData(vertices, sizeof(vertices));
+		}
+		else
+		{
+			float vertices[] =
+			{
+				-0.5f, -0.5f, 0.0f,
 				0.5f, -0.5f, 0.0f,
 				0.0f,  0.5f, 0.0f
-		};
+			};
 
-		vbo.Bind();
-		vbo.SetVertexData(vertices, sizeof(vertices));
+			vbo.Bind();
+			vbo.SetVertexData(vertices, sizeof(vertices));
+		}
 
 		vao.Bind();
 		vao.SetAttribute(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
@@ -66,8 +93,13 @@ FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);
 
 	void ExampleScene::HandleEvent(POG::Core::Event& e)
 	{
-
+		
 	}
+
+	void ExampleScene::Exit()
+	{
+	}
+
 
 	ExampleApplication::ExampleApplication()
 		: Application::Application("POG Example")
@@ -76,8 +108,10 @@ FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);
 
 	void ExampleApplication::Init()
 	{
-		inputManager.AddAction("Quit", POG::Core::InputInfo(POG::Core::InputType::Keyboard, PG_KEY_ESCAPE, PG_KEY_RELEASE, PG_MOD_ANY));
-		inputManager.AddAction("Fullscreen", POG::Core::InputInfo(POG::Core::InputType::Keyboard, PG_KEY_F11, PG_KEY_RELEASE, PG_MOD_ANY));
+		inputManager->AddAction("Quit", POG::Core::InputInfo(POG::Core::InputType::Keyboard, PG_KEY_ESCAPE, PG_KEY_RELEASE, PG_MOD_ANY));
+		inputManager->AddAction("Fullscreen", POG::Core::InputInfo(POG::Core::InputType::Keyboard, PG_KEY_F11, PG_KEY_RELEASE, PG_MOD_ANY));
+
+		inputManager->AddAction("Jump", POG::Core::InputInfo(POG::Core::InputType::Keyboard, PG_KEY_SPACE, PG_KEY_RELEASE, PG_MOD_ANY));
 			
 		activeScene = std::make_unique<ExampleScene>();
 	}
@@ -86,7 +120,7 @@ FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);
 	{
 		if (inputPackage.HasActionOccurred("Quit", true))
 		{
-			Quit();
+			Exit();
 		}
 
 		if (inputPackage.HasActionOccurred("Fullscreen", true))

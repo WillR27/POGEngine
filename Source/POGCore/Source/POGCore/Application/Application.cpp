@@ -17,13 +17,14 @@ namespace POG::Core
 	Application::Application(std::string name)
 		: name(name)
 		, window(nullptr)
+		, ownWindow(true)
 		, view()
-		, inputManager()
+		, inputManager(new InputManager())
 		, activeScene(nullptr)
 		, shouldClose(false)
-		, targetUpdatesPerSecond(60.0f)
+		, targetUpdatesPerSecond(30.0f)
 		, targetUpdateInterval(1.0f / targetUpdatesPerSecond)
-		, targetFramesPerSecond(120.0f)
+		, targetFramesPerSecond(60.0f)
 		, targetFrameInterval(1.0f / targetFramesPerSecond)
 		, timeBetweenLoops(0)
 		, timeBetweenUpdates(0)
@@ -42,6 +43,18 @@ namespace POG::Core
 	Application::~Application()
 	{
 		POG_INFO("Destroying application \"{0}\"!", name);
+
+		if (ownWindow)
+		{
+			delete inputManager;
+		}
+	}
+
+	void Application::Exit()
+	{
+		POG_INFO("Exiting application \"{0}\"!", name);
+
+		shouldClose = true;
 	}
 
 	void Application::PreInit()
@@ -55,24 +68,64 @@ namespace POG::Core
 			window->SetEventCallback(POG_BIND_FN(HandleEvent));
 		}
 
-		inputManager.AddInputCallback(POG_BIND_FN(Input));
+		inputManager->AddInputCallback(POG_BIND_FN(Input));
 
-		POG::Render::Render::SetContextAddressFunc(GetWindow().GetContextAddressFunc());
-		POG::Render::Render::Init();
+		if (ownWindow)
+		{
+			POG::Render::Render::SetContextAddressFunc(GetWindow().GetContextAddressFunc());
+			POG::Render::Render::Init();
+		}
 	}
 
 	void Application::PostInit()
 	{
 		activeScene->Init();
 
+		inputManager->AddInputCallback(POG_BIND_FN(activeScene->Input));
+
 		timer.Reset();
 		timer.Start();
+	}
+
+	void Application::Input(InputPackage& inputPackage, float dt)
+	{
+	}
+
+	void Application::Update(float dt)
+	{
+		if (ownWindow)
+		{
+			// Check for inputs each update
+			window->Input();
+			inputManager->Dispatch(dt);
+		}
+
+		activeScene->Update(dt);
+	}
+
+	void Application::Frame(float alpha)
+	{
+		if (ownWindow)
+		{
+			window->Frame();
+		}
+
+		activeScene->Frame(timeBetweenFrames / GetTargetFrameInterval());
+
+		if (ownWindow)
+		{
+			window->SwapBuffers();
+		}
 	}
 
 	void Application::Run()
 	{
 		POG_INFO("Running application \"{0}!\"", name);
 		
+		PreInit();
+		Init();
+		PostInit();
+
 		while (!ShouldClose())
 		{
 			Loop();
@@ -103,11 +156,7 @@ namespace POG::Core
 			// Count how many updates we have done this game loop (happens if we are lagging)
 			updatesInCurrentLoop++;
 
-			// Check for inputs each update
-			window->InputUpdate();
-			inputManager.Dispatch(GetTargetUpdateInterval());
-
-			activeScene->Update(GetTargetUpdateInterval());
+			Update(GetTargetUpdateInterval());
 
 			// Set the remaining lag, if we have updated a lot of times without rendering just stop updating
 			timeBetweenUpdates = updatesInCurrentLoop >= maxUpdatesPerLoop ? 0.0f : timeBetweenUpdates - GetTargetUpdateInterval();
@@ -118,20 +167,11 @@ namespace POG::Core
 		{
 			//POG_TRACE(1.0f / timeBetweenFrames);
 
-			window->FrameUpdate();
-
-			activeScene->FrameUpdate(timeBetweenFrames / GetTargetFrameInterval());
-
-			window->SwapBuffers();
+			Frame(timeBetweenFrames / GetTargetFrameInterval());
 
 			// We don't care about trying to catch up with frames so set to 0
 			timeBetweenFrames = 0.0f;
 		}
-	}
-
-	void Application::Quit()
-	{
-		shouldClose = true;
 	}
 
 	void Application::HandleEvent(Event& e)
@@ -142,9 +182,9 @@ namespace POG::Core
 		ed.Dispatch<WindowFocusEvent>(POG_BIND_FN(window->HandleWindowFocusEvent));
 		ed.Dispatch<WindowSizeEvent>(POG_BIND_FN(HandleWindowSizeEvent));
 
-		ed.Dispatch<KeyEvent>(POG_BIND_FN(inputManager.HandleKeyEvent));
-		ed.Dispatch<MouseMoveEvent>(POG_BIND_FN(inputManager.HandleMouseMoveEvent));
-		ed.Dispatch<MouseButtonEvent>(POG_BIND_FN(inputManager.HandleMouseButtonEvent));
+		ed.Dispatch<KeyEvent>(POG_BIND_FN(inputManager->HandleKeyEvent));
+		ed.Dispatch<MouseMoveEvent>(POG_BIND_FN(inputManager->HandleMouseMoveEvent));
+		ed.Dispatch<MouseButtonEvent>(POG_BIND_FN(inputManager->HandleMouseButtonEvent));
 	}
 
 	bool Application::HandleWindowSizeEvent(WindowSizeEvent& e)
@@ -153,12 +193,11 @@ namespace POG::Core
 
 		view.SetDimensions(e.width, e.height);
 
-		window->UpdateView(view);
+		if (ownWindow)
+		{
+			window->UpdateView(view);
+		}
 
 		return true;
-	}
-
-	void Application::Input(InputPackage& inputPackage, float dt)
-	{
 	}
 }

@@ -15,24 +15,28 @@ namespace POG::Core
 		static Application& GetInstance();
 
 		Window* window;
+		bool ownWindow;
+		InputManager* inputManager;
 
 		Application(std::string name = "POG Engine");
 
 		virtual ~Application();
 
+		virtual void Exit();
+
+		void Run();
+
 		void PreInit();
 		virtual void Init() = 0;
 		void PostInit();
 
-		void Run();
+		virtual void Input(InputPackage& inputPackage, float dt);
+		virtual void Update(float dt);
+		virtual void Frame(float alpha);
 
 		virtual void Loop();
 
-		void Quit();
-
 		void HandleEvent(Event& e);
-
-		virtual void Input(InputPackage& inputPackage, float dt);
 
 		bool ShouldClose() const { return shouldClose; };
 
@@ -52,8 +56,6 @@ namespace POG::Core
 
 	protected:
 		Common::Timer<Common::Time::Unit::Seconds, float, true> timer;
-
-		InputManager inputManager;
 
 		std::unique_ptr<Scene> activeScene;
 

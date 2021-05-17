@@ -136,16 +136,14 @@ namespace POG::Core
 			});
 	}
 
-	void WindowsWindow::InputUpdate()
+	void WindowsWindow::Input()
 	{
 		glfwPollEvents();
 	}
 
-	void WindowsWindow::FrameUpdate()
+	void WindowsWindow::Frame()
 	{
-		Render::Render::ClearColour(0.3f, 0.7f, 0.9f, 1.0f);
-		Render::Render::ClearColourBuffer();
-		Render::Render::ClearDepthBuffer();
+
 	}
 
 	void WindowsWindow::SwapBuffers()
@@ -157,7 +155,7 @@ namespace POG::Core
 	{
 		POG_INFO(e.ToString());
 
-		Application::GetInstance().Quit();
+		Application::GetInstance().Exit();
 
 		return true;
 	}

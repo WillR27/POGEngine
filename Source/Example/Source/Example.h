@@ -14,18 +14,22 @@ namespace Example
 
 		void Init() override;
 
-		void Exit() override;
+		void Input(POG::Core::InputPackage& inputPackage, float dt) override;
 
 		void Update(float dt) override;
 
-		void FrameUpdate(float alpha) override;
+		void Frame(float alpha) override;
 
 		void HandleEvent(POG::Core::Event& e) override;
+
+		void Exit() override;
 
 	private:
 		POG::Render::Shader shader;
 		POG::Render::VertexBuffer vbo;
 		POG::Render::VertexArray vao;
+
+		bool flip;
 	};
 
 	class ExampleApplication : public POG::Core::Application

@@ -19,8 +19,8 @@ namespace POG::Core
 		virtual void Init() override;
 		virtual void Close() override;
 
-		virtual void InputUpdate() override;
-		virtual void FrameUpdate() override;
+		virtual void Input() override;
+		virtual void Frame() override;
 
 		virtual void SwapBuffers() override;
 
