@@ -32,5 +32,5 @@ createbaseprojectcpp("POGEditor", "ConsoleApp")
 	
 	defines
 	{
-		"POG_EDITOR",
+		"POG_STANDALONE",
 	}

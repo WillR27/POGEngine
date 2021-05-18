@@ -123,4 +123,9 @@ namespace POG::Core
         axes.clear();
         hasMouseMoved = false;
     }
+
+    bool InputPackage::IsEmpty()
+    {
+        return actions.empty() && states.empty() && axes.empty() && !hasMouseMoved;
+    }
 }

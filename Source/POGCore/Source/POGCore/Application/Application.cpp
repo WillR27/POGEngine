@@ -19,7 +19,7 @@ namespace POG::Core
 		, window(nullptr)
 		, isStandalone(true)
 		, view()
-		, inputManager(new InputManager())
+		, inputManager(nullptr)
 		, activeScene(nullptr)
 		, shouldClose(false)
 		, targetUpdatesPerSecond(30.0f)
@@ -44,9 +44,10 @@ namespace POG::Core
 	{
 		POG_INFO("Destroying application \"{0}\"!", name);
 
-		if (isStandalone)
+		if (IsStandalone())
 		{
 			delete inputManager;
+			delete window;
 		}
 	}
 
@@ -66,20 +67,19 @@ namespace POG::Core
 	{
 		POG_INFO("Initialising application \"{0}\"!", name);
 
-		if (isStandalone)
+		if (IsStandalone())
 		{
 			window = Window::Create(name);
 			window->Init();
 			window->SetEventCallback(POG_BIND_FN(HandleEvent));
+
+			Render::SetContextAddressFunc(GetWindow().GetContextAddressFunc());
+			Render::Init();
+
+			inputManager = new InputManager();
 		}
 
 		inputManager->AddInputCallback(POG_BIND_FN(Input));
-
-		if (isStandalone)
-		{
-			Render::SetContextAddressFunc(GetWindow().GetContextAddressFunc());
-			Render::Init();
-		}
 	}
 
 	void Application::PostInit()
@@ -98,26 +98,27 @@ namespace POG::Core
 
 	void Application::Update(float dt)
 	{
-		if (isStandalone)
+		if (IsStandalone())
 		{
 			// Check for inputs each update
 			window->Input();
-			inputManager->Dispatch(dt);
 		}
+		
+		inputManager->Dispatch(dt);
 
 		activeScene->Update(dt);
 	}
 
 	void Application::Frame(float alpha)
 	{
-		if (isStandalone)
+		if (IsStandalone())
 		{
 			window->Frame();
 		}
 
 		activeScene->Frame(timeBetweenFrames / GetTargetFrameInterval());
 
-		if (isStandalone)
+		if (IsStandalone())
 		{
 			window->SwapBuffers();
 		}
@@ -183,9 +184,12 @@ namespace POG::Core
 	{
 		EventDispatcher ed(e);
 
-		ed.Dispatch<WindowCloseEvent>(POG_BIND_FN(window->HandleWindowCloseEvent));
-		ed.Dispatch<WindowFocusEvent>(POG_BIND_FN(window->HandleWindowFocusEvent));
-		ed.Dispatch<WindowSizeEvent>(POG_BIND_FN(HandleWindowSizeEvent));
+		if (IsStandalone())
+		{
+			ed.Dispatch<WindowCloseEvent>(POG_BIND_FN(window->HandleWindowCloseEvent));
+			ed.Dispatch<WindowFocusEvent>(POG_BIND_FN(window->HandleWindowFocusEvent));
+			ed.Dispatch<WindowSizeEvent>(POG_BIND_FN(HandleWindowSizeEvent));
+		}
 
 		ed.Dispatch<KeyEvent>(POG_BIND_FN(inputManager->HandleKeyEvent));
 		ed.Dispatch<MouseMoveEvent>(POG_BIND_FN(inputManager->HandleMouseMoveEvent));
@@ -203,7 +207,7 @@ namespace POG::Core
 
 		view.SetDimensions(e.width, e.height);
 
-		if (isStandalone)
+		if (IsStandalone())
 		{
 			window->UpdateView(view);
 		}

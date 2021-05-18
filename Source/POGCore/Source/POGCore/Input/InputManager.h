@@ -11,7 +11,7 @@ namespace POG::Core
 	enum class InputType
 	{
 		Keyboard,
-		Mouse
+		Mouse,
 	};
 
 	struct InputInfo
@@ -33,25 +33,41 @@ namespace POG::Core
 		}
 	};
 
-	class InputManager
+	typedef std::function<void(InputPackage&, float dt)> InputCallback;
+
+	class IInputManager
 	{
 	public:
-		typedef std::function<void(InputPackage&, float dt)> InputCallback;
+		virtual void Dispatch(float dt) = 0;
 
+		virtual bool HandleKeyEvent(KeyEvent& e) = 0;
+		virtual bool HandleMouseMoveEvent(MouseMoveEvent& e) = 0;
+		virtual bool HandleMouseButtonEvent(MouseButtonEvent& e) = 0;
+
+		virtual void AddInputCallback(InputCallback actionCallback) = 0;
+
+		virtual void AddAction(std::string name, InputInfo inputInfo) = 0;
+		virtual void AddState(std::string name, InputInfo activeInputInfo, InputInfo inactiveInputInfo) = 0;
+		virtual void AddAxis(std::string name, InputInfo activeNegativeInputInfo, InputInfo inactiveNegativeInputInfo, InputInfo activePositiveInputInfo, InputInfo inactivePositiveInputInfo) = 0;
+	};
+
+	class InputManager : public IInputManager
+	{
+	public:
 		InputManager();
 		virtual ~InputManager() = default;
 
-		void Dispatch(float dt);
+		void Dispatch(float dt) override;
 
-		bool HandleKeyEvent(KeyEvent& e);
-		bool HandleMouseMoveEvent(MouseMoveEvent& e);
-		bool HandleMouseButtonEvent(MouseButtonEvent& e);
+		bool HandleKeyEvent(KeyEvent& e) override;
+		bool HandleMouseMoveEvent(MouseMoveEvent& e) override;
+		bool HandleMouseButtonEvent(MouseButtonEvent& e) override;
 
-		void AddInputCallback(InputCallback actionCallback);
+		void AddInputCallback(InputCallback actionCallback) override;
 
-		void AddAction(std::string name, InputInfo inputInfo);
-		void AddState(std::string name, InputInfo activeInputInfo, InputInfo inactiveInputInfo);
-		void AddAxis(std::string name, InputInfo activeNegativeInputInfo, InputInfo inactiveNegativeInputInfo, InputInfo activePositiveInputInfo, InputInfo inactivePositiveInputInfo);
+		void AddAction(std::string name, InputInfo inputInfo) override;
+		void AddState(std::string name, InputInfo activeInputInfo, InputInfo inactiveInputInfo) override;
+		void AddAxis(std::string name, InputInfo activeNegativeInputInfo, InputInfo inactiveNegativeInputInfo, InputInfo activePositiveInputInfo, InputInfo inactivePositiveInputInfo) override;
 
 	private:
 		std::vector<InputCallback> inputPackageCallbacks;

@@ -13,10 +13,10 @@
 
 namespace POG::Editor
 {
-	Core::IApplication* POGEditor::clientApplication = nullptr;
-
 	POGEditor::POGEditor()
 		: Application::Application("POG Editor")
+		, clientApplication(nullptr)
+		, clientInputManager(nullptr)
 	{
 	}
 
@@ -34,7 +34,7 @@ namespace POG::Editor
 	{
 		inputManager->AddAction("Quit", Core::InputInfo(Core::InputType::Keyboard, PG_KEY_ESCAPE, PG_KEY_RELEASE, PG_MOD_ANY));
 		inputManager->AddAction("Fullscreen", Core::InputInfo(Core::InputType::Keyboard, PG_KEY_F11, PG_KEY_RELEASE, PG_MOD_ANY));
-		inputManager->AddAction("Load", Core::InputInfo(Core::InputType::Keyboard, PG_KEY_SPACE, PG_KEY_RELEASE, PG_MOD_ANY));
+		inputManager->AddAction("Load", Core::InputInfo(Core::InputType::Keyboard, PG_KEY_SPACE, PG_KEY_RELEASE, PG_MOD_NONE));
 
 		activeScene = std::make_unique<POGEditorScene>();
 
@@ -104,17 +104,31 @@ namespace POG::Editor
 		Application::Frame(alpha);
 	}
 
+	void POGEditor::HandleEvent(Core::Event& e)
+	{
+		if (IsClientLoaded())
+		{
+			clientApplication->HandleEvent(e);
+		}
+
+		Application::HandleEvent(e);
+	}
+
 	void POGEditor::LoadClientApp()
 	{
-		POG_TRACE("Loading dll!");
+		POG_INFO("Loading dll!");
+
 		exampleDll = LoadLibrary(L"Example.dll");
 		POG_ASSERT(exampleDll, "Dll failed to load!");
 
 		createClientApplication = reinterpret_cast<CreateClientApplication>(GetProcAddress(exampleDll, "CreateClientApplication"));
 		POG_ASSERT(createClientApplication, "Function not found!");
 
+		clientInputManager = new Core::InputManager();
+
 		clientApplication = createClientApplication();
 		clientApplication->SetStandalone(false);
+		clientApplication->SetInputManager(clientInputManager);
 		clientApplication->SetContextAddressFunc(GetWindow().GetContextAddressFunc());
 		clientApplication->PreInit();
 		clientApplication->Init();
@@ -123,9 +137,14 @@ namespace POG::Editor
 
 	void POGEditor::UnloadClientApp()
 	{
-		POG_TRACE("Unloading dll!");
+		POG_INFO("Unloading dll!");
+
 		clientApplication->Destroy();
 		clientApplication = nullptr;
+
+		delete clientInputManager;
+		clientInputManager = nullptr;
+
 		FreeLibrary(exampleDll);
 	}
 }

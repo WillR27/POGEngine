@@ -40,5 +40,7 @@ namespace Example
 		void Init() override;
 
 		void Input(POG::Core::InputPackage& inputPackage, float dt) override;
+
+		void HandleEvent(POG::Core::Event& e) override;
 	};
 }

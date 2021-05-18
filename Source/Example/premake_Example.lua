@@ -30,7 +30,7 @@ createbaseprojectcpp("Example", "SharedLib")
 	
 	defines
 	{
-		"POG_EDITOR",
+		--"POG_STANDALONE",
 	}
 
     filter "configurations:Dist"

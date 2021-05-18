@@ -2,6 +2,7 @@
 #include "Example.h"
 
 #include "POGCore.h"
+#include "POGLog.h"
 #include "POGRender.h"
 
 #include "POGCore/Main.h"
@@ -108,10 +109,8 @@ FragColor = vec4(0.0f, 0.2f, 0.9f, 1.0f);
 
 	void ExampleApplication::Init()
 	{
-		inputManager->AddAction("Quit", POG::Core::InputInfo(POG::Core::InputType::Keyboard, PG_KEY_ESCAPE, PG_KEY_RELEASE, PG_MOD_ANY));
 		inputManager->AddAction("Fullscreen", POG::Core::InputInfo(POG::Core::InputType::Keyboard, PG_KEY_F11, PG_KEY_RELEASE, PG_MOD_ANY));
-
-		inputManager->AddAction("Jump", POG::Core::InputInfo(POG::Core::InputType::Keyboard, PG_KEY_SPACE, PG_KEY_RELEASE, PG_MOD_ANY));
+		inputManager->AddAction("Jump", POG::Core::InputInfo(POG::Core::InputType::Keyboard, PG_KEY_SPACE, PG_KEY_RELEASE, PG_MOD_CONTROL));
 			
 		activeScene = std::make_unique<ExampleScene>();
 	}
@@ -127,6 +126,11 @@ FragColor = vec4(0.0f, 0.2f, 0.9f, 1.0f);
 		{
 			GetWindow().ToggleFullscreen();
 		}
+	}
+
+	void ExampleApplication::HandleEvent(POG::Core::Event& e)
+	{
+		Application::HandleEvent(e);
 	}
 }
 

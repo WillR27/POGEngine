@@ -26,11 +26,17 @@ namespace POG::Editor
 
 		void Frame(float alpha) override;
 
+		void HandleEvent(Core::Event& e) override;
+
+		bool IsClientLoaded() const { return clientApplication; }
+
 	private:
-		static Core::IApplication* clientApplication;
+		Core::IApplication* clientApplication;
 
 		HINSTANCE exampleDll;
 		CreateClientApplication createClientApplication;
+
+		Core::InputManager* clientInputManager;
 
 		void LoadClientApp();
 		void UnloadClientApp();

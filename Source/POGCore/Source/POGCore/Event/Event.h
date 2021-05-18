@@ -36,7 +36,7 @@ namespace POG::Core
 		template<typename T, typename F>
 		bool Dispatch(const F& func)
 		{
-			if (typeid(e) == typeid(T) || typeid(T) == typeid(Event))
+			if (!e.handled && (typeid(e) == typeid(T) || typeid(T) == typeid(Event)))
 			{
 				e.handled = func(static_cast<T&>(e));
 				return true;

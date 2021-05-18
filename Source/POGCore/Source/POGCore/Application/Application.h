@@ -25,6 +25,10 @@ namespace POG::Core
 		virtual void Update(float dt) = 0;
 		virtual void Frame(float alpha) = 0;
 
+		virtual void HandleEvent(Event& e) = 0;
+
+		virtual void SetInputManager(IInputManager* inputManager) = 0;
+
 		virtual void SetContextAddressFunc(ContextAddressFunc func) = 0;
 
 		virtual void SetStandalone(bool isStandalone) = 0;
@@ -35,9 +39,6 @@ namespace POG::Core
 	{
 	public:
 		static Application& GetInstance();
-
-		Window* window;
-		InputManager* inputManager;
 
 		Application(std::string name = "POG Engine");
 
@@ -59,7 +60,7 @@ namespace POG::Core
 
 		virtual void Loop();
 
-		void HandleEvent(Event& e);
+		void HandleEvent(Event& e) override;
 
 		bool ShouldClose() const { return shouldClose; };
 
@@ -77,6 +78,8 @@ namespace POG::Core
 		int GetWidth() const { return view.GetWidth(); }
 		int GetHeight() const { return view.GetHeight(); }
 
+		void SetInputManager(IInputManager* inputManager) override { this->inputManager = inputManager; }
+
 		void SetContextAddressFunc(ContextAddressFunc func) override;
 
 		void SetStandalone(bool isStandalone) override { this->isStandalone = isStandalone; }
@@ -87,12 +90,16 @@ namespace POG::Core
 
 		std::unique_ptr<Scene> activeScene;
 
+		IInputManager* inputManager;
+
 		Window& GetWindow() { return *window; }
 
 	private:
 		static Application* Instance;
 
 		std::string name;
+
+		Window* window;
 
 		View view;
 

@@ -1,10 +1,10 @@
 #pragma once
 
+#ifdef POG_STANDALONE
+
 #include "POGLog.h"
 
 #include "Application/Application.h"
-
-#if defined(POG_STANDALONE) || defined(POG_EDITOR)
 
 int main(int argc, char** argv)
 {
@@ -14,9 +14,5 @@ int main(int argc, char** argv)
 
 	delete app;
 }
-
-//m #elif
-
-
 
 #endif

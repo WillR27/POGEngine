@@ -21,6 +21,8 @@ namespace POG::Core
 
 		void Clear();
 
+		bool IsEmpty();
+
 	private:
 		std::vector<Action> actions;
 		std::vector<State> states;
