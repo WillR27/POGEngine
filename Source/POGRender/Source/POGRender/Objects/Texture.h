@@ -12,6 +12,8 @@ namespace POG::Render
 
 		virtual void Bind() override;
 		virtual void Unbind() override;
+		
+		void SetDimensions(int width, int height);
 
 		virtual RenderingObject* GetCurrent() override;
 

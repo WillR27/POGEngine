@@ -35,6 +35,12 @@ namespace POG::Render
 		glBindTexture(GL_TEXTURE_2D, 0);
 	}
 
+	void Texture::SetDimensions(int width, int height)
+	{
+		Bind();
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
+	}
+
 	RenderingObject* Texture::GetCurrent()
 	{
 		return currentFBO;

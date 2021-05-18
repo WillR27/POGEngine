@@ -117,9 +117,9 @@ void main()
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
 
+		Core::Application& app = Core::Application::GetInstance();
 		clientFBO.Bind();
-		clientTexture.Bind();
-		clientFBO.BindTexture(clientTexture);
+		clientTexture.SetDimensions(app.GetWidth(), app.GetHeight());
 	}
 
 	void POGEditorScene::HandleEvent(Core::Event& e)
