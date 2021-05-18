@@ -104,7 +104,6 @@ FragColor = vec4(0.0f, 0.2f, 0.9f, 1.0f);
 	ExampleApplication::ExampleApplication()
 		: Application::Application("POG Example")
 	{
-		ownWindow = false;
 	}
 
 	void ExampleApplication::Init()

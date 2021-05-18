@@ -26,6 +26,9 @@ namespace POG::Core
 		virtual void Frame(float alpha) = 0;
 
 		virtual void SetContextAddressFunc(ContextAddressFunc func) = 0;
+
+		virtual void SetStandalone(bool isStandalone) = 0;
+		virtual bool IsStandalone() = 0;
 	};
 
 	class Application : public IApplication
@@ -34,7 +37,6 @@ namespace POG::Core
 		static Application& GetInstance();
 
 		Window* window;
-		bool ownWindow;
 		InputManager* inputManager;
 
 		Application(std::string name = "POG Engine");
@@ -77,6 +79,9 @@ namespace POG::Core
 
 		void SetContextAddressFunc(ContextAddressFunc func) override;
 
+		void SetStandalone(bool isStandalone) override { this->isStandalone = isStandalone; }
+		bool IsStandalone() override { return isStandalone; }
+
 	protected:
 		Common::Timer<Common::Time::Unit::Seconds, float, true> timer;
 
@@ -90,6 +95,8 @@ namespace POG::Core
 		std::string name;
 
 		View view;
+
+		bool isStandalone;
 
 		bool shouldClose;
 

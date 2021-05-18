@@ -17,7 +17,7 @@ namespace POG::Core
 	Application::Application(std::string name)
 		: name(name)
 		, window(nullptr)
-		, ownWindow(true)
+		, isStandalone(true)
 		, view()
 		, inputManager(new InputManager())
 		, activeScene(nullptr)
@@ -44,7 +44,7 @@ namespace POG::Core
 	{
 		POG_INFO("Destroying application \"{0}\"!", name);
 
-		if (ownWindow)
+		if (isStandalone)
 		{
 			delete inputManager;
 		}
@@ -66,7 +66,7 @@ namespace POG::Core
 	{
 		POG_INFO("Initialising application \"{0}\"!", name);
 
-		if (ownWindow)
+		if (isStandalone)
 		{
 			window = Window::Create(name);
 			window->Init();
@@ -75,7 +75,7 @@ namespace POG::Core
 
 		inputManager->AddInputCallback(POG_BIND_FN(Input));
 
-		if (ownWindow)
+		if (isStandalone)
 		{
 			Render::SetContextAddressFunc(GetWindow().GetContextAddressFunc());
 			Render::Init();
@@ -98,7 +98,7 @@ namespace POG::Core
 
 	void Application::Update(float dt)
 	{
-		if (ownWindow)
+		if (isStandalone)
 		{
 			// Check for inputs each update
 			window->Input();
@@ -110,14 +110,14 @@ namespace POG::Core
 
 	void Application::Frame(float alpha)
 	{
-		if (ownWindow)
+		if (isStandalone)
 		{
 			window->Frame();
 		}
 
 		activeScene->Frame(timeBetweenFrames / GetTargetFrameInterval());
 
-		if (ownWindow)
+		if (isStandalone)
 		{
 			window->SwapBuffers();
 		}
@@ -203,7 +203,7 @@ namespace POG::Core
 
 		view.SetDimensions(e.width, e.height);
 
-		if (ownWindow)
+		if (isStandalone)
 		{
 			window->UpdateView(view);
 		}

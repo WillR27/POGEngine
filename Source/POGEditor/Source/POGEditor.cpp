@@ -110,13 +110,11 @@ namespace POG::Editor
 		exampleDll = LoadLibrary(L"Example.dll");
 		POG_ASSERT(exampleDll, "Dll failed to load!");
 
-		createClientApplication = reinterpret_cast<CreateClientApplication>(
-			GetProcAddress(exampleDll, "CreateClientApplication"));
+		createClientApplication = reinterpret_cast<CreateClientApplication>(GetProcAddress(exampleDll, "CreateClientApplication"));
 		POG_ASSERT(createClientApplication, "Function not found!");
 
 		clientApplication = createClientApplication();
-		//clientApplication->window = this->window;
-		//clientApplication->ownWindow = false;
+		clientApplication->SetStandalone(false);
 		clientApplication->SetContextAddressFunc(GetWindow().GetContextAddressFunc());
 		clientApplication->PreInit();
 		clientApplication->Init();
