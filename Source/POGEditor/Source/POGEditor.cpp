@@ -38,20 +38,7 @@ namespace POG::Editor
 
 		activeScene = std::make_unique<POGEditorScene>();
 
-		exampleDll = LoadLibrary(L"Example.dll");
-		POG_ASSERT(exampleDll, "Dll failed to load!");
-
-		createClientApplication = reinterpret_cast<CreateClientApplication>(
-			GetProcAddress(exampleDll, "CreateClientApplication"));
-		POG_ASSERT(createClientApplication, "Function not found!");
-
-		clientApplication = createClientApplication();
-		//clientApplication->window = this->window;
-		//clientApplication->ownWindow = false;
-		clientApplication->SetContextAddressFunc(GetWindow().GetContextAddressFunc());
-		clientApplication->PreInit();
-		clientApplication->Init();
-		clientApplication->PostInit();
+		LoadClientApp();
 
 		// Setup Dear ImGui context
 		IMGUI_CHECKVERSION();
@@ -86,28 +73,11 @@ namespace POG::Editor
 		{
 			if (load)
 			{
-				POG_TRACE("Loading dll!");
-				exampleDll = LoadLibrary(L"Example.dll");
-				POG_ASSERT(exampleDll, "Dll failed to load!");
-
-				createClientApplication = reinterpret_cast<CreateClientApplication>(
-					GetProcAddress(exampleDll, "CreateClientApplication"));
-				POG_ASSERT(createClientApplication, "Function not found!");
-
-				clientApplication = createClientApplication();
-				//clientApplication->window = this->window;
-				//clientApplication->ownWindow = false;
-				clientApplication->SetContextAddressFunc(GetWindow().GetContextAddressFunc());
-				clientApplication->PreInit();
-				clientApplication->Init();
-				clientApplication->PostInit();
+				LoadClientApp();
 			}
 			else
 			{
-				POG_TRACE("Unloading dll!");
-				clientApplication->Destroy();
-				clientApplication = nullptr;
-				FreeLibrary(exampleDll);
+				UnloadClientApp();
 			}
 
 			load = !load;
@@ -132,6 +102,33 @@ namespace POG::Editor
 		}
 
 		Application::Frame(alpha);
+	}
+
+	void POGEditor::LoadClientApp()
+	{
+		POG_TRACE("Loading dll!");
+		exampleDll = LoadLibrary(L"Example.dll");
+		POG_ASSERT(exampleDll, "Dll failed to load!");
+
+		createClientApplication = reinterpret_cast<CreateClientApplication>(
+			GetProcAddress(exampleDll, "CreateClientApplication"));
+		POG_ASSERT(createClientApplication, "Function not found!");
+
+		clientApplication = createClientApplication();
+		//clientApplication->window = this->window;
+		//clientApplication->ownWindow = false;
+		clientApplication->SetContextAddressFunc(GetWindow().GetContextAddressFunc());
+		clientApplication->PreInit();
+		clientApplication->Init();
+		clientApplication->PostInit();
+	}
+
+	void POGEditor::UnloadClientApp()
+	{
+		POG_TRACE("Unloading dll!");
+		clientApplication->Destroy();
+		clientApplication = nullptr;
+		FreeLibrary(exampleDll);
 	}
 }
 

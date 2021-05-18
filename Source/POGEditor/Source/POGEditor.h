@@ -31,5 +31,8 @@ namespace POG::Editor
 
 		HINSTANCE exampleDll;
 		CreateClientApplication createClientApplication;
+
+		void LoadClientApp();
+		void UnloadClientApp();
 	};
 }
