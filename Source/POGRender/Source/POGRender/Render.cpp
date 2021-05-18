@@ -8,7 +8,7 @@
 
 namespace POG::Render
 {
-	void Render::ErrorCallback(unsigned int source, unsigned int type, unsigned int id, unsigned int severity, int length, const char* message, const void* userParam)
+	void ErrorCallback(unsigned int source, unsigned int type, unsigned int id, unsigned int severity, int length, const char* message, const void* userParam)
 	{
 		POG_ERROR("OpenGL error: {0}", message);
 
@@ -20,32 +20,37 @@ namespace POG::Render
 		POG_ASSERT(false, "OpenGL error!");
 	}
 
-	void Render::Init()
+	void Init()
 	{
-		glDebugMessageCallback(Render::ErrorCallback, nullptr);
+		glDebugMessageCallback(ErrorCallback, nullptr);
 	}
 
-	void Render::ClearColour(float r, float g, float b, float a)
+	void ClearColour(float r, float g, float b, float a)
 	{
 		glClearColor(r, g, b, a);
 	}
 
-	void Render::ClearColourBuffer()
+	void ClearColourBuffer()
 	{
 		glClear(GL_COLOR_BUFFER_BIT);
 	}
 
-	void Render::ClearDepthBuffer()
+	void ClearDepthBuffer()
 	{
 		glClear(GL_DEPTH_BUFFER_BIT);
 	}
 
-	void Render::SetViewport(int x, int y, int width, int height)
+	void SetViewport(int x, int y, int width, int height)
 	{
 		glViewport(x, y, width, height);
 	}
 
-	void Render::SetContextAddressFunc(ContextAddressFunc func)
+	void BindDefaultFrameBuffer()
+	{
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	}
+
+	void SetContextAddressFunc(ContextAddressFunc func)
 	{
 		POG_INFO("Initialising Glad!");
 		int success = gladLoadGLLoader((GLADloadproc)func);

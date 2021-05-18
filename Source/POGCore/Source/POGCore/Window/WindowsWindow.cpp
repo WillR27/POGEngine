@@ -191,7 +191,7 @@ namespace POG::Core
 	{
 		glfwSetWindowSize(window, view.GetWidth(), view.GetHeight());
 
-		Render::Render::SetViewport(0, 0, view.GetWidth(), view.GetHeight());
+		Render::SetViewport(0, 0, view.GetWidth(), view.GetHeight());
 	}
 
 	void WindowsWindow::SetEventCallback(EventCallback eventCallback)

@@ -3,8 +3,6 @@
 
 #include "POGEditor.h"
 
-#include <glad/glad.h>
-
 #include <imgui.h>
 #include <imgui_impl_glfw.h>
 #include <imgui_impl_opengl3.h>
@@ -34,58 +32,27 @@ void main()
 )";
 
 		shader.Init(vertexShaderSource, fragmentShaderSource);
+
+		clientFBO.Bind();
+		clientTexture.Bind();
+		clientFBO.BindTexture(clientTexture);
 	}
+
 	void POGEditorScene::Input(Core::InputPackage& inputPackage, float dt)
 	{
 	}
+
 	void POGEditorScene::Update(float dt)
 	{
 	}
+
 	void POGEditorScene::Frame(float alpha)
 	{
-		POGEditor& app = static_cast<POGEditor&>(Core::Application::GetInstance());
-		//glBindFramebuffer(GL_FRAMEBUFFER, fbo);
-		//glBindTexture(GL_TEXTURE_2D, tex);
-		//glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, app.GetWidth(), app.GetHeight(), 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
-		//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-		//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-		//glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, tex, 0);
-		//app.clientApplication->FrameUpdate(alpha);
+		Render::BindDefaultFrameBuffer();
 
-		float r = ((float)rand() / (RAND_MAX)) + 0;
-		float g = ((float)rand() / (RAND_MAX)) + 0;
-		float b = ((float)rand() / (RAND_MAX)) + 0;
-
-		//Render::Render::ClearColour(r, g, b, 1.0f);
-		//Render::Render::ClearColourBuffer();
-		//Render::Render::ClearDepthBuffer();
-
-		//float vertices[] =
-		//{
-		//	-0.5f, -0.5f, 0.0f,
-		//	 0.5f, -0.5f, 0.0f,
-		//	 0.0f,  0.5f, 0.0f
-		//};
-
-		//vbo.Bind();
-		//vbo.SetVertexData(vertices, sizeof(vertices));
-
-		//vao.Bind();
-		//vao.SetAttribute(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-
-		//shader.Use();
-
-		//glDrawArrays(GL_TRIANGLES, 0, 3);
-
-		glBindFramebuffer(GL_FRAMEBUFFER, 0);
-		r = ((float)rand() / (RAND_MAX)) + 0;
-		g = ((float)rand() / (RAND_MAX)) + 0;
-		b = ((float)rand() / (RAND_MAX)) + 0;
-		r = 0.5f, g = 0.1f, b = 0.9f;
-
-		Render::Render::ClearColour(r, g, b, 1.0f);
-		Render::Render::ClearColourBuffer();
-		Render::Render::ClearDepthBuffer();
+		Render::ClearColour(0.5f, 0.1f, 0.9f, 1.0f);
+		Render::ClearColourBuffer();
+		Render::ClearDepthBuffer();
 
 		ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 
@@ -139,7 +106,7 @@ void main()
 			// Get the size of the child (i.e. the whole draw size of the windows).
 			ImVec2 wsize = ImGui::GetWindowSize();
 			// Because I use the texture from OpenGL, I need to invert the V from the UV.
-			ImGui::Image((ImTextureID)app.GetClientTexture(), wsize, ImVec2(0, 1), ImVec2(1, 0));
+			ImGui::Image((ImTextureID)((unsigned int)clientTexture), wsize, ImVec2(0, 1), ImVec2(1, 0));
 			ImGui::EndChild();
 		}
 		ImGui::End();
@@ -148,6 +115,11 @@ void main()
 		// Rendering
 		ImGui::Render();
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
+
+		clientFBO.Bind();
+		clientTexture.Bind();
+		clientFBO.BindTexture(clientTexture);
 	}
 
 	void POGEditorScene::HandleEvent(Core::Event& e)

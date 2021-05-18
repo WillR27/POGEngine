@@ -77,8 +77,8 @@ namespace POG::Core
 
 		if (ownWindow)
 		{
-			Render::Render::SetContextAddressFunc(GetWindow().GetContextAddressFunc());
-			Render::Render::Init();
+			Render::SetContextAddressFunc(GetWindow().GetContextAddressFunc());
+			Render::Init();
 		}
 	}
 
@@ -194,7 +194,7 @@ namespace POG::Core
 
 	void Application::SetContextAddressFunc(ContextAddressFunc func)
 	{
-		Render::Render::SetContextAddressFunc(func);
+		Render::SetContextAddressFunc(func);
 	}
 
 	bool Application::HandleWindowSizeEvent(WindowSizeEvent& e)

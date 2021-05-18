@@ -54,9 +54,9 @@ FragColor = vec4(0.0f, 0.2f, 0.9f, 1.0f);
 		float g = ((float)rand() / (RAND_MAX)) + 0;
 		float b = ((float)rand() / (RAND_MAX)) + 0;
 
-		POG::Render::Render::ClearColour(r, g, b, 1.0f);
-		POG::Render::Render::ClearColourBuffer();
-		POG::Render::Render::ClearDepthBuffer();
+		POG::Render::ClearColour(r, g, b, 1.0f);
+		POG::Render::ClearColourBuffer();
+		POG::Render::ClearDepthBuffer();
 		 
 		if (flip)
 		{

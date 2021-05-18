@@ -16,15 +16,12 @@ namespace POG::Editor
 	Core::IApplication* POGEditor::clientApplication = nullptr;
 
 	POGEditor::POGEditor()
-		: Application::Application("POG Example")
+		: Application::Application("POG Editor")
 	{
 	}
 
 	POGEditor::~POGEditor()
 	{
-		delete clientFBO;
-		delete clientTexture;
-
 		delete clientApplication;
 	}
 
@@ -70,13 +67,6 @@ namespace POG::Editor
 		// Setup Platform/Renderer backends
 		ImGui_ImplGlfw_InitForOpenGL(static_cast<GLFWwindow*>(GetWindow().GetActualWindow()), true);
 		ImGui_ImplOpenGL3_Init("#version 150");
-
-		clientFBO = new Render::FrameBuffer();
-		clientTexture = new Render::Texture();
-
-		clientFBO->Bind();
-		clientTexture->Bind();
-		clientFBO->BindTexture(*clientTexture);
 	}
 
 	void POGEditor::Input(Core::InputPackage& inputPackage, float dt)
@@ -136,10 +126,6 @@ namespace POG::Editor
 
 	void POGEditor::Frame(float alpha)
 	{
-		clientFBO->Bind();
-		clientTexture->Bind();
-		clientFBO->BindTexture(*clientTexture);
-
 		if (clientApplication)
 		{
 			clientApplication->Frame(alpha);

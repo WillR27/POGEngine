@@ -6,21 +6,19 @@
 
 namespace POG::Render
 {
-	class Render
-	{
-	public:
-		static void ErrorCallback(unsigned int source, unsigned int type, unsigned int id, unsigned int severity, int length, const char* message, const void* userParam);
+	void ErrorCallback(unsigned int source, unsigned int type, unsigned int id, unsigned int severity, int length, const char* message, const void* userParam);
 
-		static void Init();
+	void Init();
 
-		static void ClearColour(float r, float g, float b, float a);
+	void ClearColour(float r, float g, float b, float a);
 
-		static void ClearColourBuffer();
-		static void ClearDepthBuffer();
+	void ClearColourBuffer();
+	void ClearDepthBuffer();
 
-		static void SetViewport(int x, int y, int width, int height);
+	void SetViewport(int x, int y, int width, int height);
 
-		static void SetContextAddressFunc(ContextAddressFunc func);
-	};
+	void BindDefaultFrameBuffer();
+
+	void SetContextAddressFunc(ContextAddressFunc func);
 }
 
