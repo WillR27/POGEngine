@@ -8,11 +8,13 @@
 
 int main(int argc, char** argv)
 {
-	POG::Log::Log::Init();
+	
 
-	std::unique_ptr<POG::Core::Application> app = POG::Core::CreateApplication();
+	POG::Core::Application* app = POG::Core::CreateApplication();
 
 	app->Run();
+
+	delete app;
 }
 
 //m #elif

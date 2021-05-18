@@ -9,7 +9,26 @@
 
 namespace POG::Core
 {
-	class Application
+	class IApplication
+	{
+	public:
+		virtual void Destroy() = 0;
+
+		virtual void Exit() = 0;
+
+		virtual void Run() = 0;
+
+		virtual void PreInit() = 0;
+		virtual void Init() = 0;
+		virtual void PostInit() = 0;
+
+		virtual void Update(float dt) = 0;
+		virtual void Frame(float alpha) = 0;
+
+		virtual void SetContextAddressFunc(ContextAddressFunc func) = 0;
+	};
+
+	class Application : public IApplication
 	{
 	public:
 		static Application& GetInstance();
@@ -22,17 +41,19 @@ namespace POG::Core
 
 		virtual ~Application();
 
-		virtual void Exit();
+		void Destroy() override;
 
-		void Run();
+		void Exit() override;
 
-		void PreInit();
-		virtual void Init() = 0;
-		void PostInit();
+		void Run() override;
+
+		void PreInit() override;
+		void Init() = 0;
+		void PostInit() override;
 
 		virtual void Input(InputPackage& inputPackage, float dt);
-		virtual void Update(float dt);
-		virtual void Frame(float alpha);
+		void Update(float dt) override;
+		void Frame(float alpha) override;
 
 		virtual void Loop();
 
@@ -53,6 +74,8 @@ namespace POG::Core
 		const View& GetView() const { return view; }
 		int GetWidth() const { return view.GetWidth(); }
 		int GetHeight() const { return view.GetHeight(); }
+
+		void SetContextAddressFunc(ContextAddressFunc func) override;
 
 	protected:
 		Common::Timer<Common::Time::Unit::Seconds, float, true> timer;
@@ -82,6 +105,5 @@ namespace POG::Core
 		bool HandleWindowSizeEvent(WindowSizeEvent& e);
 	};
 
-	std::unique_ptr<Application> CreateApplication();
+	Application* CreateApplication();
 }
-

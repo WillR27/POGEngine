@@ -31,7 +31,7 @@ namespace POG::Core
 		, timeBetweenFrames(0)
 	{
 		//POG_ASSERT(Instance == nullptr, "Application already created!");
-
+		POG::Log::Log::Init();
 		POG_INFO("Creating application \"{0}\"!", name);
 
 		if (!Instance)
@@ -50,6 +50,11 @@ namespace POG::Core
 		}
 	}
 
+	void Application::Destroy()
+	{
+		delete this;
+	}
+
 	void Application::Exit()
 	{
 		POG_INFO("Exiting application \"{0}\"!", name);
@@ -61,7 +66,7 @@ namespace POG::Core
 	{
 		POG_INFO("Initialising application \"{0}\"!", name);
 
-		if (!window)
+		if (ownWindow)
 		{
 			window = Window::Create(name);
 			window->Init();
@@ -72,8 +77,8 @@ namespace POG::Core
 
 		if (ownWindow)
 		{
-			POG::Render::Render::SetContextAddressFunc(GetWindow().GetContextAddressFunc());
-			POG::Render::Render::Init();
+			Render::Render::SetContextAddressFunc(GetWindow().GetContextAddressFunc());
+			Render::Render::Init();
 		}
 	}
 
@@ -187,6 +192,11 @@ namespace POG::Core
 		ed.Dispatch<MouseButtonEvent>(POG_BIND_FN(inputManager->HandleMouseButtonEvent));
 	}
 
+	void Application::SetContextAddressFunc(ContextAddressFunc func)
+	{
+		Render::Render::SetContextAddressFunc(func);
+	}
+
 	bool Application::HandleWindowSizeEvent(WindowSizeEvent& e)
 	{
 		POG_INFO(e.ToString());
@@ -200,4 +210,9 @@ namespace POG::Core
 
 		return true;
 	}
+}
+
+extern "C" __declspec(dllexport) POG::Core::IApplication * __cdecl CreateClientApplication()
+{
+	return POG::Core::CreateApplication();
 }

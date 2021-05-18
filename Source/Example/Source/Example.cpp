@@ -57,7 +57,7 @@ FragColor = vec4(0.0f, 0.2f, 0.9f, 1.0f);
 		POG::Render::Render::ClearColour(r, g, b, 1.0f);
 		POG::Render::Render::ClearColourBuffer();
 		POG::Render::Render::ClearDepthBuffer();
-
+		 
 		if (flip)
 		{
 			float vertices[] =
@@ -104,6 +104,7 @@ FragColor = vec4(0.0f, 0.2f, 0.9f, 1.0f);
 	ExampleApplication::ExampleApplication()
 		: Application::Application("POG Example")
 	{
+		ownWindow = false;
 	}
 
 	void ExampleApplication::Init()
@@ -130,11 +131,7 @@ FragColor = vec4(0.0f, 0.2f, 0.9f, 1.0f);
 	}
 }
 
-#ifdef POG_STANDALONE
-
-std::unique_ptr<POG::Core::Application> POG::Core::CreateApplication()
+POG::Core::Application* POG::Core::CreateApplication()
 {
-	return std::make_unique<Example::ExampleApplication>();
+	return new Example::ExampleApplication();
 }
-
-#endif

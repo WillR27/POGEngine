@@ -1,4 +1,4 @@
-createbaseprojectcpp("Example", "StaticLib")
+createbaseprojectcpp("Example", "SharedLib")
     pchheader "ExamplePCH.h"
 	pchsource "Source/ExamplePCH.cpp"
 	
@@ -27,6 +27,11 @@ createbaseprojectcpp("Example", "StaticLib")
 		"POGMaths",
 		"POGRender",
     }
+	
+	defines
+	{
+		"POG_EDITOR",
+	}
 
     filter "configurations:Dist"
         signexe = select(1, ("\"%{wks.location}/CodeSigning/SignFiles.bat\" \"" .. outputbindirproj .. "/Example.exe\""):gsub("/", "\\"))
