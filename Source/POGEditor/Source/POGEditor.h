@@ -26,7 +26,7 @@ namespace POG::Editor
 
 		void Frame(float alpha) override;
 
-		unsigned int GetClientTexture() const { return clientTexture; }
+		unsigned int GetClientTexture() const { return *clientTexture; }
 
 	private:
 		static Core::IApplication* clientApplication;
@@ -34,7 +34,7 @@ namespace POG::Editor
 		HINSTANCE exampleDll;
 		CreateClientApplication createClientApplication;
 
-		unsigned int clientFBO;
-		unsigned int clientTexture;
+		Render::FrameBuffer* clientFBO;
+		Render::Texture* clientTexture;
 	};
 }

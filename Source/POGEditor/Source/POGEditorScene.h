@@ -29,6 +29,9 @@ namespace POG::Editor
 		Render::VertexBuffer vbo;
 		Render::VertexArray vao;
 
+		Render::FrameBuffer clientFBO;
+		Render::Texture clientTexture;
+
 		bool show_demo_window = true;
 		bool show_another_window = false;
 	};

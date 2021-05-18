@@ -22,13 +22,14 @@ namespace POG::Editor
 
 	POGEditor::~POGEditor()
 	{
+		delete clientFBO;
+		delete clientTexture;
+
 		delete clientApplication;
 	}
 
 	void POGEditor::Exit()
 	{
-		glDeleteFramebuffers(1, &clientFBO);
-
 		Application::Exit();
 	}
 
@@ -70,16 +71,12 @@ namespace POG::Editor
 		ImGui_ImplGlfw_InitForOpenGL(static_cast<GLFWwindow*>(GetWindow().GetActualWindow()), true);
 		ImGui_ImplOpenGL3_Init("#version 150");
 
-		glGenFramebuffers(1, &clientFBO);
-		glGenTextures(1, &clientTexture);
+		clientFBO = new Render::FrameBuffer();
+		clientTexture = new Render::Texture();
 
-		glBindFramebuffer(GL_FRAMEBUFFER, clientFBO);
-		glBindTexture(GL_TEXTURE_2D, clientTexture);
-
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1000, 800, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, clientTexture, 0);
+		clientFBO->Bind();
+		clientTexture->Bind();
+		clientFBO->BindTexture(*clientTexture);
 	}
 
 	void POGEditor::Input(Core::InputPackage& inputPackage, float dt)
@@ -139,12 +136,9 @@ namespace POG::Editor
 
 	void POGEditor::Frame(float alpha)
 	{
-		glBindFramebuffer(GL_FRAMEBUFFER, clientFBO);
-		glBindTexture(GL_TEXTURE_2D, clientTexture);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, GetWidth(), GetHeight(), 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, clientTexture, 0);
+		clientFBO->Bind();
+		clientTexture->Bind();
+		clientFBO->BindTexture(*clientTexture);
 
 		if (clientApplication)
 		{
