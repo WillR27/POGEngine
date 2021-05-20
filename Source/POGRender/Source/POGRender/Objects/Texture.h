@@ -8,6 +8,9 @@ namespace POG::Render
 	{
 	public:
 		Texture();
+		Texture(const Texture&) = delete;
+		Texture(Texture&&) = delete;
+
 		~Texture();
 
 		virtual void Bind() override;

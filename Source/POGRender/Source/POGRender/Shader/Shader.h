@@ -6,6 +6,9 @@ namespace POG::Render
 	{
 	public:
 		Shader();
+		Shader(const Shader&) = delete;
+		Shader(Shader&&) = delete;
+
 		~Shader();
 
 		void Init(const char* vertexShader, const char* fragmentShader);

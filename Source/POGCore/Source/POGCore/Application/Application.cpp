@@ -19,9 +19,10 @@ namespace POG::Core
 		, window(nullptr)
 		, isStandalone(true)
 		, view()
-		, inputManager(nullptr)
+		, inputManager()
 		, activeScene(nullptr)
 		, shouldClose(false)
+		, isFullscreen(false)
 		, targetUpdatesPerSecond(30.0f)
 		, targetUpdateInterval(1.0f / targetUpdatesPerSecond)
 		, targetFramesPerSecond(60.0f)
@@ -46,7 +47,6 @@ namespace POG::Core
 
 		if (IsStandalone())
 		{
-			delete inputManager;
 			delete window;
 		}
 	}
@@ -75,21 +75,54 @@ namespace POG::Core
 
 			Render::SetContextAddressFunc(GetWindow().GetContextAddressFunc());
 			Render::Init();
-
-			inputManager = new InputManager();
 		}
 
-		inputManager->AddInputCallback(POG_BIND_FN(Input));
+		inputManager.AddInputCallback(POG_BIND_FN(Input));
 	}
 
 	void Application::PostInit()
 	{
 		activeScene->Init();
 
-		inputManager->AddInputCallback(POG_BIND_FN(activeScene->Input));
+		inputManager.AddInputCallback(POG_BIND_FN(activeScene->Input));
+	}
 
-		timer.Reset();
-		timer.Start();
+	void Application::TryUpdate(float timeBetweenLoops)
+	{
+		const int maxUpdatesPerLoop = 10;
+		int updatesInCurrentLoop = 0;
+
+		timeBetweenUpdates += timeBetweenLoops;
+
+		// Try catch up with updates if we are lagging
+		while (timeBetweenUpdates >= GetTargetUpdateInterval())
+		{
+			//POG_INFO(1.0f / timeBetweenUpdates);
+
+			// Count how many updates we have done this game loop (happens if we are lagging)
+			updatesInCurrentLoop++;
+
+			Update(GetTargetUpdateInterval());
+
+			// Set the remaining lag, if we have updated a lot of times without rendering just stop updating
+			timeBetweenUpdates = updatesInCurrentLoop >= maxUpdatesPerLoop ? 0.0f : timeBetweenUpdates - GetTargetUpdateInterval();
+		}
+	}
+
+	void Application::TryFrame(float timeBetweenLoops)
+	{
+		timeBetweenFrames += timeBetweenLoops;
+
+		// Render once every game loop
+		if (timeBetweenFrames >= GetTargetFrameInterval())
+		{
+			//POG_TRACE(1.0f / timeBetweenFrames);
+
+			Frame(timeBetweenFrames / GetTargetFrameInterval());
+
+			// We don't care about trying to catch up with frames so set to 0
+			timeBetweenFrames = 0.0f;
+		}
 	}
 
 	void Application::Input(InputPackage& inputPackage, float dt)
@@ -104,7 +137,7 @@ namespace POG::Core
 			window->Input();
 		}
 		
-		inputManager->Dispatch(dt);
+		inputManager.Dispatch(dt);
 
 		activeScene->Update(dt);
 	}
@@ -132,52 +165,22 @@ namespace POG::Core
 		Init();
 		PostInit();
 
+		timer.Reset();
+		timer.Start();
+
 		while (!ShouldClose())
 		{
-			Loop();
+			timeBetweenLoops = timer.Stop();
+			timer.Reset();
+			timer.Start();
+
+			TryUpdate(timeBetweenLoops);
+			TryFrame(timeBetweenLoops);
 		}
 
 		activeScene->Exit();
 
 		window->Close();
-	}
-
-	void Application::Loop()
-	{
-		const int maxUpdatesPerLoop = 10;
-
-		timeBetweenLoops = timer.Stop();
-		timer.Reset();
-		timer.Start();
-
-		int updatesInCurrentLoop = 0;
-		timeBetweenUpdates += timeBetweenLoops;
-		timeBetweenFrames += timeBetweenLoops;
-
-		// Try catch up with updates if we are lagging
-		while (timeBetweenUpdates >= GetTargetUpdateInterval())
-		{
-			//POG_INFO(1.0f / timeBetweenUpdates);
-
-			// Count how many updates we have done this game loop (happens if we are lagging)
-			updatesInCurrentLoop++;
-
-			Update(GetTargetUpdateInterval());
-
-			// Set the remaining lag, if we have updated a lot of times without rendering just stop updating
-			timeBetweenUpdates = updatesInCurrentLoop >= maxUpdatesPerLoop ? 0.0f : timeBetweenUpdates - GetTargetUpdateInterval();
-		}
-
-		// Render once every game loop
-		if (timeBetweenFrames >= GetTargetFrameInterval())
-		{
-			//POG_TRACE(1.0f / timeBetweenFrames);
-
-			Frame(timeBetweenFrames / GetTargetFrameInterval());
-
-			// We don't care about trying to catch up with frames so set to 0
-			timeBetweenFrames = 0.0f;
-		}
 	}
 
 	void Application::HandleEvent(Event& e)
@@ -191,14 +194,29 @@ namespace POG::Core
 			ed.Dispatch<WindowSizeEvent>(POG_BIND_FN(HandleWindowSizeEvent));
 		}
 
-		ed.Dispatch<KeyEvent>(POG_BIND_FN(inputManager->HandleKeyEvent));
-		ed.Dispatch<MouseMoveEvent>(POG_BIND_FN(inputManager->HandleMouseMoveEvent));
-		ed.Dispatch<MouseButtonEvent>(POG_BIND_FN(inputManager->HandleMouseButtonEvent));
+		ed.Dispatch<KeyEvent>(POG_BIND_FN(inputManager.HandleKeyEvent));
+		ed.Dispatch<MouseMoveEvent>(POG_BIND_FN(inputManager.HandleMouseMoveEvent));
+		ed.Dispatch<MouseButtonEvent>(POG_BIND_FN(inputManager.HandleMouseButtonEvent));
 	}
 
 	void Application::SetContextAddressFunc(ContextAddressFunc func)
 	{
 		Render::SetContextAddressFunc(func);
+	}
+
+	void Application::SetFullscreen(bool isFullscreen)
+	{
+		this->isFullscreen = isFullscreen;
+
+		if (window)
+		{
+			window->SetFullscreen(isFullscreen);
+		}
+	}
+
+	void Application::ToggleFullscreen()
+	{
+		SetFullscreen(!IsFullscreen());
 	}
 
 	bool Application::HandleWindowSizeEvent(WindowSizeEvent& e)
@@ -216,7 +234,7 @@ namespace POG::Core
 	}
 }
 
-extern "C" __declspec(dllexport) POG::Core::IApplication * __cdecl CreateClientApplication()
+extern "C" __declspec(dllexport) POG::Core::IApplication* __cdecl CreateClientApplication()
 {
 	return POG::Core::CreateApplication();
 }

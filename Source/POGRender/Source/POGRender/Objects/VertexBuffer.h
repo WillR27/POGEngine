@@ -10,6 +10,9 @@ namespace POG::Render
 	{
 	public:
 		VertexBuffer();
+		VertexBuffer(const VertexBuffer&) = delete;
+		VertexBuffer(VertexBuffer&&) = delete;
+
 		~VertexBuffer();
 
 		virtual void Bind() override;

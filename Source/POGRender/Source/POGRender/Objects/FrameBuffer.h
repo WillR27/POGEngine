@@ -9,6 +9,9 @@ namespace POG::Render
 	{
 	public:
 		FrameBuffer();
+		FrameBuffer(const FrameBuffer&) = delete;
+		FrameBuffer(FrameBuffer&&) = delete;
+
 		~FrameBuffer();
 
 		virtual void Bind() override;

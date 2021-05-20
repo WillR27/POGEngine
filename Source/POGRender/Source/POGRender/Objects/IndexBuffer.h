@@ -10,6 +10,9 @@ namespace POG::Render
 	{
 	public:
 		IndexBuffer();
+		IndexBuffer(const IndexBuffer&) = delete;
+		IndexBuffer(IndexBuffer&&) = delete;
+
 		~IndexBuffer();
 
 		virtual void Bind() override;

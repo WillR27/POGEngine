@@ -14,6 +14,8 @@ namespace Example
 
 		void Init() override;
 
+		void Exit() override;
+
 		void Input(POG::Core::InputPackage& inputPackage, float dt) override;
 
 		void Update(float dt) override;
@@ -21,8 +23,6 @@ namespace Example
 		void Frame(float alpha) override;
 
 		void HandleEvent(POG::Core::Event& e) override;
-
-		void Exit() override;
 
 	private:
 		POG::Render::Shader shader;
@@ -39,7 +39,12 @@ namespace Example
 
 		void Init() override;
 
+		void TryUpdate(float timeBetweenLoops) override;
+		void TryFrame(float timeBetweenLoops) override;
+
 		void Input(POG::Core::InputPackage& inputPackage, float dt) override;
+		void Update(float dt) override;
+		void Frame(float alpha) override;
 
 		void HandleEvent(POG::Core::Event& e) override;
 	};

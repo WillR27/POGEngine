@@ -5,6 +5,7 @@ createbaseprojectcpp("POGEditor", "ConsoleApp")
 	includedirs
     {
 		"../../External/Glad/include",
+		"../../External/GLFW/include",
 		"../../External/ImGui",
 	
         "../POGCommon/Source",
@@ -20,6 +21,7 @@ createbaseprojectcpp("POGEditor", "ConsoleApp")
     links
     {
 		"Glad",
+		"GLFW",
 		"ImGui",
 		
 		"POGCommon",

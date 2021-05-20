@@ -14,6 +14,9 @@ namespace POG::Render
 	{
 	public:
 		VertexArray();
+		VertexArray(const VertexArray&) = delete;
+		VertexArray(VertexArray&&) = delete;
+
 		~VertexArray();
 
 		virtual void Bind() override;

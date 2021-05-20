@@ -22,14 +22,18 @@ namespace POG::Core
 		virtual void Init() = 0;
 		virtual void PostInit() = 0;
 
+		virtual void TryUpdate(float timeBetweenLoops) = 0;
+		virtual void TryFrame(float timeBetweenLoops) = 0;
+
 		virtual void Update(float dt) = 0;
 		virtual void Frame(float alpha) = 0;
 
 		virtual void HandleEvent(Event& e) = 0;
 
-		virtual void SetInputManager(IInputManager* inputManager) = 0;
-
 		virtual void SetContextAddressFunc(ContextAddressFunc func) = 0;
+
+		virtual float GetTargetUpdatesPerSecond() const = 0;
+		virtual float GetTargetFramesPerSecond() const = 0;
 
 		virtual void SetStandalone(bool isStandalone) = 0;
 		virtual bool IsStandalone() = 0;
@@ -41,6 +45,8 @@ namespace POG::Core
 		static Application& GetInstance();
 
 		Application(std::string name = "POG Engine");
+		Application(const Application&) = delete;
+		Application(Application&&) = delete;
 
 		virtual ~Application();
 
@@ -54,22 +60,31 @@ namespace POG::Core
 		void Init() = 0;
 		void PostInit() override;
 
+		void TryUpdate(float timeBetweenLoops) override;
+		void TryFrame(float timeBetweenLoops) override;
+
 		virtual void Input(InputPackage& inputPackage, float dt);
 		void Update(float dt) override;
 		void Frame(float alpha) override;
-
-		virtual void Loop();
 
 		void HandleEvent(Event& e) override;
 
 		bool ShouldClose() const { return shouldClose; };
 
-		float GetTargetUpdatesPerSecond() const { return targetUpdatesPerSecond; }
+		void SetContextAddressFunc(ContextAddressFunc func) override;
+
+		Window& GetWindow() { return *window; }
+
+		bool IsFullscreen() const { return isFullscreen; }
+		void SetFullscreen(bool isFullscreen);
+		void ToggleFullscreen();
+
+		float GetTargetUpdatesPerSecond() const override { return targetUpdatesPerSecond; }
 		void SetTargetUpdatesPerSecond(float newTarget) { targetUpdatesPerSecond = newTarget; targetUpdateInterval = 1.0f / targetUpdatesPerSecond; }
 		
 		float GetTargetUpdateInterval() const { return targetUpdateInterval; }
 		
-		float GetTargetFramesPerSecond() const { return targetFramesPerSecond; }
+		float GetTargetFramesPerSecond() const override { return targetFramesPerSecond; }
 		void SetTargetFramesPerSecond(float newTarget) { targetFramesPerSecond = newTarget; targetFrameInterval = 1.0f / targetFramesPerSecond; }
 
 		float GetTargetFrameInterval() const { return targetFrameInterval; }
@@ -77,10 +92,6 @@ namespace POG::Core
 		const View& GetView() const { return view; }
 		int GetWidth() const { return view.GetWidth(); }
 		int GetHeight() const { return view.GetHeight(); }
-
-		void SetInputManager(IInputManager* inputManager) override { this->inputManager = inputManager; }
-
-		void SetContextAddressFunc(ContextAddressFunc func) override;
 
 		void SetStandalone(bool isStandalone) override { this->isStandalone = isStandalone; }
 		bool IsStandalone() override { return isStandalone; }
@@ -90,9 +101,11 @@ namespace POG::Core
 
 		std::unique_ptr<Scene> activeScene;
 
-		IInputManager* inputManager;
+		InputManager inputManager;
 
-		Window& GetWindow() { return *window; }
+		float timeBetweenLoops;
+		float timeBetweenUpdates;
+		float timeBetweenFrames;
 
 	private:
 		static Application* Instance;
@@ -107,14 +120,12 @@ namespace POG::Core
 
 		bool shouldClose;
 
+		bool isFullscreen;
+
 		float targetUpdatesPerSecond;
 		float targetUpdateInterval;
 		float targetFramesPerSecond;
 		float targetFrameInterval;
-
-		float timeBetweenLoops;
-		float timeBetweenUpdates;
-		float timeBetweenFrames;
 
 		bool HandleWindowSizeEvent(WindowSizeEvent& e);
 	};

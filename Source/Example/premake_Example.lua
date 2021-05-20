@@ -38,5 +38,5 @@ createbaseprojectcpp("Example", "SharedLib")
 
         postbuildcommands 
         { 
-            signexe,
+            --signexe,
         }

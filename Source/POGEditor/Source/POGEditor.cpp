@@ -5,18 +5,13 @@
 
 #include "POGEditorScene.h"
 
-#include <glad/glad.h>
-
-#include <imgui.h>
-#include <imgui_impl_glfw.h>
-#include <imgui_impl_opengl3.h>
-
 namespace POG::Editor
 {
 	POGEditor::POGEditor()
 		: Application::Application("POG Editor")
+		, exampleDll(nullptr)
+		, createClientApplication(nullptr)
 		, clientApplication(nullptr)
-		, clientInputManager(nullptr)
 	{
 	}
 
@@ -32,28 +27,36 @@ namespace POG::Editor
 
 	void POGEditor::Init()
 	{
-		inputManager->AddAction("Quit", Core::InputInfo(Core::InputType::Keyboard, PG_KEY_ESCAPE, PG_KEY_RELEASE, PG_MOD_ANY));
-		inputManager->AddAction("Fullscreen", Core::InputInfo(Core::InputType::Keyboard, PG_KEY_F11, PG_KEY_RELEASE, PG_MOD_ANY));
-		inputManager->AddAction("Load", Core::InputInfo(Core::InputType::Keyboard, PG_KEY_SPACE, PG_KEY_RELEASE, PG_MOD_NONE));
+		SetTargetUpdatesPerSecond(60.0f);
+		SetTargetFramesPerSecond(60.0f);
+
+		inputManager.AddAction("Quit", Core::InputInfo(Core::InputType::Keyboard, PG_KEY_ESCAPE, PG_KEY_RELEASE, PG_MOD_ANY));
+		inputManager.AddAction("Fullscreen", Core::InputInfo(Core::InputType::Keyboard, PG_KEY_F11, PG_KEY_RELEASE, PG_MOD_ANY));
+		inputManager.AddAction("Load", Core::InputInfo(Core::InputType::Keyboard, PG_KEY_SPACE, PG_KEY_RELEASE, PG_MOD_NONE));
 
 		activeScene = std::make_unique<POGEditorScene>();
 
 		LoadClientApp();
+	}
 
-		// Setup Dear ImGui context
-		IMGUI_CHECKVERSION();
-		ImGui::CreateContext();
-		ImGuiIO& io = ImGui::GetIO(); (void)io;
-		//io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
-		//io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
+	void POGEditor::TryUpdate(float timeBetweenLoops)
+	{
+		if (clientApplication)
+		{
+			clientApplication->TryUpdate(timeBetweenLoops);
+		}
 
-		// Setup Dear ImGui style
-		ImGui::StyleColorsDark();
-		//ImGui::StyleColorsClassic();
+		Application::TryUpdate(timeBetweenLoops);
+	}
 
-		// Setup Platform/Renderer backends
-		ImGui_ImplGlfw_InitForOpenGL(static_cast<GLFWwindow*>(GetWindow().GetActualWindow()), true);
-		ImGui_ImplOpenGL3_Init("#version 150");
+	void POGEditor::TryFrame(float timeBetweenLoops)
+	{
+		if (clientApplication)
+		{
+			clientApplication->TryFrame(timeBetweenLoops);
+		}
+
+		Application::TryFrame(timeBetweenLoops);
 	}
 
 	void POGEditor::Input(Core::InputPackage& inputPackage, float dt)
@@ -65,7 +68,7 @@ namespace POG::Editor
 
 		if (inputPackage.HasActionOccurred("Fullscreen", true))
 		{
-			GetWindow().ToggleFullscreen();
+			ToggleFullscreen();
 		}
 
 		static bool load = false;
@@ -86,32 +89,22 @@ namespace POG::Editor
 
 	void POGEditor::Update(float dt)
 	{
-		if (clientApplication)
-		{
-			clientApplication->Update(dt);
-		}
-
 		Application::Update(dt);
 	}
 
 	void POGEditor::Frame(float alpha)
 	{
-		if (clientApplication)
-		{
-			clientApplication->Frame(alpha);
-		}
-
 		Application::Frame(alpha);
 	}
 
 	void POGEditor::HandleEvent(Core::Event& e)
 	{
+		Application::HandleEvent(e);
+
 		if (IsClientLoaded())
 		{
 			clientApplication->HandleEvent(e);
 		}
-
-		Application::HandleEvent(e);
 	}
 
 	void POGEditor::LoadClientApp()
@@ -124,11 +117,8 @@ namespace POG::Editor
 		createClientApplication = reinterpret_cast<CreateClientApplication>(GetProcAddress(exampleDll, "CreateClientApplication"));
 		POG_ASSERT(createClientApplication, "Function not found!");
 
-		clientInputManager = new Core::InputManager();
-
 		clientApplication = createClientApplication();
 		clientApplication->SetStandalone(false);
-		clientApplication->SetInputManager(clientInputManager);
 		clientApplication->SetContextAddressFunc(GetWindow().GetContextAddressFunc());
 		clientApplication->PreInit();
 		clientApplication->Init();
@@ -141,9 +131,6 @@ namespace POG::Editor
 
 		clientApplication->Destroy();
 		clientApplication = nullptr;
-
-		delete clientInputManager;
-		clientInputManager = nullptr;
 
 		FreeLibrary(exampleDll);
 	}

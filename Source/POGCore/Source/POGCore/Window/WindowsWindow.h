@@ -32,8 +32,7 @@ namespace POG::Core
 		virtual void SetEventCallback(EventCallback eventCallback) override;
 
 		virtual bool IsFullscreen() const override { return isFullscreen; }
-		virtual void SetFullscreen(bool fullscreen) override;
-		virtual void ToggleFullscreen() override;
+		virtual void SetFullscreen(bool isFullscreen) override;
 
 		virtual bool HasFocus() const override { return hasFocus; }
 

@@ -223,11 +223,6 @@ namespace POG::Core
 		}
 	}
 
-	void WindowsWindow::ToggleFullscreen()
-	{
-		SetFullscreen(!IsFullscreen());
-	}
-
 	void WindowsWindow::SetCursorEnabled(bool isCursorEnabled)
 	{
 		this->isCursorEnabled = isCursorEnabled;

@@ -3,6 +3,8 @@
 #include "POGCore.h"
 #include "POGRender.h"
 
+#include "Gui.h"
+
 namespace POG::Editor
 {
 	class POGEditorScene : public POG::Core::Scene
@@ -14,6 +16,8 @@ namespace POG::Editor
 
 		void Init() override;
 
+		void Exit() override;
+
 		void Input(Core::InputPackage& inputPackage, float dt) override;
 
 		void Update(float dt) override;
@@ -22,18 +26,15 @@ namespace POG::Editor
 
 		void HandleEvent(Core::Event& e) override;
 
-		void Exit() override;
-
 	private:
+		Gui gui;
+
 		Render::Shader shader;
 		Render::VertexBuffer vbo;
 		Render::VertexArray vao;
 
 		Render::FrameBuffer clientFBO;
 		Render::Texture clientTexture;
-
-		bool show_demo_window = true;
-		bool show_another_window = false;
 	};
 }
 

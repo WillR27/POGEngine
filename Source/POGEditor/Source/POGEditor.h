@@ -20,10 +20,11 @@ namespace POG::Editor
 
 		void Init() override;
 
+		void TryUpdate(float timeBetweenLoops) override;
+		void TryFrame(float timeBetweenLoops) override;
+
 		void Input(Core::InputPackage& inputPackage, float dt) override;
-
 		void Update(float dt) override;
-
 		void Frame(float alpha) override;
 
 		void HandleEvent(Core::Event& e) override;
@@ -31,12 +32,10 @@ namespace POG::Editor
 		bool IsClientLoaded() const { return clientApplication; }
 
 	private:
-		Core::IApplication* clientApplication;
-
 		HINSTANCE exampleDll;
 		CreateClientApplication createClientApplication;
 
-		Core::InputManager* clientInputManager;
+		Core::IApplication* clientApplication;
 
 		void LoadClientApp();
 		void UnloadClientApp();

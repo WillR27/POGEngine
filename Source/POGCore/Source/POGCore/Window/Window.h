@@ -40,8 +40,7 @@ namespace POG::Core
 		virtual void SetEventCallback(EventCallback eventCallback) = 0;
 
 		virtual bool IsFullscreen() const = 0;
-		virtual void SetFullscreen(bool fullscreen) = 0;
-		virtual void ToggleFullscreen() = 0;
+		virtual void SetFullscreen(bool isFullscreen) = 0;
 
 		virtual bool HasFocus() const = 0;
 

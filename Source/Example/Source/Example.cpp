@@ -36,6 +36,10 @@ FragColor = vec4(0.0f, 0.2f, 0.9f, 1.0f);
 		shader.Init(vertexShaderSource, fragmentShaderSource);
 	}
 
+	void ExampleScene::Exit()
+	{
+	}
+
 	void ExampleScene::Input(POG::Core::InputPackage& inputPackage, float dt)
 	{
 		if (inputPackage.HasActionOccurred("Jump"))
@@ -97,10 +101,6 @@ FragColor = vec4(0.0f, 0.2f, 0.9f, 1.0f);
 		
 	}
 
-	void ExampleScene::Exit()
-	{
-	}
-
 
 	ExampleApplication::ExampleApplication()
 		: Application::Application("POG Example")
@@ -109,10 +109,23 @@ FragColor = vec4(0.0f, 0.2f, 0.9f, 1.0f);
 
 	void ExampleApplication::Init()
 	{
-		inputManager->AddAction("Fullscreen", POG::Core::InputInfo(POG::Core::InputType::Keyboard, PG_KEY_F11, PG_KEY_RELEASE, PG_MOD_ANY));
-		inputManager->AddAction("Jump", POG::Core::InputInfo(POG::Core::InputType::Keyboard, PG_KEY_SPACE, PG_KEY_RELEASE, PG_MOD_CONTROL));
+		SetTargetUpdatesPerSecond(60.0f);
+		SetTargetFramesPerSecond(60.0f);
+
+		inputManager.AddAction("Fullscreen", POG::Core::InputInfo(POG::Core::InputType::Keyboard, PG_KEY_F11, PG_KEY_RELEASE, PG_MOD_ANY));
+		inputManager.AddAction("Jump", POG::Core::InputInfo(POG::Core::InputType::Keyboard, PG_KEY_SPACE, PG_KEY_RELEASE, PG_MOD_CONTROL));
 			
 		activeScene = std::make_unique<ExampleScene>();
+	}
+
+	void ExampleApplication::TryUpdate(float timeBetweenLoops)
+	{
+		Application::TryUpdate(timeBetweenLoops);
+	}
+
+	void ExampleApplication::TryFrame(float timeBetweenLoops)
+	{
+		Application::TryFrame(timeBetweenLoops);
 	}
 
 	void ExampleApplication::Input(POG::Core::InputPackage& inputPackage, float dt)
@@ -124,8 +137,18 @@ FragColor = vec4(0.0f, 0.2f, 0.9f, 1.0f);
 
 		if (inputPackage.HasActionOccurred("Fullscreen", true))
 		{
-			GetWindow().ToggleFullscreen();
+			ToggleFullscreen();
 		}
+	}
+
+	void ExampleApplication::Update(float dt)
+	{
+		Application::Update(dt);
+	}
+
+	void ExampleApplication::Frame(float alpha)
+	{
+		Application::Frame(alpha);
 	}
 
 	void ExampleApplication::HandleEvent(POG::Core::Event& e)
