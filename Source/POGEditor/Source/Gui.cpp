@@ -2,19 +2,33 @@
 #include "Gui.h"
 
 #include "POGCore.h"
+#include "POGLog.h"
 
 #include <glad/glad.h>
 
 #include <GLFW/glfw3.h>
 
+#include <imgui_internal.h>
+
 namespace POG::Editor
 {
+	Gui::Gui()
+		: context(nullptr)
+		, dockspaceId(0)
+		, dockspaceLoaded(false)
+		, isClientFocused(true)
+		, shouldLoadClient(false)
+		, isClientPaused(false)
+	{
+	}
+
 	void Gui::Init()
 	{
 		// Setup Dear ImGui context
 		IMGUI_CHECKVERSION();
-		ImGui::CreateContext();
-		ImGuiIO& io = ImGui::GetIO(); (void)io;
+		context = ImGui::CreateContext();
+		ImGuiIO& io = ImGui::GetIO();
+		io.IniFilename = "editor.ini";
 		io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;       // Enable Keyboard Controls
 		//io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
 		io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;           // Enable Docking
@@ -24,6 +38,7 @@ namespace POG::Editor
 
 		// When viewports are enabled we tweak WindowRounding/WindowBg so platform windows can look identical to regular ones.
 		ImGuiStyle& style = ImGui::GetStyle();
+		style.DisplaySafeAreaPadding = ImVec2(0.0f, 0.0f);
 		if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
 		{
 			style.WindowRounding = 0.0f;
@@ -49,34 +64,32 @@ namespace POG::Editor
 		ImGui_ImplOpenGL3_NewFrame();
 		ImGui_ImplGlfw_NewFrame();
 		ImGui::NewFrame();
+		dockspaceLoaded = context->SettingsWindows.size();
 	}
 
 	void Gui::StartStyle()
 	{
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
+
+		ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 0.0f);
+		ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(0, 0));
+
+		ImGui::PushStyleVar(ImGuiStyleVar_ChildBorderSize, 0.0f);
+
+		ImGui::PushStyleVar(ImGuiStyleVar_CellPadding, ImVec2(0, 0));
+		ImGui::PushStyleVar(ImGuiStyleVar_IndentSpacing, 0.0f);
+		ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(0, 0));
+		ImGui::PushStyleVar(ImGuiStyleVar_ItemInnerSpacing, ImVec2(0, 0));
 	}
 
-	void Gui::Dockspace()
+	void Gui::MainMenu()
 	{
-		static ImGuiID dockspaceID = 0;
-		bool active = true;
-
-		const ImGuiViewport* main_viewport = ImGui::GetMainViewport();
-		ImGui::SetNextWindowPos(ImVec2(main_viewport->WorkPos.x, main_viewport->WorkPos.y));
-		ImGui::SetNextWindowSize(ImVec2(main_viewport->WorkSize.x, main_viewport->WorkSize.y));
-		ImGui::Begin("Master Window", &active, ImGuiWindowFlags_None | ImGuiWindowFlags_NoNav | ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoInputs);
-		dockspaceID = ImGui::GetID("HUB_DockSpace");
-		ImGui::DockSpace(dockspaceID, ImVec2(0.0f, 0.0f), ImGuiDockNodeFlags_None);
-		ImGui::End();
-
 		if (ImGui::BeginMainMenuBar())
 		{
-			ImGui::Text("POG ");
-
 			if (ImGui::BeginMenu("File"))
 			{
-				if (ImGui::MenuItem("Exit", nullptr)) 
+				if (ImGui::MenuItem("Exit", nullptr))
 				{
 					Core::Application::GetInstance().Exit();
 				}
@@ -98,23 +111,74 @@ namespace POG::Editor
 			}
 			ImGui::EndMainMenuBar();
 		}
+	}
+
+	void Gui::Dockspace()
+	{
+		bool active = true;
+
+		const ImGuiViewport* mainViewport = ImGui::GetMainViewport();
+		ImGui::SetNextWindowPos(ImVec2(mainViewport->WorkPos.x, mainViewport->WorkPos.y));
+		ImGui::SetNextWindowSize(ImVec2(mainViewport->WorkSize.x, mainViewport->WorkSize.y));
+		ImGui::Begin("Dock Space Window", &active, ImGuiWindowFlags_None | ImGuiWindowFlags_NoNav | ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoInputs);
+		{
+			dockspaceId = ImGui::GetID("Dock Space");
+			ImVec2 dockspaceSize = mainViewport->Size;
+			ImGui::DockSpace(dockspaceId, dockspaceSize, ImGuiDockNodeFlags_None);
+			
+			if (!dockspaceLoaded)
+			{
+				ImGui::DockBuilderRemoveNode(dockspaceId); // Clear out existing layout
+				ImGui::DockBuilderAddNode(dockspaceId, ImGuiDockNodeFlags_DockSpace); // Add empty node
+				ImGui::DockBuilderSetNodeSize(dockspaceId, dockspaceSize);
+
+				ImGuiID dockMainId = dockspaceId; // This variable will track the document node, however we are not using it here as we aren't docking anything into it.
+				ImGuiID dockLeftId= ImGui::DockBuilderSplitNode(dockMainId, ImGuiDir_Left, 0.30f, NULL, &dockMainId);
+
+				ImGui::DockBuilderDockWindow("Dear ImGui Demo", dockLeftId);
+				ImGui::DockBuilderDockWindow("Game Window", dockMainId);
+				ImGui::DockBuilderFinish(dockspaceId);
+
+				dockspaceLoaded = true;
+			}
+		}
+		ImGui::End();
 
 		// 1. Show the big demo window (Most of the sample code is in ImGui::ShowDemoWindow()! You can browse its code to learn more about Dear ImGui!).
-		bool show_demo_window = true;
-		if (show_demo_window)
-			ImGui::ShowDemoWindow(&show_demo_window);
+		bool showDemoWindow = true;
+		if (showDemoWindow)
+		{
+			ImGui::ShowDemoWindow(&showDemoWindow);
+		}
 	}
 
 	void Gui::GameWindow(Render::Texture& clientTexture)
 	{
-		ImGui::Begin("GameWindow");
+		ImGui::Begin("Game Window");
 		{
-			// Using a Child allow to fill all the space of the window.
-			// It also alows customization
-			ImGui::BeginChild("GameRender");
-			// Get the size of the child (i.e. the whole draw size of the windows).
+			isClientFocused = ImGui::IsWindowFocused(ImGuiFocusedFlags_RootAndChildWindows);
+			
+			if (ImGui::Button("Play"))
+			{
+				shouldLoadClient = true;
+				isClientPaused = false;
+			}
+
+			ImGui::SameLine();
+			if (ImGui::Button("Pause"))
+			{
+				isClientPaused = true;
+			}
+
+			ImGui::SameLine();
+			if (ImGui::Button("Stop"))
+			{
+				shouldLoadClient = false;
+				isClientPaused = true;
+			}
+
+			ImGui::BeginChild("Game Render");
 			ImVec2 wsize = ImGui::GetWindowSize();
-			// Because I use the texture from OpenGL, I need to invert the V from the UV.
 			ImGui::Image((ImTextureID)((unsigned int)clientTexture), wsize, ImVec2(0, 1), ImVec2(1, 0));
 			ImGui::EndChild();
 		}
@@ -123,7 +187,7 @@ namespace POG::Editor
 
 	void Gui::EndStyle()
 	{
-		ImGui::PopStyleVar(2);
+		ImGui::PopStyleVar(9);
 	}
 
 	void Gui::Render()

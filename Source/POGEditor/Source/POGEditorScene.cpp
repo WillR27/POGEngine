@@ -59,15 +59,27 @@ void main()
 
 		gui.Frame();
 		gui.StartStyle();
+		gui.MainMenu();
 		gui.Dockspace();
 		gui.GameWindow(clientTexture);
 		gui.EndStyle();
 		gui.Render();
 
+		POGEditor& pogEditor = static_cast<POGEditor&>(Core::Application::GetInstance());
+		pogEditor.SetClientFocused(gui.IsClientFocused());
+		gui.ShouldLoadClient() ? pogEditor.TryLoadClient() : pogEditor.TryUnloadClient();
+		pogEditor.SetClientPaused(gui.IsClientPaused());
+
 		// Setup the fbo for the client app to render to
-		Core::Application& app = Core::Application::GetInstance();
 		clientFBO.Bind();
-		clientTexture.SetDimensions(app.GetWidth(), app.GetHeight());
+		clientTexture.SetDimensions(pogEditor.GetWidth(), pogEditor.GetHeight());
+
+		if (!pogEditor.IsClientLoaded())
+		{
+			Render::ClearColour(0.5f, 0.1f, 0.9f, 1.0f);
+			Render::ClearColourBuffer();
+			Render::ClearDepthBuffer();
+		}
 	}
 
 	void POGEditorScene::HandleEvent(Core::Event& e)

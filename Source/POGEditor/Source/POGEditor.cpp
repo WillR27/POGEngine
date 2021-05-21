@@ -12,6 +12,8 @@ namespace POG::Editor
 		, exampleDll(nullptr)
 		, createClientApplication(nullptr)
 		, clientApplication(nullptr)
+		, isClientFocused(false)
+		, isClientPaused(false)
 	{
 	}
 
@@ -32,16 +34,13 @@ namespace POG::Editor
 
 		inputManager.AddAction("Quit", Core::InputInfo(Core::InputType::Keyboard, PG_KEY_ESCAPE, PG_KEY_RELEASE, PG_MOD_ANY));
 		inputManager.AddAction("Fullscreen", Core::InputInfo(Core::InputType::Keyboard, PG_KEY_F11, PG_KEY_RELEASE, PG_MOD_ANY));
-		inputManager.AddAction("Load", Core::InputInfo(Core::InputType::Keyboard, PG_KEY_SPACE, PG_KEY_RELEASE, PG_MOD_NONE));
 
 		activeScene = std::make_unique<POGEditorScene>();
-
-		LoadClientApp();
 	}
 
 	void POGEditor::TryUpdate(float timeBetweenLoops)
 	{
-		if (clientApplication)
+		if (IsClientLoaded() && !IsClientPaused())
 		{
 			clientApplication->TryUpdate(timeBetweenLoops);
 		}
@@ -51,7 +50,7 @@ namespace POG::Editor
 
 	void POGEditor::TryFrame(float timeBetweenLoops)
 	{
-		if (clientApplication)
+		if (IsClientLoaded() && !IsClientPaused())
 		{
 			clientApplication->TryFrame(timeBetweenLoops);
 		}
@@ -70,21 +69,6 @@ namespace POG::Editor
 		{
 			ToggleFullscreen();
 		}
-
-		static bool load = false;
-		if (inputPackage.HasActionOccurred("Load", true))
-		{
-			if (load)
-			{
-				LoadClientApp();
-			}
-			else
-			{
-				UnloadClientApp();
-			}
-
-			load = !load;
-		}
 	}
 
 	void POGEditor::Update(float dt)
@@ -101,13 +85,29 @@ namespace POG::Editor
 	{
 		Application::HandleEvent(e);
 
-		if (IsClientLoaded())
+		if (IsClientLoaded() && !IsClientPaused() && IsClientFocused())
 		{
 			clientApplication->HandleEvent(e);
 		}
 	}
 
-	void POGEditor::LoadClientApp()
+	void POGEditor::TryLoadClient()
+	{
+		if (!IsClientLoaded())
+		{
+			LoadClient();
+		}
+	}
+
+	void POGEditor::TryUnloadClient()
+	{
+		if (IsClientLoaded())
+		{
+			UnloadClient();
+		}
+	}
+
+	void POGEditor::LoadClient()
 	{
 		POG_INFO("Loading dll!");
 
@@ -125,7 +125,7 @@ namespace POG::Editor
 		clientApplication->PostInit();
 	}
 
-	void POGEditor::UnloadClientApp()
+	void POGEditor::UnloadClient()
 	{
 		POG_INFO("Unloading dll!");
 

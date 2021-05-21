@@ -11,7 +11,7 @@ namespace POG::Editor
 	class Gui
 	{
 	public:
-		Gui() = default;
+		Gui();
 
 		~Gui() = default;
 
@@ -21,13 +21,28 @@ namespace POG::Editor
 
 		void Frame();
 		void StartStyle();
+		void MainMenu();
 		void Dockspace();
 		void GameWindow(Render::Texture& clientTexture);
 		void EndStyle();
 		void Render();
 
+		bool IsClientFocused() const { return isClientFocused; }
+		bool ShouldLoadClient() const { return shouldLoadClient; }
+		bool IsClientPaused() const { return isClientPaused; }
+
 	private:
+		ImGuiContext* context;
+
+		ImGuiID dockspaceId;
+
+		bool dockspaceLoaded;
+
 		ImVec4 clearColour;
+
+		bool isClientFocused;
+		bool shouldLoadClient;
+		bool isClientPaused;
 	};
 }
 

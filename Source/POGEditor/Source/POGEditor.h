@@ -29,6 +29,15 @@ namespace POG::Editor
 
 		void HandleEvent(Core::Event& e) override;
 
+		void TryLoadClient();
+		void TryUnloadClient();
+
+		bool IsClientFocused() const { return isClientFocused; }
+		void SetClientFocused(bool isFocused) { isClientFocused = isFocused; }
+
+		bool IsClientPaused() const { return isClientPaused; }
+		void SetClientPaused(bool isPaused) { isClientPaused = isPaused; }
+
 		bool IsClientLoaded() const { return clientApplication; }
 
 	private:
@@ -37,7 +46,10 @@ namespace POG::Editor
 
 		Core::IApplication* clientApplication;
 
-		void LoadClientApp();
-		void UnloadClientApp();
+		bool isClientFocused;
+		bool isClientPaused;
+
+		void LoadClient();
+		void UnloadClient();
 	};
 }

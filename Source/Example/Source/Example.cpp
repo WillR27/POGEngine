@@ -55,9 +55,9 @@ FragColor = vec4(0.0f, 0.2f, 0.9f, 1.0f);
 
 	void ExampleScene::Frame(float alpha)
 	{
-		float r = ((float)rand() / (RAND_MAX)) + 0;
-		float g = ((float)rand() / (RAND_MAX)) + 0;
-		float b = ((float)rand() / (RAND_MAX)) + 0;
+		float r = ((float)rand() / (RAND_MAX)) / 3.0f + 0;
+		float g = ((float)rand() / (RAND_MAX)) / 3.0f + 0;
+		float b = ((float)rand() / (RAND_MAX)) / 3.0f + 0;
 
 		POG::Render::ClearColour(r, g, b, 1.0f);
 		POG::Render::ClearColourBuffer();
