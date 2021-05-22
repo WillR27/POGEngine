@@ -33,6 +33,9 @@ namespace Example
 		std::shared_ptr<POG::Render::Mesh> mesh;
 		std::shared_ptr<POG::Render::Material> material;
 
+		POG::Core::Entity player;
+		POG::Core::Entity square;
+
 		bool flip;
 	};
 

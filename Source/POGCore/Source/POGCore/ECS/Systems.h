@@ -5,6 +5,19 @@
 
 namespace POG::Core
 {
+	class CameraUpdateViewSystem : public System
+	{
+	public:
+		CameraUpdateViewSystem(ECSManager& ecsManager)
+			: System::System(ecsManager)
+		{
+		}
+
+		static Signature GetSignature(ECSManager& ecsManager);
+
+		void UpdateView();
+	};
+
 	class MeshRendererSystem : public System
 	{
 	public:

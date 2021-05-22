@@ -7,9 +7,11 @@ namespace POG::Core
     {
         ecsManager.Init();
 
+        ecsManager.RegisterComponent<AttachedCamera>();
         ecsManager.RegisterComponent<MeshRenderer>();
         ecsManager.RegisterComponent<Transform>();
 
+        cameraUpdateViewSystem = ecsManager.RegisterSystem<CameraUpdateViewSystem>();
         meshRendererSystem = ecsManager.RegisterSystem<MeshRendererSystem>();
         transformSystem = ecsManager.RegisterSystem<TransformSystem>();
     }

@@ -7,6 +7,11 @@
 
 namespace POG::Core
 {
+	struct AttachedCamera
+	{
+		std::shared_ptr<Render::Camera> camera;
+	};
+
 	struct MeshRenderer
 	{
 		std::shared_ptr<Render::Mesh> mesh = nullptr;

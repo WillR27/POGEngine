@@ -82,14 +82,26 @@ void main()
 		material->AddColour("colourIn", POG::Maths::Vec4(1.0f, 0.0f, 0.0f, 1.0f));
 		material->SetShader(meshShader);
 
-		POG::Core::Entity entity = GetECSManager().CreateEntity();
-		entity.AddComponent<POG::Core::Transform>(POG::Core::Transform
+		player = GetECSManager().CreateEntity();
+		player.AddComponent<POG::Core::AttachedCamera>(POG::Core::AttachedCamera
+			{
+				.camera = POG::Render::Camera::MainCamera,
+			});
+		player.AddComponent<POG::Core::Transform>(POG::Core::Transform
+			{
+				.position = POG::Maths::Vec3(0.0f, 0.0f, -5.0f),
+				.orientation = POG::Maths::Quat(POG::Maths::Vec3(0.0f, 0.0f, 0.0f)),
+				.scale = POG::Maths::Vec3(1.0f, 1.0f, 1.0f),
+			});
+
+		square = GetECSManager().CreateEntity();
+		square.AddComponent<POG::Core::Transform>(POG::Core::Transform
 			{
 				.position = POG::Maths::Vec3(0.0f, 0.0f, 0.0f),
 				.orientation = POG::Maths::Quat(POG::Maths::Vec3(0.0f, 0.0f, 0.0f)),
 				.scale = POG::Maths::Vec3(1.0f, 1.0f, 1.0f),
 			});
-		entity.AddComponent<POG::Core::MeshRenderer>(POG::Core::MeshRenderer
+		square.AddComponent<POG::Core::MeshRenderer>(POG::Core::MeshRenderer
 			{
 				.mesh = mesh,
 				.material = material,
@@ -102,14 +114,20 @@ void main()
 
 	void ExampleScene::Input(POG::Core::InputPackage& inputPackage, float dt)
 	{
-		if (inputPackage.HasActionOccurred("Jump"))
-		{
-			flip = !flip;
-		}
+		POG::Core::Transform& squareTransform = square.GetComponent<POG::Core::Transform>();
+		squareTransform.orientation *= POG::Maths::Quat(POG::Maths::Vec3(0.0f, 0.0f, 1.0f * dt));
+
+		POG::Core::Transform& playerTransform = player.GetComponent<POG::Core::Transform>();
+		float speed = 3.0f;
+		playerTransform.position.x += inputPackage.GetAxisValue("Horizontal") * dt * speed;
+		playerTransform.position.y += inputPackage.GetAxisValue("Fly") * dt * speed;
+		playerTransform.position.z += inputPackage.GetAxisValue("Vertical") * dt * speed;
+		playerTransform.orientation *= POG::Maths::Quat(POG::Maths::Vec3(0.0f, 0.0f, 1.0f * dt));
 	}
 
 	void ExampleScene::Update(float dt)
 	{
+		GetCameraUpdateViewSystem().UpdateView();
 		GetTransformSystem().Update(dt);
 	}
 
@@ -128,8 +146,6 @@ void main()
 		POG::Render::FaceCulling(true);
 		POG::Render::CullFace(POG_BACK);
 		POG::Render::DepthTest(true);
-
-		POG::Render::Camera::MainCamera->UpdateView(POG::Maths::Vec3(0.0f, 0.0f, -10.0f), POG::Maths::Quat(POG::Maths::Vec3(0.5f, 0.0f, 0.0f)));
 
 		//if (flip)
 		//{
@@ -187,8 +203,28 @@ void main()
 
 		inputManager.AddAction("Quit", POG::Core::InputInfo(POG::Core::InputType::Keyboard, POG_KEY_ESCAPE, POG_KEY_RELEASE, POG_MOD_ANY));
 		inputManager.AddAction("Fullscreen", POG::Core::InputInfo(POG::Core::InputType::Keyboard, POG_KEY_F11, POG_KEY_RELEASE, POG_MOD_ANY));
-		inputManager.AddAction("Jump", POG::Core::InputInfo(POG::Core::InputType::Keyboard, POG_KEY_SPACE, POG_KEY_RELEASE, POG_MOD_CONTROL));
-			
+
+		inputManager.AddAction("Left", POG::Core::InputInfo(POG::Core::InputType::Mouse, POG_MOUSE_BUTTON_LEFT, POG_KEY_RELEASE));
+		inputManager.AddAction("Right", POG::Core::InputInfo(POG::Core::InputType::Mouse, POG_MOUSE_BUTTON_RIGHT, POG_KEY_RELEASE));
+
+		inputManager.AddAxis("Fly",
+			POG::Core::InputInfo(POG::Core::InputType::Keyboard, POG_KEY_LEFT_CONTROL, POG_KEY_PRESS),
+			POG::Core::InputInfo(POG::Core::InputType::Keyboard, POG_KEY_LEFT_CONTROL, POG_KEY_RELEASE),
+			POG::Core::InputInfo(POG::Core::InputType::Keyboard, POG_KEY_SPACE, POG_KEY_PRESS),
+			POG::Core::InputInfo(POG::Core::InputType::Keyboard, POG_KEY_SPACE, POG_KEY_RELEASE));
+
+		inputManager.AddAxis("Horizontal",
+			POG::Core::InputInfo(POG::Core::InputType::Keyboard, POG_KEY_A, POG_KEY_PRESS),
+			POG::Core::InputInfo(POG::Core::InputType::Keyboard, POG_KEY_A, POG_KEY_RELEASE),
+			POG::Core::InputInfo(POG::Core::InputType::Keyboard, POG_KEY_D, POG_KEY_PRESS),
+			POG::Core::InputInfo(POG::Core::InputType::Keyboard, POG_KEY_D, POG_KEY_RELEASE));
+		
+		inputManager.AddAxis("Vertical", 
+			POG::Core::InputInfo(POG::Core::InputType::Keyboard, POG_KEY_S, POG_KEY_PRESS),
+			POG::Core::InputInfo(POG::Core::InputType::Keyboard, POG_KEY_S, POG_KEY_RELEASE),
+			POG::Core::InputInfo(POG::Core::InputType::Keyboard, POG_KEY_W, POG_KEY_PRESS),
+			POG::Core::InputInfo(POG::Core::InputType::Keyboard, POG_KEY_W, POG_KEY_RELEASE));
+
 		activeScene = std::make_unique<ExampleScene>();
 	}
 

@@ -24,6 +24,8 @@ namespace POG::Render
 	void Camera::UpdateView(Maths::Vec3 parentPosition, Maths::Quat parentOrientation)
 	{
 		Maths::Quat cameraOrientation = Maths::Quat(Maths::Vec3(pitch, yaw, 0.0f));
+		cameraOrientation.w *= -1.0f; // Invert view matrix rotation axes
+		parentOrientation.w *= -1.0f; // Invert view matrix rotation axes
 
 		forwardVec = Maths::ToForwardVec(parentOrientation * cameraOrientation);
 		upVec = Maths::ToUpVec(parentOrientation * cameraOrientation);
@@ -34,17 +36,17 @@ namespace POG::Render
 
 	void Camera::AddPitchAndYaw(float pitchAmount, float yawAmount)
 	{
-		pitch -= pitchAmount;
-		yaw -= yawAmount;
+		pitch += pitchAmount;
+		yaw += yawAmount;
 	}
 
 	void Camera::CalculateProjection()
 	{
 		projection = glm::perspective(fov, aspectRatio, nearZ, farZ);
-		projection[0].x *= -1;
-		projection[1].x *= -1;
-		projection[2].x *= -1;
-		projection[3].x *= -1;
+		projection[0].x *= -1; // Covert to left handed coordinate system
+		projection[1].x *= -1; // Covert to left handed coordinate system
+		projection[2].x *= -1; // Covert to left handed coordinate system
+		projection[3].x *= -1; // Covert to left handed coordinate system
 	}
 
 	void Camera::SetFov(float newFov)
