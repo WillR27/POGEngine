@@ -29,6 +29,9 @@ namespace Example
 		POG::Render::VertexBuffer vbo;
 		POG::Render::VertexArray vao;
 
+		POG::Render::Shader meshShader;
+		POG::Render::Mesh mesh;
+
 		bool flip;
 	};
 

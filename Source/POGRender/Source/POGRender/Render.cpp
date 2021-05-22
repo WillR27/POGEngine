@@ -50,6 +50,26 @@ namespace POG::Render
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
 
+	void RenderArrays(RenderingOption type, unsigned int first, unsigned int count)
+	{
+		glDrawArrays(type, first, count);
+	}
+
+	void RenderElements(RenderingOption type, unsigned int first, unsigned int count)
+	{
+		glDrawElements(type, count, GL_UNSIGNED_INT, (void*)(first * sizeof(unsigned int))); // TODO: Remove GL references
+	}
+
+	void RenderTrianglesFromArrays(unsigned int first, unsigned int count)
+	{
+		RenderArrays(POG_TRIANGLES, first, count);
+	}
+
+	void RenderTrianglesFromElements(unsigned int first, unsigned int count)
+	{
+		RenderElements(POG_TRIANGLES, first, count);
+	}
+
 	void SetContextAddressFunc(ContextAddressFunc func)
 	{
 		POG_INFO("Initialising Glad!");

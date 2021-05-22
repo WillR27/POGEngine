@@ -16,7 +16,6 @@ namespace POG::Core
 		{
 			auto& transform = ecsManager.GetComponent<Transform>(entityId);
 			transform.x += 0.00001f;
-			POG_TRACE(transform.x);
 		}
 	}
 }
