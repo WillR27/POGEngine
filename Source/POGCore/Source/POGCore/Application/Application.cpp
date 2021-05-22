@@ -130,14 +130,21 @@ namespace POG::Core
 	{
 	}
 
-	void Application::Update(float dt)
+	void Application::Input()
 	{
+		Input::ResetMouseDeltas();
+
 		if (IsStandalone())
 		{
 			// Check for inputs each update
 			window->Input();
 		}
-		
+	}
+
+	void Application::Update(float dt)
+	{		
+		Input();
+
 		inputManager.Dispatch(dt);
 
 		activeScene->Update(dt);

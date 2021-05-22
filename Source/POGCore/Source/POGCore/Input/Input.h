@@ -155,7 +155,7 @@ namespace POG::Core
 	class Input
 	{
 		friend class MouseMoveEvent;
-		friend class WindowsWindow;
+		friend class Application;
 
 	private:
 		static bool ShouldResetMouseMovement;

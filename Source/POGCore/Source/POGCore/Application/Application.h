@@ -25,6 +25,7 @@ namespace POG::Core
 		virtual void TryUpdate(float timeBetweenLoops) = 0;
 		virtual void TryFrame(float timeBetweenLoops) = 0;
 
+		virtual void Input() = 0;
 		virtual void Update(float dt) = 0;
 		virtual void Frame(float alpha) = 0;
 
@@ -64,6 +65,7 @@ namespace POG::Core
 		void TryFrame(float timeBetweenLoops) override;
 
 		virtual void Input(InputPackage& inputPackage, float dt);
+		void Input() override;
 		void Update(float dt) override;
 		void Frame(float alpha) override;
 

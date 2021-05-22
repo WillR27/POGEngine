@@ -2,6 +2,8 @@
 
 #include "Event.h"
 
+#include "POGCore/Input/Input.h"
+
 namespace POG::Core
 {
 	class KeyEvent : public Event
@@ -35,7 +37,7 @@ namespace POG::Core
 	public:
 		MouseMoveEvent(float mouseX, float mouseY)
 		{
-			//Input::SetMouseXY(mouseX, mouseY);
+			Input::SetMouseXY(mouseX, mouseY);
 		}
 
 		virtual const char* GetName() const override
@@ -46,7 +48,7 @@ namespace POG::Core
 		virtual std::string ToString() const override
 		{
 			std::stringstream ss;
-			ss << GetName() << ": " << "MouseX:" /*<< Input::MouseX << ", MouseY: " << Input::MouseY*/;
+			ss << GetName() << ": " << "MouseX:" << Input::MouseX << ", MouseY: " << Input::MouseY;
 			return ss.str();
 		}
 	};

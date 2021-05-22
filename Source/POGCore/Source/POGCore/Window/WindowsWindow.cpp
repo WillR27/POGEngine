@@ -226,6 +226,15 @@ namespace POG::Core
 	void WindowsWindow::SetCursorEnabled(bool isCursorEnabled)
 	{
 		this->isCursorEnabled = isCursorEnabled;
+
+		if (isCursorEnabled)
+		{
+			glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+		}
+		else
+		{
+			glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+		}
 	}
 
 	void WindowsWindow::ToggleCursorEnabled()

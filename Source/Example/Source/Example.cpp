@@ -115,14 +115,23 @@ void main()
 	void ExampleScene::Input(POG::Core::InputPackage& inputPackage, float dt)
 	{
 		POG::Core::Transform& squareTransform = square.GetComponent<POG::Core::Transform>();
-		squareTransform.orientation *= POG::Maths::Quat(POG::Maths::Vec3(0.0f, 0.0f, 1.0f * dt));
+		//squareTransform.orientation *= POG::Maths::Quat(POG::Maths::Vec3(0.0f, 0.0f, 1.0f * dt));
 
 		POG::Core::Transform& playerTransform = player.GetComponent<POG::Core::Transform>();
+		POG::Core::AttachedCamera& playerCamera = player.GetComponent<POG::Core::AttachedCamera>();
 		float speed = 3.0f;
-		playerTransform.position.x += inputPackage.GetAxisValue("Horizontal") * dt * speed;
+		//playerTransform.position.x += inputPackage.GetAxisValue("Horizontal") * dt * speed;
 		playerTransform.position.y += inputPackage.GetAxisValue("Fly") * dt * speed;
-		playerTransform.position.z += inputPackage.GetAxisValue("Vertical") * dt * speed;
-		playerTransform.orientation *= POG::Maths::Quat(POG::Maths::Vec3(0.0f, 0.0f, 1.0f * dt));
+		//playerTransform.position.z += inputPackage.GetAxisValue("Vertical") * dt * speed;
+		//playerTransform.orientation *= POG::Maths::Quat(POG::Maths::Vec3(0.0f, 0.0f, 1.0f * dt));
+		playerTransform.position += (playerCamera.camera->GetRightVec() * static_cast<float>(inputPackage.GetAxisValue("Horizontal")) * dt * speed +
+									 playerCamera.camera->GetForwardVec() * static_cast<float>(inputPackage.GetAxisValue("Vertical")) * dt * speed);
+
+		if (inputPackage.HasMouseMoved())
+		{
+			float lookSpeed = 0.1f;
+			playerCamera.camera->AddPitchAndYaw(POG::Core::Input::GetDeltaMouseY() * dt * lookSpeed, POG::Core::Input::GetDeltaMouseX() * dt * lookSpeed);
+		}
 	}
 
 	void ExampleScene::Update(float dt)
@@ -200,6 +209,8 @@ void main()
 	{
 		SetTargetUpdatesPerSecond(60.0f);
 		SetTargetFramesPerSecond(60.0f);
+
+		GetWindow().SetCursorEnabled(false);
 
 		inputManager.AddAction("Quit", POG::Core::InputInfo(POG::Core::InputType::Keyboard, POG_KEY_ESCAPE, POG_KEY_RELEASE, POG_MOD_ANY));
 		inputManager.AddAction("Fullscreen", POG::Core::InputInfo(POG::Core::InputType::Keyboard, POG_KEY_F11, POG_KEY_RELEASE, POG_MOD_ANY));

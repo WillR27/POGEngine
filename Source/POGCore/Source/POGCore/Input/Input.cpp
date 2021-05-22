@@ -43,7 +43,7 @@ namespace POG::Core
 
 		MouseX = x;
 		MouseY = y;
-		DeltaMouseX += PrevMouseX - MouseX;
-		DeltaMouseY += PrevMouseY - MouseY;
+		DeltaMouseX += MouseX - PrevMouseX;
+		DeltaMouseY += MouseY - PrevMouseY;
 	}
 }
