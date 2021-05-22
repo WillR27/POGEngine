@@ -7,8 +7,10 @@ namespace POG::Core
     {
         ecsManager.Init();
 
+        ecsManager.RegisterComponent<MeshRenderer>();
         ecsManager.RegisterComponent<Transform>();
 
+        meshRendererSystem = ecsManager.RegisterSystem<MeshRendererSystem>();
         transformSystem = ecsManager.RegisterSystem<TransformSystem>();
     }
 }

@@ -1,8 +1,37 @@
 #pragma once
 
+#include "POGMaths/Matrices.h"
+#include "POGMaths/Quaternions.h"
 #include "POGMaths/Vectors.h"
 
 #include "POGMathsAPI.h"
 
-// TODO: Just here to get the dll/lib to build
-POG_MATHS_API void Placeholder();
+namespace POG::Maths
+{
+	constexpr float TwoPi()
+	{
+		return glm::two_pi<float>();
+	}
+
+	constexpr float Pi()
+	{
+		return glm::pi<float>();
+	}
+
+	constexpr float HalfPi()
+	{
+		return glm::half_pi<float>();
+	}
+
+	template <typename T>
+	static int Sign(T val)
+	{
+		return (T(0) < val) - (val < T(0));
+	}
+
+	// Coverts degrees to radians. Does not normalise.
+	float ToRadians(float degrees);
+
+	// Creates a model matrix from the passed parameters. 
+	Mat4 ToModelMatrix(Vec3 position, Quat orientation, Vec3 scale);
+}

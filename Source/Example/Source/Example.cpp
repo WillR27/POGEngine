@@ -35,14 +35,15 @@ void main()
 
 		shader.Init(vertexShaderSource, fragmentShaderSource);
 
+		meshShader = std::make_shared<POG::Render::Shader>();
 		vertexShaderSource = R"(
 #version 330 core
 layout (location = 0) in vec3 aPos;
 layout (location = 1) in vec3 aColour;
 
-//uniform mat4 model;
-//uniform mat4 view;
-//uniform mat4 projection;
+uniform mat4 model;
+uniform mat4 view;
+uniform mat4 projection;
 
 //uniform vec4 colourIn;
 
@@ -50,10 +51,10 @@ out vec3 colour;
 
 void main()
 {
-	//colour = vec3(colourIn.r, colourIn.g, colourIn.b);
-    //gl_Position = projection * view * model * vec4(aPos, 1.0);
+    gl_Position = projection * view * model * vec4(aPos, 1.0);
+	//gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);
 	colour = aColour;
-	gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);
+	//colour = vec3(colourIn.r, colourIn.g, colourIn.b);
 }
 )";
 
@@ -70,18 +71,28 @@ void main()
 } 
 )";
 
-		meshShader.Init(vertexShaderSource, fragmentShaderSource);
+		meshShader->Init(vertexShaderSource, fragmentShaderSource);
 
-		mesh.SetPositionData(POG::Render::squarePositions, sizeof(POG::Render::squarePositions));
-		mesh.SetColourData(POG::Render::squareColours, sizeof(POG::Render::squareColours));
-		mesh.Build();
+		mesh = std::make_shared <POG::Render::Mesh>();
+		mesh->SetPositionData(POG::Render::squarePositions, sizeof(POG::Render::squarePositions));
+		mesh->SetColourData(POG::Render::squareColours, sizeof(POG::Render::squareColours));
+		mesh->Build();
+
+		material = std::make_shared<POG::Render::Material>();
+		material->AddColour("colourIn", POG::Maths::Vec4(1.0f, 0.0f, 0.0f, 1.0f));
+		material->SetShader(meshShader);
 
 		POG::Core::Entity entity = GetECSManager().CreateEntity();
-		entity.AddComponent<POG::Core::Transform>(POG::Core::Transform 
-			{ 
-				.x = 0.0f, 
-				.y = 0.0f, 
-				.z = 0.0f,
+		entity.AddComponent<POG::Core::Transform>(POG::Core::Transform
+			{
+				.position = POG::Maths::Vec3(0.0f, 0.0f, 0.0f),
+				.orientation = POG::Maths::Quat(POG::Maths::Vec3(0.0f, 0.0f, 0.0f)),
+				.scale = POG::Maths::Vec3(1.0f, 1.0f, 1.0f),
+			});
+		entity.AddComponent<POG::Core::MeshRenderer>(POG::Core::MeshRenderer
+			{
+				.mesh = mesh,
+				.material = material,
 			});
 	}
 
@@ -111,7 +122,15 @@ void main()
 		POG::Render::ClearColour(r, g, b, 1.0f);
 		POG::Render::ClearColourBuffer();
 		POG::Render::ClearDepthBuffer();
-		
+	
+		POG::Render::SetPolygonMode(POG_FRONT_AND_BACK, POG_FILL);
+		POG::Render::SetFrontFace(POG_CW);
+		POG::Render::FaceCulling(true);
+		POG::Render::CullFace(POG_BACK);
+		POG::Render::DepthTest(true);
+
+		POG::Render::Camera::MainCamera->UpdateView(POG::Maths::Vec3(0.0f, 0.0f, -10.0f), POG::Maths::Quat(POG::Maths::Vec3(0.5f, 0.0f, 0.0f)));
+
 		//if (flip)
 		//{
 		//	float vertices[] =
@@ -144,8 +163,10 @@ void main()
 
 		//glDrawArrays(GL_TRIANGLES, 0, 3);
 
-		meshShader.Use();
-		mesh.Render();
+		//meshShader->Use();
+		//mesh->Render();
+
+		GetMeshRendererSystem().Frame(alpha);
 	}
 
 	void ExampleScene::HandleEvent(POG::Core::Event& e)
@@ -164,6 +185,7 @@ void main()
 		SetTargetUpdatesPerSecond(60.0f);
 		SetTargetFramesPerSecond(60.0f);
 
+		inputManager.AddAction("Quit", POG::Core::InputInfo(POG::Core::InputType::Keyboard, POG_KEY_ESCAPE, POG_KEY_RELEASE, POG_MOD_ANY));
 		inputManager.AddAction("Fullscreen", POG::Core::InputInfo(POG::Core::InputType::Keyboard, POG_KEY_F11, POG_KEY_RELEASE, POG_MOD_ANY));
 		inputManager.AddAction("Jump", POG::Core::InputInfo(POG::Core::InputType::Keyboard, POG_KEY_SPACE, POG_KEY_RELEASE, POG_MOD_CONTROL));
 			

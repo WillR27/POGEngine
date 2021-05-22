@@ -5,11 +5,11 @@ namespace POG::Render
 {
 	const float squarePositions[] =
 	{
-		-1.0f, -1.0f, -1.0f,
 		1.0f, -1.0f, -1.0f,
-		1.0f,  1.0f, -1.0f,
+		-1.0f, -1.0f, -1.0f,
 		1.0f,  1.0f, -1.0f,
 		-1.0f,  1.0f, -1.0f,
+		1.0f,  1.0f, -1.0f,
 		-1.0f, -1.0f, -1.0f
 	};
 	const float squareColours[] =

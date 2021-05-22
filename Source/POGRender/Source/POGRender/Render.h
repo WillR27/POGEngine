@@ -54,6 +54,13 @@ namespace POG::Render
 	void ClearColourBuffer();
 	void ClearDepthBuffer();
 
+	void DepthTest(bool enable);
+	void FaceCulling(bool enable);
+
+	void SetPolygonMode(RenderingOption face, RenderingOption type);
+	void CullFace(RenderingOption face);
+	void SetFrontFace(RenderingOption face);
+
 	void SetViewport(int x, int y, int width, int height);
 
 	void BindDefaultFrameBuffer();

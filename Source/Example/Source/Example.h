@@ -29,8 +29,9 @@ namespace Example
 		POG::Render::VertexBuffer vbo;
 		POG::Render::VertexArray vao;
 
-		POG::Render::Shader meshShader;
-		POG::Render::Mesh mesh;
+		std::shared_ptr<POG::Render::Shader> meshShader;
+		std::shared_ptr<POG::Render::Mesh> mesh;
+		std::shared_ptr<POG::Render::Material> material;
 
 		bool flip;
 	};

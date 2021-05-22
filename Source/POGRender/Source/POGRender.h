@@ -1,6 +1,8 @@
 #pragma once
 
+#include "POGRender/Camera.h"
 #include "POGRender/Render.h"
+#include "POGRender/Material/Material.h"
 #include "POGRender/Mesh/Mesh.h"
 #include "POGRender/Mesh/Primitives/Primitives.h"
 #include "POGRender/Objects/FrameBuffer.h"

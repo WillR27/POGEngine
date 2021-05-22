@@ -26,11 +26,13 @@ namespace POG::Core
 
 		ECSManager& GetECSManager() { return ecsManager; }
 
+		MeshRendererSystem& GetMeshRendererSystem() { return *meshRendererSystem; }
 		TransformSystem& GetTransformSystem() { return *transformSystem; }
 
 	private:
 		ECSManager ecsManager;
 
+		std::shared_ptr<MeshRendererSystem> meshRendererSystem;
 		std::shared_ptr<TransformSystem> transformSystem;
 	};
 }

@@ -40,6 +40,31 @@ namespace POG::Render
 		glClear(GL_DEPTH_BUFFER_BIT);
 	}
 
+	void DepthTest(bool enable)
+	{
+		enable ? glEnable(GL_DEPTH_TEST) : glDisable(GL_DEPTH_TEST);
+	}
+
+	void FaceCulling(bool enable)
+	{
+		enable ? glEnable(GL_CULL_FACE) : glDisable(GL_CULL_FACE);
+	}
+
+	void SetPolygonMode(RenderingOption face, RenderingOption type)
+	{
+		glPolygonMode(face, type);
+	}
+
+	void CullFace(RenderingOption face)
+	{
+		glCullFace(face);
+	}
+
+	void SetFrontFace(RenderingOption face)
+	{
+		glFrontFace(face);
+	}
+
 	void SetViewport(int x, int y, int width, int height)
 	{
 		glViewport(x, y, width, height);
