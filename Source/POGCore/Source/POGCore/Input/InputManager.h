@@ -19,7 +19,7 @@ namespace POG::Core
 		InputType type;
 		int keyOrButton, action, mods;
 
-		InputInfo(InputType type, int key, int action, int mods = PG_MOD_ANY)
+		InputInfo(InputType type, int key, int action, int mods = POG_MOD_ANY)
 			: type(type)
 			, keyOrButton(key)
 			, action(action)
@@ -29,7 +29,7 @@ namespace POG::Core
 
 		bool operator==(const InputInfo& rhs) const
 		{
-			return type == rhs.type && keyOrButton == rhs.keyOrButton && action == rhs.action && (mods == PG_MOD_ANY || rhs.mods == PG_MOD_ANY || mods == rhs.mods);
+			return type == rhs.type && keyOrButton == rhs.keyOrButton && action == rhs.action && (mods == POG_MOD_ANY || rhs.mods == POG_MOD_ANY || mods == rhs.mods);
 		}
 	};
 

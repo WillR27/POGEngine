@@ -34,6 +34,14 @@ FragColor = vec4(0.0f, 0.2f, 0.9f, 1.0f);
 )";
 
 		shader.Init(vertexShaderSource, fragmentShaderSource);
+
+		POG::Core::Entity entity = GetECSManager().CreateEntity();
+		entity.AddComponent<POG::Core::Transform>(POG::Core::Transform 
+			{ 
+				.x = 0.0f, 
+				.y = 0.0f, 
+				.z = 0.0f,
+			});
 	}
 
 	void ExampleScene::Exit()
@@ -50,7 +58,7 @@ FragColor = vec4(0.0f, 0.2f, 0.9f, 1.0f);
 
 	void ExampleScene::Update(float dt)
 	{
-
+		GetTransformSystem().Update(dt);
 	}
 
 	void ExampleScene::Frame(float alpha)
@@ -62,7 +70,7 @@ FragColor = vec4(0.0f, 0.2f, 0.9f, 1.0f);
 		POG::Render::ClearColour(r, g, b, 1.0f);
 		POG::Render::ClearColourBuffer();
 		POG::Render::ClearDepthBuffer();
-		 
+		
 		if (flip)
 		{
 			float vertices[] =
@@ -112,8 +120,8 @@ FragColor = vec4(0.0f, 0.2f, 0.9f, 1.0f);
 		SetTargetUpdatesPerSecond(60.0f);
 		SetTargetFramesPerSecond(60.0f);
 
-		inputManager.AddAction("Fullscreen", POG::Core::InputInfo(POG::Core::InputType::Keyboard, PG_KEY_F11, PG_KEY_RELEASE, PG_MOD_ANY));
-		inputManager.AddAction("Jump", POG::Core::InputInfo(POG::Core::InputType::Keyboard, PG_KEY_SPACE, PG_KEY_RELEASE, PG_MOD_CONTROL));
+		inputManager.AddAction("Fullscreen", POG::Core::InputInfo(POG::Core::InputType::Keyboard, POG_KEY_F11, POG_KEY_RELEASE, POG_MOD_ANY));
+		inputManager.AddAction("Jump", POG::Core::InputInfo(POG::Core::InputType::Keyboard, POG_KEY_SPACE, POG_KEY_RELEASE, POG_MOD_CONTROL));
 			
 		activeScene = std::make_unique<ExampleScene>();
 	}

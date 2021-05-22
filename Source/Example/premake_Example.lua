@@ -1,4 +1,4 @@
-createbaseprojectcpp("Example", "SharedLib")
+createbaseprojectcpp("Example", "ConsoleApp")
     pchheader "ExamplePCH.h"
 	pchsource "Source/ExamplePCH.cpp"
 	
@@ -30,7 +30,7 @@ createbaseprojectcpp("Example", "SharedLib")
 	
 	defines
 	{
-		--"POG_STANDALONE",
+		"POG_STANDALONE",
 	}
 
     filter "configurations:Dist"

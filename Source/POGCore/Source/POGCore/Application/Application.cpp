@@ -82,6 +82,7 @@ namespace POG::Core
 
 	void Application::PostInit()
 	{
+		activeScene->PreInit();
 		activeScene->Init();
 
 		inputManager.AddInputCallback(POG_BIND_FN(activeScene->Input));

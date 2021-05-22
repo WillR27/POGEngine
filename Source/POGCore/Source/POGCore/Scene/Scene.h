@@ -1,5 +1,6 @@
 #pragma once
 
+#include "POGCore/ECS/ECS.h"
 #include "POGCore/Event/Event.h"
 #include "POGCore/Input/InputPackage.h"
 
@@ -12,6 +13,7 @@ namespace POG::Core
 
 		virtual ~Scene() = default;
 
+		void PreInit();
 		virtual void Init() = 0;
 
 		virtual void Exit() = 0;
@@ -22,8 +24,14 @@ namespace POG::Core
 
 		virtual void HandleEvent(Event& e) = 0;
 
-	private:
+		ECSManager& GetECSManager() { return ecsManager; }
 
+		TransformSystem& GetTransformSystem() { return *transformSystem; }
+
+	private:
+		ECSManager ecsManager;
+
+		std::shared_ptr<TransformSystem> transformSystem;
 	};
 }
 
