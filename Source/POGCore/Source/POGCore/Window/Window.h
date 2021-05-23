@@ -45,8 +45,7 @@ namespace POG::Core
 		virtual bool HasFocus() const = 0;
 
 		virtual bool IsCursorEnabled() const = 0;
-		virtual void SetCursorEnabled(bool cursor) = 0;
-		virtual void ToggleCursorEnabled() = 0;
+		virtual void SetCursorEnabled(bool isCursorEnabled) = 0;
 
 		virtual ContextAddressFunc GetContextAddressFunc() const = 0;
 

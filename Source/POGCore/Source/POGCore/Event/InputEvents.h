@@ -35,9 +35,12 @@ namespace POG::Core
 	class MouseMoveEvent : public Event
 	{
 	public:
+		float mouseX, mouseY;
+
 		MouseMoveEvent(float mouseX, float mouseY)
+			: mouseX(mouseX)
+			, mouseY(mouseY)
 		{
-			Input::SetMouseXY(mouseX, mouseY);
 		}
 
 		virtual const char* GetName() const override

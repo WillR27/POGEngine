@@ -237,11 +237,6 @@ namespace POG::Core
 		}
 	}
 
-	void WindowsWindow::ToggleCursorEnabled()
-	{
-		SetCursorEnabled(!IsCursorEnabled());
-	}
-
 	ContextAddressFunc WindowsWindow::GetContextAddressFunc() const
 	{
 		return (ContextAddressFunc)glfwGetProcAddress;

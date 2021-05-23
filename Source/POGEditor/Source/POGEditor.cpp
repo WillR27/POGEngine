@@ -83,12 +83,12 @@ namespace POG::Editor
 
 	void POGEditor::HandleEvent(Core::Event& e)
 	{
-		Application::HandleEvent(e);
-
 		if (IsClientLoaded() && !IsClientPaused() && IsClientFocused())
 		{
 			clientApplication->HandleEvent(e);
 		}
+
+		Application::HandleEvent(e);
 	}
 
 	void POGEditor::TryLoadClient()

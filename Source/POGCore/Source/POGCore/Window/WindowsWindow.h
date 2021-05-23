@@ -37,8 +37,7 @@ namespace POG::Core
 		virtual bool HasFocus() const override { return hasFocus; }
 
 		virtual bool IsCursorEnabled() const override { return isCursorEnabled; }
-		virtual void SetCursorEnabled(bool cursor) override;
-		virtual void ToggleCursorEnabled() override;
+		virtual void SetCursorEnabled(bool isCursorEnabled) override;
 
 		virtual ContextAddressFunc GetContextAddressFunc() const override;
 

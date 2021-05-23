@@ -201,9 +201,9 @@ namespace POG::Core
 			ed.Dispatch<WindowFocusEvent>(POG_BIND_FN(window->HandleWindowFocusEvent));
 			ed.Dispatch<WindowSizeEvent>(POG_BIND_FN(HandleWindowSizeEvent));
 		}
-
+		
 		ed.Dispatch<KeyEvent>(POG_BIND_FN(inputManager.HandleKeyEvent));
-		ed.Dispatch<MouseMoveEvent>(POG_BIND_FN(inputManager.HandleMouseMoveEvent));
+		ed.Dispatch<MouseMoveEvent>(POG_BIND_FN(HandleMouseMoveEvent));
 		ed.Dispatch<MouseButtonEvent>(POG_BIND_FN(inputManager.HandleMouseButtonEvent));
 	}
 
@@ -216,7 +216,7 @@ namespace POG::Core
 	{
 		this->isFullscreen = isFullscreen;
 
-		if (window)
+		if (IsStandalone())
 		{
 			window->SetFullscreen(isFullscreen);
 		}
@@ -225,6 +225,21 @@ namespace POG::Core
 	void Application::ToggleFullscreen()
 	{
 		SetFullscreen(!IsFullscreen());
+	}
+
+	void Application::SetCursorEnabled(bool isCursorEnabled)
+	{
+		this->isCursorEnabled = isCursorEnabled;
+
+		if (IsStandalone())
+		{
+			window->SetCursorEnabled(isCursorEnabled);
+		}
+	}
+
+	void Application::ToggleCursorEnabled()
+	{
+		SetCursorEnabled(!IsCursorEnabled());
 	}
 
 	bool Application::HandleWindowSizeEvent(WindowSizeEvent& e)
@@ -239,6 +254,15 @@ namespace POG::Core
 		}
 
 		return true;
+	}
+
+	bool Application::HandleMouseMoveEvent(MouseMoveEvent& e)
+	{
+		Input::SetMouseXY(e.mouseX, e.mouseY);
+
+		inputManager.HandleMouseMoveEvent(e);
+
+		return false;
 	}
 }
 

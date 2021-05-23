@@ -1,11 +1,11 @@
 #include "ExamplePCH.h"
 #include "Example.h"
 
+#include "POGCore/Main.h"
+
 #include "POGCore.h"
 #include "POGLog.h"
 #include "POGRender.h"
-
-#include "POGCore/Main.h"
 
 #include <glad/glad.h>
 
@@ -210,7 +210,7 @@ void main()
 		SetTargetUpdatesPerSecond(60.0f);
 		SetTargetFramesPerSecond(60.0f);
 
-		GetWindow().SetCursorEnabled(false);
+		SetCursorEnabled(false);
 
 		inputManager.AddAction("Quit", POG::Core::InputInfo(POG::Core::InputType::Keyboard, POG_KEY_ESCAPE, POG_KEY_RELEASE, POG_MOD_ANY));
 		inputManager.AddAction("Fullscreen", POG::Core::InputInfo(POG::Core::InputType::Keyboard, POG_KEY_F11, POG_KEY_RELEASE, POG_MOD_ANY));

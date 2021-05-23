@@ -75,11 +75,17 @@ namespace POG::Core
 
 		void SetContextAddressFunc(ContextAddressFunc func) override;
 
+		std::string GetName() const { return name; }
+
 		Window& GetWindow() { return *window; }
 
 		bool IsFullscreen() const { return isFullscreen; }
 		void SetFullscreen(bool isFullscreen);
 		void ToggleFullscreen();
+
+		bool IsCursorEnabled() const { return isCursorEnabled; }
+		void SetCursorEnabled(bool isCursorEnabled);
+		void ToggleCursorEnabled();
 
 		float GetTargetUpdatesPerSecond() const override { return targetUpdatesPerSecond; }
 		void SetTargetUpdatesPerSecond(float newTarget) { targetUpdatesPerSecond = newTarget; targetUpdateInterval = 1.0f / targetUpdatesPerSecond; }
@@ -123,6 +129,7 @@ namespace POG::Core
 		bool shouldClose;
 
 		bool isFullscreen;
+		bool isCursorEnabled;
 
 		float targetUpdatesPerSecond;
 		float targetUpdateInterval;
@@ -130,6 +137,7 @@ namespace POG::Core
 		float targetFrameInterval;
 
 		bool HandleWindowSizeEvent(WindowSizeEvent& e);
+		bool HandleMouseMoveEvent(MouseMoveEvent& e);
 	};
 
 	Application* CreateApplication();
