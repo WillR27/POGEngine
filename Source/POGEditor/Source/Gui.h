@@ -29,9 +29,9 @@ namespace POG::Editor
 
 		void SetCursorEnabled(bool isCursorEnabled);
 
-		bool IsClientFocused() const { return isClientFocused; }
-		bool ShouldLoadClient() const { return shouldLoadClient; }
-		bool IsClientPaused() const { return isClientPaused; }
+		//bool IsClientFocused() const { return isClientFocused; }
+		//bool ShouldLoadClient() const { return shouldLoadClient; }
+		//bool IsClientPaused() const { return isClientPaused; }
 
 	private:
 		ImGuiContext* context;
@@ -43,9 +43,7 @@ namespace POG::Editor
 
 		ImVec4 clearColour;
 
-		bool isClientFocused;
-		bool shouldLoadClient;
-		bool isClientPaused;
+		bool isClientWindowFocused;
 	};
 }
 

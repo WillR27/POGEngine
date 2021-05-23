@@ -22,7 +22,7 @@ namespace Example
 
 		void Frame(float alpha) override;
 
-		void HandleEvent(POG::Core::Event& e) override;
+		bool HandleEvent(POG::Core::Event& e) override;
 
 	private:
 		POG::Render::Shader shader;
@@ -52,7 +52,5 @@ namespace Example
 		void Input(POG::Core::InputPackage& inputPackage, float dt) override;
 		void Update(float dt) override;
 		void Frame(float alpha) override;
-
-		void HandleEvent(POG::Core::Event& e) override;
 	};
 }

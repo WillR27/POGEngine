@@ -2,6 +2,7 @@
 #include "Gui.h"
 
 #include "POGEditor.h"
+#include "POGEditorEvents.h"
 
 #include "POGCore.h"
 #include "POGLog.h"
@@ -19,9 +20,7 @@ namespace POG::Editor
 		, io(nullptr)
 		, dockspaceId(0)
 		, dockspaceLoaded(false)
-		, isClientFocused(true)
-		, shouldLoadClient(false)
-		, isClientPaused(false)
+		, isClientWindowFocused(false)
 	{
 	}
 
@@ -159,25 +158,32 @@ namespace POG::Editor
 	{
 		ImGui::Begin("Game Window");
 		{
-			isClientFocused = ImGui::IsWindowFocused(ImGuiFocusedFlags_RootAndChildWindows);
+			bool wasClientWindowFocused = isClientWindowFocused;
+			isClientWindowFocused = ImGui::IsWindowFocused(ImGuiFocusedFlags_RootAndChildWindows);
+			if (wasClientWindowFocused != isClientWindowFocused)
+			{
+				ClientFocusedEvent e(isClientWindowFocused);
+				Core::Application::GetInstance().HandleEvent(e);
+			}
 			
 			if (ImGui::Button("Play"))
 			{
-				shouldLoadClient = true;
-				isClientPaused = false;
+				ClientPlayEvent e;
+				Core::Application::GetInstance().HandleEvent(e);
 			}
 
 			ImGui::SameLine();
 			if (ImGui::Button("Pause"))
 			{
-				isClientPaused = true;
+				ClientPauseEvent e;
+				Core::Application::GetInstance().HandleEvent(e);
 			}
 
 			ImGui::SameLine();
 			if (ImGui::Button("Stop"))
 			{
-				shouldLoadClient = false;
-				isClientPaused = true;
+				ClientStopEvent e;
+				Core::Application::GetInstance().HandleEvent(e);
 			}
 
 			ImGui::BeginChild("Game Render");
@@ -195,6 +201,15 @@ namespace POG::Editor
 
 	void Gui::Render()
 	{
+		// TODO: Replace with something proper if possible?
+		// Hack to prevent game window losing focus when clicking without cursor
+		if (!POGEditor::GetInstance().IsCursorEnabled())
+		{
+			// Set left mouse button to false before ImGui::Render()
+			// As this is where the window changes focus if clicked
+			io->MouseClicked[0] = false;
+		}
+
 		ImGui::Render();
 		int display_w, display_h;
 		glfwGetFramebufferSize((GLFWwindow*)Core::Application::GetInstance().GetWindow().GetActualWindow(), &display_w, &display_h);

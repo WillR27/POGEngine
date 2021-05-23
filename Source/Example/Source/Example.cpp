@@ -194,9 +194,9 @@ void main()
 		GetMeshRendererSystem().Frame(alpha);
 	}
 
-	void ExampleScene::HandleEvent(POG::Core::Event& e)
+	bool ExampleScene::HandleEvent(POG::Core::Event& e)
 	{
-		
+		return false;
 	}
 
 
@@ -209,6 +209,8 @@ void main()
 	{
 		SetTargetUpdatesPerSecond(60.0f);
 		SetTargetFramesPerSecond(60.0f);
+
+		activeScene = std::make_unique<ExampleScene>();
 
 		SetCursorEnabled(false);
 
@@ -235,8 +237,6 @@ void main()
 			POG::Core::InputInfo(POG::Core::InputType::Keyboard, POG_KEY_S, POG_KEY_RELEASE),
 			POG::Core::InputInfo(POG::Core::InputType::Keyboard, POG_KEY_W, POG_KEY_PRESS),
 			POG::Core::InputInfo(POG::Core::InputType::Keyboard, POG_KEY_W, POG_KEY_RELEASE));
-
-		activeScene = std::make_unique<ExampleScene>();
 	}
 
 	void ExampleApplication::TryUpdate(float timeBetweenLoops)
@@ -270,11 +270,6 @@ void main()
 	void ExampleApplication::Frame(float alpha)
 	{
 		Application::Frame(alpha);
-	}
-
-	void ExampleApplication::HandleEvent(POG::Core::Event& e)
-	{
-		Application::HandleEvent(e);
 	}
 }
 

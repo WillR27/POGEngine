@@ -1,9 +1,10 @@
 #pragma once
 
+#include "Gui.h"
+#include "POGEditorEvents.h"
+
 #include "POGCore.h"
 #include "POGRender.h"
-
-#include "Gui.h"
 
 namespace POG::Editor
 {
@@ -24,7 +25,7 @@ namespace POG::Editor
 
 		void Frame(float alpha) override;
 
-		void HandleEvent(Core::Event& e) override;
+		bool HandleEvent(Core::Event& e) override;
 
 	private:
 		Gui gui;
@@ -35,6 +36,8 @@ namespace POG::Editor
 
 		Render::FrameBuffer clientFBO;
 		Render::Texture clientTexture;
+
+		bool HandleCursorEnabledEvent(Core::CursorEnabledEvent& e);
 	};
 }
 

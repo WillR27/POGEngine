@@ -59,15 +59,6 @@ void main()
 		Render::ClearColourBuffer();
 		Render::ClearDepthBuffer();
 
-		if (pogEditor.IsClientLoaded())
-		{
-			gui.SetCursorEnabled(pogEditor.GetClientApplication().IsCursorEnabled());
-		}
-		else
-		{
-			gui.SetCursorEnabled(true);
-		}
-
 		gui.Frame();
 		gui.StartStyle();
 		gui.MainMenu();
@@ -75,10 +66,6 @@ void main()
 		gui.GameWindow(clientTexture);
 		gui.EndStyle();
 		gui.Render();
-
-		pogEditor.SetClientFocused(gui.IsClientFocused());
-		gui.ShouldLoadClient() ? pogEditor.TryLoadClient() : pogEditor.TryUnloadClient();
-		pogEditor.SetClientPaused(gui.IsClientPaused());
 
 		// Setup the fbo for the client app to render to
 		clientFBO.Bind();
@@ -92,7 +79,18 @@ void main()
 		}
 	}
 
-	void POGEditorScene::HandleEvent(Core::Event& e)
+	bool POGEditorScene::HandleEvent(Core::Event& e)
 	{
+		Core::EventDispatcher ed(e);
+		ed.Dispatch<Core::CursorEnabledEvent>(POG_BIND_FN(HandleCursorEnabledEvent));
+
+		return false;
+	}
+
+	bool POGEditorScene::HandleCursorEnabledEvent(Core::CursorEnabledEvent& e)
+	{
+		gui.SetCursorEnabled(e.isCursorEnabled);
+
+		return false;
 	}
 }

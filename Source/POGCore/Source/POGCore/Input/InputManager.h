@@ -33,7 +33,7 @@ namespace POG::Core
 		}
 	};
 
-	typedef std::function<void(InputPackage&, float dt)> InputCallback;
+	using InputCallback = std::function<void(InputPackage&, float dt)>;
 
 	class InputManager final
 	{

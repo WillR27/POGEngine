@@ -22,7 +22,7 @@ namespace POG::Core
 		virtual void Update(float dt) = 0;
 		virtual void Frame(float alpha) = 0;
 
-		virtual void HandleEvent(Event& e) = 0;
+		virtual bool HandleEvent(Event& e) = 0;
 
 		ECSManager& GetECSManager() { return ecsManager; }
 

@@ -22,7 +22,11 @@ namespace POG::Core
 		, inputManager()
 		, activeScene(nullptr)
 		, shouldClose(false)
+		, hasUpdated(false)
+		, editorEventHandler()
+		, ignoreNextEvent(false)
 		, isFullscreen(false)
+		, isCursorEnabled(true)
 		, targetUpdatesPerSecond(30.0f)
 		, targetUpdateInterval(1.0f / targetUpdatesPerSecond)
 		, targetFramesPerSecond(60.0f)
@@ -34,7 +38,7 @@ namespace POG::Core
 		//POG_ASSERT(Instance == nullptr, "Application already created!");
 		POG::Log::Log::Init();
 		POG_INFO("Creating application \"{0}\"!", name);
-
+		
 		if (!Instance)
 		{
 			Instance = this;
@@ -216,20 +220,47 @@ namespace POG::Core
 		window->Close();
 	}
 
-	void Application::HandleEvent(Event& e)
+	bool Application::HandleEvent(Event& e)
 	{
-		EventDispatcher ed(e);
+		if (!ignoreNextEvent)
+		{
+			EventDispatcher ed(e);
+
+			if (editorEventHandler)
+			{
+				// Send event to editor but make sure we don't get stuck in an infinite loop
+				ignoreNextEvent = true;
+				ed.Dispatch<Event>(POG_BIND_FN(editorEventHandler));
+				ignoreNextEvent = false;
+			}
+
+			if (IsStandalone())
+			{
+				ed.Dispatch<WindowCloseEvent>(POG_BIND_FN(window->HandleWindowCloseEvent));
+				ed.Dispatch<WindowFocusEvent>(POG_BIND_FN(window->HandleWindowFocusEvent));
+				ed.Dispatch<WindowSizeEvent>(POG_BIND_FN(HandleWindowSizeEvent));
+			}
+
+			ed.Dispatch<KeyEvent>(POG_BIND_FN(inputManager.HandleKeyEvent));
+			ed.Dispatch<MouseMoveEvent>(POG_BIND_FN(HandleMouseMoveEvent));
+			ed.Dispatch<MouseButtonEvent>(POG_BIND_FN(inputManager.HandleMouseButtonEvent));
+
+			ed.Dispatch<Event>(POG_BIND_FN(activeScene->HandleEvent));
+		}
+
+		return false;
+	}
+
+	bool Application::HandleCursorEnabledEvent(Core::CursorEnabledEvent& e)
+	{
+		isCursorEnabled = e.isCursorEnabled;
 
 		if (IsStandalone())
 		{
-			ed.Dispatch<WindowCloseEvent>(POG_BIND_FN(window->HandleWindowCloseEvent));
-			ed.Dispatch<WindowFocusEvent>(POG_BIND_FN(window->HandleWindowFocusEvent));
-			ed.Dispatch<WindowSizeEvent>(POG_BIND_FN(HandleWindowSizeEvent));
+			window->SetCursorEnabled(isCursorEnabled);
 		}
-		
-		ed.Dispatch<KeyEvent>(POG_BIND_FN(inputManager.HandleKeyEvent));
-		ed.Dispatch<MouseMoveEvent>(POG_BIND_FN(HandleMouseMoveEvent));
-		ed.Dispatch<MouseButtonEvent>(POG_BIND_FN(inputManager.HandleMouseButtonEvent));
+
+		return false;
 	}
 
 	void Application::SetContextAddressFunc(ContextAddressFunc func)
@@ -257,9 +288,8 @@ namespace POG::Core
 
 	void Application::SetCursorEnabled(bool isCursorEnabled)
 	{
-		this->isCursorEnabled = isCursorEnabled;
-
-		window->SetCursorEnabled(isCursorEnabled);
+		CursorEnabledEvent e(isCursorEnabled);
+		HandleEvent(e);
 	}
 
 	void Application::ToggleCursorEnabled()

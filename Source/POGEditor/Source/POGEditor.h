@@ -1,5 +1,7 @@
 #pragma once
 
+#include "POGEditorEvents.h"
+
 #include "POGCore.h"
 #include "POGDebug.h"
 #include "POGLog.h"
@@ -12,6 +14,8 @@ namespace POG::Editor
 	class POGEditor : public POG::Core::Application
 	{
 	public:
+		static POGEditor& GetInstance();
+
 		POGEditor();
 
 		virtual ~POGEditor();
@@ -27,7 +31,7 @@ namespace POG::Editor
 		void Update(float dt) override;
 		void Frame(float alpha) override;
 
-		void HandleEvent(Core::Event& e) override;
+		bool HandleEvent(Core::Event& e) override;
 
 		void TryLoadClient();
 		void TryUnloadClient();
@@ -35,14 +39,16 @@ namespace POG::Editor
 		Core::IApplication& GetClientApplication() { return *clientApplication; }
 
 		bool IsClientFocused() const { return isClientFocused; }
-		void SetClientFocused(bool isFocused) { isClientFocused = isFocused; }
+		//void SetClientFocused(bool isFocused) { isClientFocused = isFocused; }
 
 		bool IsClientPaused() const { return isClientPaused; }
-		void SetClientPaused(bool isPaused) { isClientPaused = isPaused; }
+		//void SetClientPaused(bool isPaused) { isClientPaused = isPaused; }
 
 		bool IsClientLoaded() const { return clientApplication; }
 
 	private:
+		static POGEditor* Instance;
+
 		HINSTANCE exampleDll;
 		CreateClientApplication createClientApplication;
 
@@ -50,9 +56,17 @@ namespace POG::Editor
 
 		bool isClientFocused;
 		bool isClientPaused;
+		bool wasCursorEnabled;
 
 		bool LookForReservedKeys(Core::KeyEvent& e);
 		bool LookForReservedMouseButtons(Core::MouseButtonEvent& e);
+
+		bool HandleClientFocusedEvent(ClientFocusedEvent& e);
+		bool HandleClientPlayEvent(ClientPlayEvent& e);
+		bool HandleClientPauseEvent(ClientPauseEvent& e);
+		bool HandleClientStopEvent(ClientStopEvent& e);
+
+		bool HandleCursorEnabledEvent(Core::CursorEnabledEvent& e) override;
 
 		void LoadClient();
 		void UnloadClient();

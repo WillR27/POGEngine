@@ -2,6 +2,7 @@
 
 #include "POGCommon.h"
 
+#include "POGCore/Event/ApplicationEvents.h"
 #include "POGCore/Input/InputManager.h"
 #include "POGCore/Scene/Scene.h"
 #include "POGCore/View/View.h"
@@ -9,6 +10,8 @@
 
 namespace POG::Core
 {
+	using EditorEventHandler = std::function<bool(Event& e)>;
+
 	class IApplication
 	{
 	public:
@@ -30,14 +33,14 @@ namespace POG::Core
 		virtual void Update(float dt) = 0;
 		virtual void Frame(float alpha) = 0;
 
-		virtual void HandleEvent(Event& e) = 0;
+		virtual bool HandleEvent(Event& e) = 0;
 
 		virtual void SetContextAddressFunc(ContextAddressFunc func) = 0;
 
 		// Only used by the editor to check if the client has updated this loop
 		virtual bool HasUpdated() const = 0;
 
-		virtual void SetWindow(Window* window) = 0;
+		virtual void SetEditorEventHandler(EditorEventHandler editorEventHandler) = 0;
 
 		virtual bool IsCursorEnabled() const = 0;
 		virtual void SetCursorEnabled(bool isCursorEnabled) = 0;
@@ -79,7 +82,9 @@ namespace POG::Core
 		void Update(float dt) override;
 		void Frame(float alpha) override;
 
-		void HandleEvent(Event& e) override;
+		bool HandleEvent(Event& e) override;
+
+		virtual bool HandleCursorEnabledEvent(Core::CursorEnabledEvent& e);
 
 		bool ShouldClose() const { return shouldClose; };
 
@@ -87,10 +92,11 @@ namespace POG::Core
 
 		bool HasUpdated() const override { return hasUpdated; }
 
+		void SetEditorEventHandler(EditorEventHandler editorEventHandler) override { this->editorEventHandler = editorEventHandler; }
+
 		std::string GetName() const { return name; }
 
 		Window& GetWindow() { return *window; }
-		void SetWindow(Window* window) override { this->window = window; };
 
 		bool IsFullscreen() const { return isFullscreen; }
 		void SetFullscreen(bool isFullscreen);
@@ -142,6 +148,9 @@ namespace POG::Core
 		bool shouldClose;
 
 		bool hasUpdated;
+
+		EditorEventHandler editorEventHandler;
+		bool ignoreNextEvent;
 
 		bool isFullscreen;
 		bool isCursorEnabled;
