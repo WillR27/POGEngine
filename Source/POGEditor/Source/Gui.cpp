@@ -1,6 +1,8 @@
 #include "POGEditorPCH.h"
 #include "Gui.h"
 
+#include "POGEditor.h"
+
 #include "POGCore.h"
 #include "POGLog.h"
 
@@ -14,6 +16,7 @@ namespace POG::Editor
 {
 	Gui::Gui()
 		: context(nullptr)
+		, io(nullptr)
 		, dockspaceId(0)
 		, dockspaceLoaded(false)
 		, isClientFocused(true)
@@ -27,19 +30,19 @@ namespace POG::Editor
 		// Setup Dear ImGui context
 		IMGUI_CHECKVERSION();
 		context = ImGui::CreateContext();
-		ImGuiIO& io = ImGui::GetIO();
-		io.IniFilename = "editor.ini";
-		io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;       // Enable Keyboard Controls
-		//io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
-		io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;           // Enable Docking
-		io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;         // Enable Multi-Viewport / Platform Windows
+		io = &ImGui::GetIO();
+		io->IniFilename = "editor.ini";
+		io->ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;       // Enable Keyboard Controls
+		//io->ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
+		io->ConfigFlags |= ImGuiConfigFlags_DockingEnable;           // Enable Docking
+		io->ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;         // Enable Multi-Viewport / Platform Windows
 
 		ImGui::StyleColorsDark();
 
 		// When viewports are enabled we tweak WindowRounding/WindowBg so platform windows can look identical to regular ones.
 		ImGuiStyle& style = ImGui::GetStyle();
 		style.DisplaySafeAreaPadding = ImVec2(0.0f, 0.0f);
-		if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+		if (io->ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
 		{
 			style.WindowRounding = 0.0f;
 			style.Colors[ImGuiCol_WindowBg].w = 1.0f;
@@ -210,6 +213,18 @@ namespace POG::Editor
 			ImGui::UpdatePlatformWindows();
 			ImGui::RenderPlatformWindowsDefault();
 			glfwMakeContextCurrent(backup_current_context);
+		}
+	}
+
+	void Gui::SetCursorEnabled(bool isCursorEnabled)
+	{
+		if (isCursorEnabled)
+		{
+			io->ConfigFlags &= ~ImGuiConfigFlags_NoMouse;
+		}
+		else
+		{
+			io->ConfigFlags |= ImGuiConfigFlags_NoMouse;
 		}
 	}
 }

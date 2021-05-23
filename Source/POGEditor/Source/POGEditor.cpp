@@ -40,12 +40,12 @@ namespace POG::Editor
 
 	void POGEditor::TryUpdate(float timeBetweenLoops)
 	{
+		Application::TryUpdate(timeBetweenLoops);
+
 		if (IsClientLoaded() && !IsClientPaused())
 		{
 			clientApplication->TryUpdate(timeBetweenLoops);
 		}
-
-		Application::TryUpdate(timeBetweenLoops);
 	}
 
 	void POGEditor::TryFrame(float timeBetweenLoops)
@@ -56,13 +56,28 @@ namespace POG::Editor
 		}
 
 		Application::TryFrame(timeBetweenLoops);
+
+		if (IsClientLoaded() && !IsClientPaused())
+		{
+			if (clientApplication->HasUpdated())
+			{
+				clientApplication->ResetInput();
+			}
+		}
 	}
 
 	void POGEditor::Input(Core::InputPackage& inputPackage, float dt)
 	{
 		if (inputPackage.HasActionOccurred("Quit", true))
 		{
-			Exit();
+			if (IsClientLoaded())
+			{
+				clientApplication->SetCursorEnabled(true);
+			}
+			else
+			{
+				Exit();
+			}
 		}
 
 		if (inputPackage.HasActionOccurred("Fullscreen", true))
@@ -83,12 +98,32 @@ namespace POG::Editor
 
 	void POGEditor::HandleEvent(Core::Event& e)
 	{
+		Core::EventDispatcher ed(e);
+		ed.Dispatch<Core::KeyEvent>(POG_BIND_FN(LookForReservedKeys));
+		//ed.Dispatch<Core::MouseMoveEvent>(POG_BIND_FN(HandleMouseMoveEvent));
+		ed.Dispatch<Core::MouseButtonEvent>(POG_BIND_FN(LookForReservedMouseButtons));
+
 		if (IsClientLoaded() && !IsClientPaused() && IsClientFocused())
 		{
 			clientApplication->HandleEvent(e);
 		}
 
 		Application::HandleEvent(e);
+	}
+
+	bool POGEditor::LookForReservedKeys(Core::KeyEvent& e)
+	{
+		if (e.key == POG_KEY_ESCAPE || e.key == POG_KEY_F11)
+		{
+			Application::HandleEvent(e);
+		}
+
+		return false;
+	}
+
+	bool POGEditor::LookForReservedMouseButtons(Core::MouseButtonEvent& e)
+	{
+		return false;
 	}
 
 	void POGEditor::TryLoadClient()
@@ -119,6 +154,7 @@ namespace POG::Editor
 
 		clientApplication = createClientApplication();
 		clientApplication->SetStandalone(false);
+		clientApplication->SetWindow(&GetWindow());
 		clientApplication->SetContextAddressFunc(GetWindow().GetContextAddressFunc());
 		clientApplication->PreInit();
 		clientApplication->Init();
@@ -133,6 +169,8 @@ namespace POG::Editor
 		clientApplication = nullptr;
 
 		FreeLibrary(exampleDll);
+
+		SetCursorEnabled(true);
 	}
 }
 

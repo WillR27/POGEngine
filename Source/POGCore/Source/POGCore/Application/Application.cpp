@@ -58,9 +58,12 @@ namespace POG::Core
 
 	void Application::Exit()
 	{
-		POG_INFO("Exiting application \"{0}\"!", name);
+		if (IsStandalone())
+		{
+			POG_INFO("Exiting application \"{0}\"!", name);
 
-		shouldClose = true;
+			shouldClose = true;
+		}
 	}
 
 	void Application::PreInit()
@@ -90,23 +93,38 @@ namespace POG::Core
 
 	void Application::TryUpdate(float timeBetweenLoops)
 	{
-		const int maxUpdatesPerLoop = 10;
-		int updatesInCurrentLoop = 0;
+		hasUpdated = false;
 
 		timeBetweenUpdates += timeBetweenLoops;
 
-		// Try catch up with updates if we are lagging
-		while (timeBetweenUpdates >= GetTargetUpdateInterval())
+		if (IsStandalone())
 		{
-			//POG_INFO(1.0f / timeBetweenUpdates);
+			const int maxUpdatesPerLoop = 10;
+			int updatesInCurrentLoop = 0;
 
-			// Count how many updates we have done this game loop (happens if we are lagging)
-			updatesInCurrentLoop++;
+			// Try catch up with updates if we are lagging
+			while (timeBetweenUpdates >= GetTargetUpdateInterval())
+			{
+				//POG_INFO(1.0f / timeBetweenUpdates);
 
-			Update(GetTargetUpdateInterval());
+				// Count how many updates we have done this game loop (happens if we are lagging)
+				updatesInCurrentLoop++;
 
-			// Set the remaining lag, if we have updated a lot of times without rendering just stop updating
-			timeBetweenUpdates = updatesInCurrentLoop >= maxUpdatesPerLoop ? 0.0f : timeBetweenUpdates - GetTargetUpdateInterval();
+				Update(GetTargetUpdateInterval());
+
+				// Set the remaining lag, if we have updated a lot of times without rendering just stop updating
+				timeBetweenUpdates = updatesInCurrentLoop >= maxUpdatesPerLoop ? 0.0f : timeBetweenUpdates - GetTargetUpdateInterval();
+			}
+		}
+		else
+		{
+			if (timeBetweenUpdates >= GetTargetUpdateInterval())
+			{
+				Update(GetTargetUpdateInterval());
+
+				// If we are in the editor, don't try to catch up
+				timeBetweenUpdates = 0.0f;
+			}
 		}
 	}
 
@@ -130,12 +148,17 @@ namespace POG::Core
 	{
 	}
 
-	void Application::Input()
+	void Application::ResetInput()
 	{
 		Input::ResetMouseDeltas();
+	}
 
+	void Application::Input()
+	{
 		if (IsStandalone())
 		{
+			ResetInput();
+
 			// Check for inputs each update
 			window->Input();
 		}
@@ -143,6 +166,8 @@ namespace POG::Core
 
 	void Application::Update(float dt)
 	{		
+		hasUpdated = true;
+
 		Input();
 
 		inputManager.Dispatch(dt);
@@ -214,11 +239,14 @@ namespace POG::Core
 
 	void Application::SetFullscreen(bool isFullscreen)
 	{
-		this->isFullscreen = isFullscreen;
-
 		if (IsStandalone())
 		{
-			window->SetFullscreen(isFullscreen);
+			this->isFullscreen = isFullscreen;
+
+			if (IsStandalone())
+			{
+				window->SetFullscreen(isFullscreen);
+			}
 		}
 	}
 
@@ -231,10 +259,7 @@ namespace POG::Core
 	{
 		this->isCursorEnabled = isCursorEnabled;
 
-		if (IsStandalone())
-		{
-			window->SetCursorEnabled(isCursorEnabled);
-		}
+		window->SetCursorEnabled(isCursorEnabled);
 	}
 
 	void Application::ToggleCursorEnabled()

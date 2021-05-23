@@ -51,11 +51,22 @@ void main()
 
 	void POGEditorScene::Frame(float alpha)
 	{
+		POGEditor& pogEditor = static_cast<POGEditor&>(Core::Application::GetInstance());
+
 		Render::BindDefaultFrameBuffer();
 
 		Render::ClearColour(0.5f, 0.1f, 0.9f, 1.0f);
 		Render::ClearColourBuffer();
 		Render::ClearDepthBuffer();
+
+		if (pogEditor.IsClientLoaded())
+		{
+			gui.SetCursorEnabled(pogEditor.GetClientApplication().IsCursorEnabled());
+		}
+		else
+		{
+			gui.SetCursorEnabled(true);
+		}
 
 		gui.Frame();
 		gui.StartStyle();
@@ -65,7 +76,6 @@ void main()
 		gui.EndStyle();
 		gui.Render();
 
-		POGEditor& pogEditor = static_cast<POGEditor&>(Core::Application::GetInstance());
 		pogEditor.SetClientFocused(gui.IsClientFocused());
 		gui.ShouldLoadClient() ? pogEditor.TryLoadClient() : pogEditor.TryUnloadClient();
 		pogEditor.SetClientPaused(gui.IsClientPaused());

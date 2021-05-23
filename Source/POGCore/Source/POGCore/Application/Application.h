@@ -25,6 +25,7 @@ namespace POG::Core
 		virtual void TryUpdate(float timeBetweenLoops) = 0;
 		virtual void TryFrame(float timeBetweenLoops) = 0;
 
+		virtual void ResetInput() = 0;
 		virtual void Input() = 0;
 		virtual void Update(float dt) = 0;
 		virtual void Frame(float alpha) = 0;
@@ -32,6 +33,14 @@ namespace POG::Core
 		virtual void HandleEvent(Event& e) = 0;
 
 		virtual void SetContextAddressFunc(ContextAddressFunc func) = 0;
+
+		// Only used by the editor to check if the client has updated this loop
+		virtual bool HasUpdated() const = 0;
+
+		virtual void SetWindow(Window* window) = 0;
+
+		virtual bool IsCursorEnabled() const = 0;
+		virtual void SetCursorEnabled(bool isCursorEnabled) = 0;
 
 		virtual float GetTargetUpdatesPerSecond() const = 0;
 		virtual float GetTargetFramesPerSecond() const = 0;
@@ -65,6 +74,7 @@ namespace POG::Core
 		void TryFrame(float timeBetweenLoops) override;
 
 		virtual void Input(InputPackage& inputPackage, float dt);
+		void ResetInput() override;
 		void Input() override;
 		void Update(float dt) override;
 		void Frame(float alpha) override;
@@ -75,16 +85,19 @@ namespace POG::Core
 
 		void SetContextAddressFunc(ContextAddressFunc func) override;
 
+		bool HasUpdated() const override { return hasUpdated; }
+
 		std::string GetName() const { return name; }
 
 		Window& GetWindow() { return *window; }
+		void SetWindow(Window* window) override { this->window = window; };
 
 		bool IsFullscreen() const { return isFullscreen; }
 		void SetFullscreen(bool isFullscreen);
 		void ToggleFullscreen();
 
-		bool IsCursorEnabled() const { return isCursorEnabled; }
-		void SetCursorEnabled(bool isCursorEnabled);
+		bool IsCursorEnabled() const override { return isCursorEnabled; }
+		void SetCursorEnabled(bool isCursorEnabled) override;
 		void ToggleCursorEnabled();
 
 		float GetTargetUpdatesPerSecond() const override { return targetUpdatesPerSecond; }
@@ -127,6 +140,8 @@ namespace POG::Core
 		bool isStandalone;
 
 		bool shouldClose;
+
+		bool hasUpdated;
 
 		bool isFullscreen;
 		bool isCursorEnabled;

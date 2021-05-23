@@ -27,12 +27,15 @@ namespace POG::Editor
 		void EndStyle();
 		void Render();
 
+		void SetCursorEnabled(bool isCursorEnabled);
+
 		bool IsClientFocused() const { return isClientFocused; }
 		bool ShouldLoadClient() const { return shouldLoadClient; }
 		bool IsClientPaused() const { return isClientPaused; }
 
 	private:
 		ImGuiContext* context;
+		ImGuiIO* io;
 
 		ImGuiID dockspaceId;
 

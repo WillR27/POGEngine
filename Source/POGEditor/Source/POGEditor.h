@@ -32,6 +32,8 @@ namespace POG::Editor
 		void TryLoadClient();
 		void TryUnloadClient();
 
+		Core::IApplication& GetClientApplication() { return *clientApplication; }
+
 		bool IsClientFocused() const { return isClientFocused; }
 		void SetClientFocused(bool isFocused) { isClientFocused = isFocused; }
 
@@ -48,6 +50,9 @@ namespace POG::Editor
 
 		bool isClientFocused;
 		bool isClientPaused;
+
+		bool LookForReservedKeys(Core::KeyEvent& e);
+		bool LookForReservedMouseButtons(Core::MouseButtonEvent& e);
 
 		void LoadClient();
 		void UnloadClient();

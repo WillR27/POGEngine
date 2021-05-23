@@ -39,8 +39,10 @@ namespace POG::Core
 			if (!e.handled && (typeid(e) == typeid(T) || typeid(T) == typeid(Event)))
 			{
 				e.handled = func(static_cast<T&>(e));
+
 				return true;
 			}
+
 			return false;
 		}
 
