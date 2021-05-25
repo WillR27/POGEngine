@@ -9,6 +9,8 @@
 
 #include <GLFW/glfw3.h>
 
+#include "POGCore/Event/ZEvent.h"
+
 namespace POG::Core
 {
 	static void GLFWErrorCallback(int error, const char* description)
@@ -85,8 +87,7 @@ namespace POG::Core
 			{
 				WindowData& windowData = GetWindowData(window);
 
-				WindowCloseEvent e;
-				windowData.eventCallback(e);
+				Application::GetInstance().mainBus.Publish(new ZWindowCloseEvent());
 			});
 
 		glfwSetWindowSizeCallback(window, [](GLFWwindow* window, int width, int height)
@@ -149,15 +150,6 @@ namespace POG::Core
 	void WindowsWindow::SwapBuffers()
 	{
 		glfwSwapBuffers(window);
-	}
-
-	bool WindowsWindow::HandleWindowCloseEvent(WindowCloseEvent& e)
-	{
-		POG_INFO(e.ToString());
-
-		Application::GetInstance().Exit();
-
-		return true;
 	}
 
 	bool WindowsWindow::HandleWindowFocusEvent(WindowFocusEvent& e)

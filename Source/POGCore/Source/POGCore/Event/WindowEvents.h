@@ -4,17 +4,6 @@
 
 namespace POG::Core
 {
-	class WindowCloseEvent : public Event
-	{
-	public:
-		WindowCloseEvent() = default;
-
-		virtual const char* GetName() const override
-		{
-			return STRINGIFY(WindowCloseEvent);
-		}
-	};
-
 	class WindowSizeEvent : public Event
 	{
 	public:

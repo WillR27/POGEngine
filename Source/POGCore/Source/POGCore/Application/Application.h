@@ -8,6 +8,8 @@
 #include "POGCore/View/View.h"
 #include "POGCore/Window/Window.h"
 
+#include "POGCore/Event/ZEvent.h"
+
 namespace POG::Core
 {
 	using EditorEventHandler = std::function<bool(Event& e)>;
@@ -85,6 +87,9 @@ namespace POG::Core
 		bool HandleEvent(Event& e) override;
 
 		virtual bool HandleCursorEnabledEvent(Core::CursorEnabledEvent& e);
+
+		EventBus mainBus;
+		void HandleZWindowCloseEvent(ZWindowCloseEvent& e);
 
 		bool ShouldClose() const { return shouldClose; };
 

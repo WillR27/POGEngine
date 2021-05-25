@@ -24,7 +24,6 @@ namespace POG::Core
 
 		virtual void SwapBuffers() override;
 
-		virtual bool HandleWindowCloseEvent(WindowCloseEvent& e) override;
 		virtual bool HandleWindowFocusEvent(WindowFocusEvent& e) override;
 		
 		virtual void UpdateView(View view) override;

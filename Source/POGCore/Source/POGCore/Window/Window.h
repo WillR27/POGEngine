@@ -32,7 +32,6 @@ namespace POG::Core
 
 		virtual void SwapBuffers() = 0;
 
-		virtual bool HandleWindowCloseEvent(WindowCloseEvent& e) = 0;
 		virtual bool HandleWindowFocusEvent(WindowFocusEvent& e) = 0;
 
 		virtual void UpdateView(View view) = 0;

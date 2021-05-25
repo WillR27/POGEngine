@@ -127,7 +127,7 @@ namespace POG::Editor
 		// TODO: Remove WindowCloseEvent check
 		// Prevent the WindowCloseEvent from handled in the client
 		// As the client will be deleted before the calls have unwound
-		if (IsClientLoaded() && !IsClientPaused() && IsClientFocused() && typeid(e) != typeid(Core::WindowCloseEvent))
+		if (IsClientLoaded() && !IsClientPaused() && IsClientFocused())
 		{
 			ed.Dispatch<Core::Event>(POG_BIND_FN_THIS(clientApplication->HandleEvent));
 		}

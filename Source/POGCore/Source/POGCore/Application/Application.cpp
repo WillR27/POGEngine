@@ -95,6 +95,8 @@ namespace POG::Core
 		Scene::GetActiveScene().PostInit();
 
 		inputManager.AddInputCallback(POG_BIND_FN(Scene::GetActiveScene().Input));
+
+		mainBus.Subscribe(this, &Application::HandleZWindowCloseEvent);
 	}
 
 	void Application::TryUpdate(float timeBetweenLoops)
@@ -238,7 +240,6 @@ namespace POG::Core
 
 			if (IsStandalone())
 			{
-				ed.Dispatch<WindowCloseEvent>(POG_BIND_FN_THIS(window->HandleWindowCloseEvent));
 				ed.Dispatch<WindowFocusEvent>(POG_BIND_FN_THIS(window->HandleWindowFocusEvent));
 				ed.Dispatch<WindowSizeEvent>(POG_BIND_FN_THIS(HandleWindowSizeEvent));
 			}
@@ -263,6 +264,11 @@ namespace POG::Core
 		}
 
 		return false;
+	}
+
+	void Application::HandleZWindowCloseEvent(ZWindowCloseEvent& e)
+	{
+		Exit();
 	}
 
 	void Application::SetContextAddressFunc(ContextAddressFunc func)
