@@ -82,7 +82,15 @@ void main()
 	bool POGEditorScene::HandleEvent(Core::Event& e)
 	{
 		Core::EventDispatcher ed(e);
-		ed.Dispatch<Core::CursorEnabledEvent>(POG_BIND_FN(HandleCursorEnabledEvent));
+		ed.Dispatch<ClientFocusedEvent>(POG_BIND_FN_THIS(HandleClientFocusedEvent));
+		ed.Dispatch<Core::CursorEnabledEvent>(POG_BIND_FN_THIS(HandleCursorEnabledEvent));
+
+		return false;
+	}
+
+	bool POGEditorScene::HandleClientFocusedEvent(ClientFocusedEvent& e)
+	{
+		gui.SetClientWindowFocused(e.isClientFocused);
 
 		return false;
 	}

@@ -27,6 +27,8 @@ namespace POG::Editor
 		void EndStyle();
 		void Render();
 
+		void SetClientWindowFocused(bool isClientWindowFocused);
+
 		void SetCursorEnabled(bool isCursorEnabled);
 
 		//bool IsClientFocused() const { return isClientFocused; }
@@ -44,6 +46,7 @@ namespace POG::Editor
 		ImVec4 clearColour;
 
 		bool isClientWindowFocused;
+		bool shouldSetClientWindowFocused;
 	};
 }
 

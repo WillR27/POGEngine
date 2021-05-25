@@ -33,9 +33,6 @@ namespace POG::Editor
 
 		bool HandleEvent(Core::Event& e) override;
 
-		void TryLoadClient();
-		void TryUnloadClient();
-
 		Core::IApplication& GetClientApplication() { return *clientApplication; }
 
 		bool IsClientFocused() const { return isClientFocused; }

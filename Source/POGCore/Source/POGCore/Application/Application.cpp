@@ -1,6 +1,8 @@
 #include "POGCorePCH.h"
 #include "Application.h"
 
+#include "POGCore/Scene/Scene.h"
+
 #include "POGDebug.h"
 #include "POGLog.h"
 #include "POGRender.h"
@@ -20,7 +22,6 @@ namespace POG::Core
 		, isStandalone(true)
 		, view()
 		, inputManager()
-		, activeScene(nullptr)
 		, shouldClose(false)
 		, hasUpdated(false)
 		, editorEventHandler()
@@ -38,7 +39,7 @@ namespace POG::Core
 		//POG_ASSERT(Instance == nullptr, "Application already created!");
 		POG::Log::Log::Init();
 		POG_INFO("Creating application \"{0}\"!", name);
-		
+
 		if (!Instance)
 		{
 			Instance = this;
@@ -78,21 +79,22 @@ namespace POG::Core
 		{
 			window = Window::Create(name);
 			window->Init();
-			window->SetEventCallback(POG_BIND_FN(HandleEvent));
+			window->SetEventCallback(POG_BIND_FN_THIS(HandleEvent));
 
 			Render::SetContextAddressFunc(GetWindow().GetContextAddressFunc());
 			Render::Init();
 		}
 
-		inputManager.AddInputCallback(POG_BIND_FN(Input));
+		inputManager.AddInputCallback(POG_BIND_FN_THIS(Input));
 	}
 
 	void Application::PostInit()
 	{
-		activeScene->PreInit();
-		activeScene->Init();
+		Scene::GetActiveScene().PreInit();
+		Scene::GetActiveScene().Init();
+		Scene::GetActiveScene().PostInit();
 
-		inputManager.AddInputCallback(POG_BIND_FN(activeScene->Input));
+		inputManager.AddInputCallback(POG_BIND_FN(Scene::GetActiveScene().Input));
 	}
 
 	void Application::TryUpdate(float timeBetweenLoops)
@@ -169,14 +171,14 @@ namespace POG::Core
 	}
 
 	void Application::Update(float dt)
-	{		
+	{
 		hasUpdated = true;
 
 		Input();
 
 		inputManager.Dispatch(dt);
 
-		activeScene->Update(dt);
+		Scene::GetActiveScene().Update(dt);
 	}
 
 	void Application::Frame(float alpha)
@@ -186,7 +188,7 @@ namespace POG::Core
 			window->Frame();
 		}
 
-		activeScene->Frame(timeBetweenFrames / GetTargetFrameInterval());
+		Scene::GetActiveScene().Frame(timeBetweenFrames / GetTargetFrameInterval());
 
 		if (IsStandalone())
 		{
@@ -197,7 +199,7 @@ namespace POG::Core
 	void Application::Run()
 	{
 		POG_INFO("Running application \"{0}!\"", name);
-		
+
 		PreInit();
 		Init();
 		PostInit();
@@ -215,7 +217,7 @@ namespace POG::Core
 			TryFrame(timeBetweenLoops);
 		}
 
-		activeScene->Exit();
+		Scene::GetActiveScene().Exit();
 
 		window->Close();
 	}
@@ -230,22 +232,22 @@ namespace POG::Core
 			{
 				// Send event to editor but make sure we don't get stuck in an infinite loop
 				ignoreNextEvent = true;
-				ed.Dispatch<Event>(POG_BIND_FN(editorEventHandler));
+				ed.Dispatch<Event>(POG_BIND_FN_THIS(editorEventHandler));
 				ignoreNextEvent = false;
 			}
 
 			if (IsStandalone())
 			{
-				ed.Dispatch<WindowCloseEvent>(POG_BIND_FN(window->HandleWindowCloseEvent));
-				ed.Dispatch<WindowFocusEvent>(POG_BIND_FN(window->HandleWindowFocusEvent));
-				ed.Dispatch<WindowSizeEvent>(POG_BIND_FN(HandleWindowSizeEvent));
+				ed.Dispatch<WindowCloseEvent>(POG_BIND_FN_THIS(window->HandleWindowCloseEvent));
+				ed.Dispatch<WindowFocusEvent>(POG_BIND_FN_THIS(window->HandleWindowFocusEvent));
+				ed.Dispatch<WindowSizeEvent>(POG_BIND_FN_THIS(HandleWindowSizeEvent));
 			}
 
-			ed.Dispatch<KeyEvent>(POG_BIND_FN(inputManager.HandleKeyEvent));
-			ed.Dispatch<MouseMoveEvent>(POG_BIND_FN(HandleMouseMoveEvent));
-			ed.Dispatch<MouseButtonEvent>(POG_BIND_FN(inputManager.HandleMouseButtonEvent));
+			ed.Dispatch<KeyEvent>(POG_BIND_FN_THIS(inputManager.HandleKeyEvent));
+			ed.Dispatch<MouseMoveEvent>(POG_BIND_FN_THIS(HandleMouseMoveEvent));
+			ed.Dispatch<MouseButtonEvent>(POG_BIND_FN_THIS(inputManager.HandleMouseButtonEvent));
 
-			ed.Dispatch<Event>(POG_BIND_FN(activeScene->HandleEvent));
+			ed.Dispatch<Event>(POG_BIND_FN(Scene::GetActiveScene().HandleEvent));
 		}
 
 		return false;
@@ -321,7 +323,7 @@ namespace POG::Core
 	}
 }
 
-extern "C" __declspec(dllexport) POG::Core::IApplication* __cdecl CreateClientApplication()
+extern "C" __declspec(dllexport) POG::Core::IApplication * __cdecl CreateClientApplication()
 {
 	return POG::Core::CreateApplication();
 }

@@ -210,29 +210,29 @@ void main()
 		SetTargetUpdatesPerSecond(60.0f);
 		SetTargetFramesPerSecond(60.0f);
 
-		activeScene = std::make_unique<ExampleScene>();
-
 		SetCursorEnabled(false);
 
-		inputManager.AddAction("Quit", POG::Core::InputInfo(POG::Core::InputType::Keyboard, POG_KEY_ESCAPE, POG_KEY_RELEASE, POG_MOD_ANY));
-		inputManager.AddAction("Fullscreen", POG::Core::InputInfo(POG::Core::InputType::Keyboard, POG_KEY_F11, POG_KEY_RELEASE, POG_MOD_ANY));
+		POG::Core::Scene::SetActiveScene(std::make_shared<ExampleScene>());
 
-		inputManager.AddAction("Left", POG::Core::InputInfo(POG::Core::InputType::Mouse, POG_MOUSE_BUTTON_LEFT, POG_KEY_RELEASE));
-		inputManager.AddAction("Right", POG::Core::InputInfo(POG::Core::InputType::Mouse, POG_MOUSE_BUTTON_RIGHT, POG_KEY_RELEASE));
+		GetInputManager().AddAction("Quit", POG::Core::InputInfo(POG::Core::InputType::Keyboard, POG_KEY_ESCAPE, POG_KEY_RELEASE, POG_MOD_ANY));
+		GetInputManager().AddAction("Fullscreen", POG::Core::InputInfo(POG::Core::InputType::Keyboard, POG_KEY_F11, POG_KEY_RELEASE, POG_MOD_ANY));
 
-		inputManager.AddAxis("Fly",
+		GetInputManager().AddAction("Left", POG::Core::InputInfo(POG::Core::InputType::Mouse, POG_MOUSE_BUTTON_LEFT, POG_KEY_RELEASE));
+		GetInputManager().AddAction("Right", POG::Core::InputInfo(POG::Core::InputType::Mouse, POG_MOUSE_BUTTON_RIGHT, POG_KEY_RELEASE));
+
+		GetInputManager().AddAxis("Fly",
 			POG::Core::InputInfo(POG::Core::InputType::Keyboard, POG_KEY_LEFT_CONTROL, POG_KEY_PRESS),
 			POG::Core::InputInfo(POG::Core::InputType::Keyboard, POG_KEY_LEFT_CONTROL, POG_KEY_RELEASE),
 			POG::Core::InputInfo(POG::Core::InputType::Keyboard, POG_KEY_SPACE, POG_KEY_PRESS),
 			POG::Core::InputInfo(POG::Core::InputType::Keyboard, POG_KEY_SPACE, POG_KEY_RELEASE));
 
-		inputManager.AddAxis("Horizontal",
+		GetInputManager().AddAxis("Horizontal",
 			POG::Core::InputInfo(POG::Core::InputType::Keyboard, POG_KEY_A, POG_KEY_PRESS),
 			POG::Core::InputInfo(POG::Core::InputType::Keyboard, POG_KEY_A, POG_KEY_RELEASE),
 			POG::Core::InputInfo(POG::Core::InputType::Keyboard, POG_KEY_D, POG_KEY_PRESS),
 			POG::Core::InputInfo(POG::Core::InputType::Keyboard, POG_KEY_D, POG_KEY_RELEASE));
 		
-		inputManager.AddAxis("Vertical", 
+		GetInputManager().AddAxis("Vertical",
 			POG::Core::InputInfo(POG::Core::InputType::Keyboard, POG_KEY_S, POG_KEY_PRESS),
 			POG::Core::InputInfo(POG::Core::InputType::Keyboard, POG_KEY_S, POG_KEY_RELEASE),
 			POG::Core::InputInfo(POG::Core::InputType::Keyboard, POG_KEY_W, POG_KEY_PRESS),

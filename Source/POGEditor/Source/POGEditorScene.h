@@ -37,6 +37,7 @@ namespace POG::Editor
 		Render::FrameBuffer clientFBO;
 		Render::Texture clientTexture;
 
+		bool HandleClientFocusedEvent(ClientFocusedEvent& e);
 		bool HandleCursorEnabledEvent(Core::CursorEnabledEvent& e);
 	};
 }

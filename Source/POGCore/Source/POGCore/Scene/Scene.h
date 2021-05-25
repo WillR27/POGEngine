@@ -9,20 +9,24 @@ namespace POG::Core
 	class Scene
 	{
 	public:
+		static Scene& GetActiveScene();
+		static void SetActiveScene(std::shared_ptr<Scene> scene);
+
 		Scene() = default;
 
 		virtual ~Scene() = default;
 
 		void PreInit();
-		virtual void Init() = 0;
+		virtual void Init();
+		void PostInit();
 
-		virtual void Exit() = 0;
+		virtual void Exit();
 
-		virtual void Input(InputPackage& inputPackage, float dt) = 0;
-		virtual void Update(float dt) = 0;
-		virtual void Frame(float alpha) = 0;
+		virtual void Input(InputPackage& inputPackage, float dt);
+		virtual void Update(float dt);
+		virtual void Frame(float alpha);
 
-		virtual bool HandleEvent(Event& e) = 0;
+		virtual bool HandleEvent(Event& e);
 
 		ECSManager& GetECSManager() { return ecsManager; }
 
@@ -31,6 +35,8 @@ namespace POG::Core
 		TransformSystem& GetTransformSystem() { return *transformSystem; }
 
 	private:
+		static std::shared_ptr<Scene> ActiveScene;
+
 		ECSManager ecsManager;
 
 		std::shared_ptr<CameraUpdateViewSystem> cameraUpdateViewSystem;

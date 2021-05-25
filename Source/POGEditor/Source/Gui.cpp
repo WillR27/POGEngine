@@ -158,14 +158,6 @@ namespace POG::Editor
 	{
 		ImGui::Begin("Game Window");
 		{
-			bool wasClientWindowFocused = isClientWindowFocused;
-			isClientWindowFocused = ImGui::IsWindowFocused(ImGuiFocusedFlags_RootAndChildWindows);
-			if (wasClientWindowFocused != isClientWindowFocused)
-			{
-				ClientFocusedEvent e(isClientWindowFocused);
-				Core::Application::GetInstance().HandleEvent(e);
-			}
-			
 			if (ImGui::Button("Play"))
 			{
 				ClientPlayEvent e;
@@ -186,9 +178,28 @@ namespace POG::Editor
 				Core::Application::GetInstance().HandleEvent(e);
 			}
 
+			if (shouldSetClientWindowFocused)
+			{
+				ImGui::SetNextWindowFocus();
+				shouldSetClientWindowFocused = false;
+			}
+
 			ImGui::BeginChild("Game Render");
-			ImVec2 wsize = ImGui::GetWindowSize();
-			ImGui::Image((ImTextureID)((unsigned int)clientTexture), wsize, ImVec2(0, 1), ImVec2(1, 0));
+			{
+				if (!shouldSetClientWindowFocused)
+				{
+					bool wasClientWindowFocused = isClientWindowFocused;
+					isClientWindowFocused = ImGui::IsWindowFocused(ImGuiFocusedFlags_ChildWindows);
+					if (wasClientWindowFocused != isClientWindowFocused)
+					{
+						ClientFocusedEvent e(isClientWindowFocused);
+						Core::Application::GetInstance().HandleEvent(e);
+					}
+				}
+
+				ImVec2 wsize = ImGui::GetWindowSize();
+				ImGui::Image((ImTextureID)((unsigned int)clientTexture), wsize, ImVec2(0, 1), ImVec2(1, 0));
+			}
 			ImGui::EndChild();
 		}
 		ImGui::End();
@@ -229,6 +240,11 @@ namespace POG::Editor
 			ImGui::RenderPlatformWindowsDefault();
 			glfwMakeContextCurrent(backup_current_context);
 		}
+	}
+
+	void Gui::SetClientWindowFocused(bool isClientWindowFocused)
+	{
+		shouldSetClientWindowFocused = isClientWindowFocused;
 	}
 
 	void Gui::SetCursorEnabled(bool isCursorEnabled)

@@ -33,7 +33,10 @@ namespace POG::Editor
 
 	void POGEditor::Exit()
 	{
-		TryUnloadClient();
+		if (IsClientLoaded())
+		{
+			UnloadClient();
+		}
 
 		Application::Exit();
 	}
@@ -43,10 +46,10 @@ namespace POG::Editor
 		SetTargetUpdatesPerSecond(60.0f);
 		SetTargetFramesPerSecond(60.0f);
 
-		inputManager.AddAction("Quit", Core::InputInfo(Core::InputType::Keyboard, POG_KEY_ESCAPE, POG_KEY_RELEASE, POG_MOD_ANY));
-		inputManager.AddAction("Fullscreen", Core::InputInfo(Core::InputType::Keyboard, POG_KEY_F11, POG_KEY_RELEASE, POG_MOD_ANY));
+		GetInputManager().AddAction("Quit", Core::InputInfo(Core::InputType::Keyboard, POG_KEY_ESCAPE, POG_KEY_RELEASE, POG_MOD_ANY));
+		GetInputManager().AddAction("Fullscreen", Core::InputInfo(Core::InputType::Keyboard, POG_KEY_F11, POG_KEY_RELEASE, POG_MOD_ANY));
 
-		activeScene = std::make_unique<POGEditorScene>();
+		Core::Scene::SetActiveScene(std::make_shared<POGEditorScene>());
 	}
 
 	void POGEditor::TryUpdate(float timeBetweenLoops)
@@ -83,6 +86,7 @@ namespace POG::Editor
 		{
 			if (IsClientLoaded() && !IsCursorEnabled())
 			{
+				wasCursorEnabled = false;
 				SetCursorEnabled(true);
 			}
 			else
@@ -110,22 +114,25 @@ namespace POG::Editor
 	bool POGEditor::HandleEvent(Core::Event& e)
 	{
 		Core::EventDispatcher ed(e);
-		ed.Dispatch<Core::KeyEvent>(POG_BIND_FN(LookForReservedKeys));
-		ed.Dispatch<Core::MouseButtonEvent>(POG_BIND_FN(LookForReservedMouseButtons));
+		ed.Dispatch<Core::KeyEvent>(POG_BIND_FN_THIS(LookForReservedKeys));
+		ed.Dispatch<Core::MouseButtonEvent>(POG_BIND_FN_THIS(LookForReservedMouseButtons));
 
-		ed.Dispatch<ClientFocusedEvent>(POG_BIND_FN(HandleClientFocusedEvent));
-		ed.Dispatch<ClientPlayEvent>(POG_BIND_FN(HandleClientPlayEvent));
-		ed.Dispatch<ClientPauseEvent>(POG_BIND_FN(HandleClientPauseEvent));
-		ed.Dispatch<ClientStopEvent>(POG_BIND_FN(HandleClientStopEvent));
+		ed.Dispatch<ClientFocusedEvent>(POG_BIND_FN_THIS(HandleClientFocusedEvent));
+		ed.Dispatch<ClientPlayEvent>(POG_BIND_FN_THIS(HandleClientPlayEvent));
+		ed.Dispatch<ClientPauseEvent>(POG_BIND_FN_THIS(HandleClientPauseEvent));
+		ed.Dispatch<ClientStopEvent>(POG_BIND_FN_THIS(HandleClientStopEvent));
 
-		ed.Dispatch<Core::CursorEnabledEvent>(POG_BIND_FN(HandleCursorEnabledEvent));
+		ed.Dispatch<Core::CursorEnabledEvent>(POG_BIND_FN_THIS(HandleCursorEnabledEvent));
 
-		if (IsClientLoaded() && !IsClientPaused() && IsClientFocused())
+		// TODO: Remove WindowCloseEvent check
+		// Prevent the WindowCloseEvent from handled in the client
+		// As the client will be deleted before the calls have unwound
+		if (IsClientLoaded() && !IsClientPaused() && IsClientFocused() && typeid(e) != typeid(Core::WindowCloseEvent))
 		{
-			ed.Dispatch<Core::Event>(POG_BIND_FN(clientApplication->HandleEvent));
+			ed.Dispatch<Core::Event>(POG_BIND_FN_THIS(clientApplication->HandleEvent));
 		}
 
-		ed.Dispatch<Core::Event>(POG_BIND_FN(Application::HandleEvent));
+		ed.Dispatch<Core::Event>(POG_BIND_FN_THIS(Application::HandleEvent));
 
 		return false;
 	}
@@ -149,22 +156,35 @@ namespace POG::Editor
 	{
 		isClientFocused = e.isClientFocused;
 
-		return true;
+		if (IsCursorEnabled() != wasCursorEnabled)
+		{
+			SetCursorEnabled(wasCursorEnabled);
+		}
+
+		return false;
 	}
 
 	bool POGEditor::HandleClientPlayEvent(ClientPlayEvent& e)
 	{
-		bool wasClientLoaded = IsClientLoaded();
+		if (!IsClientLoaded())
+		{
+			LoadClient();
+			wasCursorEnabled = IsCursorEnabled();
+		}
+		else
+		{
+			// Reset the cursor back to what the client wanted before pausing if unpausing
+			if (IsCursorEnabled() != wasCursorEnabled)
+			{
+				SetCursorEnabled(wasCursorEnabled);
+			}
+		}
 
-		TryLoadClient();
+		// Set the client window to focused so events get passed through
+		ClientFocusedEvent e2(true);
+		HandleEvent(e2);
 
 		isClientPaused = false;
-
-		// Reset the cursor back to what the client wanted before pausing if unpausing
-		if (wasClientLoaded && IsCursorEnabled() != wasCursorEnabled)
-		{
-			SetCursorEnabled(wasCursorEnabled);
-		}
 
 		return true;
 	}
@@ -172,14 +192,16 @@ namespace POG::Editor
 	bool POGEditor::HandleClientPauseEvent(ClientPauseEvent& e)
 	{
 		isClientPaused = true;
-		wasCursorEnabled = IsCursorEnabled();
 
 		return true;
 	}
 
 	bool POGEditor::HandleClientStopEvent(ClientStopEvent& e)
 	{
-		TryUnloadClient();
+		if (IsClientLoaded())
+		{
+			UnloadClient();
+		}
 
 		// If the cursor is somehow not already enabled, enable it
 		if (!IsCursorEnabled())
@@ -197,22 +219,6 @@ namespace POG::Editor
 		return false;
 	}
 
-	void POGEditor::TryLoadClient()
-	{
-		if (!IsClientLoaded())
-		{
-			LoadClient();
-		}
-	}
-
-	void POGEditor::TryUnloadClient()
-	{
-		if (IsClientLoaded())
-		{
-			UnloadClient();
-		}
-	}
-
 	void POGEditor::LoadClient()
 	{
 		POG_INFO("Loading dll!");
@@ -224,7 +230,7 @@ namespace POG::Editor
 		POG_ASSERT(createClientApplication, "Function not found!");
 
 		clientApplication = createClientApplication();
-		clientApplication->SetEditorEventHandler(POG_BIND_FN(HandleEvent));
+		clientApplication->SetEditorEventHandler(POG_BIND_FN_THIS(HandleEvent));
 		clientApplication->SetStandalone(false);
 		clientApplication->SetContextAddressFunc(GetWindow().GetContextAddressFunc());
 		clientApplication->PreInit();

@@ -37,19 +37,19 @@ namespace POG::Core
 
 		virtual void SetContextAddressFunc(ContextAddressFunc func) = 0;
 
-		// Only used by the editor to check if the client has updated this loop
-		virtual bool HasUpdated() const = 0;
+		virtual void SetStandalone(bool isStandalone) = 0;
+		virtual bool IsStandalone() = 0;
 
 		virtual void SetEditorEventHandler(EditorEventHandler editorEventHandler) = 0;
+
+		// Only used by the editor to check if the client has updated this loop
+		virtual bool HasUpdated() const = 0;
 
 		virtual bool IsCursorEnabled() const = 0;
 		virtual void SetCursorEnabled(bool isCursorEnabled) = 0;
 
 		virtual float GetTargetUpdatesPerSecond() const = 0;
 		virtual float GetTargetFramesPerSecond() const = 0;
-
-		virtual void SetStandalone(bool isStandalone) = 0;
-		virtual bool IsStandalone() = 0;
 	};
 
 	class Application : public IApplication
@@ -90,13 +90,22 @@ namespace POG::Core
 
 		void SetContextAddressFunc(ContextAddressFunc func) override;
 
-		bool HasUpdated() const override { return hasUpdated; }
+		std::string GetName() const { return name; }
+
+		void SetStandalone(bool isStandalone) override { this->isStandalone = isStandalone; }
+		bool IsStandalone() override { return isStandalone; }
+
+		Window& GetWindow() { return *window; }
+
+		const View& GetView() const { return view; }
+		int GetWidth() const { return view.GetWidth(); }
+		int GetHeight() const { return view.GetHeight(); }
+
+		InputManager& GetInputManager() { return inputManager; }
 
 		void SetEditorEventHandler(EditorEventHandler editorEventHandler) override { this->editorEventHandler = editorEventHandler; }
 
-		std::string GetName() const { return name; }
-
-		Window& GetWindow() { return *window; }
+		bool HasUpdated() const override { return hasUpdated; }
 
 		bool IsFullscreen() const { return isFullscreen; }
 		void SetFullscreen(bool isFullscreen);
@@ -116,19 +125,8 @@ namespace POG::Core
 
 		float GetTargetFrameInterval() const { return targetFrameInterval; }
 
-		const View& GetView() const { return view; }
-		int GetWidth() const { return view.GetWidth(); }
-		int GetHeight() const { return view.GetHeight(); }
-
-		void SetStandalone(bool isStandalone) override { this->isStandalone = isStandalone; }
-		bool IsStandalone() override { return isStandalone; }
-
 	protected:
 		Common::Timer<Common::Time::Unit::Seconds, float, true> timer;
-
-		std::unique_ptr<Scene> activeScene;
-
-		InputManager inputManager;
 
 		float timeBetweenLoops;
 		float timeBetweenUpdates;
@@ -137,20 +135,20 @@ namespace POG::Core
 	private:
 		static Application* Instance;
 
+		bool isStandalone;
+
 		std::string name;
 
 		Window* window;
-
 		View view;
 
-		bool isStandalone;
-
-		bool shouldClose;
-
-		bool hasUpdated;
+		InputManager inputManager;
 
 		EditorEventHandler editorEventHandler;
 		bool ignoreNextEvent;
+
+		bool shouldClose;
+		bool hasUpdated;
 
 		bool isFullscreen;
 		bool isCursorEnabled;
