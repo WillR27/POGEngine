@@ -6,9 +6,8 @@
 
 namespace POG::Core
 {
-	class KeyEvent : public Event
+	struct KeyEvent : public Event
 	{
-	public:
 		int key, scancode, action, mods;
 
 		KeyEvent(int key, int scancode, int action, int mods)
@@ -19,12 +18,12 @@ namespace POG::Core
 		{
 		}
 
-		virtual const char* GetName() const override
+		const char* GetName() const override
 		{
 			return STRINGIFY(KeyEvent);
 		}
 
-		virtual std::string ToString() const override
+		std::string ToString() const override
 		{
 			std::stringstream ss;
 			ss << GetName() << ": " << "KEY:" << key << ", SCANCODE: " << scancode << ", ACTION: " << action << ", MODS: " << mods;
@@ -32,9 +31,8 @@ namespace POG::Core
 		}
 	};
 
-	class MouseMoveEvent : public Event
+	struct MouseMoveEvent : public Event
 	{
-	public:
 		float mouseX, mouseY;
 
 		MouseMoveEvent(float mouseX, float mouseY)
@@ -43,12 +41,12 @@ namespace POG::Core
 		{
 		}
 
-		virtual const char* GetName() const override
+		const char* GetName() const override
 		{
 			return STRINGIFY(MouseMoveEvent);
 		}
 
-		virtual std::string ToString() const override
+		std::string ToString() const override
 		{
 			std::stringstream ss;
 			ss << GetName() << ": " << "MouseX:" << Input::MouseX << ", MouseY: " << Input::MouseY;
@@ -56,9 +54,8 @@ namespace POG::Core
 		}
 	};
 
-	class MouseButtonEvent : public Event
+	struct MouseButtonEvent : public Event
 	{
-	public:
 		int button, action, mods;
 
 		MouseButtonEvent(int button, int action, int mods)
@@ -68,12 +65,12 @@ namespace POG::Core
 		{
 		}
 
-		virtual const char* GetName() const override
+		const char* GetName() const override
 		{
 			return STRINGIFY(MouseButtonEvent);
 		}
 
-		virtual std::string ToString() const override
+		std::string ToString() const override
 		{
 			std::stringstream ss;
 			ss << GetName() << ": " << "BUTTON:" << button << ", ACTION: " << action << ", MODS: " << mods;

@@ -25,8 +25,6 @@ namespace POG::Core
 		, inputManager()
 		, shouldClose(false)
 		, hasUpdated(false)
-		, editorEventHandler()
-		, ignoreNextEvent(false)
 		, isFullscreen(false)
 		, isCursorEnabled(true)
 		, targetUpdatesPerSecond(30.0f)
@@ -69,6 +67,16 @@ namespace POG::Core
 
 		GetMainEventBus().Unsubscribe(this, &Application::HandleWindowCloseEvent);
 		GetMainEventBus().Unsubscribe(this, &Application::HandleCursorEnabledEvent);
+		
+		if (IsStandalone())
+		{
+			GetMainEventBus().Unsubscribe(window, &Window::HandleWindowFocusEvent);
+			GetMainEventBus().Unsubscribe(this, &Application::HandleWindowSizeEvent);
+		}
+
+		GetMainEventBus().Unsubscribe(inputManager, &InputManager::HandleKeyEvent);
+		GetMainEventBus().Unsubscribe(inputManager, &InputManager::HandleMouseButtonEvent);
+		GetMainEventBus().Unsubscribe(this, &Application::HandleMouseMoveEvent);
 
 		// This only applies to a standalone app that is run via Run()
 		// In the editor Run() is never used
@@ -88,7 +96,6 @@ namespace POG::Core
 
 			window = Window::Create(name);
 			window->Init();
-			window->SetEventCallback(POG_BIND_FN_THIS(HandleEvent));
 
 			Render::SetContextAddressFunc(GetWindow().GetContextAddressFunc());
 			Render::Init();
@@ -96,6 +103,16 @@ namespace POG::Core
 
 		GetMainEventBus().Subscribe(this, &Application::HandleWindowCloseEvent);
 		GetMainEventBus().Subscribe(this, &Application::HandleCursorEnabledEvent);
+
+		if (IsStandalone())
+		{
+			GetMainEventBus().Subscribe(window, &Window::HandleWindowFocusEvent);
+			GetMainEventBus().Subscribe(this, &Application::HandleWindowSizeEvent);
+		}
+
+		GetMainEventBus().Subscribe(inputManager, &InputManager::HandleKeyEvent);
+		GetMainEventBus().Subscribe(inputManager, &InputManager::HandleMouseButtonEvent);
+		GetMainEventBus().Subscribe(this, &Application::HandleMouseMoveEvent);
 
 		inputManager.AddInputCallback(POG_BIND_FN_THIS(Input));
 	}
@@ -234,36 +251,6 @@ namespace POG::Core
 		window->Close();
 	}
 
-	bool Application::HandleEvent(Event& e)
-	{
-		if (!ignoreNextEvent)
-		{
-			EventDispatcher ed(e);
-
-			if (editorEventHandler)
-			{
-				// Send event to editor but make sure we don't get stuck in an infinite loop
-				ignoreNextEvent = true;
-				ed.Dispatch<Event>(POG_BIND_FN_THIS(editorEventHandler));
-				ignoreNextEvent = false;
-			}
-
-			if (IsStandalone())
-			{
-				ed.Dispatch<WindowFocusEvent>(POG_BIND_FN_THIS(window->HandleWindowFocusEvent));
-				ed.Dispatch<WindowSizeEvent>(POG_BIND_FN_THIS(HandleWindowSizeEvent));
-			}
-
-			ed.Dispatch<KeyEvent>(POG_BIND_FN_THIS(inputManager.HandleKeyEvent));
-			ed.Dispatch<MouseMoveEvent>(POG_BIND_FN_THIS(HandleMouseMoveEvent));
-			ed.Dispatch<MouseButtonEvent>(POG_BIND_FN_THIS(inputManager.HandleMouseButtonEvent));
-
-			ed.Dispatch<Event>(POG_BIND_FN(Scene::GetActiveScene().HandleEvent));
-		}
-
-		return false;
-	}
-
 	void Application::HandleCursorEnabledEvent(Core::CursorEnabledEvent& e)
 	{
 		isCursorEnabled = e.isCursorEnabled;
@@ -277,6 +264,8 @@ namespace POG::Core
 	void Application::HandleWindowCloseEvent(WindowCloseEvent& e)
 	{
 		Exit();
+
+		e.SetHandled();
 	}
 
 	void Application::SetContextAddressFunc(ContextAddressFunc func)
@@ -304,7 +293,7 @@ namespace POG::Core
 
 	void Application::SetCursorEnabled(bool isCursorEnabled)
 	{
-		GetMainEventBus().Publish(new CursorEnabledEvent(isCursorEnabled));
+		GetMainEventBus().Publish(CursorEnabledEvent(isCursorEnabled));
 	}
 
 	void Application::ToggleCursorEnabled()
@@ -312,7 +301,7 @@ namespace POG::Core
 		SetCursorEnabled(!IsCursorEnabled());
 	}
 
-	bool Application::HandleWindowSizeEvent(WindowSizeEvent& e)
+	void Application::HandleWindowSizeEvent(WindowSizeEvent& e)
 	{
 		POG_INFO(e.ToString());
 
@@ -323,16 +312,14 @@ namespace POG::Core
 			window->UpdateView(view);
 		}
 
-		return true;
+		e.SetHandled();
 	}
 
-	bool Application::HandleMouseMoveEvent(MouseMoveEvent& e)
+	void Application::HandleMouseMoveEvent(MouseMoveEvent& e)
 	{
 		Input::SetMouseXY(e.mouseX, e.mouseY);
 
 		inputManager.HandleMouseMoveEvent(e);
-
-		return false;
 	}
 }
 

@@ -1,15 +1,14 @@
 #include "POGCorePCH.h"
 #include "WindowsWindow.h"
 
+#include "POGCore/Application/Application.h"
+#include "POGCore/Event/Events.h"
+
 #include "POGDebug.h"
 #include "POGLog.h"
 #include "POGRender.h"
 
-#include "POGCore/Application/Application.h"
-
 #include <GLFW/glfw3.h>
-
-#include "POGCore/Event/ZEvent.h"
 
 namespace POG::Core
 {
@@ -55,10 +54,6 @@ namespace POG::Core
 
 		windowData.width = Application::GetInstance().GetWidth();
 		windowData.height = Application::GetInstance().GetHeight();
-		windowData.eventCallback = [](Event& e)
-		{
-			POG_WARN("Window event callback has not been set!");
-		};
 
 		POG_INFO("Initialising GLFW!");
 		int success = glfwInit();
@@ -87,7 +82,7 @@ namespace POG::Core
 			{
 				WindowData& windowData = GetWindowData(window);
 
-				Application::GetInstance().GetMainEventBus().Publish(new WindowCloseEvent());
+				Application::GetInstance().GetMainEventBus().Publish(WindowCloseEvent());
 			});
 
 		glfwSetWindowSizeCallback(window, [](GLFWwindow* window, int width, int height)
@@ -98,8 +93,7 @@ namespace POG::Core
 					windowData.width = width;
 					windowData.height = height;
 
-					WindowSizeEvent e(width, height);
-					windowData.eventCallback(e);
+					Application::GetInstance().GetMainEventBus().Publish(WindowSizeEvent(width, height));
 				}
 			});
 
@@ -108,32 +102,28 @@ namespace POG::Core
 				WindowData& windowData = GetWindowData(window);
 				windowData.hasFocus = hasFocus;
 
-				WindowFocusEvent e(hasFocus);
-				windowData.eventCallback(e);
+				Application::GetInstance().GetMainEventBus().Publish(WindowFocusEvent(hasFocus));
 			});
 
 		glfwSetKeyCallback(window, [](GLFWwindow* window, int key, int scancode, int action, int mods)
 			{
 				WindowData& windowData = GetWindowData(window);
 
-				KeyEvent e(key, scancode, action, mods);
-				windowData.eventCallback(e);
+				Application::GetInstance().GetMainEventBus().Publish(KeyEvent(key, scancode, action, mods));
 			});
 
 		glfwSetCursorPosCallback(window, [](GLFWwindow* window, double posX, double posY)
 			{
 				WindowData& windowData = GetWindowData(window);
 
-				MouseMoveEvent e(static_cast<float>(posX), static_cast<float>(posY));
-				windowData.eventCallback(e);
+				Application::GetInstance().GetMainEventBus().Publish(MouseMoveEvent(static_cast<float>(posX), static_cast<float>(posY)));
 			});
 
 		glfwSetMouseButtonCallback(window, [](GLFWwindow* window, int button, int action, int mods)
 			{
 				WindowData& windowData = GetWindowData(window);
 
-				MouseButtonEvent e(button, action, mods);
-				windowData.eventCallback(e);
+				Application::GetInstance().GetMainEventBus().Publish(MouseButtonEvent(button, action, mods));
 			});
 	}
 
@@ -152,7 +142,7 @@ namespace POG::Core
 		glfwSwapBuffers(window);
 	}
 
-	bool WindowsWindow::HandleWindowFocusEvent(WindowFocusEvent& e)
+	void WindowsWindow::HandleWindowFocusEvent(WindowFocusEvent& e)
 	{
 		POG_INFO(e.ToString());
 
@@ -176,7 +166,7 @@ namespace POG::Core
 
 		hasFocus = e.hasFocus;
 
-		return true;
+		e.SetHandled();
 	}
 
 	void WindowsWindow::UpdateView(View view)
@@ -184,11 +174,6 @@ namespace POG::Core
 		glfwSetWindowSize(window, view.GetWidth(), view.GetHeight());
 
 		Render::SetViewport(0, 0, view.GetWidth(), view.GetHeight());
-	}
-
-	void WindowsWindow::SetEventCallback(EventCallback eventCallback)
-	{
-		windowData.eventCallback = eventCallback;
 	}
 
 	void WindowsWindow::SetFullscreen(bool isFullscreen)
@@ -204,14 +189,12 @@ namespace POG::Core
 
 			const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
 			glfwSetWindowMonitor(window, glfwGetPrimaryMonitor(), 0, 0, mode->width, mode->height, GLFW_DONT_CARE);
-			WindowSizeEvent e(mode->width, mode->height);
-			Application::GetInstance().HandleEvent(e);
+			Application::GetInstance().GetMainEventBus().Publish(WindowSizeEvent(mode->width, mode->height));
 		}
 		else
 		{
 			glfwSetWindowMonitor(window, nullptr, x, y, width, height, GLFW_DONT_CARE);
-			WindowSizeEvent e(width, height);
-			Application::GetInstance().HandleEvent(e);
+			Application::GetInstance().GetMainEventBus().Publish(WindowSizeEvent(width, height));
 		}
 	}
 

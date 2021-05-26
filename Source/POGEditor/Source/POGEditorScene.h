@@ -25,8 +25,6 @@ namespace POG::Editor
 
 		void Frame(float alpha) override;
 
-		bool HandleEvent(Core::Event& e) override;
-
 	private:
 		Gui gui;
 
@@ -37,7 +35,7 @@ namespace POG::Editor
 		Render::FrameBuffer clientFBO;
 		Render::Texture clientTexture;
 
-		bool HandleClientFocusedEvent(ClientFocusedEvent& e);
+		void HandleClientFocusedEvent(ClientFocusedEvent& e);
 		void HandleCursorEnabledEvent(Core::CursorEnabledEvent& e);
 	};
 }

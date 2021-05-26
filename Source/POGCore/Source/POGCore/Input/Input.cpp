@@ -1,8 +1,6 @@
 #include "POGCorePCH.h"
 #include "Input.h"
 
-#include "POGCore/Event/InputEvents.h"
-
 namespace POG::Core
 {
 	bool Input::ShouldResetMouseMovement = true;

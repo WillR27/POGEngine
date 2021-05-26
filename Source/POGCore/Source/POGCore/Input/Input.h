@@ -154,7 +154,7 @@ namespace POG::Core
 {
 	class Input
 	{
-		friend class MouseMoveEvent;
+		friend struct MouseMoveEvent;
 		friend class Application;
 
 	private:

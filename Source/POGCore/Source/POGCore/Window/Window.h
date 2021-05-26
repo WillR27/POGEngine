@@ -12,7 +12,6 @@ namespace POG::Core
 	{
 		int width = 0, height = 0;
 		bool hasFocus;
-		EventCallback eventCallback;
 	};
 
 	class Window
@@ -32,11 +31,9 @@ namespace POG::Core
 
 		virtual void SwapBuffers() = 0;
 
-		virtual bool HandleWindowFocusEvent(WindowFocusEvent& e) = 0;
+		virtual void HandleWindowFocusEvent(WindowFocusEvent& e) = 0;
 
 		virtual void UpdateView(View view) = 0;
-
-		virtual void SetEventCallback(EventCallback eventCallback) = 0;
 
 		virtual bool IsFullscreen() const = 0;
 		virtual void SetFullscreen(bool isFullscreen) = 0;

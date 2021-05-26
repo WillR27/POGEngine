@@ -2,18 +2,15 @@
 
 #include "POGCommon.h"
 
-#include "POGCore/Event/ApplicationEvents.h"
+#include "POGCore/Application/Application.h"
+#include "POGCore/Event/Events.h"
 #include "POGCore/Input/InputManager.h"
 #include "POGCore/Scene/Scene.h"
 #include "POGCore/View/View.h"
 #include "POGCore/Window/Window.h"
 
-#include "POGCore/Event/ZEvent.h"
-
 namespace POG::Core
 {
-	using EditorEventHandler = std::function<bool(Event& e)>;
-
 	class IApplication
 	{
 	public:
@@ -35,16 +32,12 @@ namespace POG::Core
 		virtual void Update(float dt) = 0;
 		virtual void Frame(float alpha) = 0;
 
-		virtual bool HandleEvent(Event& e) = 0;
-
 		virtual void SetContextAddressFunc(ContextAddressFunc func) = 0;
 
 		virtual void SetStandalone(bool isStandalone) = 0;
 		virtual bool IsStandalone() = 0;
 
 		virtual void SetMainEventBus(EventBus& mainEventBus) = 0;
-
-		virtual void SetEditorEventHandler(EditorEventHandler editorEventHandler) = 0;
 
 		// Only used by the editor to check if the client has updated this loop
 		virtual bool HasUpdated() const = 0;
@@ -86,8 +79,6 @@ namespace POG::Core
 		void Update(float dt) override;
 		void Frame(float alpha) override;
 
-		bool HandleEvent(Event& e) override;
-
 		void HandleCursorEnabledEvent(Core::CursorEnabledEvent& e);
 
 		void HandleWindowCloseEvent(WindowCloseEvent& e);
@@ -111,8 +102,6 @@ namespace POG::Core
 		void SetMainEventBus(EventBus& mainEventBus) override { this->mainEventBus = &mainEventBus; }
 
 		InputManager& GetInputManager() { return inputManager; }
-
-		void SetEditorEventHandler(EditorEventHandler editorEventHandler) override { this->editorEventHandler = editorEventHandler; }
 
 		bool HasUpdated() const override { return hasUpdated; }
 
@@ -154,9 +143,6 @@ namespace POG::Core
 		EventBus* mainEventBus;
 		InputManager inputManager;
 
-		EditorEventHandler editorEventHandler;
-		bool ignoreNextEvent;
-
 		bool shouldClose;
 		bool hasUpdated;
 
@@ -168,8 +154,8 @@ namespace POG::Core
 		float targetFramesPerSecond;
 		float targetFrameInterval;
 
-		bool HandleWindowSizeEvent(WindowSizeEvent& e);
-		bool HandleMouseMoveEvent(MouseMoveEvent& e);
+		void HandleWindowSizeEvent(WindowSizeEvent& e);
+		void HandleMouseMoveEvent(MouseMoveEvent& e);
 	};
 
 	Application* CreateApplication();

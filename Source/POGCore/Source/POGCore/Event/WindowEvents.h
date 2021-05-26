@@ -4,9 +4,16 @@
 
 namespace POG::Core
 {
-	class WindowSizeEvent : public Event
+	struct WindowCloseEvent : public Event
 	{
-	public:
+		const char* GetName() const override
+		{
+			return STRINGIFY(WindowCloseEvent);
+		}
+	};
+
+	struct WindowSizeEvent : public Event
+	{
 		int width, height;
 
 		WindowSizeEvent(int width, int height)
@@ -15,12 +22,12 @@ namespace POG::Core
 		{
 		}
 
-		virtual const char* GetName() const override
+		const char* GetName() const override
 		{
 			return STRINGIFY(WindowSizeEvent);
 		}
 
-		virtual std::string ToString() const override
+		std::string ToString() const override
 		{
 			std::stringstream ss;
 			ss << GetName() << ": " << width << ", " << height;
@@ -28,9 +35,8 @@ namespace POG::Core
 		}
 	};
 
-	class WindowFocusEvent : public Event
+	struct WindowFocusEvent : public Event
 	{
-	public:
 		bool hasFocus;
 
 		WindowFocusEvent(bool hasFocus)
@@ -38,12 +44,12 @@ namespace POG::Core
 		{
 		}
 
-		virtual const char* GetName() const override
+		const char* GetName() const override
 		{
 			return STRINGIFY(WindowFocusEvent);
 		}
 
-		virtual std::string ToString() const override
+		std::string ToString() const override
 		{
 			std::stringstream ss;
 			ss << GetName() << ": " << hasFocus;

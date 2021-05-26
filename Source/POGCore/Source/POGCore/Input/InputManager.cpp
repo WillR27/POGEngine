@@ -36,7 +36,7 @@ namespace POG::Core
 		inputPackage.Clear();
 	}
 
-	bool InputManager::HandleKeyEvent(KeyEvent& e)
+	void InputManager::HandleKeyEvent(KeyEvent& e)
 	{
 		InputInfo eventInputInfo(InputType::Keyboard, e.key, e.action, e.mods);
 		bool handled = false;
@@ -124,17 +124,18 @@ namespace POG::Core
 			axes[i].SetValue(axisValue);
 		}
 
-		return handled;
+		if (handled)
+		{
+			e.SetHandled();
+		}
 	}
 
-	bool InputManager::HandleMouseMoveEvent(MouseMoveEvent& e)
+	void InputManager::HandleMouseMoveEvent(MouseMoveEvent& e)
 	{
 		inputPackage.SetMouseMoved();
-
-		return false;
 	}
 
-	bool InputManager::HandleMouseButtonEvent(MouseButtonEvent& e)
+	void InputManager::HandleMouseButtonEvent(MouseButtonEvent& e)
 	{
 		InputInfo eventInputInfo(InputType::Mouse, e.button, e.action, e.mods); // TODO: Merge with key inputs as they are the same?
 		bool handled = false;
@@ -222,7 +223,10 @@ namespace POG::Core
 			axes[i].SetValue(axisValue);
 		}
 
-		return handled;
+		if (handled)
+		{
+			e.SetHandled();
+		}
 	}
 
 	void InputManager::AddInputCallback(InputCallback inputCallback)

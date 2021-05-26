@@ -31,16 +31,10 @@ namespace POG::Editor
 		void Update(float dt) override;
 		void Frame(float alpha) override;
 
-		bool HandleEvent(Core::Event& e) override;
-
 		Core::IApplication& GetClientApplication() { return *clientApplication; }
 
 		bool IsClientFocused() const { return isClientFocused; }
-		//void SetClientFocused(bool isFocused) { isClientFocused = isFocused; }
-
 		bool IsClientPaused() const { return isClientPaused; }
-		//void SetClientPaused(bool isPaused) { isClientPaused = isPaused; }
-
 		bool IsClientLoaded() const { return clientApplication; }
 
 	private:
@@ -55,13 +49,13 @@ namespace POG::Editor
 		bool isClientPaused;
 		bool wasCursorEnabled;
 
-		bool LookForReservedKeys(Core::KeyEvent& e);
-		bool LookForReservedMouseButtons(Core::MouseButtonEvent& e);
+		void LookForReservedKeys(Core::KeyEvent& e);
+		void LookForReservedMouseButtons(Core::MouseButtonEvent& e);
 
-		bool HandleClientFocusedEvent(ClientFocusedEvent& e);
-		bool HandleClientPlayEvent(ClientPlayEvent& e);
-		bool HandleClientPauseEvent(ClientPauseEvent& e);
-		bool HandleClientStopEvent(ClientStopEvent& e);
+		void HandleClientFocusedEvent(ClientFocusedEvent& e);
+		void HandleClientPlayEvent(ClientPlayEvent& e);
+		void HandleClientPauseEvent(ClientPauseEvent& e);
+		void HandleClientStopEvent(ClientStopEvent& e);
 
 		void LoadClient();
 		void UnloadClient();

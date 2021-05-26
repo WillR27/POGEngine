@@ -1,8 +1,8 @@
 #pragma once
 
-#include "POGCommon.h"
-
 #include "Window.h"
+
+#include "POGCommon.h"
 
 // If we include GLFW inside this header then we get APIENTRY redefinitions
 struct GLFWwindow;
@@ -16,33 +16,33 @@ namespace POG::Core
 
 		virtual ~WindowsWindow();
 
-		virtual void Init() override;
-		virtual void Close() override;
+		void Init() override;
+		void Close() override;
 
-		virtual void Input() override;
-		virtual void Frame() override;
+		void Input() override;
+		void Frame() override;
 
-		virtual void SwapBuffers() override;
+		void SwapBuffers() override;
 
-		virtual bool HandleWindowFocusEvent(WindowFocusEvent& e) override;
+		void HandleWindowFocusEvent(WindowFocusEvent& e) override;
 		
-		virtual void UpdateView(View view) override;
+		void UpdateView(View view) override;
 
-		virtual void SetEventCallback(EventCallback eventCallback) override;
+		bool IsFullscreen() const override { return isFullscreen; }
+		void SetFullscreen(bool isFullscreen) override;
 
-		virtual bool IsFullscreen() const override { return isFullscreen; }
-		virtual void SetFullscreen(bool isFullscreen) override;
+		bool HasFocus() const override { return hasFocus; }
 
-		virtual bool HasFocus() const override { return hasFocus; }
+		bool IsCursorEnabled() const override { return isCursorEnabled; }
+		void SetCursorEnabled(bool isCursorEnabled) override;
 
-		virtual bool IsCursorEnabled() const override { return isCursorEnabled; }
-		virtual void SetCursorEnabled(bool isCursorEnabled) override;
+		ContextAddressFunc GetContextAddressFunc() const override;
 
-		virtual ContextAddressFunc GetContextAddressFunc() const override;
-
-		virtual void* GetActualWindow() override;
+		void* GetActualWindow() override;
 
 	private:
+		static WindowData& GetWindowData(GLFWwindow* window);
+
 		GLFWwindow* window;
 
 		WindowData windowData;
@@ -50,8 +50,6 @@ namespace POG::Core
 		bool isFullscreen;
 		bool hasFocus;
 		bool isCursorEnabled;
-
-		static WindowData& GetWindowData(GLFWwindow* window);
 
 		void InitWindow();
 		void InitCallbacks();

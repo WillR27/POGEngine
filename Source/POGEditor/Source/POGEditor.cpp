@@ -46,6 +46,14 @@ namespace POG::Editor
 		SetTargetUpdatesPerSecond(60.0f);
 		SetTargetFramesPerSecond(60.0f);
 
+		GetMainEventBus().Subscribe(this, &POGEditor::LookForReservedKeys);
+		GetMainEventBus().Subscribe(this, &POGEditor::LookForReservedMouseButtons);
+
+		GetMainEventBus().Subscribe(this, &POGEditor::HandleClientFocusedEvent);
+		GetMainEventBus().Subscribe(this, &POGEditor::HandleClientPlayEvent);
+		GetMainEventBus().Subscribe(this, &POGEditor::HandleClientPauseEvent);
+		GetMainEventBus().Subscribe(this, &POGEditor::HandleClientStopEvent);
+
 		GetInputManager().AddAction("Quit", Core::InputInfo(Core::InputType::Keyboard, POG_KEY_ESCAPE, POG_KEY_RELEASE, POG_MOD_ANY));
 		GetInputManager().AddAction("Fullscreen", Core::InputInfo(Core::InputType::Keyboard, POG_KEY_F11, POG_KEY_RELEASE, POG_MOD_ANY));
 
@@ -111,46 +119,19 @@ namespace POG::Editor
 		Application::Frame(alpha);
 	}
 
-	bool POGEditor::HandleEvent(Core::Event& e)
-	{
-		Core::EventDispatcher ed(e);
-		ed.Dispatch<Core::KeyEvent>(POG_BIND_FN_THIS(LookForReservedKeys));
-		ed.Dispatch<Core::MouseButtonEvent>(POG_BIND_FN_THIS(LookForReservedMouseButtons));
-
-		ed.Dispatch<ClientFocusedEvent>(POG_BIND_FN_THIS(HandleClientFocusedEvent));
-		ed.Dispatch<ClientPlayEvent>(POG_BIND_FN_THIS(HandleClientPlayEvent));
-		ed.Dispatch<ClientPauseEvent>(POG_BIND_FN_THIS(HandleClientPauseEvent));
-		ed.Dispatch<ClientStopEvent>(POG_BIND_FN_THIS(HandleClientStopEvent));
-
-		// TODO: Remove WindowCloseEvent check
-		// Prevent the WindowCloseEvent from handled in the client
-		// As the client will be deleted before the calls have unwound
-		if (IsClientLoaded() && !IsClientPaused() && IsClientFocused())
-		{
-			ed.Dispatch<Core::Event>(POG_BIND_FN_THIS(clientApplication->HandleEvent));
-		}
-
-		ed.Dispatch<Core::Event>(POG_BIND_FN_THIS(Application::HandleEvent));
-
-		return false;
-	}
-
-	bool POGEditor::LookForReservedKeys(Core::KeyEvent& e)
+	void POGEditor::LookForReservedKeys(Core::KeyEvent& e)
 	{
 		if (e.key == POG_KEY_ESCAPE || e.key == POG_KEY_F11)
 		{
-			Application::HandleEvent(e);
+			
 		}
-
-		return false;
 	}
 
-	bool POGEditor::LookForReservedMouseButtons(Core::MouseButtonEvent& e)
+	void POGEditor::LookForReservedMouseButtons(Core::MouseButtonEvent& e)
 	{
-		return false;
 	}
 
-	bool POGEditor::HandleClientFocusedEvent(ClientFocusedEvent& e)
+	void POGEditor::HandleClientFocusedEvent(ClientFocusedEvent& e)
 	{
 		isClientFocused = e.isClientFocused;
 
@@ -158,11 +139,9 @@ namespace POG::Editor
 		{
 			SetCursorEnabled(wasCursorEnabled);
 		}
-
-		return false;
 	}
 
-	bool POGEditor::HandleClientPlayEvent(ClientPlayEvent& e)
+	void POGEditor::HandleClientPlayEvent(ClientPlayEvent& e)
 	{
 		if (!IsClientLoaded())
 		{
@@ -179,22 +158,21 @@ namespace POG::Editor
 		}
 
 		// Set the client window to focused so events get passed through
-		ClientFocusedEvent e2(true);
-		HandleEvent(e2);
+		GetMainEventBus().Publish(ClientFocusedEvent(true));
 
 		isClientPaused = false;
 
-		return true;
+		e.SetHandled();
 	}
 
-	bool POGEditor::HandleClientPauseEvent(ClientPauseEvent& e)
+	void POGEditor::HandleClientPauseEvent(ClientPauseEvent& e)
 	{
 		isClientPaused = true;
 
-		return true;
+		e.SetHandled();
 	}
 
-	bool POGEditor::HandleClientStopEvent(ClientStopEvent& e)
+	void POGEditor::HandleClientStopEvent(ClientStopEvent& e)
 	{
 		if (IsClientLoaded())
 		{
@@ -207,7 +185,7 @@ namespace POG::Editor
 			SetCursorEnabled(true);
 		}
 
-		return true;
+		e.SetHandled();
 	}
 
 	void POGEditor::LoadClient()
@@ -221,7 +199,6 @@ namespace POG::Editor
 		POG_ASSERT(createClientApplication, "Function not found!");
 
 		clientApplication = createClientApplication();
-		clientApplication->SetEditorEventHandler(POG_BIND_FN_THIS(HandleEvent));
 		clientApplication->SetMainEventBus(GetMainEventBus());
 		clientApplication->SetStandalone(false);
 		clientApplication->SetContextAddressFunc(GetWindow().GetContextAddressFunc());

@@ -36,6 +36,7 @@ void main()
 		clientFBO.BindTexture(clientTexture);
 
 		Core::Application::GetInstance().GetMainEventBus().Subscribe(this, &POGEditorScene::HandleCursorEnabledEvent);
+		Core::Application::GetInstance().GetMainEventBus().Subscribe(this, &POGEditorScene::HandleClientFocusedEvent);
 	}
 
 	void POGEditorScene::Exit()
@@ -81,19 +82,9 @@ void main()
 		}
 	}
 
-	bool POGEditorScene::HandleEvent(Core::Event& e)
-	{
-		Core::EventDispatcher ed(e);
-		ed.Dispatch<ClientFocusedEvent>(POG_BIND_FN_THIS(HandleClientFocusedEvent));
-
-		return false;
-	}
-
-	bool POGEditorScene::HandleClientFocusedEvent(ClientFocusedEvent& e)
+	void POGEditorScene::HandleClientFocusedEvent(ClientFocusedEvent& e)
 	{
 		gui.SetClientWindowFocused(e.isClientFocused);
-
-		return false;
 	}
 
 	void POGEditorScene::HandleCursorEnabledEvent(Core::CursorEnabledEvent& e)

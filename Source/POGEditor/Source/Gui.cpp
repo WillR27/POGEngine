@@ -160,22 +160,19 @@ namespace POG::Editor
 		{
 			if (ImGui::Button("Play"))
 			{
-				ClientPlayEvent e;
-				Core::Application::GetInstance().HandleEvent(e);
+				Core::Application::GetInstance().GetMainEventBus().Publish(ClientPlayEvent());
 			}
 
 			ImGui::SameLine();
 			if (ImGui::Button("Pause"))
 			{
-				ClientPauseEvent e;
-				Core::Application::GetInstance().HandleEvent(e);
+				Core::Application::GetInstance().GetMainEventBus().Publish(ClientPauseEvent());
 			}
 
 			ImGui::SameLine();
 			if (ImGui::Button("Stop"))
 			{
-				ClientStopEvent e;
-				Core::Application::GetInstance().HandleEvent(e);
+				Core::Application::GetInstance().GetMainEventBus().Publish(ClientStopEvent());
 			}
 
 			if (shouldSetClientWindowFocused)
@@ -192,8 +189,7 @@ namespace POG::Editor
 					isClientWindowFocused = ImGui::IsWindowFocused(ImGuiFocusedFlags_ChildWindows);
 					if (wasClientWindowFocused != isClientWindowFocused)
 					{
-						ClientFocusedEvent e(isClientWindowFocused);
-						Core::Application::GetInstance().HandleEvent(e);
+						Core::Application::GetInstance().GetMainEventBus().Publish(ClientFocusedEvent(isClientWindowFocused));
 					}
 				}
 
