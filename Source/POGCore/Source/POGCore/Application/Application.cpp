@@ -21,6 +21,7 @@ namespace POG::Core
 		, window(nullptr)
 		, isStandalone(true)
 		, view()
+		, mainEventBus(nullptr)
 		, inputManager()
 		, shouldClose(false)
 		, hasUpdated(false)
@@ -53,6 +54,7 @@ namespace POG::Core
 		if (IsStandalone())
 		{
 			delete window;
+			delete mainEventBus;
 		}
 	}
 
@@ -63,10 +65,15 @@ namespace POG::Core
 
 	void Application::Exit()
 	{
+		POG_INFO("Exiting application \"{0}\"!", name);
+
+		GetMainEventBus().Unsubscribe(this, &Application::HandleWindowCloseEvent);
+		GetMainEventBus().Unsubscribe(this, &Application::HandleCursorEnabledEvent);
+
+		// This only applies to a standalone app that is run via Run()
+		// In the editor Run() is never used
 		if (IsStandalone())
 		{
-			POG_INFO("Exiting application \"{0}\"!", name);
-
 			shouldClose = true;
 		}
 	}
@@ -77,6 +84,8 @@ namespace POG::Core
 
 		if (IsStandalone())
 		{
+			mainEventBus = new EventBus();
+
 			window = Window::Create(name);
 			window->Init();
 			window->SetEventCallback(POG_BIND_FN_THIS(HandleEvent));
@@ -84,6 +93,9 @@ namespace POG::Core
 			Render::SetContextAddressFunc(GetWindow().GetContextAddressFunc());
 			Render::Init();
 		}
+
+		GetMainEventBus().Subscribe(this, &Application::HandleWindowCloseEvent);
+		GetMainEventBus().Subscribe(this, &Application::HandleCursorEnabledEvent);
 
 		inputManager.AddInputCallback(POG_BIND_FN_THIS(Input));
 	}
@@ -95,8 +107,6 @@ namespace POG::Core
 		Scene::GetActiveScene().PostInit();
 
 		inputManager.AddInputCallback(POG_BIND_FN(Scene::GetActiveScene().Input));
-
-		mainBus.Subscribe(this, &Application::HandleZWindowCloseEvent);
 	}
 
 	void Application::TryUpdate(float timeBetweenLoops)
@@ -254,7 +264,7 @@ namespace POG::Core
 		return false;
 	}
 
-	bool Application::HandleCursorEnabledEvent(Core::CursorEnabledEvent& e)
+	void Application::HandleCursorEnabledEvent(Core::CursorEnabledEvent& e)
 	{
 		isCursorEnabled = e.isCursorEnabled;
 
@@ -262,13 +272,18 @@ namespace POG::Core
 		{
 			window->SetCursorEnabled(isCursorEnabled);
 		}
-
-		return false;
 	}
 
-	void Application::HandleZWindowCloseEvent(ZWindowCloseEvent& e)
+	void Application::HandleWindowCloseEvent(WindowCloseEvent& e)
 	{
 		Exit();
+
+		// If we aren't in the editor make sure we set the event to handled
+		// Otherwise the event bus will try to call a handler that doesn't exist anymore
+		if (IsStandalone())
+		{
+			e.SetHandled();
+		}
 	}
 
 	void Application::SetContextAddressFunc(ContextAddressFunc func)
@@ -296,8 +311,7 @@ namespace POG::Core
 
 	void Application::SetCursorEnabled(bool isCursorEnabled)
 	{
-		CursorEnabledEvent e(isCursorEnabled);
-		HandleEvent(e);
+		GetMainEventBus().Publish(new CursorEnabledEvent(isCursorEnabled));
 	}
 
 	void Application::ToggleCursorEnabled()
@@ -329,7 +343,7 @@ namespace POG::Core
 	}
 }
 
-extern "C" __declspec(dllexport) POG::Core::IApplication * __cdecl CreateClientApplication()
+extern "C" __declspec(dllexport) POG::Core::IApplication* __cdecl CreateClientApplication()
 {
 	return POG::Core::CreateApplication();
 }

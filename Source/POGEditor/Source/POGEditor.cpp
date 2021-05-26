@@ -122,8 +122,6 @@ namespace POG::Editor
 		ed.Dispatch<ClientPauseEvent>(POG_BIND_FN_THIS(HandleClientPauseEvent));
 		ed.Dispatch<ClientStopEvent>(POG_BIND_FN_THIS(HandleClientStopEvent));
 
-		ed.Dispatch<Core::CursorEnabledEvent>(POG_BIND_FN_THIS(HandleCursorEnabledEvent));
-
 		// TODO: Remove WindowCloseEvent check
 		// Prevent the WindowCloseEvent from handled in the client
 		// As the client will be deleted before the calls have unwound
@@ -212,13 +210,6 @@ namespace POG::Editor
 		return true;
 	}
 
-	bool POGEditor::HandleCursorEnabledEvent(Core::CursorEnabledEvent& e)
-	{
-		Application::HandleCursorEnabledEvent(e);
-
-		return false;
-	}
-
 	void POGEditor::LoadClient()
 	{
 		POG_INFO("Loading dll!");
@@ -231,6 +222,7 @@ namespace POG::Editor
 
 		clientApplication = createClientApplication();
 		clientApplication->SetEditorEventHandler(POG_BIND_FN_THIS(HandleEvent));
+		clientApplication->SetMainEventBus(GetMainEventBus());
 		clientApplication->SetStandalone(false);
 		clientApplication->SetContextAddressFunc(GetWindow().GetContextAddressFunc());
 		clientApplication->PreInit();
@@ -242,6 +234,7 @@ namespace POG::Editor
 	{
 		POG_INFO("Unloading dll!");
 
+		clientApplication->Exit();
 		clientApplication->Destroy();
 		clientApplication = nullptr;
 

@@ -63,8 +63,6 @@ namespace POG::Editor
 		bool HandleClientPauseEvent(ClientPauseEvent& e);
 		bool HandleClientStopEvent(ClientStopEvent& e);
 
-		bool HandleCursorEnabledEvent(Core::CursorEnabledEvent& e) override;
-
 		void LoadClient();
 		void UnloadClient();
 	};

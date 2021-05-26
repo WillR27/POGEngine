@@ -87,7 +87,7 @@ namespace POG::Core
 			{
 				WindowData& windowData = GetWindowData(window);
 
-				Application::GetInstance().mainBus.Publish(new ZWindowCloseEvent());
+				Application::GetInstance().GetMainEventBus().Publish(new WindowCloseEvent());
 			});
 
 		glfwSetWindowSizeCallback(window, [](GLFWwindow* window, int width, int height)

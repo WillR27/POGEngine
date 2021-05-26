@@ -6,6 +6,7 @@
 #include <map>
 #include <typeindex>
 #include <typeinfo>
+#include <vector>
 
 namespace POG::Core
 {
@@ -20,7 +21,10 @@ namespace POG::Core
 	class ZEvent
 	{
 	public:
-		ZEvent() = default;
+		ZEvent()
+			: isHandled(false)
+		{
+		}
 
 		virtual ~ZEvent() = default;
 
@@ -60,6 +64,11 @@ namespace POG::Core
 		{
 		}
 
+		bool ConsistsOf(T* object, Handler handler) const
+		{
+			return this->object == object && this->handler == handler;
+		}
+
 	private:
 		T* object;
 		Handler handler;
@@ -82,46 +91,155 @@ namespace POG::Core
 		template<class E>
 		void Publish(E* e)
 		{
-			std::list<EventHandlerBase*>* handlers = subscribers[typeid(E)];
-
+			std::type_index eventTypeIndex = typeid(E);
+			std::vector<EventHandlerBase*>* handlers = subscribers[eventTypeIndex];
+			
 			if (!handlers)
 			{
 				return;
 			}
 
-			for (auto& handler : *handlers)
+			int& eventDepth = eventDepths[eventTypeIndex];
+			std::vector<int>& eventHandlerIndexesToRemove = eventHandlersToRemove[eventTypeIndex];
+
+			// Increase the depth whilst we process the event
+			// If a handler publishes another of the same event on the same bus
+			// This value will be incremented again and so on...
+			eventDepth++;
+
+			// Use a normal for loop to iterate through each handler
+			// So we can compare indexes inside eventHandlersToRemove
+			// To avoid calling event handlers that are being removed
+			for (int i = 0; i < handlers->size() && !e->IsHandled(); i++)
 			{
-				if (!e->IsHandled())
+				// Check if this event handler is being removed
+				if (eventHandlerIndexesToRemove.empty() || std::find(eventHandlerIndexesToRemove.begin(), eventHandlerIndexesToRemove.end(), i) == eventHandlerIndexesToRemove.end())
 				{
-					handler->Handle(*e);
+					(*handlers)[i]->Handle(*e);
 				}
+			}
+
+			// Once we've finished handling the event, decrease the depth
+			eventDepth--;
+
+			// If we have now finished handling the event
+			// Remove any handlers that were set to be removed during the handling of the event
+			if (eventDepth == 0 && !eventHandlerIndexesToRemove.empty())
+			{
+				for (int i = 0; i < eventHandlerIndexesToRemove.size(); i++)
+				{
+					// Subtract i as the list shrinks for every removal
+					int index = eventHandlerIndexesToRemove[i] - i;
+
+					handlers->erase(handlers->begin() + index);
+				}
+
+				// Clear all the indexes as we should have removed them now
+				eventHandlerIndexesToRemove.clear();
 			}
 		}
 
 		template<class T, class E>
 		void Subscribe(T* object, void (T::*handler)(E&))
 		{
-			std::list<EventHandlerBase*>* handlers = subscribers[typeid(E)];
+			POG_TRACE("Subscribing event handler: {0}", typeid(handler).name());
+
+			std::type_index eventTypeIndex = typeid(E);
+			std::vector<EventHandlerBase*>* handlers = subscribers[eventTypeIndex];
 
 			// If handlers doesn't exist for this event type then create a new list
 			if (!handlers)
 			{
-				handlers = new std::list<EventHandlerBase*>();
-				subscribers[typeid(E)] = handlers;
+				handlers = new std::vector<EventHandlerBase*>();
+				subscribers[eventTypeIndex] = handlers;
+				eventDepths[eventTypeIndex] = 0;
 			}
 
 			handlers->push_back(new EventHandler(object, handler));
 		}
 
+		template<class T, class E>
+		void Unsubscribe(T* object, void (T::*handler)(E&))
+		{
+			POG_TRACE("Unsubscribing event handler: {0}", typeid(handler).name());
+
+			std::type_index eventTypeIndex = typeid(E);
+			std::vector<EventHandlerBase*>* handlers = subscribers[eventTypeIndex];
+
+			// If handlers doesn't exist for this event type then there's nothing to unsubscribe
+			if (!handlers)
+			{
+				POG_WARN("Tried to unsubscribe event handler that didn't exist!");
+
+				return;
+			}
+
+			int eventDepth = eventDepths[eventTypeIndex];
+
+			// If we are not currently handling an event of this type we can just unsubscribe now
+			if (eventDepth == 0)
+			{
+				auto it = handlers->begin();
+				while (it != handlers->end())
+				{
+					EventHandler<T, E>* testHandler = static_cast<EventHandler<T, E>*>(*it);
+					if (testHandler->ConsistsOf(object, handler))
+					{
+						it = handlers->erase(it);
+					}
+					else
+					{
+						it++;
+					}
+				}
+			}
+			// Otherwise make sure we don't remove it yet but make a note to once we've finished handling the root event
+			else
+			{
+				for (int i = 0; i < handlers->size(); i++)
+				{
+					EventHandler<T, E>* testHandler = static_cast<EventHandler<T, E>*>((*handlers)[i]);
+					if (testHandler->ConsistsOf(object, handler))
+					{
+						eventHandlersToRemove[eventTypeIndex].push_back(i);
+					}
+				}
+			}
+		}
+
 	private:
-		std::map<std::type_index, std::list<EventHandlerBase*>*> subscribers;
+		std::map<std::type_index, std::vector<EventHandlerBase*>*> subscribers;
+		std::map<std::type_index, std::vector<int>> eventHandlersToRemove;
+		std::map<std::type_index, int> eventDepths;
 	};
 
-	struct ZWindowCloseEvent : public ZEvent
+	struct WindowCloseEvent : public ZEvent
 	{
 		const char* GetName() const override
 		{
-			return STRINGIFY(ZWindowCloseEvent);
+			return STRINGIFY(WindowCloseEvent);
+		}
+	};
+
+	struct CursorEnabledEvent : public ZEvent
+	{
+		bool isCursorEnabled;
+
+		CursorEnabledEvent(bool isCursorEnabled)
+			: isCursorEnabled(isCursorEnabled)
+		{
+		}
+
+		const char* GetName() const override
+		{
+			return STRINGIFY(CursorEnabledEvent);
+		}
+
+		std::string ToString() const override
+		{
+			std::stringstream ss;
+			ss << GetName() << ": " << isCursorEnabled;
+			return ss.str();
 		}
 	};
 }

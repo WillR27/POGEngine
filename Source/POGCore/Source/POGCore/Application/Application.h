@@ -42,6 +42,8 @@ namespace POG::Core
 		virtual void SetStandalone(bool isStandalone) = 0;
 		virtual bool IsStandalone() = 0;
 
+		virtual void SetMainEventBus(EventBus& mainEventBus) = 0;
+
 		virtual void SetEditorEventHandler(EditorEventHandler editorEventHandler) = 0;
 
 		// Only used by the editor to check if the client has updated this loop
@@ -86,10 +88,9 @@ namespace POG::Core
 
 		bool HandleEvent(Event& e) override;
 
-		virtual bool HandleCursorEnabledEvent(Core::CursorEnabledEvent& e);
+		void HandleCursorEnabledEvent(Core::CursorEnabledEvent& e);
 
-		EventBus mainBus;
-		void HandleZWindowCloseEvent(ZWindowCloseEvent& e);
+		void HandleWindowCloseEvent(WindowCloseEvent& e);
 
 		bool ShouldClose() const { return shouldClose; };
 
@@ -105,6 +106,9 @@ namespace POG::Core
 		const View& GetView() const { return view; }
 		int GetWidth() const { return view.GetWidth(); }
 		int GetHeight() const { return view.GetHeight(); }
+
+		EventBus& GetMainEventBus() const { return *mainEventBus; }
+		void SetMainEventBus(EventBus& mainEventBus) override { this->mainEventBus = &mainEventBus; }
 
 		InputManager& GetInputManager() { return inputManager; }
 
@@ -147,6 +151,7 @@ namespace POG::Core
 		Window* window;
 		View view;
 
+		EventBus* mainEventBus;
 		InputManager inputManager;
 
 		EditorEventHandler editorEventHandler;

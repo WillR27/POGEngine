@@ -38,7 +38,7 @@ namespace POG::Editor
 		Render::Texture clientTexture;
 
 		bool HandleClientFocusedEvent(ClientFocusedEvent& e);
-		bool HandleCursorEnabledEvent(Core::CursorEnabledEvent& e);
+		void HandleCursorEnabledEvent(Core::CursorEnabledEvent& e);
 	};
 }
 
