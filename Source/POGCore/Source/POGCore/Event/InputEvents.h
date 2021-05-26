@@ -6,7 +6,15 @@
 
 namespace POG::Core
 {
-	struct KeyEvent : public Event
+	struct InputEvent : public Event
+	{
+		const char* GetName() const override
+		{
+			return STRINGIFY(InputEvent);
+		}
+	};
+
+	struct KeyEvent : public InputEvent
 	{
 		int key, scancode, action, mods;
 
@@ -31,7 +39,7 @@ namespace POG::Core
 		}
 	};
 
-	struct MouseMoveEvent : public Event
+	struct MouseMoveEvent : public InputEvent
 	{
 		float mouseX, mouseY;
 
@@ -54,7 +62,7 @@ namespace POG::Core
 		}
 	};
 
-	struct MouseButtonEvent : public Event
+	struct MouseButtonEvent : public InputEvent
 	{
 		int button, action, mods;
 

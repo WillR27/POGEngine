@@ -49,8 +49,9 @@ namespace POG::Editor
 		bool isClientPaused;
 		bool wasCursorEnabled;
 
-		void LookForReservedKeys(Core::KeyEvent& e);
-		void LookForReservedMouseButtons(Core::MouseButtonEvent& e);
+		void OnKeyEvent(Core::KeyEvent& e);
+		void OnMouseButtonEvent(Core::MouseButtonEvent& e);
+		void OnMouseMoveEvent(Core::MouseMoveEvent& e);
 
 		void HandleClientFocusedEvent(ClientFocusedEvent& e);
 		void HandleClientPlayEvent(ClientPlayEvent& e);
