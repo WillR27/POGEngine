@@ -10,13 +10,7 @@
 
 namespace POG::Core
 {
-	// Event buses that you can publish/subscribe to
-	// mainBus.publish(new EggEvent())
-	// mainBus.subscribe(egg->OnEgg)
-
-	// Event handlers that are a wrapper around callback functions
-
-	// Events that contain event data but not functionality
+	using EventHashId = size_t;
 
 	class ZEvent
 	{
@@ -86,21 +80,35 @@ namespace POG::Core
 		EventBus(const EventBus&) = delete;
 		EventBus(EventBus&&) = delete;
 
-		~EventBus() = default;
+		~EventBus()
+		{
+			for (auto& pair : subscribers)
+			{
+				std::vector<EventHandlerBase*>* handlers = pair.second;
+
+				while (!handlers->empty())
+				{
+					delete handlers->back();
+					handlers->pop_back();
+				}
+
+				delete handlers;
+			}
+		}
 
 		template<class E>
-		void Publish(E* e)
+		void Publish(E* e, bool deleteEvent = true)
 		{
-			size_t eventTypeIndex = Common::HashId<E>();
-			std::vector<EventHandlerBase*>* handlers = subscribers[eventTypeIndex];
+			constexpr EventHashId eventHashId = Common::HashId<E>();
+			std::vector<EventHandlerBase*>* handlers = subscribers[eventHashId];
 			
 			if (!handlers)
 			{
 				return;
 			}
 
-			int& eventDepth = eventDepths[eventTypeIndex];
-			std::vector<int>& eventHandlerIndexesToRemove = eventHandlersToRemove[eventTypeIndex];
+			int& eventDepth = eventDepths[eventHashId];
+			std::vector<int>& eventHandlerIndexesToRemove = eventHandlersToRemove[eventHashId];
 
 			// Increase the depth whilst we process the event
 			// If a handler publishes another of the same event on the same bus
@@ -124,20 +132,30 @@ namespace POG::Core
 
 			// If we have now finished handling the event
 			// Remove any handlers that were set to be removed during the handling of the event
-			if (eventDepth == 0 && !eventHandlerIndexesToRemove.empty())
+			// And delete the event unless the user has specified otherwise
+			if (eventDepth == 0)
 			{
-				std::sort(eventHandlerIndexesToRemove.begin(), eventHandlerIndexesToRemove.end());
-
-				for (int i = 0; i < eventHandlerIndexesToRemove.size(); i++)
+				if (deleteEvent)
 				{
-					// Subtract i as the list shrinks for every removal
-					int index = eventHandlerIndexesToRemove[i] - i;
-
-					handlers->erase(handlers->begin() + index);
+					delete e;
 				}
 
-				// Clear all the indexes as we should have removed them now
-				eventHandlerIndexesToRemove.clear();
+				if (!eventHandlerIndexesToRemove.empty())
+				{
+					std::sort(eventHandlerIndexesToRemove.begin(), eventHandlerIndexesToRemove.end());
+
+					for (int i = 0; i < eventHandlerIndexesToRemove.size(); i++)
+					{
+						// Subtract i as the list shrinks for every removal
+						int index = eventHandlerIndexesToRemove[i] - i;
+
+						delete (*handlers)[index];
+						handlers->erase(handlers->begin() + index);
+					}
+
+					// Clear all the indexes as we should have removed them now
+					eventHandlerIndexesToRemove.clear();
+				}
 			}
 		}
 
@@ -146,15 +164,15 @@ namespace POG::Core
 		{
 			POG_TRACE("Subscribing event handler: {0}", typeid(handler).name());
 
-			size_t eventTypeIndex = Common::HashId<E>();
-			std::vector<EventHandlerBase*>* handlers = subscribers[eventTypeIndex];
+			constexpr EventHashId eventHashId = Common::HashId<E>();
+			std::vector<EventHandlerBase*>* handlers = subscribers[eventHashId];
 
 			// If handlers doesn't exist for this event type then create a new list
 			if (!handlers)
 			{
 				handlers = new std::vector<EventHandlerBase*>();
-				subscribers[eventTypeIndex] = handlers;
-				eventDepths[eventTypeIndex] = 0;
+				subscribers[eventHashId] = handlers;
+				eventDepths[eventHashId] = 0;
 			}
 
 			handlers->push_back(new EventHandler(object, handler));
@@ -165,8 +183,8 @@ namespace POG::Core
 		{
 			POG_TRACE("Unsubscribing event handler: {0}", typeid(handler).name());
 
-			size_t eventTypeIndex = Common::HashId<E>();
-			std::vector<EventHandlerBase*>* handlers = subscribers[eventTypeIndex];
+			constexpr EventHashId eventHashId = Common::HashId<E>();
+			std::vector<EventHandlerBase*>* handlers = subscribers[eventHashId];
 
 			// If handlers doesn't exist for this event type then there's nothing to unsubscribe
 			if (!handlers)
@@ -176,7 +194,7 @@ namespace POG::Core
 				return;
 			}
 
-			int eventDepth = eventDepths[eventTypeIndex];
+			int eventDepth = eventDepths[eventHashId];
 
 			// If we are not currently handling an event of this type we can just unsubscribe now
 			if (eventDepth == 0)
@@ -187,6 +205,7 @@ namespace POG::Core
 					EventHandler<T, E>* testHandler = static_cast<EventHandler<T, E>*>(*it);
 					if (testHandler->ConsistsOf(object, handler))
 					{
+						delete *it;
 						it = handlers->erase(it);
 					}
 					else
@@ -203,16 +222,16 @@ namespace POG::Core
 					EventHandler<T, E>* testHandler = static_cast<EventHandler<T, E>*>((*handlers)[i]);
 					if (testHandler->ConsistsOf(object, handler))
 					{
-						eventHandlersToRemove[eventTypeIndex].push_back(i);
+						eventHandlersToRemove[eventHashId].push_back(i);
 					}
 				}
 			}
 		}
 
 	private:
-		std::map<size_t, std::vector<EventHandlerBase*>*> subscribers;
-		std::map<size_t, std::vector<int>> eventHandlersToRemove;
-		std::map<size_t, int> eventDepths;
+		std::map<EventHashId, std::vector<EventHandlerBase*>*> subscribers;
+		std::map<EventHashId, std::vector<int>> eventHandlersToRemove;
+		std::map<EventHashId, int> eventDepths;
 	};
 
 	struct WindowCloseEvent : public ZEvent
