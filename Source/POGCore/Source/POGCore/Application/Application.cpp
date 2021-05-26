@@ -277,13 +277,6 @@ namespace POG::Core
 	void Application::HandleWindowCloseEvent(WindowCloseEvent& e)
 	{
 		Exit();
-
-		// If we aren't in the editor make sure we set the event to handled
-		// Otherwise the event bus will try to call a handler that doesn't exist anymore
-		if (IsStandalone())
-		{
-			e.SetHandled();
-		}
 	}
 
 	void Application::SetContextAddressFunc(ContextAddressFunc func)

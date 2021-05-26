@@ -91,7 +91,7 @@ namespace POG::Core
 		template<class E>
 		void Publish(E* e)
 		{
-			std::type_index eventTypeIndex = typeid(E);
+			size_t eventTypeIndex = Common::HashId<E>();
 			std::vector<EventHandlerBase*>* handlers = subscribers[eventTypeIndex];
 			
 			if (!handlers)
@@ -126,6 +126,8 @@ namespace POG::Core
 			// Remove any handlers that were set to be removed during the handling of the event
 			if (eventDepth == 0 && !eventHandlerIndexesToRemove.empty())
 			{
+				std::sort(eventHandlerIndexesToRemove.begin(), eventHandlerIndexesToRemove.end());
+
 				for (int i = 0; i < eventHandlerIndexesToRemove.size(); i++)
 				{
 					// Subtract i as the list shrinks for every removal
@@ -144,7 +146,7 @@ namespace POG::Core
 		{
 			POG_TRACE("Subscribing event handler: {0}", typeid(handler).name());
 
-			std::type_index eventTypeIndex = typeid(E);
+			size_t eventTypeIndex = Common::HashId<E>();
 			std::vector<EventHandlerBase*>* handlers = subscribers[eventTypeIndex];
 
 			// If handlers doesn't exist for this event type then create a new list
@@ -163,7 +165,7 @@ namespace POG::Core
 		{
 			POG_TRACE("Unsubscribing event handler: {0}", typeid(handler).name());
 
-			std::type_index eventTypeIndex = typeid(E);
+			size_t eventTypeIndex = Common::HashId<E>();
 			std::vector<EventHandlerBase*>* handlers = subscribers[eventTypeIndex];
 
 			// If handlers doesn't exist for this event type then there's nothing to unsubscribe
@@ -208,9 +210,9 @@ namespace POG::Core
 		}
 
 	private:
-		std::map<std::type_index, std::vector<EventHandlerBase*>*> subscribers;
-		std::map<std::type_index, std::vector<int>> eventHandlersToRemove;
-		std::map<std::type_index, int> eventDepths;
+		std::map<size_t, std::vector<EventHandlerBase*>*> subscribers;
+		std::map<size_t, std::vector<int>> eventHandlersToRemove;
+		std::map<size_t, int> eventDepths;
 	};
 
 	struct WindowCloseEvent : public ZEvent
