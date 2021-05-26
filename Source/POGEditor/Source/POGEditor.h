@@ -53,10 +53,10 @@ namespace POG::Editor
 		void OnMouseButtonEvent(Core::MouseButtonEvent& e);
 		void OnMouseMoveEvent(Core::MouseMoveEvent& e);
 
-		void HandleClientFocusedEvent(ClientFocusedEvent& e);
-		void HandleClientPlayEvent(ClientPlayEvent& e);
-		void HandleClientPauseEvent(ClientPauseEvent& e);
-		void HandleClientStopEvent(ClientStopEvent& e);
+		void OnClientFocusedEvent(ClientFocusedEvent& e);
+		void OnClientPlayEvent(ClientPlayEvent& e);
+		void OnClientPauseEvent(ClientPauseEvent& e);
+		void OnClientStopEvent(ClientStopEvent& e);
 
 		void LoadClient();
 		void UnloadClient();

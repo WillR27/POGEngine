@@ -51,9 +51,4 @@ namespace POG::Core
     void Scene::Frame(float alpha)
     {
     }
-
-    bool Scene::HandleEvent(Event& e)
-    {
-        return false;
-    }
 }

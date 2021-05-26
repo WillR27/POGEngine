@@ -28,7 +28,6 @@ namespace POG::Editor
 		void Render();
 
 		void SetClientWindowFocused(bool isClientWindowFocused);
-
 		void SetCursorEnabled(bool isCursorEnabled);
 
 		//bool IsClientFocused() const { return isClientFocused; }

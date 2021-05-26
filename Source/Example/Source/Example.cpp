@@ -194,11 +194,6 @@ void main()
 		GetMeshRendererSystem().Frame(alpha);
 	}
 
-	bool ExampleScene::HandleEvent(POG::Core::Event& e)
-	{
-		return false;
-	}
-
 
 	ExampleApplication::ExampleApplication()
 		: Application::Application("POG Example")

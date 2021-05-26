@@ -26,8 +26,6 @@ namespace POG::Core
 		virtual void Update(float dt);
 		virtual void Frame(float alpha);
 
-		virtual bool HandleEvent(Event& e);
-
 		ECSManager& GetECSManager() { return ecsManager; }
 
 		CameraUpdateViewSystem& GetCameraUpdateViewSystem() { return *cameraUpdateViewSystem; }

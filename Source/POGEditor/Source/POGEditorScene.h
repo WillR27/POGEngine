@@ -20,9 +20,7 @@ namespace POG::Editor
 		void Exit() override;
 
 		void Input(Core::InputPackage& inputPackage, float dt) override;
-
 		void Update(float dt) override;
-
 		void Frame(float alpha) override;
 
 	private:
@@ -35,8 +33,8 @@ namespace POG::Editor
 		Render::FrameBuffer clientFBO;
 		Render::Texture clientTexture;
 
-		void HandleClientFocusedEvent(ClientFocusedEvent& e);
-		void HandleCursorEnabledEvent(Core::CursorEnabledEvent& e);
+		void OnClientFocusedEvent(ClientFocusedEvent& e);
+		void OnCursorEnabledEvent(Core::CursorEnabledEvent& e);
 	};
 }
 

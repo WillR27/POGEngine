@@ -50,10 +50,10 @@ namespace POG::Editor
 		GetMainEventBus().Subscribe(this, &POGEditor::OnMouseButtonEvent);
 		GetMainEventBus().Subscribe(this, &POGEditor::OnMouseMoveEvent);
 
-		GetMainEventBus().Subscribe(this, &POGEditor::HandleClientFocusedEvent);
-		GetMainEventBus().Subscribe(this, &POGEditor::HandleClientPlayEvent);
-		GetMainEventBus().Subscribe(this, &POGEditor::HandleClientPauseEvent);
-		GetMainEventBus().Subscribe(this, &POGEditor::HandleClientStopEvent);
+		GetMainEventBus().Subscribe(this, &POGEditor::OnClientFocusedEvent);
+		GetMainEventBus().Subscribe(this, &POGEditor::OnClientPlayEvent);
+		GetMainEventBus().Subscribe(this, &POGEditor::OnClientPauseEvent);
+		GetMainEventBus().Subscribe(this, &POGEditor::OnClientStopEvent);
 
 		GetInputManager().AddAction("Quit", Core::InputInfo(Core::InputType::Keyboard, POG_KEY_ESCAPE, POG_KEY_RELEASE, POG_MOD_ANY));
 		GetInputManager().AddAction("Fullscreen", Core::InputInfo(Core::InputType::Keyboard, POG_KEY_F11, POG_KEY_RELEASE, POG_MOD_ANY));
@@ -149,7 +149,7 @@ namespace POG::Editor
 		}
 	}
 
-	void POGEditor::HandleClientFocusedEvent(ClientFocusedEvent& e)
+	void POGEditor::OnClientFocusedEvent(ClientFocusedEvent& e)
 	{
 		isClientFocused = e.isClientFocused;
 
@@ -159,7 +159,7 @@ namespace POG::Editor
 		}
 	}
 
-	void POGEditor::HandleClientPlayEvent(ClientPlayEvent& e)
+	void POGEditor::OnClientPlayEvent(ClientPlayEvent& e)
 	{
 		if (!IsClientLoaded())
 		{
@@ -183,14 +183,14 @@ namespace POG::Editor
 		e.SetHandled();
 	}
 
-	void POGEditor::HandleClientPauseEvent(ClientPauseEvent& e)
+	void POGEditor::OnClientPauseEvent(ClientPauseEvent& e)
 	{
 		isClientPaused = true;
 
 		e.SetHandled();
 	}
 
-	void POGEditor::HandleClientStopEvent(ClientStopEvent& e)
+	void POGEditor::OnClientStopEvent(ClientStopEvent& e)
 	{
 		if (IsClientLoaded())
 		{

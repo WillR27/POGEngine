@@ -142,7 +142,7 @@ namespace POG::Core
 		glfwSwapBuffers(window);
 	}
 
-	void WindowsWindow::HandleWindowFocusEvent(WindowFocusEvent& e)
+	void WindowsWindow::OnWindowFocusEvent(WindowFocusEvent& e)
 	{
 		POG_INFO(e.ToString());
 

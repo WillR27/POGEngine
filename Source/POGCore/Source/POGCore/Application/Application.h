@@ -79,9 +79,8 @@ namespace POG::Core
 		void Update(float dt) override;
 		void Frame(float alpha) override;
 
-		void HandleCursorEnabledEvent(Core::CursorEnabledEvent& e);
-
-		void HandleWindowCloseEvent(WindowCloseEvent& e);
+		void OnCursorEnabledEvent(Core::CursorEnabledEvent& e);
+		void OnWindowCloseEvent(WindowCloseEvent& e);
 
 		bool ShouldClose() const { return shouldClose; };
 
@@ -154,8 +153,8 @@ namespace POG::Core
 		float targetFramesPerSecond;
 		float targetFrameInterval;
 
-		void HandleWindowSizeEvent(WindowSizeEvent& e);
-		void HandleMouseMoveEvent(MouseMoveEvent& e);
+		void OnWindowSizeEvent(WindowSizeEvent& e);
+		void OnMouseMoveEvent(MouseMoveEvent& e);
 	};
 
 	Application* CreateApplication();

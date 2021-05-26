@@ -24,7 +24,7 @@ namespace POG::Core
 
 		void SwapBuffers() override;
 
-		void HandleWindowFocusEvent(WindowFocusEvent& e) override;
+		void OnWindowFocusEvent(WindowFocusEvent& e) override;
 		
 		void UpdateView(View view) override;
 

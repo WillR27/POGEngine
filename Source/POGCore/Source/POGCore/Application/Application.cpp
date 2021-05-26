@@ -65,18 +65,18 @@ namespace POG::Core
 	{
 		POG_INFO("Exiting application \"{0}\"!", name);
 
-		GetMainEventBus().Unsubscribe(this, &Application::HandleWindowCloseEvent);
-		GetMainEventBus().Unsubscribe(this, &Application::HandleCursorEnabledEvent);
+		GetMainEventBus().Unsubscribe(this, &Application::OnWindowCloseEvent);
+		GetMainEventBus().Unsubscribe(this, &Application::OnCursorEnabledEvent);
 		
 		if (IsStandalone())
 		{
-			GetMainEventBus().Unsubscribe(window, &Window::HandleWindowFocusEvent);
-			GetMainEventBus().Unsubscribe(this, &Application::HandleWindowSizeEvent);
+			GetMainEventBus().Unsubscribe(window, &Window::OnWindowFocusEvent);
+			GetMainEventBus().Unsubscribe(this, &Application::OnWindowSizeEvent);
 		}
 
-		GetMainEventBus().Unsubscribe(inputManager, &InputManager::HandleKeyEvent);
-		GetMainEventBus().Unsubscribe(inputManager, &InputManager::HandleMouseButtonEvent);
-		GetMainEventBus().Unsubscribe(this, &Application::HandleMouseMoveEvent);
+		GetMainEventBus().Unsubscribe(inputManager, &InputManager::OnKeyEvent);
+		GetMainEventBus().Unsubscribe(inputManager, &InputManager::OnMouseButtonEvent);
+		GetMainEventBus().Unsubscribe(this, &Application::OnMouseMoveEvent);
 
 		// This only applies to a standalone app that is run via Run()
 		// In the editor Run() is never used
@@ -101,18 +101,18 @@ namespace POG::Core
 			Render::Init();
 		}
 
-		GetMainEventBus().Subscribe(this, &Application::HandleWindowCloseEvent);
-		GetMainEventBus().Subscribe(this, &Application::HandleCursorEnabledEvent);
+		GetMainEventBus().Subscribe(this, &Application::OnWindowCloseEvent);
+		GetMainEventBus().Subscribe(this, &Application::OnCursorEnabledEvent);
 
 		if (IsStandalone())
 		{
-			GetMainEventBus().Subscribe(window, &Window::HandleWindowFocusEvent);
-			GetMainEventBus().Subscribe(this, &Application::HandleWindowSizeEvent);
+			GetMainEventBus().Subscribe(window, &Window::OnWindowFocusEvent);
+			GetMainEventBus().Subscribe(this, &Application::OnWindowSizeEvent);
 		}
 
-		GetMainEventBus().Subscribe(inputManager, &InputManager::HandleKeyEvent);
-		GetMainEventBus().Subscribe(inputManager, &InputManager::HandleMouseButtonEvent);
-		GetMainEventBus().Subscribe(this, &Application::HandleMouseMoveEvent);
+		GetMainEventBus().Subscribe(inputManager, &InputManager::OnKeyEvent);
+		GetMainEventBus().Subscribe(inputManager, &InputManager::OnMouseButtonEvent);
+		GetMainEventBus().Subscribe(this, &Application::OnMouseMoveEvent);
 
 		inputManager.AddInputCallback(POG_BIND_FN_THIS(Input));
 	}
@@ -251,7 +251,7 @@ namespace POG::Core
 		window->Close();
 	}
 
-	void Application::HandleCursorEnabledEvent(Core::CursorEnabledEvent& e)
+	void Application::OnCursorEnabledEvent(Core::CursorEnabledEvent& e)
 	{
 		isCursorEnabled = e.isCursorEnabled;
 
@@ -261,7 +261,7 @@ namespace POG::Core
 		}
 	}
 
-	void Application::HandleWindowCloseEvent(WindowCloseEvent& e)
+	void Application::OnWindowCloseEvent(WindowCloseEvent& e)
 	{
 		Exit();
 
@@ -301,7 +301,7 @@ namespace POG::Core
 		SetCursorEnabled(!IsCursorEnabled());
 	}
 
-	void Application::HandleWindowSizeEvent(WindowSizeEvent& e)
+	void Application::OnWindowSizeEvent(WindowSizeEvent& e)
 	{
 		POG_INFO(e.ToString());
 
@@ -315,11 +315,11 @@ namespace POG::Core
 		e.SetHandled();
 	}
 
-	void Application::HandleMouseMoveEvent(MouseMoveEvent& e)
+	void Application::OnMouseMoveEvent(MouseMoveEvent& e)
 	{
 		Input::SetMouseXY(e.mouseX, e.mouseY);
 
-		inputManager.HandleMouseMoveEvent(e);
+		inputManager.OnMouseMoveEvent(e);
 	}
 }
 

@@ -17,12 +17,8 @@ namespace Example
 		void Exit() override;
 
 		void Input(POG::Core::InputPackage& inputPackage, float dt) override;
-
 		void Update(float dt) override;
-
 		void Frame(float alpha) override;
-
-		bool HandleEvent(POG::Core::Event& e) override;
 
 	private:
 		POG::Render::Shader shader;
