@@ -22,7 +22,6 @@ namespace POG::Core
 
 	using ComponentTypeId = std::uint8_t;
 	const ComponentTypeId MaxComponentTypes = std::numeric_limits<ComponentTypeId>::max();
-	using ComponentTypeHashId = size_t;
 	using Signature = std::bitset<MaxComponentTypes>;
 
 	struct EntityInfo

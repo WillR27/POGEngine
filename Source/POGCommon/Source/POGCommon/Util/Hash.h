@@ -2,12 +2,14 @@
 
 namespace POG::Common
 {
-	constexpr size_t Hash(const char* str)
-	{
-		static_assert(sizeof(size_t) == 8 || sizeof(size_t) == 4);
+	using HashId = size_t;
 
-		size_t h = 0;
-		if constexpr (sizeof(size_t) == 8)
+	constexpr HashId HashStr(const char* str)
+	{
+		static_assert(sizeof(HashId) == 8 || sizeof(HashId) == 4);
+
+		HashId h = 0;
+		if constexpr (sizeof(HashId) == 8)
 		{
 			h = 1125899906842597L; // prime
 		}
@@ -26,9 +28,9 @@ namespace POG::Common
 	}
 
 	// Returns a hash id for the given type
-	template <typename T, typename U = size_t>
-	constexpr U HashId()
+	template <typename T, typename U = HashId>
+	constexpr U Hash()
 	{
-		return Hash(__FUNCSIG__);
+		return HashStr(__FUNCSIG__);
 	}
 }

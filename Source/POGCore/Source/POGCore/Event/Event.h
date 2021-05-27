@@ -4,13 +4,39 @@
 
 #include <list>
 #include <map>
+#include <set>
 #include <typeindex>
 #include <typeinfo>
 #include <vector>
 
+#define POG_EVENT(NewEvent, BaseEvent)	struct NewEvent; \
+										static POG::Core::DerivedClasses<POG::Common::Hash<BaseEvent>()> POG_EVENT_##NewEvent(POG::Common::Hash<NewEvent>()); \
+										struct NewEvent : public BaseEvent
+
 namespace POG::Core
 {
-	using EventHashId = size_t;
+	// TODO: Move to generic location like POGCommon
+	template<Common::HashId BaseClassId>
+	class DerivedClasses
+	{
+	public:
+		DerivedClasses(Common::HashId id)
+		{
+			if (std::find(DerivedIds.begin(), DerivedIds.end(), id) == DerivedIds.end())
+			{
+				if (DerivedIds.size() == 0)
+				{
+					DerivedIds = std::vector<Common::HashId>();
+				}
+
+				DerivedIds.push_back(id);
+			}
+		}
+
+		static std::vector<Common::HashId> DerivedIds;
+	};
+	template<Common::HashId BaseClassId>
+	std::vector<Common::HashId> DerivedClasses<BaseClassId>::DerivedIds;
 
 	struct Event
 	{
@@ -103,16 +129,16 @@ namespace POG::Core
 		template<class E>
 		void PublishExisting(E& e)
 		{
-			constexpr EventHashId eventHashId = Common::HashId<E>();
-			std::vector<EventHandlerBase*>* handlers = subscribers[eventHashId];
+			constexpr Common::HashId eventId = Common::Hash<E>();
+			std::vector<EventHandlerBase*>* handlers = subscribers[eventId];
 			
 			if (!handlers)
 			{
 				return;
 			}
 
-			int& eventDepth = eventDepths[eventHashId];
-			std::vector<int>& eventHandlerIndexesToRemove = eventHandlersToRemove[eventHashId];
+			int& eventDepth = eventDepths[eventId];
+			std::vector<int>& eventHandlerIndexesToRemove = eventHandlersToRemove[eventId];
 
 			// Increase the depth whilst we process the event
 			// If a handler publishes another of the same event on the same bus
@@ -169,15 +195,26 @@ namespace POG::Core
 		{
 			POG_TRACE("Subscribing event handler: {0}", typeid(handler).name());
 
-			constexpr EventHashId eventHashId = Common::HashId<E>();
-			std::vector<EventHandlerBase*>* handlers = subscribers[eventHashId];
+			constexpr Common::HashId eventId = Common::Hash<E>();
+			Subscribe(eventId, object, handler);
+
+			for (auto derivedId : DerivedClasses<eventId>::DerivedIds)
+			{
+				Subscribe(derivedId, object, handler);
+			}
+		}
+
+		template<class T, class E>
+		void Subscribe(Common::HashId eventId, T* object, void (T::* handler)(E&))
+		{
+			std::vector<EventHandlerBase*>* handlers = subscribers[eventId];
 
 			// If handlers doesn't exist for this event type then create a new list
 			if (!handlers)
 			{
 				handlers = new std::vector<EventHandlerBase*>();
-				subscribers[eventHashId] = handlers;
-				eventDepths[eventHashId] = 0;
+				subscribers[eventId] = handlers;
+				eventDepths[eventId] = 0;
 			}
 
 			handlers->push_back(new EventHandler(object, handler));
@@ -194,8 +231,8 @@ namespace POG::Core
 		{
 			POG_TRACE("Unsubscribing event handler: {0}", typeid(handler).name());
 
-			constexpr EventHashId eventHashId = Common::HashId<E>();
-			std::vector<EventHandlerBase*>* handlers = subscribers[eventHashId];
+			constexpr Common::HashId eventId = Common::Hash<E>();
+			std::vector<EventHandlerBase*>* handlers = subscribers[eventId];
 
 			// If handlers doesn't exist for this event type then there's nothing to unsubscribe
 			if (!handlers)
@@ -205,7 +242,7 @@ namespace POG::Core
 				return;
 			}
 
-			int eventDepth = eventDepths[eventHashId];
+			int eventDepth = eventDepths[eventId];
 
 			// If we are not currently handling an event of this type we can just unsubscribe now
 			if (eventDepth == 0)
@@ -233,15 +270,15 @@ namespace POG::Core
 					EventHandler<T, E>* testHandler = static_cast<EventHandler<T, E>*>((*handlers)[i]);
 					if (testHandler->ConsistsOf(object, handler))
 					{
-						eventHandlersToRemove[eventHashId].push_back(i);
+						eventHandlersToRemove[eventId].push_back(i);
 					}
 				}
 			}
 		}
 
 	private:
-		std::map<EventHashId, std::vector<EventHandlerBase*>*> subscribers;
-		std::map<EventHashId, std::vector<int>> eventHandlersToRemove;
-		std::map<EventHashId, int> eventDepths;
+		std::map<Common::HashId, std::vector<EventHandlerBase*>*> subscribers;
+		std::map<Common::HashId, std::vector<int>> eventHandlersToRemove;
+		std::map<Common::HashId, int> eventDepths;
 	};
 }

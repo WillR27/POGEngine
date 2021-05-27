@@ -4,7 +4,7 @@
 
 namespace POG::Core
 {
-	struct WindowCloseEvent : public Event
+	POG_EVENT(WindowCloseEvent, Event)
 	{
 		const char* GetName() const override
 		{
@@ -12,7 +12,7 @@ namespace POG::Core
 		}
 	};
 
-	struct WindowSizeEvent : public Event
+	POG_EVENT(WindowSizeEvent, Event)
 	{
 		int width, height;
 
@@ -35,7 +35,7 @@ namespace POG::Core
 		}
 	};
 
-	struct WindowFocusEvent : public Event
+	POG_EVENT(WindowFocusEvent, Event)
 	{
 		bool hasFocus;
 

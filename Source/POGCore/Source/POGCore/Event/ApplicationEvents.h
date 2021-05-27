@@ -4,7 +4,7 @@
 
 namespace POG::Core
 {
-	struct CursorEnabledEvent : public Event
+	POG_EVENT(CursorEnabledEvent, Event)
 	{
 		bool isCursorEnabled;
 

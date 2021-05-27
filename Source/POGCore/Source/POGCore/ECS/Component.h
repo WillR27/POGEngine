@@ -92,7 +92,7 @@ namespace POG::Core
 		void RegisterComponent()
 		{
 			// Get the hash id for this component
-			static const ComponentTypeHashId hashId = Common::HashId<T, ComponentTypeHashId>();
+			static const Common::HashId hashId = Common::Hash<T, Common::HashId>();
 
 			// Check the component doesn't already exist
 			POG_ASSERT(componentTypeIds.find(hashId) == componentTypeIds.end(), "Tried to register a component that already exists: {0}.", STRINGIFY(T));
@@ -111,7 +111,7 @@ namespace POG::Core
 		std::shared_ptr<ComponentArray<T>> GetComponentArray()
 		{
 			// Get the hash id for this component
-			static const ComponentTypeHashId hashId = Common::HashId<T, ComponentTypeHashId>();
+			static const Common::HashId hashId = Common::Hash<T, Common::HashId>();
 
 			// Find the corresponding component id index
 			POG_ASSERT(componentTypeIds.find(hashId) != componentTypeIds.end(), "Tried to access a component array that didn't exist: {0}.", STRINGIFY(T));
@@ -154,7 +154,7 @@ namespace POG::Core
 		ComponentTypeId GetComponentTypeId()
 		{
 			// Get the hash id for this component
-			static const ComponentTypeHashId hashId = Common::HashId<T, ComponentTypeHashId>();
+			static const Common::HashId hashId = Common::Hash<T, Common::HashId>();
 
 			return componentTypeIds[hashId];
 		}
@@ -164,7 +164,7 @@ namespace POG::Core
 		std::array<std::shared_ptr<IComponentArray>, MaxComponentTypes> componentArrays;
 
 		// Sparse set containing the indexes of each component array for each type of component
-		std::unordered_map<ComponentTypeHashId, ComponentTypeId> componentTypeIds;
+		std::unordered_map<Common::HashId, ComponentTypeId> componentTypeIds;
 
 		// Count of component arrays
 		ComponentTypeId count = 0;

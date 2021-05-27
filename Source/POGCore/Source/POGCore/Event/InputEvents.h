@@ -6,7 +6,7 @@
 
 namespace POG::Core
 {
-	struct InputEvent : public Event
+	POG_EVENT(InputEvent, Event)
 	{
 		const char* GetName() const override
 		{
@@ -14,7 +14,7 @@ namespace POG::Core
 		}
 	};
 
-	struct KeyEvent : public InputEvent
+	POG_EVENT(KeyEvent, InputEvent)
 	{
 		int key, scancode, action, mods;
 
@@ -39,7 +39,7 @@ namespace POG::Core
 		}
 	};
 
-	struct MouseMoveEvent : public InputEvent
+	POG_EVENT(MouseMoveEvent, InputEvent)
 	{
 		float mouseX, mouseY;
 
@@ -62,7 +62,7 @@ namespace POG::Core
 		}
 	};
 
-	struct MouseButtonEvent : public InputEvent
+	POG_EVENT(MouseButtonEvent, InputEvent)
 	{
 		int button, action, mods;
 

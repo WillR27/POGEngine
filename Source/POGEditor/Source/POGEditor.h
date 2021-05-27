@@ -49,6 +49,7 @@ namespace POG::Editor
 		bool isClientPaused;
 		bool wasCursorEnabled;
 
+		void OnInputEvent(Core::InputEvent& e);
 		void OnKeyEvent(Core::KeyEvent& e);
 		void OnMouseButtonEvent(Core::MouseButtonEvent& e);
 		void OnMouseMoveEvent(Core::MouseMoveEvent& e);

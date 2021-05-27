@@ -46,6 +46,7 @@ namespace POG::Editor
 		SetTargetUpdatesPerSecond(60.0f);
 		SetTargetFramesPerSecond(60.0f);
 
+		GetMainEventBus().Subscribe(this, &POGEditor::OnInputEvent);
 		GetMainEventBus().Subscribe(this, &POGEditor::OnKeyEvent);
 		GetMainEventBus().Subscribe(this, &POGEditor::OnMouseButtonEvent);
 		GetMainEventBus().Subscribe(this, &POGEditor::OnMouseMoveEvent);
@@ -120,33 +121,29 @@ namespace POG::Editor
 		Application::Frame(alpha);
 	}
 
+	void POGEditor::OnInputEvent(Core::InputEvent& e)
+	{
+		if (IsClientLoaded() && !IsClientFocused())
+		{
+			e.SetHandled();
+		}
+	}
+
 	void POGEditor::OnKeyEvent(Core::KeyEvent& e)
 	{
 		if (e.key == POG_KEY_ESCAPE || e.key == POG_KEY_F11)
 		{
 			
 		}
-
-		if (IsClientLoaded() && !IsClientFocused())
-		{
-			e.SetHandled();
-		}
 	}
 
 	void POGEditor::OnMouseButtonEvent(Core::MouseButtonEvent& e)
 	{
-		if (IsClientLoaded() && !IsClientFocused())
-		{
-			e.SetHandled();
-		}
 	}
 
 	void POGEditor::OnMouseMoveEvent(Core::MouseMoveEvent& e)
 	{
-		if (IsClientLoaded() && !IsClientFocused())
-		{
-			e.SetHandled();
-		}
+
 	}
 
 	void POGEditor::OnClientFocusedEvent(ClientFocusedEvent& e)

@@ -4,7 +4,7 @@
 
 namespace POG::Editor
 {
-	struct ClientPlayEvent : public Core::Event
+	POG_EVENT(ClientPlayEvent, Core::Event)
 	{
 		ClientPlayEvent()
 		{
@@ -23,7 +23,7 @@ namespace POG::Editor
 		}
 	};
 
-	struct ClientPauseEvent : public Core::Event
+	POG_EVENT(ClientPauseEvent, Core::Event)
 	{
 		ClientPauseEvent()
 		{
@@ -42,7 +42,7 @@ namespace POG::Editor
 		}
 	};
 
-	struct ClientStopEvent : public Core::Event
+	POG_EVENT(ClientStopEvent, Core::Event)
 	{
 		ClientStopEvent()
 		{
@@ -61,7 +61,7 @@ namespace POG::Editor
 		}
 	};
 
-	struct ClientFocusedEvent : public Core::Event
+	POG_EVENT(ClientFocusedEvent, Core::Event)
 	{
 		bool isClientFocused;
 
