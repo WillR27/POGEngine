@@ -25,7 +25,9 @@ namespace POG::Editor
 		void Dockspace();
 		void EntityExplorer();
 		void GameWindow(Render::Texture& clientTexture);
+		void ShowModalDialogs();
 		void MainMenu();
+		void ApplyChanges();
 		void EndStyle();
 		void Render();
 
@@ -49,6 +51,9 @@ namespace POG::Editor
 		Core::Scene* clientScene;
 		Core::EntityId selectedEntityId;
 		Core::EntityId clickedEntityId;
+		std::vector<Core::EntityId> potentialEntitiesToDelete;
+		std::vector<Core::EntityId> entitiesToDelete;
+		bool openEntityDeleteConfirmationDialog;
 
 		bool isClientWindowFocused;
 		bool shouldSetClientWindowFocused;

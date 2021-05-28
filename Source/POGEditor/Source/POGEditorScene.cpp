@@ -68,8 +68,10 @@ void main()
 		gui.Dockspace();
 		gui.GameWindow(clientTexture);
 		gui.EntityExplorer();
-		gui.EndStyle();
 		gui.MainMenu();
+		gui.ShowModalDialogs();
+		gui.EndStyle();
+		gui.ApplyChanges();
 		gui.Render();
 
 		// Setup the fbo for the client app to render to

@@ -1,6 +1,7 @@
 #include "POGEditorPCH.h"
 #include "Gui.h"
 
+#include "GuiUtil.h"
 #include "POGEditor.h"
 #include "POGEditorEvents.h"
 
@@ -25,6 +26,9 @@ namespace POG::Editor
 		, clientScene(nullptr)
 		, selectedEntityId(Core::NullEntity)
 		, clickedEntityId(Core::NullEntity)
+		, potentialEntitiesToDelete()
+		, entitiesToDelete()
+		, openEntityDeleteConfirmationDialog(false)
 		, isClientWindowFocused(false)
 		, shouldSetClientWindowFocused(false)
 		, clearColour()
@@ -90,36 +94,6 @@ namespace POG::Editor
 		//ImGui::PushStyleVar(ImGuiStyleVar_IndentSpacing, 0.0f);
 		//ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(0, 0));
 		//ImGui::PushStyleVar(ImGuiStyleVar_ItemInnerSpacing, ImVec2(0, 0));
-	}
-
-	void Gui::MainMenu()
-	{
-		if (ImGui::BeginMainMenuBar())
-		{
-			if (ImGui::BeginMenu("File"))
-			{
-				if (ImGui::MenuItem("Exit", nullptr))
-				{
-					Core::Application::GetInstance().Exit();
-				}
-
-				ImGui::EndMenu();
-			}
-			if (ImGui::BeginMenu("Edit"))
-			{
-				if (ImGui::MenuItem("Undo", "CTRL+Z")) {}
-				if (ImGui::MenuItem("Redo", "CTRL+Y", false, false)) {}  // Disabled item
-
-				ImGui::Separator();
-
-				if (ImGui::MenuItem("Cut", "CTRL+X")) {}
-				if (ImGui::MenuItem("Copy", "CTRL+C")) {}
-				if (ImGui::MenuItem("Paste", "CTRL+V")) {}
-
-				ImGui::EndMenu();
-			}
-			ImGui::EndMainMenuBar();
-		}
 	}
 
 	void Gui::Dockspace()
@@ -192,9 +166,23 @@ namespace POG::Editor
 
 		bool isOpen = ImGui::TreeNodeEx((void*)(intptr_t)entityId, flags, "Entity %d", entityId);
 
-		if (ImGui::IsItemClicked())
+		if (ImGui::IsItemClicked(ImGuiMouseButton_Left) || ImGui::IsItemClicked(ImGuiMouseButton_Right))
 		{
 			clickedEntityId = entityId;
+		}
+
+		if (ImGui::BeginPopupContextItem())
+		{
+			clickedEntityId = entityId;
+
+			if (ImGui::MenuItem("Delete"))
+			{
+				openEntityDeleteConfirmationDialog = true;
+
+				potentialEntitiesToDelete.push_back(entityId);
+			}
+
+			ImGui::EndPopup();
 		}
 
 		if (isOpen)
@@ -262,9 +250,83 @@ namespace POG::Editor
 		ImGui::End();
 	}
 
+	void Gui::ShowModalDialogs()
+	{
+		if (openEntityDeleteConfirmationDialog)
+		{
+			ImGui::OpenPopup("Are you sure?");
+			openEntityDeleteConfirmationDialog = false;
+		}
+
+		if (ImGui::BeginPopupModal("Are you sure?", NULL, ImGuiWindowFlags_AlwaysAutoResize))
+		{
+			ImGui::Text("The selected entity will be deleted along with all of \nits children.");
+			ImGui::NewLine();
+			ImGui::Separator();
+
+			ImGui::Indent(ImGui::GetWindowWidth() - 190);
+			if (ImGui::Button("Delete", ImVec2(80, 0))) 
+			{ 
+				entitiesToDelete = potentialEntitiesToDelete;
+				ImGui::CloseCurrentPopup(); 
+			}
+
+			ImGui::SetItemDefaultFocus();
+			ImGui::SameLine(ImGui::GetWindowWidth() - 90);
+			if (ImGui::Button("Cancel", ImVec2(80, 0))) 
+			{ 
+				ImGui::CloseCurrentPopup(); 
+			}
+
+			ImGui::EndPopup();
+		}
+	}
+
+	void Gui::MainMenu()
+	{
+		if (ImGui::BeginMainMenuBar())
+		{
+			if (ImGui::BeginMenu("File"))
+			{
+				if (ImGui::MenuItem("Exit", nullptr))
+				{
+					Core::Application::GetInstance().Exit();
+				}
+
+				ImGui::EndMenu();
+			}
+			if (ImGui::BeginMenu("Edit"))
+			{
+				if (ImGui::MenuItem("Undo", "CTRL+Z")) {}
+				if (ImGui::MenuItem("Redo", "CTRL+Y", false, false)) {}  // Disabled item
+
+				ImGui::Separator();
+
+				if (ImGui::MenuItem("Cut", "CTRL+X")) {}
+				if (ImGui::MenuItem("Copy", "CTRL+C")) {}
+				if (ImGui::MenuItem("Paste", "CTRL+V")) {}
+
+				ImGui::EndMenu();
+			}
+			ImGui::EndMainMenuBar();
+		}
+	}
+
 	void Gui::EndStyle()
 	{
 		//ImGui::PopStyleVar(9);
+	}
+
+	void Gui::ApplyChanges()
+	{
+		Core::ECSManager& clientECSManager = clientScene->GetECSManager();
+
+		for (Core::EntityId entityId : entitiesToDelete)
+		{
+			clientECSManager.DestroyEntity(entityId);
+		}
+
+		entitiesToDelete.clear();
 	}
 
 	void Gui::Render()
