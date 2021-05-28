@@ -136,7 +136,7 @@ namespace POG::Editor
 			ImGuiID dockMainId = dockspaceId; // This variable will track the document node, however we are not using it here as we aren't docking anything into it.
 			ImGuiID dockLeftId= ImGui::DockBuilderSplitNode(dockMainId, ImGuiDir_Left, 0.30f, NULL, &dockMainId);
 
-			ImGui::DockBuilderDockWindow("Dear ImGui Demo", dockLeftId);
+			ImGui::DockBuilderDockWindow("Entity Explorer", dockLeftId);
 			ImGui::DockBuilderDockWindow("Game Window", dockMainId);
 			ImGui::DockBuilderFinish(dockspaceId);
 
