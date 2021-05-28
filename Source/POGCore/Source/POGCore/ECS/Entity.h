@@ -11,13 +11,14 @@ namespace POG::Core
 	public:
 		void Init()
 		{
-			for (EntityId i = 0; i < MaxEntities; i++)
+			// Start at 1 so we can use 0 as a null entity id
+			for (EntityId i = 1; i < MaxEntities; i++)
 			{
 				// Add all possible ids to the queue
 				availableEntityIds.push(i);
 
-				// Set all entity versions to start at 1
-				currentEntityVersions[i] = 1;
+				// Set all entity versions to start at 0
+				currentEntityVersions[i] = 0;
 			}
 		}
 
@@ -26,6 +27,7 @@ namespace POG::Core
 			// Get the entity id at the front of the queue
 			EntityId entityId = availableEntityIds.front();
 			availableEntityIds.pop();
+			usedEntityIds.push_back(entityId);
 
 			// Return an entity struct containing the entity id and the version of that entity
 			return { entityId, currentEntityVersions[entityId] };
@@ -36,11 +38,91 @@ namespace POG::Core
 			// Add this entity id back to the queue of available entity ids
 			availableEntityIds.push(entityId);
 
+			// Remove the entity id from the vector of used ids
+			auto it = std::find(usedEntityIds.begin(), usedEntityIds.end(), entityId);
+			if (it != usedEntityIds.end())
+			{
+				usedEntityIds.erase(it);
+			}
+
 			// Increment the version for this entity id
 			currentEntityVersions[entityId]++;
 
 			// Reset the signature for this entity
 			entitySignatures[entityId].reset();
+
+			// Get the parent id
+			EntityId parentId = entityParents[entityId];
+
+			// Remove the entity from the parent's children if it had a parent
+			std::vector<EntityId>& parentsChildren = entityChildren[parentId];
+			auto it2 = std::find(parentsChildren.begin(), parentsChildren.end(), entityId);
+			if (it2 != parentsChildren.end())
+			{
+				parentsChildren.erase(it2);
+			}
+
+			// Clear the entity's parent
+			entityParents[entityId] = NullEntity;
+
+			// Destroy any children this entity had
+			for (EntityId childId : entityChildren[entityId])
+			{
+				Destroy(childId);
+			}
+		}
+
+		std::vector<EntityId> GetChildren(EntityId entityId) const
+		{
+			return entityChildren[entityId];
+		}
+
+		bool HasChildren(EntityId entityId) const
+		{
+			return GetChildren(entityId).size() != 0;
+		}
+
+		EntityId GetParent(EntityId entityId) const
+		{
+			return entityParents[entityId];
+		}
+
+		bool HasParent(EntityId entityId) const
+		{
+			return GetParent(entityId) != NullEntity;
+		}
+
+		void SetParent(EntityId entityId, EntityId parentId)
+		{
+			// Make sure the new parent is not a child of the entity
+			for (EntityId childId : entityChildren[entityId])
+			{
+				POG_ASSERT(childId != parentId, "Cannot set entity's parent to one of its children!");
+			}
+
+			EntityId oldParentId = entityParents[entityId];
+
+			// Set the new parent and append the entity as a child of the parent
+			entityParents[entityId] = parentId;
+			entityChildren[parentId].push_back(entityId);
+
+			// Remove the entity from the old parent's children if it had a parent
+			std::vector<EntityId>& oldParentsChildren = entityChildren[oldParentId];
+			auto it = std::find(oldParentsChildren.begin(), oldParentsChildren.end(), entityId);
+			if (it != oldParentsChildren.end())
+			{
+				oldParentsChildren.erase(it);
+			}
+		}
+
+		std::vector<EntityId> GetUsedEntityIds() const
+		{
+			return usedEntityIds;
+		}
+
+		bool IsUsed(EntityId entityId) const
+		{
+			return std::find(usedEntityIds.begin(), usedEntityIds.end(), entityId) != usedEntityIds.end();
 		}
 
 		EntityVersion GetVersion(EntityId entityId) const
@@ -48,7 +130,7 @@ namespace POG::Core
 			return currentEntityVersions[entityId];
 		}
 
-		bool IsEntityValid(EntityInfo entityInfo) const
+		bool IsValid(EntityInfo entityInfo) const
 		{
 			return entityInfo.version == GetVersion(entityInfo.id);
 		}
@@ -84,10 +166,19 @@ namespace POG::Core
 		// Currently available entity ids
 		std::queue<EntityId> availableEntityIds;
 
+		// Currently used entity ids
+		std::vector<EntityId> usedEntityIds;
+
 		// Current versions for each entity id
 		std::array<EntityVersion, MaxEntities> currentEntityVersions;
 
 		// Current entity signatures
 		std::array<Signature, MaxEntities> entitySignatures;
+
+		// Parents for each entity id
+		std::array<EntityId, MaxEntities> entityParents;
+
+		// Children for each entity id
+		std::array<std::vector<EntityId>, MaxEntities> entityChildren;
 	};
 }

@@ -1,5 +1,6 @@
 #pragma once
 
+#include "POGCore.h"
 #include "POGRender.h"
 
 #include <imgui.h>
@@ -16,14 +17,15 @@ namespace POG::Editor
 		~Gui() = default;
 
 		void Init();
-
 		void Cleanup();
 
+		void SetScene(Core::Scene* clientScene) { this->clientScene = clientScene; }
 		void Frame();
 		void StartStyle();
-		void MainMenu();
 		void Dockspace();
+		void EntityExplorer();
 		void GameWindow(Render::Texture& clientTexture);
+		void MainMenu();
 		void EndStyle();
 		void Render();
 
@@ -35,6 +37,8 @@ namespace POG::Editor
 		//bool IsClientPaused() const { return isClientPaused; }
 
 	private:
+		static const ImGuiTreeNodeFlags BaseTreeFlags;
+
 		ImGuiContext* context;
 		ImGuiIO* io;
 
@@ -42,10 +46,16 @@ namespace POG::Editor
 
 		bool dockspaceLoaded;
 
-		ImVec4 clearColour;
+		Core::Scene* clientScene;
+		Core::EntityId selectedEntityId;
+		Core::EntityId clickedEntityId;
 
 		bool isClientWindowFocused;
 		bool shouldSetClientWindowFocused;
+
+		ImVec4 clearColour;
+
+		void EntityExplorerAddNode(Core::EntityId entityId);
 	};
 }
 

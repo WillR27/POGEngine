@@ -1,5 +1,7 @@
 #pragma once
 
+#include "POGCore/ECS/Common.h"
+
 #include "POGMaths.h"
 #include "POGRender.h"
 

@@ -31,6 +31,7 @@ namespace Example
 
 		POG::Core::Entity player;
 		POG::Core::Entity square;
+		POG::Core::Entity child;
 
 		bool flip;
 	};

@@ -7,7 +7,7 @@
 namespace POG::Core
 {
 	class Entity;
-	class ECSManager
+	class ECSManager final
 	{
 	public:
 		/*std::shared_ptr<TransformSystem>	transformSystem;
@@ -38,9 +38,44 @@ namespace POG::Core
 			return entityManager.GetVersion(entityId);
 		}
 
-		bool IsEntityValid(EntityInfo entityInfo) const
+		bool IsValid(EntityInfo entityInfo) const
 		{
-			return entityManager.IsEntityValid(entityInfo);
+			return entityManager.IsValid(entityInfo);
+		}
+
+		std::vector<EntityId> GetChildren(EntityId entityId) const
+		{
+			return entityManager.GetChildren(entityId);
+		}
+
+		bool HasChildren(EntityId entityId) const
+		{
+			return entityManager.HasChildren(entityId);
+		}
+
+		EntityId GetParent(EntityId entityId) const
+		{
+			return entityManager.GetParent(entityId);
+		}
+
+		bool HasParent(EntityId entityId) const
+		{
+			return entityManager.HasParent(entityId);
+		}
+
+		void SetParent(EntityId entityId, EntityId parentId)
+		{
+			entityManager.SetParent(entityId, parentId);
+		}
+
+		std::vector<EntityId> GetUsedEntityIds() const
+		{
+			return entityManager.GetUsedEntityIds();
+		}
+
+		bool IsUsed(EntityId entityId) const
+		{
+			return entityManager.IsUsed(entityId);
 		}
 
 		template <typename T>
@@ -53,6 +88,14 @@ namespace POG::Core
 		std::shared_ptr<ComponentArray<T>> GetComponentArray()
 		{
 			return componentManager.GetComponentArray<T>();
+		}
+
+		template <typename T>
+		bool HasComponent(EntityId entityId)
+		{
+			Signature entitySignature = entityManager.GetEntitySignature(entityId);
+
+			return entitySignature[componentManager.GetComponentTypeId<T>()];
 		}
 
 		template <typename T>
@@ -101,18 +144,6 @@ namespace POG::Core
 		void Init()
 		{
 			entityManager.Init();
-
-			//RegisterComponent<Transform>();
-			//RegisterComponent<RigidBody>();
-			//RegisterComponent<BoxCollider>();
-			//RegisterComponent<MeshRenderer>();
-			//RegisterComponent<AttachedCamera>();
-
-			//transformSystem = RegisterSystem<TransformSystem>();
-			//physicsSystem = RegisterSystem<PhysicsSystem>();
-			//collisionsSystem = RegisterSystem<CollisionsSystem>();
-			//cameraUpdateViewSystem = RegisterSystem<CameraUpdateViewSystem>();
-			//rayCastSystem = RegisterSystem<RayCastSystem>();
 		}
 
 	private:
@@ -136,6 +167,8 @@ namespace POG::Core
 		{
 		}
 
+		operator EntityId () { return GetId(); }
+
 		template <typename T>
 		T& GetComponent()
 		{
@@ -156,7 +189,32 @@ namespace POG::Core
 
 		bool IsValid() const
 		{
-			return ecsManager->IsEntityValid(entityInfo);
+			return ecsManager->IsValid(entityInfo);
+		}
+
+		std::vector<EntityId> GetChildren() const
+		{
+			return ecsManager->GetChildren(GetId());
+		}
+
+		bool HasChildren() const
+		{
+			return ecsManager->HasChildren(GetId());
+		}
+
+		EntityId GetParent() const
+		{
+			return ecsManager->GetParent(GetId());
+		}
+
+		bool HasParent() const
+		{
+			return ecsManager->HasParent(GetId());
+		}
+
+		void SetParent(EntityId parentId)
+		{
+			ecsManager->SetParent(GetId(), parentId);
 		}
 
 		EntityId GetId() const { return entityInfo.id; }

@@ -62,12 +62,14 @@ void main()
 		Render::ClearColourBuffer();
 		Render::ClearDepthBuffer();
 
+		gui.SetScene(pogEditor.IsClientLoaded() ? &pogEditor.GetClientApplication().GetActiveScene() : nullptr);
 		gui.Frame();
 		gui.StartStyle();
-		gui.MainMenu();
 		gui.Dockspace();
 		gui.GameWindow(clientTexture);
+		gui.EntityExplorer();
 		gui.EndStyle();
+		gui.MainMenu();
 		gui.Render();
 
 		// Setup the fbo for the client app to render to

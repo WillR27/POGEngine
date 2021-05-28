@@ -39,6 +39,8 @@ namespace POG::Core
 
 		virtual void SetMainEventBus(EventBus& mainEventBus) = 0;
 
+		virtual Scene& GetActiveScene() = 0;
+
 		// Only used by the editor to check if the client has updated this loop
 		virtual bool HasUpdated() const = 0;
 
@@ -99,6 +101,8 @@ namespace POG::Core
 
 		EventBus& GetMainEventBus() const { return *mainEventBus; }
 		void SetMainEventBus(EventBus& mainEventBus) override { this->mainEventBus = &mainEventBus; }
+
+		Scene& GetActiveScene() override { return Scene::GetActiveScene(); }
 
 		InputManager& GetInputManager() { return inputManager; }
 

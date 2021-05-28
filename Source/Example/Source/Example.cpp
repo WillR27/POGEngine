@@ -106,6 +106,9 @@ void main()
 				.mesh = mesh,
 				.material = material,
 			});
+
+		child = GetECSManager().CreateEntity();
+
 	}
 
 	void ExampleScene::Exit()
@@ -131,6 +134,44 @@ void main()
 		{
 			float lookSpeed = 0.1f;
 			playerCamera.camera->AddPitchAndYaw(POG::Core::Input::GetDeltaMouseY() * dt * lookSpeed, POG::Core::Input::GetDeltaMouseX() * dt * lookSpeed);
+		}
+
+		if (inputPackage.HasActionOccurred("Right") && !child.IsValid())
+		{
+			child = GetECSManager().CreateEntity();
+			child.SetParent(square);
+
+			GetECSManager().CreateEntity().SetParent(child);
+			GetECSManager().CreateEntity().SetParent(child);
+			GetECSManager().CreateEntity().SetParent(child);
+			GetECSManager().CreateEntity().SetParent(child);
+			GetECSManager().CreateEntity().SetParent(child);
+			GetECSManager().CreateEntity().SetParent(child);
+			GetECSManager().CreateEntity().SetParent(child);
+			GetECSManager().CreateEntity().SetParent(child);
+			GetECSManager().CreateEntity().SetParent(child);
+			GetECSManager().CreateEntity().SetParent(child);
+			GetECSManager().CreateEntity().SetParent(child);
+			GetECSManager().CreateEntity().SetParent(child);
+			GetECSManager().CreateEntity().SetParent(child);
+			GetECSManager().CreateEntity().SetParent(child);
+			GetECSManager().CreateEntity().SetParent(child);
+			GetECSManager().CreateEntity().SetParent(child);
+			GetECSManager().CreateEntity().SetParent(child);
+			GetECSManager().CreateEntity().SetParent(child);
+			GetECSManager().CreateEntity().SetParent(child);
+			GetECSManager().CreateEntity().SetParent(child);
+
+			POG::Core::Entity child2 = GetECSManager().CreateEntity();
+			child2.SetParent(child);
+
+			GetECSManager().CreateEntity().SetParent(child2);
+			GetECSManager().CreateEntity().SetParent(child2);
+			GetECSManager().CreateEntity().SetParent(child2);
+		}
+		else if (inputPackage.HasActionOccurred("Left") && child.IsValid())
+		{
+			GetECSManager().DestroyEntity(child);
 		}
 	}
 

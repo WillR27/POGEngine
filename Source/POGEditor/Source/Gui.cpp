@@ -15,12 +15,19 @@
 
 namespace POG::Editor
 {
+	const ImGuiTreeNodeFlags Gui::BaseTreeFlags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_OpenOnDoubleClick | ImGuiTreeNodeFlags_SpanAvailWidth;
+
 	Gui::Gui()
 		: context(nullptr)
 		, io(nullptr)
 		, dockspaceId(0)
 		, dockspaceLoaded(false)
+		, clientScene(nullptr)
+		, selectedEntityId(Core::NullEntity)
+		, clickedEntityId(Core::NullEntity)
 		, isClientWindowFocused(false)
+		, shouldSetClientWindowFocused(false)
+		, clearColour()
 	{
 	}
 
@@ -71,18 +78,18 @@ namespace POG::Editor
 
 	void Gui::StartStyle()
 	{
-		ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
-		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
+		//ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
+		//ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
 
-		ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 0.0f);
-		ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(0, 0));
+		//ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 0.0f);
+		//ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(0, 0));
 
-		ImGui::PushStyleVar(ImGuiStyleVar_ChildBorderSize, 0.0f);
+		//ImGui::PushStyleVar(ImGuiStyleVar_ChildBorderSize, 0.0f);
 
-		ImGui::PushStyleVar(ImGuiStyleVar_CellPadding, ImVec2(0, 0));
-		ImGui::PushStyleVar(ImGuiStyleVar_IndentSpacing, 0.0f);
-		ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(0, 0));
-		ImGui::PushStyleVar(ImGuiStyleVar_ItemInnerSpacing, ImVec2(0, 0));
+		//ImGui::PushStyleVar(ImGuiStyleVar_CellPadding, ImVec2(0, 0));
+		//ImGui::PushStyleVar(ImGuiStyleVar_IndentSpacing, 0.0f);
+		//ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(0, 0));
+		//ImGui::PushStyleVar(ImGuiStyleVar_ItemInnerSpacing, ImVec2(0, 0));
 	}
 
 	void Gui::MainMenu()
@@ -117,45 +124,99 @@ namespace POG::Editor
 
 	void Gui::Dockspace()
 	{
-		bool active = true;
-
-		const ImGuiViewport* mainViewport = ImGui::GetMainViewport();
-		ImGui::SetNextWindowPos(ImVec2(mainViewport->WorkPos.x, mainViewport->WorkPos.y));
-		ImGui::SetNextWindowSize(ImVec2(mainViewport->WorkSize.x, mainViewport->WorkSize.y));
-		ImGui::Begin("Dock Space Window", &active, ImGuiWindowFlags_None | ImGuiWindowFlags_NoNav | ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoInputs);
+		dockspaceId = ImGui::DockSpaceOverViewport(ImGui::GetMainViewport());
+		if (!dockspaceLoaded)
 		{
-			dockspaceId = ImGui::GetID("Dock Space");
-			ImVec2 dockspaceSize = mainViewport->Size;
-			ImGui::DockSpace(dockspaceId, dockspaceSize, ImGuiDockNodeFlags_None);
-			
-			if (!dockspaceLoaded)
+			ImVec2 dockspaceSize = ImGui::GetMainViewport()->Size;
+
+			ImGui::DockBuilderRemoveNode(dockspaceId); // Clear out existing layout
+			ImGui::DockBuilderAddNode(dockspaceId, ImGuiDockNodeFlags_DockSpace); // Add empty node
+			ImGui::DockBuilderSetNodeSize(dockspaceId, dockspaceSize);
+
+			ImGuiID dockMainId = dockspaceId; // This variable will track the document node, however we are not using it here as we aren't docking anything into it.
+			ImGuiID dockLeftId= ImGui::DockBuilderSplitNode(dockMainId, ImGuiDir_Left, 0.30f, NULL, &dockMainId);
+
+			ImGui::DockBuilderDockWindow("Dear ImGui Demo", dockLeftId);
+			ImGui::DockBuilderDockWindow("Game Window", dockMainId);
+			ImGui::DockBuilderFinish(dockspaceId);
+
+			dockspaceLoaded = true;
+		}
+	}
+
+	void Gui::EntityExplorer()
+	{
+		ImGui::Begin("Entity Explorer");
+		{
+			if (clientScene)
 			{
-				ImGui::DockBuilderRemoveNode(dockspaceId); // Clear out existing layout
-				ImGui::DockBuilderAddNode(dockspaceId, ImGuiDockNodeFlags_DockSpace); // Add empty node
-				ImGui::DockBuilderSetNodeSize(dockspaceId, dockspaceSize);
+				clickedEntityId = Core::NullEntity;
 
-				ImGuiID dockMainId = dockspaceId; // This variable will track the document node, however we are not using it here as we aren't docking anything into it.
-				ImGuiID dockLeftId= ImGui::DockBuilderSplitNode(dockMainId, ImGuiDir_Left, 0.30f, NULL, &dockMainId);
+				Core::ECSManager& clientECSManager = clientScene->GetECSManager();
 
-				ImGui::DockBuilderDockWindow("Dear ImGui Demo", dockLeftId);
-				ImGui::DockBuilderDockWindow("Game Window", dockMainId);
-				ImGui::DockBuilderFinish(dockspaceId);
+				// Find entities without parents
+				for (Core::EntityId entityId : clientECSManager.GetUsedEntityIds())
+				{
+					// If it has a parent continue
+					if (clientECSManager.GetParent(entityId) != Core::NullEntity)
+					{
+						continue;
+					}
 
-				dockspaceLoaded = true;
+					EntityExplorerAddNode(entityId);
+				}
 			}
 		}
 		ImGui::End();
 
+		if (clickedEntityId != Core::NullEntity)
+		{
+			selectedEntityId = clickedEntityId;
+		}
+	}
+
+	void Gui::EntityExplorerAddNode(Core::EntityId entityId)
+	{
+		Core::ECSManager& clientECSManager = clientScene->GetECSManager();
+
+		ImGuiTreeNodeFlags flags = BaseTreeFlags;
+		if (selectedEntityId == entityId)
+		{
+			flags |= ImGuiTreeNodeFlags_Selected;
+		}
+
+		if (!clientECSManager.HasChildren(entityId))
+		{
+			flags |= ImGuiTreeNodeFlags_Leaf;
+		}
+
+		bool isOpen = ImGui::TreeNodeEx((void*)(intptr_t)entityId, flags, "Entity %d", entityId);
+
+		if (ImGui::IsItemClicked())
+		{
+			clickedEntityId = entityId;
+		}
+
+		if (isOpen)
+		{
+			for (Core::EntityId childId : clientECSManager.GetChildren(entityId))
+			{ 
+				EntityExplorerAddNode(childId);
+			}
+
+			ImGui::TreePop();
+		}
+	}
+
+	void Gui::GameWindow(Render::Texture& clientTexture)
+	{
 		// 1. Show the big demo window (Most of the sample code is in ImGui::ShowDemoWindow()! You can browse its code to learn more about Dear ImGui!).
 		bool showDemoWindow = true;
 		if (showDemoWindow)
 		{
 			ImGui::ShowDemoWindow(&showDemoWindow);
 		}
-	}
 
-	void Gui::GameWindow(Render::Texture& clientTexture)
-	{
 		ImGui::Begin("Game Window");
 		{
 			if (ImGui::Button("Play"))
@@ -203,7 +264,7 @@ namespace POG::Editor
 
 	void Gui::EndStyle()
 	{
-		ImGui::PopStyleVar(9);
+		//ImGui::PopStyleVar(9);
 	}
 
 	void Gui::Render()

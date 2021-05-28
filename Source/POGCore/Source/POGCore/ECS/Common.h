@@ -19,6 +19,7 @@ namespace POG::Core
 	const EntityId MaxEntities = 10000; //std::numeric_limits<Entity>::max() - 1;
 	const EntityId MaxEntityId = MaxEntities - 1;
 	using EntityVersion = std::uint16_t;
+	const EntityId NullEntity = 0;
 
 	using ComponentTypeId = std::uint8_t;
 	const ComponentTypeId MaxComponentTypes = std::numeric_limits<ComponentTypeId>::max();
