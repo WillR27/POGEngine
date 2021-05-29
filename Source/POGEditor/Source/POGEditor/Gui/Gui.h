@@ -1,11 +1,13 @@
 #pragma once
 
-#include "POGCore.h"
-#include "POGRender.h"
-
 #include <imgui.h>
 #include <imgui_impl_glfw.h>
 #include <imgui_impl_opengl3.h>
+
+#include "POGCore.h"
+#include "POGRender.h"
+
+#include "Dialogs.h"
 
 namespace POG::Editor
 {
@@ -54,6 +56,8 @@ namespace POG::Editor
 		std::vector<Core::EntityId> potentialEntitiesToDelete;
 		std::vector<Core::EntityId> entitiesToDelete;
 		bool openEntityDeleteConfirmationDialog;
+
+		ConfirmationDialog deleteEntitiesConfirmationDialog;
 
 		bool isClientWindowFocused;
 		bool shouldSetClientWindowFocused;

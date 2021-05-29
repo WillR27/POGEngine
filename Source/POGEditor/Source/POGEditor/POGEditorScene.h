@@ -1,7 +1,8 @@
 #pragma once
 
-#include "Gui.h"
 #include "POGEditorEvents.h"
+
+#include "POGEditor/Gui/Gui.h"
 
 #include "POGCore.h"
 #include "POGRender.h"

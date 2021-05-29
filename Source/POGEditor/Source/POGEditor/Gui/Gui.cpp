@@ -1,18 +1,17 @@
 #include "POGEditorPCH.h"
 #include "Gui.h"
 
-#include "GuiUtil.h"
-#include "POGEditor.h"
-#include "POGEditorEvents.h"
-
-#include "POGCore.h"
-#include "POGLog.h"
-
 #include <glad/glad.h>
 
 #include <GLFW/glfw3.h>
 
 #include <imgui_internal.h>
+
+#include "POGCore.h"
+#include "POGLog.h"
+
+#include "POGEditor/POGEditor.h"
+#include "POGEditor/POGEditorEvents.h"
 
 namespace POG::Editor
 {
@@ -29,6 +28,7 @@ namespace POG::Editor
 		, potentialEntitiesToDelete()
 		, entitiesToDelete()
 		, openEntityDeleteConfirmationDialog(false)
+		, deleteEntitiesConfirmationDialog("The selected entity will be deleted along with all of \nits children.")
 		, isClientWindowFocused(false)
 		, shouldSetClientWindowFocused(false)
 		, clearColour()
@@ -63,6 +63,9 @@ namespace POG::Editor
 		ImGui_ImplOpenGL3_Init("#version 410");
 
 		clearColour = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
+
+		deleteEntitiesConfirmationDialog.AddButton("Delete", [this] { entitiesToDelete = potentialEntitiesToDelete; });
+		deleteEntitiesConfirmationDialog.AddButton("Cancel", [this] { potentialEntitiesToDelete.clear(); });
 	}
 
 	void Gui::Cleanup()
@@ -187,7 +190,7 @@ namespace POG::Editor
 
 			if (ImGui::MenuItem("Delete"))
 			{
-				openEntityDeleteConfirmationDialog = true;
+				deleteEntitiesConfirmationDialog.Open();
 
 				potentialEntitiesToDelete.push_back(entityId);
 			}
@@ -253,7 +256,7 @@ namespace POG::Editor
 				}
 
 				ImVec2 wsize = ImGui::GetWindowSize();
-				ImGui::Image((ImTextureID)((unsigned int)clientTexture), wsize, ImVec2(0, 1), ImVec2(1, 0));
+				ImGui::Image((ImTextureID)((unsigned long long)clientTexture), wsize, ImVec2(0, 1), ImVec2(1, 0));
 			}
 			ImGui::EndChild();
 		}
@@ -262,34 +265,7 @@ namespace POG::Editor
 
 	void Gui::ShowModalDialogs()
 	{
-		if (openEntityDeleteConfirmationDialog)
-		{
-			ImGui::OpenPopup("Are you sure?");
-			openEntityDeleteConfirmationDialog = false;
-		}
-
-		if (ImGui::BeginPopupModal("Are you sure?", NULL, ImGuiWindowFlags_AlwaysAutoResize))
-		{
-			ImGui::Text("The selected entity will be deleted along with all of \nits children.");
-			ImGui::NewLine();
-			ImGui::Separator();
-
-			ImGui::Indent(ImGui::GetWindowWidth() - 190);
-			if (ImGui::Button("Delete", ImVec2(80, 0))) 
-			{ 
-				entitiesToDelete = potentialEntitiesToDelete;
-				ImGui::CloseCurrentPopup(); 
-			}
-
-			ImGui::SetItemDefaultFocus();
-			ImGui::SameLine(ImGui::GetWindowWidth() - 90);
-			if (ImGui::Button("Cancel", ImVec2(80, 0))) 
-			{ 
-				ImGui::CloseCurrentPopup(); 
-			}
-
-			ImGui::EndPopup();
-		}
+		deleteEntitiesConfirmationDialog.Render();
 	}
 
 	void Gui::MainMenu()
