@@ -12,6 +12,8 @@ namespace POG::Maths
 		return glm::cross(x, y);
 	}
 
+	float* ToDataRef(Vec3& vec);
+
 	// Normalises the given vector.
 	Vec3 Normalise(Vec3 vector);
 

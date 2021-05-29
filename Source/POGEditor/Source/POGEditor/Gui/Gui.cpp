@@ -226,6 +226,17 @@ namespace POG::Editor
 				{
 					clientECSManager.SetName(selectedEntityId, entityNameField.GetText());
 				}
+
+				if (clientECSManager.HasComponent<Core::Transform>(selectedEntityId))
+				{
+					Transform transform(clientECSManager.GetComponent<Core::Transform>(selectedEntityId));
+					transform.Render();
+
+					if (transform.HasChanged())
+					{
+						clientECSManager.SetComponent(selectedEntityId, transform.GetTransform());
+					}
+				}
 			}
 		}
 		ImGui::End();

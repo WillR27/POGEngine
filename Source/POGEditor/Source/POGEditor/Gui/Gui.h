@@ -7,6 +7,7 @@
 #include "POGCore.h"
 #include "POGRender.h"
 
+#include "Components.h"
 #include "Dialogs.h"
 #include "Text.h"
 

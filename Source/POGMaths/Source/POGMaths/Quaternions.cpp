@@ -1,8 +1,15 @@
 #include "POGMathsPCH.h"
 #include "Quaternions.h"
 
+#include <glm/gtc/type_ptr.hpp>
+
 namespace POG::Maths
 {
+	float* ToDataRef(Quat& quat)
+	{
+		return glm::value_ptr(*((glm::quat*)&quat));
+	}
+
 	Quat Normalise(Quat quaternion)
 	{
 		return glm::normalize(quaternion);

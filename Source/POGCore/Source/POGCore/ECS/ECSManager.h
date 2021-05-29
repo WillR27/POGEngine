@@ -115,6 +115,12 @@ namespace POG::Core
 		}
 
 		template <typename T>
+		void SetComponent(EntityId entityId, T component)
+		{
+			componentManager.SetComponent(entityId, component);
+		}
+
+		template <typename T>
 		T& AddComponent(EntityId entityId, const T& component)
 		{
 			T& copiedComponent = componentManager.AddComponent(entityId, component);
@@ -183,6 +189,12 @@ namespace POG::Core
 		T& GetComponent()
 		{
 			return ecsManager->GetComponent<T>(GetId());
+		}
+
+		template <typename T>
+		void SetComponent(EntityId entityId, T component)
+		{
+			ecsManager->SetComponent(entityId, component);
 		}
 
 		template <typename T>

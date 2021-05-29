@@ -6,6 +6,8 @@
 
 namespace POG::Maths
 {
+	float* ToDataRef(Quat& quat);
+
 	// Normalises the given quaternion.
 	Quat Normalise(Quat quaternion);
 

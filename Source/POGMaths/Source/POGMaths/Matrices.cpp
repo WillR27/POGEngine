@@ -1,9 +1,9 @@
 #include "POGMathsPCH.h"
 #include "Matrices.h"
 
-#include "Quaternions.h"
-
 #include <glm/gtc/type_ptr.hpp>
+
+#include "Quaternions.h"
 
 namespace POG::Maths
 {

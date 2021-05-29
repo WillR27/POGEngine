@@ -1,8 +1,15 @@
 #include "POGMathsPCH.h"
 #include "Vectors.h"
 
+#include <glm/gtc/type_ptr.hpp>
+
 namespace POG::Maths
 {
+	float* ToDataRef(Vec3& vec)
+	{
+		return glm::value_ptr(*((glm::vec3*)&vec));
+	}
+
 	Vec3 Normalise(Vec3 vector)
 	{
 		return glm::normalize(vector);

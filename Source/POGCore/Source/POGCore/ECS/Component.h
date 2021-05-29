@@ -34,6 +34,20 @@ namespace POG::Core
 			return components[index];
 		}
 
+		template <typename T>
+		void SetComponent(EntityId entityId, T component)
+		{
+			// Find the index of the entity
+			EntityId index;
+			if (!entityIds.Find(entityId, index))
+			{
+				POG_ASSERT(false, "No component exists for entity id: {0}.", entityId);
+			}
+
+			// If it exists set the component
+			components[index] = component;
+		}
+
 		T& AddComponent(EntityId entityId, const T& component)
 		{
 			// Get the count before adding the new entity id
@@ -128,6 +142,12 @@ namespace POG::Core
 		T& GetComponent(EntityId entityId)
 		{
 			return GetComponentArray<T>()->GetComponent(entityId);
+		}
+
+		template <typename T>
+		void SetComponent(EntityId entityId, T component)
+		{
+			GetComponentArray<T>()->SetComponent(entityId, component);
 		}
 
 		template <typename T>
