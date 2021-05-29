@@ -67,7 +67,8 @@ void main()
 		gui.StartStyle();
 		gui.Dockspace();
 		gui.GameWindow(clientTexture);
-		gui.EntityExplorer();
+		gui.EntitiesPanel();
+		gui.PropertiesPanel();
 		gui.MainMenu();
 		gui.ShowModalDialogs();
 		gui.EndStyle();

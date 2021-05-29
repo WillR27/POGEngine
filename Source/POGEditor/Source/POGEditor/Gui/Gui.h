@@ -8,6 +8,7 @@
 #include "POGRender.h"
 
 #include "Dialogs.h"
+#include "Text.h"
 
 namespace POG::Editor
 {
@@ -25,7 +26,8 @@ namespace POG::Editor
 		void Frame();
 		void StartStyle();
 		void Dockspace();
-		void EntityExplorer();
+		void EntitiesPanel();
+		void PropertiesPanel();
 		void GameWindow(Render::Texture& clientTexture);
 		void ShowModalDialogs();
 		void MainMenu();
@@ -53,18 +55,23 @@ namespace POG::Editor
 		Core::Scene* clientScene;
 		Core::EntityId selectedEntityId;
 		Core::EntityId clickedEntityId;
+		bool selectedEntityChanged;
 		std::vector<Core::EntityId> potentialEntitiesToDelete;
 		std::vector<Core::EntityId> entitiesToDelete;
 		bool openEntityDeleteConfirmationDialog;
 
 		ConfirmationDialog deleteEntitiesConfirmationDialog;
 
+		TextField entityNameField;
+
 		bool isClientWindowFocused;
 		bool shouldSetClientWindowFocused;
 
 		ImVec4 clearColour;
 
-		void EntityExplorerAddNode(Core::EntityId entityId);
+		void EntitiesPanelAddNode(Core::EntityId entityId);
+
+		void SetSelectedEntity(Core::EntityId selectedEntityId);
 	};
 }
 

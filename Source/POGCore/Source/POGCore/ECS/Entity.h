@@ -29,6 +29,10 @@ namespace POG::Core
 			availableEntityIds.pop();
 			usedEntityIds.push_back(entityId);
 
+			std::stringstream ss;
+			ss << "Entity " << entityId;
+			entityNames[entityId] = ss.str();
+
 			// Return an entity struct containing the entity id and the version of that entity
 			return { entityId, currentEntityVersions[entityId] };
 		}
@@ -52,7 +56,7 @@ namespace POG::Core
 			entitySignatures[entityId].reset();
 
 			// Reset the entity's name
-			entityNames[entityId] = nullptr;
+			entityNames[entityId] = "ENTITY NAME ERROR";
 
 			// Get the parent id
 			EntityId parentId = entityParents[entityId];
@@ -75,12 +79,12 @@ namespace POG::Core
 			}
 		}
 
-		const char* GetName(EntityId entityId) const
+		std::string GetName(EntityId entityId) const
 		{
 			return entityNames[entityId];
 		}
 
-		void SetName(EntityId entityId, const char* name)
+		void SetName(EntityId entityId, std::string name)
 		{
 			entityNames[entityId] = name;
 		}
@@ -189,7 +193,7 @@ namespace POG::Core
 		std::array<Signature, MaxEntities> entitySignatures;
 
 		// Names for each entity
-		std::array<const char*, MaxEntities> entityNames;
+		std::array<std::string, MaxEntities> entityNames;
 
 		// Parents for each entity id
 		std::array<EntityId, MaxEntities> entityParents;

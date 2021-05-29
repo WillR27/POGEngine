@@ -25,10 +25,12 @@ namespace POG::Editor
 		, clientScene(nullptr)
 		, selectedEntityId(Core::NullEntity)
 		, clickedEntityId(Core::NullEntity)
+		, selectedEntityChanged(false)
 		, potentialEntitiesToDelete()
 		, entitiesToDelete()
 		, openEntityDeleteConfirmationDialog(false)
 		, deleteEntitiesConfirmationDialog("The selected entity will be deleted along with all of \nits children.")
+		, entityNameField("Name")
 		, isClientWindowFocused(false)
 		, shouldSetClientWindowFocused(false)
 		, clearColour()
@@ -64,7 +66,7 @@ namespace POG::Editor
 
 		clearColour = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 
-		deleteEntitiesConfirmationDialog.AddButton("Delete", [this] { entitiesToDelete = potentialEntitiesToDelete; });
+		deleteEntitiesConfirmationDialog.AddButton("Delete", [this] { entitiesToDelete = potentialEntitiesToDelete; SetSelectedEntity(Core::NullEntity); });
 		deleteEntitiesConfirmationDialog.AddButton("Cancel", [this] { potentialEntitiesToDelete.clear(); });
 	}
 
@@ -81,6 +83,7 @@ namespace POG::Editor
 		ImGui_ImplGlfw_NewFrame();
 		ImGui::NewFrame();
 		dockspaceLoaded = context->SettingsWindows.size();
+		selectedEntityChanged = false;
 	}
 
 	void Gui::StartStyle()
@@ -111,9 +114,11 @@ namespace POG::Editor
 			ImGui::DockBuilderSetNodeSize(dockspaceId, dockspaceSize);
 
 			ImGuiID dockMainId = dockspaceId; // This variable will track the document node, however we are not using it here as we aren't docking anything into it.
-			ImGuiID dockLeftId= ImGui::DockBuilderSplitNode(dockMainId, ImGuiDir_Left, 0.30f, NULL, &dockMainId);
+			ImGuiID dockLeftId = ImGui::DockBuilderSplitNode(dockMainId, ImGuiDir_Left, 0.20f, NULL, &dockMainId);
+			ImGuiID dockRightId = ImGui::DockBuilderSplitNode(dockMainId, ImGuiDir_Right, 0.30f, NULL, &dockMainId);
 
 			ImGui::DockBuilderDockWindow("Entities", dockLeftId);
+			ImGui::DockBuilderDockWindow("Properties", dockRightId);
 			ImGui::DockBuilderDockWindow("Game", dockMainId);
 			ImGui::DockBuilderFinish(dockspaceId);
 
@@ -121,7 +126,7 @@ namespace POG::Editor
 		}
 	}
 
-	void Gui::EntityExplorer()
+	void Gui::EntitiesPanel()
 	{
 		ImGui::Begin("Entities", NULL, ImGuiWindowFlags_HorizontalScrollbar);
 		{
@@ -140,7 +145,7 @@ namespace POG::Editor
 						continue;
 					}
 
-					EntityExplorerAddNode(entityId);
+					EntitiesPanelAddNode(entityId);
 				}
 			}
 		}
@@ -148,13 +153,14 @@ namespace POG::Editor
 
 		if (clickedEntityId != Core::NullEntity)
 		{
-			selectedEntityId = clickedEntityId;
+			SetSelectedEntity(clickedEntityId);
 		}
 	}
 
-	void Gui::EntityExplorerAddNode(Core::EntityId entityId)
+	void Gui::EntitiesPanelAddNode(Core::EntityId entityId)
 	{
 		Core::ECSManager& clientECSManager = clientScene->GetECSManager();
+		std::string entityName = clientECSManager.GetName(entityId);
 
 		ImGuiTreeNodeFlags flags = BaseTreeFlags;
 		if (selectedEntityId == entityId)
@@ -167,17 +173,7 @@ namespace POG::Editor
 			flags |= ImGuiTreeNodeFlags_Leaf;
 		}
 
-		const char* entityName = clientECSManager.GetName(entityId);
-		bool isOpen = false;
-
-		if (entityName != nullptr)
-		{
-			isOpen = ImGui::TreeNodeEx((void*)(intptr_t)entityId, flags, entityName);
-		}
-		else
-		{
-			isOpen = ImGui::TreeNodeEx((void*)(intptr_t)entityId, flags, "Entity %d", entityId);
-		}
+		bool isOpen = ImGui::TreeNodeEx((void*)(intptr_t)entityId, flags, entityName.c_str());
 
 		if (ImGui::IsItemClicked(ImGuiMouseButton_Left) || ImGui::IsItemClicked(ImGuiMouseButton_Right))
 		{
@@ -202,11 +198,37 @@ namespace POG::Editor
 		{
 			for (Core::EntityId childId : clientECSManager.GetChildren(entityId))
 			{ 
-				EntityExplorerAddNode(childId);
+				EntitiesPanelAddNode(childId);
 			}
 
 			ImGui::TreePop();
 		}
+	}
+
+	void Gui::PropertiesPanel()
+	{
+		Core::ECSManager& clientECSManager = clientScene->GetECSManager();
+
+		ImGui::Begin("Properties");
+		{
+			if (selectedEntityId != Core::NullEntity)
+			{
+				std::string entityName = clientECSManager.GetName(selectedEntityId);
+
+				if (selectedEntityChanged)
+				{
+					entityNameField.SetText(_strdup(entityName.c_str()));
+				}
+
+				entityNameField.Render();
+
+				if (entityNameField.HasFinishedEditing())
+				{
+					clientECSManager.SetName(selectedEntityId, entityNameField.GetText());
+				}
+			}
+		}
+		ImGui::End();
 	}
 
 	void Gui::GameWindow(Render::Texture& clientTexture)
@@ -361,6 +383,15 @@ namespace POG::Editor
 		else
 		{
 			io->ConfigFlags |= ImGuiConfigFlags_NoMouse;
+		}
+	}
+
+	void Gui::SetSelectedEntity(Core::EntityId selectedEntityId)
+	{
+		if (this->selectedEntityId != selectedEntityId)
+		{
+			selectedEntityChanged = true;
+			this->selectedEntityId = selectedEntityId;
 		}
 	}
 }

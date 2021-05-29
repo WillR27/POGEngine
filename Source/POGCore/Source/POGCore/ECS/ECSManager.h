@@ -43,12 +43,12 @@ namespace POG::Core
 			return entityManager.IsValid(entityInfo);
 		}
 
-		const char* GetName(EntityId entityId) const
+		std::string GetName(EntityId entityId) const
 		{
 			return entityManager.GetName(entityId);
 		}
 
-		void SetName(EntityId entityId, const char* name)
+		void SetName(EntityId entityId, std::string name)
 		{
 			entityManager.SetName(entityId, name);
 		}
@@ -207,12 +207,12 @@ namespace POG::Core
 			return ecsManager->GetChildren(GetId());
 		}
 
-		const char* GetName() const
+		std::string GetName() const
 		{
 			return ecsManager->GetName(GetId());
 		}
 
-		void SetName(const char* name)
+		void SetName(std::string name)
 		{
 			ecsManager->SetName(GetId(), name);
 		}
