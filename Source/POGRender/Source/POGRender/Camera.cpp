@@ -8,6 +8,7 @@ namespace POG::Render
 	Camera::Camera()
 		: pitch(0.0f)
 		, yaw(0.0f)
+		, cameraOrientation()
 		, forwardVec(0.0f, 0.0f, 1.0f)
 		, upVec(0.0f, 1.0f, 0.0f)
 		, rightVec(1.0f, 0.0f, 0.0f)
@@ -23,7 +24,7 @@ namespace POG::Render
 
 	void Camera::UpdateView(Maths::Vec3 parentPosition, Maths::Quat parentOrientation)
 	{
-		Maths::Quat cameraOrientation = Maths::Quat(Maths::Vec3(pitch, yaw, 0.0f));
+		cameraOrientation = Maths::Quat(Maths::Vec3(pitch, yaw, 0.0f));
 		//cameraOrientation.w *= -1.0f; // Invert view matrix rotation axes
 		parentOrientation.w *= -1.0f; // Invert view matrix rotation axes
 

@@ -15,6 +15,7 @@ namespace POG::Render
 
 		void UpdateView(Maths::Vec3 parentPosition, Maths::Quat parentOrientation);
 		void AddPitchAndYaw(float pitchAmount, float yawAmount);
+		Maths::Quat GetCameraOrientation() const { return cameraOrientation; }
 
 		Maths::Vec3 GetForwardVec() const { return forwardVec; }
 		Maths::Vec3 GetUpVec() const { return upVec; }
@@ -32,6 +33,7 @@ namespace POG::Render
 
 	private:
 		float pitch, yaw;
+		Maths::Quat cameraOrientation;
 
 		Maths::Vec3 forwardVec;
 		Maths::Vec3 upVec;

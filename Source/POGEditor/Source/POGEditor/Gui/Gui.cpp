@@ -227,6 +227,12 @@ namespace POG::Editor
 					clientECSManager.SetName(selectedEntityId, entityNameField.GetText());
 				}
 
+				if (clientECSManager.HasComponent<Core::AttachedCamera>(selectedEntityId))
+				{
+					AttachedCamera camera(clientECSManager.GetComponent<Core::AttachedCamera>(selectedEntityId));
+					camera.Render();
+				}
+
 				if (clientECSManager.HasComponent<Core::Transform>(selectedEntityId))
 				{
 					Transform transform(clientECSManager.GetComponent<Core::Transform>(selectedEntityId));

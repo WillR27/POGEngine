@@ -21,6 +21,22 @@ namespace POG::Editor
 		bool hasChanged;
 	};
 
+	class AttachedCamera : public Component
+	{
+	public:
+		AttachedCamera(Core::AttachedCamera camera)
+			: camera(camera)
+		{
+		}
+
+		void Render() override;
+
+		Core::AttachedCamera GetCamera() const { return camera; }
+
+	private:
+		Core::AttachedCamera camera;
+	};
+
 	class Transform : public Component
 	{
 	public:
