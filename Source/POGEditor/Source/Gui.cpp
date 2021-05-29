@@ -110,8 +110,8 @@ namespace POG::Editor
 			ImGuiID dockMainId = dockspaceId; // This variable will track the document node, however we are not using it here as we aren't docking anything into it.
 			ImGuiID dockLeftId= ImGui::DockBuilderSplitNode(dockMainId, ImGuiDir_Left, 0.30f, NULL, &dockMainId);
 
-			ImGui::DockBuilderDockWindow("Entity Explorer", dockLeftId);
-			ImGui::DockBuilderDockWindow("Game Window", dockMainId);
+			ImGui::DockBuilderDockWindow("Entities", dockLeftId);
+			ImGui::DockBuilderDockWindow("Game", dockMainId);
 			ImGui::DockBuilderFinish(dockspaceId);
 
 			dockspaceLoaded = true;
@@ -120,7 +120,7 @@ namespace POG::Editor
 
 	void Gui::EntityExplorer()
 	{
-		ImGui::Begin("Entity Explorer");
+		ImGui::Begin("Entities", NULL, ImGuiWindowFlags_HorizontalScrollbar);
 		{
 			if (clientScene)
 			{
@@ -164,7 +164,17 @@ namespace POG::Editor
 			flags |= ImGuiTreeNodeFlags_Leaf;
 		}
 
-		bool isOpen = ImGui::TreeNodeEx((void*)(intptr_t)entityId, flags, "Entity %d", entityId);
+		const char* entityName = clientECSManager.GetName(entityId);
+		bool isOpen = false;
+
+		if (entityName != nullptr)
+		{
+			isOpen = ImGui::TreeNodeEx((void*)(intptr_t)entityId, flags, entityName);
+		}
+		else
+		{
+			isOpen = ImGui::TreeNodeEx((void*)(intptr_t)entityId, flags, "Entity %d", entityId);
+		}
 
 		if (ImGui::IsItemClicked(ImGuiMouseButton_Left) || ImGui::IsItemClicked(ImGuiMouseButton_Right))
 		{
@@ -205,7 +215,7 @@ namespace POG::Editor
 			ImGui::ShowDemoWindow(&showDemoWindow);
 		}
 
-		ImGui::Begin("Game Window");
+		ImGui::Begin("Game");
 		{
 			if (ImGui::Button("Play"))
 			{

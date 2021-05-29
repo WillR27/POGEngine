@@ -51,6 +51,9 @@ namespace POG::Core
 			// Reset the signature for this entity
 			entitySignatures[entityId].reset();
 
+			// Reset the entity's name
+			entityNames[entityId] = nullptr;
+
 			// Get the parent id
 			EntityId parentId = entityParents[entityId];
 
@@ -70,6 +73,16 @@ namespace POG::Core
 			{
 				Destroy(childId);
 			}
+		}
+
+		const char* GetName(EntityId entityId) const
+		{
+			return entityNames[entityId];
+		}
+
+		void SetName(EntityId entityId, const char* name)
+		{
+			entityNames[entityId] = name;
 		}
 
 		std::vector<EntityId> GetChildren(EntityId entityId) const
@@ -174,6 +187,9 @@ namespace POG::Core
 
 		// Current entity signatures
 		std::array<Signature, MaxEntities> entitySignatures;
+
+		// Names for each entity
+		std::array<const char*, MaxEntities> entityNames;
 
 		// Parents for each entity id
 		std::array<EntityId, MaxEntities> entityParents;

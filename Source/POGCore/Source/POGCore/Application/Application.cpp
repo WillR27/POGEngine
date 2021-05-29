@@ -20,7 +20,7 @@ namespace POG::Core
 		: name(name)
 		, window(nullptr)
 		, isStandalone(true)
-		, view()
+		, view(1200, 800)
 		, mainEventBus(nullptr)
 		, inputManager()
 		, shouldClose(false)

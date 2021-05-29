@@ -83,6 +83,7 @@ void main()
 		material->SetShader(meshShader);
 
 		player = GetECSManager().CreateEntity();
+		player.SetName("Player");
 		player.AddComponent<POG::Core::AttachedCamera>(POG::Core::AttachedCamera
 			{
 				.camera = POG::Render::Camera::MainCamera,
@@ -95,6 +96,7 @@ void main()
 			});
 
 		square = GetECSManager().CreateEntity();
+		square.SetName("Square");
 		square.AddComponent<POG::Core::Transform>(POG::Core::Transform
 			{
 				.position = POG::Maths::Vec3(0.0f, 0.0f, 0.0f),
