@@ -1,0 +1,7 @@
+F:\Dev\Projects\Pagoog\External\POGEngine\Source\POGEditorInstaller\bin\Debug\POGEditorInstaller.msi
+F:\Dev\Projects\Pagoog\External\POGEngine\Source\POGEditorInstaller\bin\Debug\POGEditorInstaller.wixpdb
+obj\Debug\Product.wixobj
+obj\Debug\POGEditorInstaller.wixproj.BindContentsFileListnull.txt
+obj\Debug\POGEditorInstaller.wixproj.BindOutputsFileListnull.txt
+obj\Debug\POGEditorInstaller.wixproj.BindBuiltOutputsFileListnull.txt
+obj\Debug\ProductInstallFiles.wixobj

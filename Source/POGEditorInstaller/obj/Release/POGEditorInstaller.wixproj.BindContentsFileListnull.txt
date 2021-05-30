@@ -1,0 +1,3 @@
+..\POGEditor\Resources\Folder.png
+..\POGEditor\Resources\File.png
+F:\Dev\Projects\Pagoog\External\POGEngine\Out\Bin\Dist-windows-x86_64\POGEditor.exe

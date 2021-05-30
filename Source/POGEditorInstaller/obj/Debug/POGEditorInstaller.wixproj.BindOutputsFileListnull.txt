@@ -1,0 +1,2 @@
+F:\Dev\Projects\Pagoog\External\POGEngine\Source\POGEditorInstaller\bin\Debug\POGEditorInstaller.msi
+F:\Dev\Projects\Pagoog\External\POGEngine\Source\POGEditorInstaller\bin\Debug\POGEditorInstaller.wixpdb

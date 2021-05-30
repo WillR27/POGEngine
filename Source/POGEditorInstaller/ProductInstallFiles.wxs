@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+    <Fragment>
+        <DirectoryRef Id="RESOURCESFOLDER">
+            <Component Id="cmp9784CF02A037E7009BBCFBE977CB58F2" Guid="*">
+                <File Id="filF7AD1183A3EA37738100A8417C1B1B9C" KeyPath="yes" Source="$(var.HarvestPath)\File.png" />
+            </Component>
+            <Component Id="cmp49EA0B1741B055F6EAE49A6050F7E2F6" Guid="*">
+                <File Id="fil526A5D0851601D518721B949F294B9B3" KeyPath="yes" Source="$(var.HarvestPath)\Folder.png" />
+            </Component>
+            <Directory Id="dir729E1E1E7E13037EE94560E484BE8CD2" Name="New folder">
+                <Component Id="cmp048D93935ED5A4BDF4583E6F21EEEBEC" Guid="*">
+                    <File Id="filA4FAE4AE57BF6FAD674FAD5E8F48AF3C" KeyPath="yes" Source="$(var.HarvestPath)\New folder\Folder.png" />
+                </Component>
+            </Directory>
+        </DirectoryRef>
+    </Fragment>
+    <Fragment>
+        <ComponentGroup Id="HeatGenerated">
+            <ComponentRef Id="cmp9784CF02A037E7009BBCFBE977CB58F2" />
+            <ComponentRef Id="cmp49EA0B1741B055F6EAE49A6050F7E2F6" />
+            <ComponentRef Id="cmp048D93935ED5A4BDF4583E6F21EEEBEC" />
+        </ComponentGroup>
+    </Fragment>
+</Wix>
