@@ -16,6 +16,7 @@ createbaseprojectcpp("POGEditor", "ConsoleApp")
         "../POGMaths/GLM",
         "../POGMaths/Source",
         "../POGRender/Source",
+		"../POGUtil/Source",
     }
 
     links
@@ -30,6 +31,7 @@ createbaseprojectcpp("POGEditor", "ConsoleApp")
 		"POGLog",
 		"POGMaths",
 		"POGRender",
+		"POGUtil",
     }
 	
 	defines

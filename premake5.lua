@@ -46,6 +46,7 @@ group "POG Engine"
 	include "Source/POGMaths/premake_POGMaths.lua"
 	include "Source/POGRender/premake_POGRender.lua"
 	include "Source/POGTest/premake_POGTest.lua"
+	include "Source/POGUtil/premake_POGUtil.lua"
 
 
 

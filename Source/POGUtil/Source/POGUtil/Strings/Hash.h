@@ -1,6 +1,6 @@
 #pragma once
 
-namespace POG::Common
+namespace POG::Util
 {
 	using HashId = size_t;
 

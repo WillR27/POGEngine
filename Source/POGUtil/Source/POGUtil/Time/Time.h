@@ -2,7 +2,7 @@
 
 #include <chrono>
 
-namespace POG::Common
+namespace POG::Util
 {
 	class Time
 	{

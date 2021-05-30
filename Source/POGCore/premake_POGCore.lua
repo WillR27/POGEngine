@@ -13,6 +13,7 @@ createbaseprojectcpp("POGCore", "StaticLib")
         "../POGMaths/GLM",
         "../POGMaths/Source",
         "../POGRender/Source",
+		"../POGUtil/Source",
     }
 
     links
@@ -24,6 +25,7 @@ createbaseprojectcpp("POGCore", "StaticLib")
 		"POGLog",
 		"POGMaths",
 		"POGRender",
+		"POGUtil"
 	}
 
     defines

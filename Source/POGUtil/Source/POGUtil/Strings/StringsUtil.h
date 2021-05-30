@@ -4,13 +4,8 @@
 #include <stdexcept>
 #include <string>
 
-#include "POGCommonAPI.h"
-
-namespace POG::Common
+namespace POG::Util
 {
-	// TODO: Just here to get the dll/lib to build
-	POG_COMMON_API void Placeholder();
-
 	template <typename... Args>
 	static std::string Format(const std::string& format, Args... args)
 	{

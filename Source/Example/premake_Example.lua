@@ -14,6 +14,7 @@ createbaseprojectcpp("Example", "SharedLib")
         "../POGMaths/GLM",
         "../POGMaths/Source",
         "../POGRender/Source",
+		"../POGUtil/Source",
     }
 
     links
@@ -26,6 +27,7 @@ createbaseprojectcpp("Example", "SharedLib")
 		"POGLog",
 		"POGMaths",
 		"POGRender",
+		"POGUtil",
     }
 	
 	defines

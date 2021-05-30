@@ -1,6 +1,7 @@
 #pragma once
 
 #include "POGCommon.h"
+#include "POGUtil.h"
 
 #include "POGCore/Application/Application.h"
 #include "POGCore/Event/Events.h"
@@ -127,7 +128,7 @@ namespace POG::Core
 		float GetTargetFrameInterval() const { return targetFrameInterval; }
 
 	protected:
-		Common::Timer<Common::Time::Unit::Seconds, float, true> timer;
+		Util::Timer<Util::Time::Unit::Seconds, float, true> timer;
 
 		float timeBetweenLoops;
 		float timeBetweenUpdates;

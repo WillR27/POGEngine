@@ -1,6 +1,6 @@
 #pragma once
 
-namespace POG::Core
+namespace POG::Util
 {
 	template <typename T, T capacity, T maxValue>
 	class SparseSet

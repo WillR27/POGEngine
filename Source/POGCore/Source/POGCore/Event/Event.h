@@ -1,7 +1,5 @@
 #pragma once
 
-#include "POGLog.h"
-
 #include <list>
 #include <map>
 #include <set>
@@ -9,34 +7,37 @@
 #include <typeinfo>
 #include <vector>
 
+#include "POGLog.h"
+#include "POGUtil.h"
+
 #define POG_EVENT(NewEvent, BaseEvent)	struct NewEvent; \
-										static POG::Core::DerivedClasses<POG::Common::Hash<BaseEvent>()> POG_EVENT_##NewEvent(POG::Common::Hash<NewEvent>()); \
+										static POG::Core::DerivedClasses<POG::Util::Hash<BaseEvent>()> POG_EVENT_##NewEvent(POG::Util::Hash<NewEvent>()); \
 										struct NewEvent : public BaseEvent
 
 namespace POG::Core
 {
 	// TODO: Move to generic location like POGCommon
-	template<Common::HashId BaseClassId>
+	template<Util::HashId BaseClassId>
 	class DerivedClasses
 	{
 	public:
-		DerivedClasses(Common::HashId id)
+		DerivedClasses(Util::HashId id)
 		{
 			if (std::find(DerivedIds.begin(), DerivedIds.end(), id) == DerivedIds.end())
 			{
 				if (DerivedIds.size() == 0)
 				{
-					DerivedIds = std::vector<Common::HashId>();
+					DerivedIds = std::vector<Util::HashId>();
 				}
 
 				DerivedIds.push_back(id);
 			}
 		}
 
-		static std::vector<Common::HashId> DerivedIds;
+		static std::vector<Util::HashId> DerivedIds;
 	};
-	template<Common::HashId BaseClassId>
-	std::vector<Common::HashId> DerivedClasses<BaseClassId>::DerivedIds;
+	template<Util::HashId BaseClassId>
+	std::vector<Util::HashId> DerivedClasses<BaseClassId>::DerivedIds;
 
 	struct Event
 	{
@@ -129,7 +130,7 @@ namespace POG::Core
 		template<class E>
 		void PublishExisting(E& e)
 		{
-			constexpr Common::HashId eventId = Common::Hash<E>();
+			constexpr Util::HashId eventId = Util::Hash<E>();
 			std::vector<EventHandlerBase*>* handlers = subscribers[eventId];
 			
 			if (!handlers)
@@ -195,7 +196,7 @@ namespace POG::Core
 		{
 			POG_TRACE("Subscribing event handler: {0}", typeid(handler).name());
 
-			constexpr Common::HashId eventId = Common::Hash<E>();
+			constexpr Util::HashId eventId = Util::Hash<E>();
 			Subscribe(eventId, object, handler);
 
 			for (auto derivedId : DerivedClasses<eventId>::DerivedIds)
@@ -205,7 +206,7 @@ namespace POG::Core
 		}
 
 		template<class T, class E>
-		void Subscribe(Common::HashId eventId, T* object, void (T::* handler)(E&))
+		void Subscribe(Util::HashId eventId, T* object, void (T::* handler)(E&))
 		{
 			std::vector<EventHandlerBase*>* handlers = subscribers[eventId];
 
@@ -231,7 +232,7 @@ namespace POG::Core
 		{
 			POG_TRACE("Unsubscribing event handler: {0}", typeid(handler).name());
 
-			constexpr Common::HashId eventId = Common::Hash<E>();
+			constexpr Util::HashId eventId = Util::Hash<E>();
 			std::vector<EventHandlerBase*>* handlers = subscribers[eventId];
 
 			// If handlers doesn't exist for this event type then there's nothing to unsubscribe
@@ -277,8 +278,8 @@ namespace POG::Core
 		}
 
 	private:
-		std::map<Common::HashId, std::vector<EventHandlerBase*>*> subscribers;
-		std::map<Common::HashId, std::vector<int>> eventHandlersToRemove;
-		std::map<Common::HashId, int> eventDepths;
+		std::map<Util::HashId, std::vector<EventHandlerBase*>*> subscribers;
+		std::map<Util::HashId, std::vector<int>> eventHandlersToRemove;
+		std::map<Util::HashId, int> eventDepths;
 	};
 }
