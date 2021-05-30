@@ -10,21 +10,22 @@ namespace POG::Editor
 
 	void LoadIcons()
 	{
-		int width, height, channels;
-		Util::Image image = Util::LoadImage("Resources\\File.png", width, height, channels);
-		FileIcon = new Render::Texture();
-		FileIcon->SetData(image, width, height);
-		Util::FreeImage(image);
-
-		image = Util::LoadImage("Resources\\Folder.png", width, height, channels);
-		FolderIcon = new Render::Texture();
-		FolderIcon->SetData(image, width, height);
-		Util::FreeImage(image);
+		LoadIcon(FileIcon, "Resources\\File.png");
+		LoadIcon(FolderIcon, "Resources\\Folder.png");
 	}
 
 	void FreeIcons()
 	{
 		delete FileIcon;
 		delete FolderIcon;
+	}
+
+	void LoadIcon(Render::Texture*& texture, const char* file)
+	{
+		int width, height, channels;
+		Util::Image image = Util::LoadImage(file, width, height, channels);
+		texture = new Render::Texture();
+		texture->SetData(image, width, height);
+		Util::FreeImage(image);
 	}
 }

@@ -9,5 +9,7 @@ namespace POG::Editor
 
 	void LoadIcons();
 	void FreeIcons();
+
+	void LoadIcon(Render::Texture*& texture, const char* file);
 }
 
