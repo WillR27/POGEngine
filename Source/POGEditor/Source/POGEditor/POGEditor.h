@@ -33,6 +33,9 @@ namespace POG::Editor
 
 		Core::IApplication& GetClientApplication() { return *clientApplication; }
 
+		std::string GetWorkingDirectory() const { return workingDirectory; }
+		void SetWorkingDirectory(std::string workingDirectory) { this->workingDirectory = workingDirectory; }
+
 		bool IsClientFocused() const { return isClientFocused; }
 		bool IsClientPaused() const { return isClientPaused; }
 		bool IsClientLoaded() const { return clientApplication; }
@@ -44,6 +47,8 @@ namespace POG::Editor
 		CreateClientApplication createClientApplication;
 
 		Core::IApplication* clientApplication;
+
+		std::string workingDirectory;
 
 		bool isClientFocused;
 		bool isClientPaused;

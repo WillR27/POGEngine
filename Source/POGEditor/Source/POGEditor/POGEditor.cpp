@@ -1,6 +1,8 @@
 #include "POGEditorPCH.h"
 #include "POGEditor.h"
 
+#include <filesystem>
+
 #include "POGEditorScene.h"
 
 #include "POGCore/Main.h"
@@ -19,6 +21,7 @@ namespace POG::Editor
 		, exampleDll(nullptr)
 		, createClientApplication(nullptr)
 		, clientApplication(nullptr)
+		, workingDirectory(std::filesystem::current_path().string())
 		, isClientFocused(false)
 		, isClientPaused(false)
 		, wasCursorEnabled(true)
@@ -43,6 +46,8 @@ namespace POG::Editor
 
 	void POGEditor::Init()
 	{
+		SetWorkingDirectory("F:\\Dev\\Projects\\POGEngine\\Source\\Internal\\Example");
+
 		SetTargetUpdatesPerSecond(60.0f);
 		SetTargetFramesPerSecond(60.0f);
 

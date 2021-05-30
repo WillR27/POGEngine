@@ -1,17 +1,19 @@
 #pragma once
 
+#include <filesystem>
 #include <vector>
 
 #include "Widget.h"
 
 namespace POG::Editor
 {
-	class Folder
+	class FileFolder
 	{
 	public:
-		Folder(int id, const char* name, float width, float height)
+		FileFolder(int id, std::filesystem::path path, float width, float height)
 			: id(id)
-			, name(name)
+			, path(path)
+			, name(path.filename().string())
 			, width(width)
 			, height(height)
 			, isHovered(false)
@@ -24,6 +26,8 @@ namespace POG::Editor
 
 		void Render();
 		
+		std::filesystem::path GetPath() { return path; }
+
 		bool IsHovered() { return isHovered; }
 		bool WasHovered() { return wasHovered; }
 
@@ -33,7 +37,8 @@ namespace POG::Editor
 
 	private:
 		int id;
-		const char* name;
+		std::filesystem::path path;
+		std::string name;
 		float width, height;
 
 		bool isHovered;
@@ -47,24 +52,32 @@ namespace POG::Editor
 	class FilesFolders
 	{
 	public:
-		FilesFolders()
-			: widgetManager(1000)
+		FilesFolders(std::filesystem::path workingDirectory)
+			: workingDirectory(workingDirectory)
+			, widgetManager(1000)
+			, files()
 			, folders()
 		{
+			LoadFilesFolders();
 		}
 
 		void Render();
 
-		void AddFile(const char* file);
-		void AddFolder(const char* folder);
-
-		void Clear();
-
 	private:
 		static const int Width, Height;
 
+		std::filesystem::path workingDirectory;
+
 		WidgetManager widgetManager;
 
-		std::vector<Folder> folders;
+		std::vector<FileFolder> files;
+		std::vector<FileFolder> folders;
+
+		void LoadFilesFolders();
+
+		void AddFile(std::filesystem::path file);
+		void AddFolder(std::filesystem::path folder);
+
+		void Clear();
 	};
 }

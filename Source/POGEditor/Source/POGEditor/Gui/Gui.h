@@ -9,7 +9,7 @@
 
 #include "Components.h"
 #include "Dialogs.h"
-#include "Files.h"
+#include "FilesFolders.h"
 #include "Text.h"
 
 namespace POG::Editor
