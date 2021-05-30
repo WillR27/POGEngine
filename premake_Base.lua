@@ -1,5 +1,9 @@
-function copy(source, target)
+function copyfile(source, target)
     return "xcopy /y \"" .. select(1, (source .. "\" \"" .. target .. "\""):gsub("/", "\\"))
+end
+
+function copyfolder(source, target)
+    return "xcopy /y /s \"" .. select(1, (source .. "\" \"" .. target .. "\""):gsub("/", "\\"))
 end
 
 

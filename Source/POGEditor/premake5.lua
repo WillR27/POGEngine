@@ -38,3 +38,8 @@ createbaseprojectcpp("POGEditor", "ConsoleApp")
 	{
 		"POG_STANDALONE",
 	}
+
+	postbuildcommands 
+    { 
+        copyfolder("%{prj.location}/Resources", outputbindirproj .. "/Resources/")
+    }
