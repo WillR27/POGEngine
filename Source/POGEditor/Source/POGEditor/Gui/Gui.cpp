@@ -33,7 +33,7 @@ namespace POG::Editor
 		, openEntityDeleteConfirmationDialog(false)
 		, deleteEntitiesConfirmationDialog("The selected entity will be deleted along with all of \nits children.")
 		, entityNameField("Name")
-		, filesFolders(POGEditor::GetInstance().GetWorkingDirectory())
+		, filesFolders(POGEditor::GetInstance().GetClientWorkspaceDirectory())
 		, isClientWindowFocused(false)
 		, shouldSetClientWindowFocused(false)
 		, clearColour()

@@ -21,7 +21,7 @@ namespace POG::Editor
 		, exampleDll(nullptr)
 		, createClientApplication(nullptr)
 		, clientApplication(nullptr)
-		, workingDirectory(std::filesystem::current_path().string())
+		, clientWorkspaceDirectory(std::filesystem::current_path().string())
 		, isClientFocused(false)
 		, isClientPaused(false)
 		, wasCursorEnabled(true)
@@ -46,7 +46,7 @@ namespace POG::Editor
 
 	void POGEditor::Init()
 	{
-		SetWorkingDirectory("F:\\Dev\\Projects\\POGEngine\\Source\\Internal\\Example");
+		SetClientWorkspaceDirectory("F:\\Dev\\Projects\\POGEngine\\Source\\Internal\\Example");
 
 		SetTargetUpdatesPerSecond(60.0f);
 		SetTargetFramesPerSecond(60.0f);
