@@ -9,6 +9,7 @@
 
 #include "Components.h"
 #include "Dialogs.h"
+#include "Files.h"
 #include "Text.h"
 
 namespace POG::Editor
@@ -23,18 +24,20 @@ namespace POG::Editor
 		void Init();
 		void Cleanup();
 
-		void SetScene(Core::Scene* clientScene) { this->clientScene = clientScene; }
 		void Frame();
 		void StartStyle();
 		void Dockspace();
 		void EntitiesPanel();
 		void PropertiesPanel();
+		void AssetsPanel();
 		void GameWindow(Render::Texture& clientTexture);
 		void ShowModalDialogs();
 		void MainMenu();
 		void ApplyChanges();
 		void EndStyle();
 		void Render();
+
+		void SetScene(Core::Scene* clientScene) { this->clientScene = clientScene; }
 
 		void SetClientWindowFocused(bool isClientWindowFocused);
 		void SetCursorEnabled(bool isCursorEnabled);
@@ -64,6 +67,8 @@ namespace POG::Editor
 		ConfirmationDialog deleteEntitiesConfirmationDialog;
 
 		TextField entityNameField;
+
+		FilesFolders filesFolders;
 
 		bool isClientWindowFocused;
 		bool shouldSetClientWindowFocused;

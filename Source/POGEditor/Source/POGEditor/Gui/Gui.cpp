@@ -31,6 +31,7 @@ namespace POG::Editor
 		, openEntityDeleteConfirmationDialog(false)
 		, deleteEntitiesConfirmationDialog("The selected entity will be deleted along with all of \nits children.")
 		, entityNameField("Name")
+		, filesFolders()
 		, isClientWindowFocused(false)
 		, shouldSetClientWindowFocused(false)
 		, clearColour()
@@ -68,6 +69,37 @@ namespace POG::Editor
 
 		deleteEntitiesConfirmationDialog.AddButton("Delete", [this] { entitiesToDelete = potentialEntitiesToDelete; SetSelectedEntity(Core::NullEntity); });
 		deleteEntitiesConfirmationDialog.AddButton("Cancel", [this] { potentialEntitiesToDelete.clear(); });
+
+		filesFolders.AddFolder("Folder 1");
+		filesFolders.AddFolder("Folder 2");
+		filesFolders.AddFolder("Folder 3");
+		filesFolders.AddFolder("Folder 4");
+		filesFolders.AddFolder("Folder 5");
+		filesFolders.AddFolder("Folder 6");
+		filesFolders.AddFolder("Folder 7");
+		filesFolders.AddFolder("Folder 8");
+		filesFolders.AddFolder("Folder 9");
+		filesFolders.AddFolder("Folder 10");
+		filesFolders.AddFolder("Folder 11");
+		filesFolders.AddFolder("Folder 12");
+		filesFolders.AddFolder("Folder 13");
+		filesFolders.AddFolder("Folder 14");
+		filesFolders.AddFolder("Folder 15");
+		filesFolders.AddFolder("Folder 16");
+		filesFolders.AddFolder("Folder 17");
+		filesFolders.AddFolder("Folder 18");
+		filesFolders.AddFolder("Folder 19");
+		filesFolders.AddFolder("Folder 20");
+		filesFolders.AddFolder("Folder 21");
+		filesFolders.AddFolder("Folder 22");
+		filesFolders.AddFolder("Folder 23");
+		filesFolders.AddFolder("Folder 24");
+		filesFolders.AddFolder("Folder 25");
+		filesFolders.AddFolder("Folder 26");
+		filesFolders.AddFolder("Folder 27");
+		filesFolders.AddFolder("Folder 28");
+		filesFolders.AddFolder("Folder 29");
+		filesFolders.AddFolder("Folder 30");
 	}
 
 	void Gui::Cleanup()
@@ -244,6 +276,15 @@ namespace POG::Editor
 					}
 				}
 			}
+		}
+		ImGui::End();
+	}
+
+	void Gui::AssetsPanel()
+	{
+		ImGui::Begin("Assets");
+		{
+			filesFolders.Render();
 		}
 		ImGui::End();
 	}
