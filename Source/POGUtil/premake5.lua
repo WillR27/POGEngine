@@ -4,10 +4,17 @@ createbaseprojectcpp("POGUtil", "StaticLib")
 	
 	includedirs
     {
+        "Stb",
+
         "../POGCommon/Source",
     }
 
     links
     {
-		"POGCommon"
+		"POGCommon",
 	}
+
+    defines
+    {
+        "STB_IMAGE_IMPLEMENTATION",
+    }

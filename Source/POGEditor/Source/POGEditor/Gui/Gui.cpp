@@ -13,6 +13,8 @@
 #include "POGEditor/POGEditor.h"
 #include "POGEditor/POGEditorEvents.h"
 
+#include "Icons.h"
+
 namespace POG::Editor
 {
 	const ImGuiTreeNodeFlags Gui::BaseTreeFlags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_OpenOnDoubleClick | ImGuiTreeNodeFlags_SpanAvailWidth;
@@ -40,6 +42,8 @@ namespace POG::Editor
 
 	void Gui::Init()
 	{
+		LoadIcons();
+
 		// Setup Dear ImGui context
 		IMGUI_CHECKVERSION();
 		context = ImGui::CreateContext();
@@ -109,6 +113,8 @@ namespace POG::Editor
 		ImGui_ImplOpenGL3_Shutdown();
 		ImGui_ImplGlfw_Shutdown();
 		ImGui::DestroyContext();
+
+		FreeIcons();
 	}
 
 	void Gui::Frame()
@@ -291,6 +297,41 @@ namespace POG::Editor
 		ImGui::End();
 	}
 
+	void Gui::MainMenu()
+	{
+		if (ImGui::BeginMainMenuBar())
+		{
+			if (ImGui::BeginMenu("File"))
+			{
+				if (ImGui::MenuItem("Exit", nullptr))
+				{
+					Core::Application::GetInstance().Exit();
+				}
+
+				ImGui::EndMenu();
+			}
+			if (ImGui::BeginMenu("Edit"))
+			{
+				if (ImGui::MenuItem("Undo", "CTRL+Z")) {}
+				if (ImGui::MenuItem("Redo", "CTRL+Y", false, false)) {}  // Disabled item
+
+				ImGui::Separator();
+
+				if (ImGui::MenuItem("Cut", "CTRL+X")) {}
+				if (ImGui::MenuItem("Copy", "CTRL+C")) {}
+				if (ImGui::MenuItem("Paste", "CTRL+V")) {}
+
+				ImGui::EndMenu();
+			}
+			ImGui::EndMainMenuBar();
+		}
+	}
+
+	void Gui::ShowModalDialogs()
+	{
+		deleteEntitiesConfirmationDialog.Render();
+	}
+
 	void Gui::GameWindow(Render::Texture& clientTexture)
 	{
 		// 1. Show the big demo window (Most of the sample code is in ImGui::ShowDemoWindow()! You can browse its code to learn more about Dear ImGui!).
@@ -345,40 +386,6 @@ namespace POG::Editor
 		ImGui::End();
 	}
 
-	void Gui::ShowModalDialogs()
-	{
-		deleteEntitiesConfirmationDialog.Render();
-	}
-
-	void Gui::MainMenu()
-	{
-		if (ImGui::BeginMainMenuBar())
-		{
-			if (ImGui::BeginMenu("File"))
-			{
-				if (ImGui::MenuItem("Exit", nullptr))
-				{
-					Core::Application::GetInstance().Exit();
-				}
-
-				ImGui::EndMenu();
-			}
-			if (ImGui::BeginMenu("Edit"))
-			{
-				if (ImGui::MenuItem("Undo", "CTRL+Z")) {}
-				if (ImGui::MenuItem("Redo", "CTRL+Y", false, false)) {}  // Disabled item
-
-				ImGui::Separator();
-
-				if (ImGui::MenuItem("Cut", "CTRL+X")) {}
-				if (ImGui::MenuItem("Copy", "CTRL+C")) {}
-				if (ImGui::MenuItem("Paste", "CTRL+V")) {}
-
-				ImGui::EndMenu();
-			}
-			ImGui::EndMainMenuBar();
-		}
-	}
 
 	void Gui::EndStyle()
 	{

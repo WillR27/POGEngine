@@ -66,19 +66,19 @@ void main()
 		gui.Frame();
 		gui.StartStyle();
 		gui.Dockspace();
-		gui.GameWindow(clientTexture);
 		gui.EntitiesPanel();
 		gui.PropertiesPanel();
 		gui.AssetsPanel();
 		gui.MainMenu();
 		gui.ShowModalDialogs();
+		gui.GameWindow(clientTexture);
 		gui.EndStyle();
 		gui.ApplyChanges();
 		gui.Render();
 
 		// Setup the fbo for the client app to render to
 		clientFBO.Bind();
-		clientTexture.SetDimensions(pogEditor.GetWidth(), pogEditor.GetHeight());
+		clientTexture.SetData(0, pogEditor.GetWidth(), pogEditor.GetHeight());
 
 		if (!pogEditor.IsClientLoaded())
 		{

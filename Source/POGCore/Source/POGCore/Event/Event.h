@@ -16,28 +16,37 @@
 
 namespace POG::Core
 {
-	// TODO: Move to generic location like POGCommon
+	// TODO: Move to generic location like POGUtil
 	template<Util::HashId BaseClassId>
 	class DerivedClasses
 	{
 	public:
 		DerivedClasses(Util::HashId id)
 		{
-			if (std::find(DerivedIds.begin(), DerivedIds.end(), id) == DerivedIds.end())
+			if (DerivedIds == nullptr || DerivedIds->size() == 0)
 			{
-				if (DerivedIds.size() == 0)
-				{
-					DerivedIds = std::vector<Util::HashId>();
-				}
+				DerivedIds = new std::vector<Util::HashId>();
+			}
 
-				DerivedIds.push_back(id);
+			if (std::find(DerivedIds->begin(), DerivedIds->end(), id) == DerivedIds->end())
+			{
+				DerivedIds->push_back(id);
 			}
 		}
 
-		static std::vector<Util::HashId> DerivedIds;
+		~DerivedClasses()
+		{
+			if (DerivedIds != nullptr)
+			{
+				delete DerivedIds;
+				DerivedIds = nullptr;
+			}
+		}
+
+		static std::vector<Util::HashId>* DerivedIds;
 	};
 	template<Util::HashId BaseClassId>
-	std::vector<Util::HashId> DerivedClasses<BaseClassId>::DerivedIds;
+	std::vector<Util::HashId>* DerivedClasses<BaseClassId>::DerivedIds = nullptr;
 
 	struct Event
 	{
@@ -199,9 +208,12 @@ namespace POG::Core
 			constexpr Util::HashId eventId = Util::Hash<E>();
 			Subscribe(eventId, object, handler);
 
-			for (auto derivedId : DerivedClasses<eventId>::DerivedIds)
+			if (DerivedClasses<eventId>::DerivedIds != nullptr)
 			{
-				Subscribe(derivedId, object, handler);
+				for (auto derivedId : *DerivedClasses<eventId>::DerivedIds)
+				{
+					Subscribe(derivedId, object, handler);
+				}
 			}
 		}
 

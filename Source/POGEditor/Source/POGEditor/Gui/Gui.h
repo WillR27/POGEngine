@@ -30,9 +30,9 @@ namespace POG::Editor
 		void EntitiesPanel();
 		void PropertiesPanel();
 		void AssetsPanel();
-		void GameWindow(Render::Texture& clientTexture);
-		void ShowModalDialogs();
 		void MainMenu();
+		void ShowModalDialogs();
+		void GameWindow(Render::Texture& clientTexture);
 		void ApplyChanges();
 		void EndStyle();
 		void Render();

@@ -3,6 +3,10 @@
 
 #include <imgui.h>
 
+#include "POGUtil.h"
+
+#include "Icons.h"
+
 namespace POG::Editor
 {
 	void FileFolder::Render()
@@ -25,7 +29,8 @@ namespace POG::Editor
 				isRightClicked = ImGui::IsMouseClicked(ImGuiMouseButton_Right);
 			}
 
-			ImGui::Image((ImTextureID)1, ImVec2(80.0f, 80.0f), ImVec2(0, 1), ImVec2(1, 0));
+			Render::Texture* texture = isFolder ? FolderIcon : FileIcon;
+			ImGui::Image((ImTextureID)((unsigned long long)(*texture)), ImVec2(70.0f, 70.0f));
 			ImGui::Text(name.c_str());
 		}
 		ImGui::EndChildFrame();

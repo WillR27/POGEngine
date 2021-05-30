@@ -14,7 +14,6 @@ namespace POG::Render
 
 		// TODO: Not this lol
 		Bind();
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1000, 800, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	}
@@ -35,10 +34,10 @@ namespace POG::Render
 		glBindTexture(GL_TEXTURE_2D, 0);
 	}
 
-	void Texture::SetDimensions(int width, int height)
+	void Texture::SetData(void* data, int width, int height)
 	{
 		Bind();
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
 	}
 
 	RenderingObject* Texture::GetCurrent()

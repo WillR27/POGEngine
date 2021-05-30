@@ -16,6 +16,7 @@ namespace POG::Editor
 			, name(path.filename().string())
 			, width(width)
 			, height(height)
+			, isFolder(std::filesystem::is_directory(path))
 			, isHovered(false)
 			, wasHovered(false)
 			, isLeftClicked(false)
@@ -40,6 +41,7 @@ namespace POG::Editor
 		std::filesystem::path path;
 		std::string name;
 		float width, height;
+		bool isFolder;
 
 		bool isHovered;
 		bool wasHovered;

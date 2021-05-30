@@ -12,6 +12,8 @@ createbaseprojectcpp("POGRender", "StaticLib")
         "../POGLog/Source",
         "../POGMaths/GLM",
         "../POGMaths/Source",
+        "../POGUtil/Stb",
+        "../POGUtil/Source",
     }
 
     links

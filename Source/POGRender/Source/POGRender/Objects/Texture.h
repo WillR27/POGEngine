@@ -11,12 +11,12 @@ namespace POG::Render
 		Texture(const Texture&) = delete;
 		Texture(Texture&&) = delete;
 
-		~Texture();
+		virtual ~Texture();
 
 		virtual void Bind() override;
 		virtual void Unbind() override;
-		
-		void SetDimensions(int width, int height);
+
+		void SetData(void* data, int width, int height);
 
 		virtual RenderingObject* GetCurrent() override;
 
