@@ -27,26 +27,26 @@ workspace "POGEngine"
 
 	
 group "External Dependencies"
-	include "External/GLFW/premake_GLFW.lua"
-	include "External/Glad/premake_Glad.lua"
-	include "External/GoogleTest/premake_GoogleTest.lua"
-	include "External/ImGui/premake_ImGui.lua"
+	include "External/GLFW/premake5.lua"
+	include "External/Glad/premake5.lua"
+	include "External/GoogleTest/premake5.lua"
+	include "External/ImGui/premake5.lua"
 
 group "Examples"
-	include "Source/Example/premake_Example.lua"
+	include "Source/Example/premake5.lua"
 	
 group "POG Editor"
-	include "Source/POGEditor/premake_POGEditor.lua"
+	include "Source/POGEditor/premake5.lua"
 	
 group "POG Engine"
-	include "Source/POGCommon/premake_POGCommon.lua"
-	include "Source/POGCore/premake_POGCore.lua"
-	include "Source/POGDebug/premake_POGDebug.lua"
-	include "Source/POGLog/premake_POGLog.lua"
-	include "Source/POGMaths/premake_POGMaths.lua"
-	include "Source/POGRender/premake_POGRender.lua"
-	include "Source/POGTest/premake_POGTest.lua"
-	include "Source/POGUtil/premake_POGUtil.lua"
+	include "Source/POGCommon/premake5.lua"
+	include "Source/POGCore/premake5.lua"
+	include "Source/POGDebug/premake5.lua"
+	include "Source/POGLog/premake5.lua"
+	include "Source/POGMaths/premake5.lua"
+	include "Source/POGRender/premake5.lua"
+	include "Source/POGTest/premake5.lua"
+	include "Source/POGUtil/premake5.lua"
 
 
 
