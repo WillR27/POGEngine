@@ -188,12 +188,14 @@ namespace POG::Editor
 			ImGui::DockBuilderAddNode(dockspaceId, ImGuiDockNodeFlags_DockSpace); // Add empty node
 			ImGui::DockBuilderSetNodeSize(dockspaceId, dockspaceSize);
 
-			ImGuiID dockMainId = dockspaceId; // This variable will track the document node, however we are not using it here as we aren't docking anything into it.
-			ImGuiID dockLeftId = ImGui::DockBuilderSplitNode(dockMainId, ImGuiDir_Left, 0.20f, NULL, &dockMainId);
-			ImGuiID dockRightId = ImGui::DockBuilderSplitNode(dockMainId, ImGuiDir_Right, 0.30f, NULL, &dockMainId);
+			ImGuiID dockMainId = dockspaceId;
+			ImGuiID dockRightId = ImGui::DockBuilderSplitNode(dockMainId, ImGuiDir_Right, 0.25f, NULL, &dockMainId);
+			ImGuiID dockBottomId = ImGui::DockBuilderSplitNode(dockMainId, ImGuiDir_Down, 0.30f, NULL, &dockMainId);
+			ImGuiID dockLeftId = ImGui::DockBuilderSplitNode(dockMainId, ImGuiDir_Left, 0.25f, NULL, &dockMainId);
 
 			ImGui::DockBuilderDockWindow("Entities", dockLeftId);
 			ImGui::DockBuilderDockWindow("Properties", dockRightId);
+			ImGui::DockBuilderDockWindow("Assets", dockBottomId);
 			ImGui::DockBuilderDockWindow("Game", dockMainId);
 			ImGui::DockBuilderFinish(dockspaceId);
 
@@ -376,12 +378,13 @@ namespace POG::Editor
 
 	void Gui::GameWindow(Render::Texture& clientTexture)
 	{
-		// 1. Show the big demo window (Most of the sample code is in ImGui::ShowDemoWindow()! You can browse its code to learn more about Dear ImGui!).
+#ifdef POG_DEBUG
 		bool showDemoWindow = true;
 		if (showDemoWindow)
 		{
 			ImGui::ShowDemoWindow(&showDemoWindow);
 		}
+#endif
 
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
 		ImGui::Begin("Game", NULL, ImGuiWindowFlags_HorizontalScrollbar);

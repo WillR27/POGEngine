@@ -6,20 +6,30 @@
 #include "POGUtil.h"
 
 #include "Icons.h"
+#include "Styles.h"
 
 namespace POG::Editor
 {
+	const float FilesFolders::Width = 100.0f;
+	const float FilesFolders::Height = 140.0f;
+
 	void FileFolder::Render()
 	{
-		wasHovered = isHovered;
 		isHovered = false;
-
 		isLeftClicked = false;
 		isDoubleLeftClicked = false;
 		isRightClicked = false;
 
-		ImGui::PushStyleColor(ImGuiCol_FrameBg, wasHovered ? ImVec4(0.2f, 0.9f, 1.0f, 0.5f) : ImVec4(0.5f, 0.5f, 1.0f, 0.5f));
-		ImGui::BeginChildFrame(id, ImVec2(100.0f, 100.0f));
+		float framePaddingX = 0.0f;
+		float framePaddingY = 0.0f;
+		float imageWidth = width - framePaddingX * 2.0f;
+		float imageHeight = height - framePaddingY * 2.0f - 40.0f;
+
+		ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(framePaddingX, framePaddingY));
+		ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, isSelected ? 1.0f : 0.0f);
+		ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(0.0f, 0.0f));
+		ImGui::PushStyleColor(ImGuiCol_FrameBg, Transparent);
+		ImGui::BeginChildFrame(id, ImVec2(width, height), ImGuiWindowFlags_NoScrollbar);
 		{
 			if (ImGui::IsWindowHovered())
 			{
@@ -30,15 +40,41 @@ namespace POG::Editor
 			}
 
 			Render::Texture* texture = isFolder ? FolderIcon : FileIcon;
-			ImGui::Image((ImTextureID)((unsigned long long)(*texture)), ImVec2(70.0f, 70.0f));
-			ImGui::Text(name.c_str());
+			ImGui::Image((ImTextureID)((unsigned long long)(*texture)), ImVec2(imageWidth, imageHeight));
+			
+			const float textPadding = 5.0f;
+			const int charsToStrip = 4;
+
+			float textWidth = ImGui::CalcTextSize(displayName.c_str()).x;
+			while (textWidth > width - textPadding)
+			{
+				displayName2 = displayName.substr(displayName.size() - charsToStrip, charsToStrip) + displayName2;
+				displayName.erase(displayName.size() - charsToStrip);
+
+				textWidth = ImGui::CalcTextSize(displayName.c_str()).x;
+			}
+			
+			float textWidth2 = ImGui::CalcTextSize(displayName2.c_str()).x;
+			while (textWidth2 > width - textPadding)
+			{
+				displayName2.erase(displayName2.size() - charsToStrip);
+				displayName2 += "...";
+
+				textWidth2 = ImGui::CalcTextSize(displayName2.c_str()).x;
+			}
+
+			ImGui::Indent(width / 2.0f - textWidth / 2.0f);
+			ImGui::Text(displayName.c_str());
+			ImGui::Indent(-(width / 2.0f - textWidth / 2.0f));
+
+			ImGui::Indent(width / 2.0f - textWidth2 / 2.0f);
+			ImGui::Text(displayName2.c_str());
+			ImGui::Indent(-(width / 2.0f - textWidth2 / 2.0f));
 		}
 		ImGui::EndChildFrame();
 		ImGui::PopStyleColor();
+		ImGui::PopStyleVar(3);
 	}
-
-	const int FilesFolders::Width = 100;
-	const int FilesFolders::Height = 100;
 
 	void FilesFolders::Render()
 	{
@@ -54,21 +90,30 @@ namespace POG::Editor
 		ImGui::Text(workingDirectory.string().c_str());
 
 		float windowWidth = ImGui::GetWindowWidth();
-		float totalUsed = 0;
+		float widthPlusSpacing = Width + ItemSpacingRight;
+		float totalUsed = WindowPaddingX;
+
+		FileFolder* newlySelected = nullptr;
 
 		for (FileFolder& folder : folders)
 		{
 			folder.Render();
+			
+			if (!newlySelected && !folder.IsSelected() && (folder.IsLeftClicked() || folder.IsDoubleLeftClicked() || folder.IsRightClicked()))
+			{
+				folder.SetSelected(true);
+				newlySelected = &folder;
+			}
 
-			totalUsed += Width;
+			totalUsed += widthPlusSpacing;
 
-			if (totalUsed + Width < windowWidth)
+			if (totalUsed + widthPlusSpacing < windowWidth)
 			{
 				ImGui::SameLine();
 			}
 			else
 			{
-				totalUsed = 0;
+				totalUsed = WindowPaddingX;
 			}
 		}
 
@@ -76,15 +121,40 @@ namespace POG::Editor
 		{
 			file.Render();
 
-			totalUsed += Width;
+			if (!newlySelected && !file.IsSelected() && (file.IsLeftClicked() || file.IsDoubleLeftClicked() || file.IsRightClicked()))
+			{
+				file.SetSelected(true);
+				newlySelected = &file;
+			}
 
-			if (totalUsed + Width < windowWidth)
+			totalUsed += widthPlusSpacing;
+
+			if (totalUsed + widthPlusSpacing < windowWidth)
 			{
 				ImGui::SameLine();
 			}
 			else
 			{
-				totalUsed = 0;
+				totalUsed = WindowPaddingX;
+			}
+		}
+
+		if (newlySelected != nullptr)
+		{
+			for (FileFolder& folder : folders)
+			{
+				if (&folder != newlySelected)
+				{
+					folder.SetSelected(false);
+				}
+			}
+
+			for (FileFolder& file : files)
+			{
+				if (&file != newlySelected)
+				{
+					file.SetSelected(false);
+				}
 			}
 		}
 
@@ -99,8 +169,11 @@ namespace POG::Editor
 			}
 		}
 
-		Clear();
-		LoadFilesFolders();
+		if (changedWorkingDir)
+		{
+			Clear();
+			LoadFilesFolders();
+		}
 	}
 
 	void FilesFolders::LoadFilesFolders()

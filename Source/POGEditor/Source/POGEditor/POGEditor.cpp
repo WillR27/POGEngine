@@ -46,7 +46,7 @@ namespace POG::Editor
 
 	void POGEditor::Init()
 	{
-		SetClientWorkspaceDirectory("F:\\Dev\\Projects\\POGEngine\\Source\\Internal\\Example");
+		//SetClientWorkspaceDirectory("F:\\Dev\\Projects\\Pagoog\\External\\POGEngine\\Source\\Example");
 
 		SetTargetUpdatesPerSecond(60.0f);
 		SetTargetFramesPerSecond(60.0f);

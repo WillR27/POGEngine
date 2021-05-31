@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
-	<Product Id="*" Name="POG Editor" Language="1033" Version="0.1.0" Manufacturer="Big Boi Studios" UpgradeCode="57DA3893-3084-450F-9556-F3B12F1C21D0">
+	<Product Id="99fe8498-2b77-41c1-9a2c-d5d834c68435" Name="POG Editor" Language="1033" Version="0.1.0" Manufacturer="Big Boi Studios" UpgradeCode="b9aeb9bc-18f6-49c9-8744-b0441aa014ca">
 		<Package Platform="x64" InstallerVersion="200" Compressed="yes" InstallScope="perMachine" />
 
 		<MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
@@ -26,8 +26,9 @@
 
 	<Fragment>
 		<ComponentGroup Id="ProductComponents" Directory="INSTALLFOLDER">
-      <Component Id="ProductComponent" Win64="yes">
+      <Component Id="ProductComponent" Guid="f7b71471-6cd3-4825-aa4d-0d8a65f9392c" Win64="yes">
 				<File Id="POGEditorExe" Source="$(var.POGEditor.TargetPath)" KeyPath="yes" />
+				<File Id="ExampleDll" Source="$(var.Example.TargetPath)" />
       </Component> 
 		</ComponentGroup>
 	</Fragment>

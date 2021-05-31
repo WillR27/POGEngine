@@ -13,15 +13,17 @@ namespace POG::Editor
 		FileFolder(int id, std::filesystem::path path, float width, float height)
 			: id(id)
 			, path(path)
-			, name(path.filename().string())
+			, fileName(path.filename().string())
+			, displayName(fileName)
+			, displayName2("")
 			, width(width)
 			, height(height)
 			, isFolder(std::filesystem::is_directory(path))
 			, isHovered(false)
-			, wasHovered(false)
 			, isLeftClicked(false)
 			, isDoubleLeftClicked(false)
 			, isRightClicked(false)
+			, isSelected(false)
 		{
 		}
 
@@ -30,25 +32,27 @@ namespace POG::Editor
 		std::filesystem::path GetPath() { return path; }
 
 		bool IsHovered() { return isHovered; }
-		bool WasHovered() { return wasHovered; }
-
 		bool IsLeftClicked() { return isLeftClicked; }
 		bool IsDoubleLeftClicked() { return isDoubleLeftClicked; }
 		bool IsRightClicked() { return isRightClicked; }
 
+		bool IsSelected() const { return isSelected; }
+		void SetSelected(bool isSelected) { this->isSelected = isSelected; }
+
 	private:
 		int id;
 		std::filesystem::path path;
-		std::string name;
+		std::string fileName;
+		std::string displayName, displayName2;
 		float width, height;
 		bool isFolder;
 
 		bool isHovered;
-		bool wasHovered;
-
 		bool isLeftClicked;
 		bool isDoubleLeftClicked;
 		bool isRightClicked;
+
+		bool isSelected;
 	};
 
 	class FilesFolders
@@ -66,7 +70,7 @@ namespace POG::Editor
 		void Render();
 
 	private:
-		static const int Width, Height;
+		static const float Width, Height;
 
 		std::filesystem::path workingDirectory;
 

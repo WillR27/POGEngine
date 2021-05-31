@@ -1,3 +1,7 @@
+F:\Dev\Projects\Pagoog\External\POGEngine\Out\Bin\Dist-windows-x86_64\Example.dll
+..\POGEditor\Resources\Fonts\Segoe UI.ttf
 ..\POGEditor\Resources\Folder.png
+..\POGEditor\Resources\New folder\Folder.png
+..\POGEditor\Resources\Fonts\Roboto-Medium.ttf
 ..\POGEditor\Resources\File.png
 F:\Dev\Projects\Pagoog\External\POGEngine\Out\Bin\Dist-windows-x86_64\POGEditor.exe
