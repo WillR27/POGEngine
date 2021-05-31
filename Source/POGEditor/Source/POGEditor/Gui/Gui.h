@@ -25,7 +25,6 @@ namespace POG::Editor
 		void Cleanup();
 
 		void Frame();
-		void StartStyle();
 		void Dockspace();
 		void EntitiesPanel();
 		void PropertiesPanel();
@@ -34,7 +33,6 @@ namespace POG::Editor
 		void ShowModalDialogs();
 		void GameWindow(Render::Texture& clientTexture);
 		void ApplyChanges();
-		void EndStyle();
 		void Render();
 
 		void SetScene(Core::Scene* clientScene) { this->clientScene = clientScene; }
@@ -74,6 +72,8 @@ namespace POG::Editor
 		bool shouldSetClientWindowFocused;
 
 		ImVec4 clearColour;
+
+		void InitStyle();
 
 		void EntitiesPanelAddNode(Core::EntityId entityId);
 

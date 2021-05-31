@@ -14,6 +14,7 @@
 #include "POGEditor/POGEditorEvents.h"
 
 #include "Icons.h"
+#include "Styles.h"
 
 namespace POG::Editor
 {
@@ -74,38 +75,28 @@ namespace POG::Editor
 		deleteEntitiesConfirmationDialog.AddButton("Delete", [this] { entitiesToDelete = potentialEntitiesToDelete; SetSelectedEntity(Core::NullEntity); });
 		deleteEntitiesConfirmationDialog.AddButton("Cancel", [this] { potentialEntitiesToDelete.clear(); });
 
-		POGEditor& pogEditor = POGEditor::GetInstance();
+		InitStyle();
+	}
 
-		//filesFolders.AddFolder("Folder 1");
-		//filesFolders.AddFolder("Folder 2");
-		//filesFolders.AddFolder("Folder 3");
-		//filesFolders.AddFolder("Folder 4");
-		//filesFolders.AddFolder("Folder 5");
-		//filesFolders.AddFolder("Folder 6");
-		//filesFolders.AddFolder("Folder 7");
-		//filesFolders.AddFolder("Folder 8");
-		//filesFolders.AddFolder("Folder 9");
-		//filesFolders.AddFolder("Folder 10");
-		//filesFolders.AddFolder("Folder 11");
-		//filesFolders.AddFolder("Folder 12");
-		//filesFolders.AddFolder("Folder 13");
-		//filesFolders.AddFolder("Folder 14");
-		//filesFolders.AddFolder("Folder 15");
-		//filesFolders.AddFolder("Folder 16");
-		//filesFolders.AddFolder("Folder 17");
-		//filesFolders.AddFolder("Folder 18");
-		//filesFolders.AddFolder("Folder 19");
-		//filesFolders.AddFolder("Folder 20");
-		//filesFolders.AddFolder("Folder 21");
-		//filesFolders.AddFolder("Folder 22");
-		//filesFolders.AddFolder("Folder 23");
-		//filesFolders.AddFolder("Folder 24");
-		//filesFolders.AddFolder("Folder 25");
-		//filesFolders.AddFolder("Folder 26");
-		//filesFolders.AddFolder("Folder 27");
-		//filesFolders.AddFolder("Folder 28");
-		//filesFolders.AddFolder("Folder 29");
-		//filesFolders.AddFolder("Folder 30");
+	void Gui::InitStyle()
+	{
+		ImGuiStyle& style = ImGui::GetStyle();
+
+		style.WindowBorderSize = WindowBorderSize;
+		style.WindowPadding = ImVec2(WindowPaddingX, WindowPaddingY);
+
+		style.TabRounding = TabRounding;
+
+		style.FrameBorderSize = FrameBorderSize;
+		style.FramePadding = ImVec2(FramePaddingX, FramePaddingY);
+
+		style.ChildBorderSize = ChildBorderThickness;
+		style.ChildRounding = ChildRounding;
+
+		style.IndentSpacing = IndentSpacing;
+
+		style.ItemSpacing = ImVec2(ItemSpacingRight, ItemSpacingBottom);
+		style.ItemInnerSpacing = ImVec2(ItemInnerSpacingRight, ItemInnerSpacingBottom);
 	}
 
 	void Gui::Cleanup()
@@ -124,22 +115,6 @@ namespace POG::Editor
 		ImGui::NewFrame();
 		dockspaceLoaded = context->SettingsWindows.size();
 		selectedEntityChanged = false;
-	}
-
-	void Gui::StartStyle()
-	{
-		//ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
-		//ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
-
-		//ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 0.0f);
-		//ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(0, 0));
-
-		//ImGui::PushStyleVar(ImGuiStyleVar_ChildBorderSize, 0.0f);
-
-		//ImGui::PushStyleVar(ImGuiStyleVar_CellPadding, ImVec2(0, 0));
-		//ImGui::PushStyleVar(ImGuiStyleVar_IndentSpacing, 0.0f);
-		//ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(0, 0));
-		//ImGui::PushStyleVar(ImGuiStyleVar_ItemInnerSpacing, ImVec2(0, 0));
 	}
 
 	void Gui::Dockspace()
@@ -384,12 +359,6 @@ namespace POG::Editor
 			ImGui::EndChild();
 		}
 		ImGui::End();
-	}
-
-
-	void Gui::EndStyle()
-	{
-		//ImGui::PopStyleVar(9);
 	}
 
 	void Gui::ApplyChanges()

@@ -64,7 +64,6 @@ void main()
 
 		gui.SetScene(pogEditor.IsClientLoaded() ? &pogEditor.GetClientApplication().GetActiveScene() : nullptr);
 		gui.Frame();
-		gui.StartStyle();
 		gui.Dockspace();
 		gui.EntitiesPanel();
 		gui.PropertiesPanel();
@@ -72,7 +71,6 @@ void main()
 		gui.MainMenu();
 		gui.ShowModalDialogs();
 		gui.GameWindow(clientTexture);
-		gui.EndStyle();
 		gui.ApplyChanges();
 		gui.Render();
 
