@@ -18,7 +18,7 @@
 
 namespace POG::Editor
 {
-	const ImGuiTreeNodeFlags Gui::BaseTreeFlags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_OpenOnDoubleClick | ImGuiTreeNodeFlags_SpanAvailWidth;
+	const ImGuiTreeNodeFlags Gui::BaseTreeFlags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_OpenOnDoubleClick | ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_FramePadding | ImGuiTreeNodeFlags_SpanFullWidth;
 
 	Gui::Gui()
 		: context(nullptr)
@@ -72,23 +72,34 @@ namespace POG::Editor
 
 		clearColour = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 
+		InitStyle();
+
+		ImFontConfig fontConfig;
+		fontConfig.OversampleH = 7;
+		fontConfig.OversampleV = 5;
+		fontConfig.RasterizerMultiply = 1.2f;
+		io->FontDefault = io->Fonts->AddFontFromFileTTF("Resources\\Fonts\\Segoe UI.ttf", 16.0f, &fontConfig);
+
 		deleteEntitiesConfirmationDialog.AddButton("Delete", [this] { entitiesToDelete = potentialEntitiesToDelete; SetSelectedEntity(Core::NullEntity); });
 		deleteEntitiesConfirmationDialog.AddButton("Cancel", [this] { potentialEntitiesToDelete.clear(); });
-
-		InitStyle();
 	}
 
 	void Gui::InitStyle()
 	{
 		ImGuiStyle& style = ImGui::GetStyle();
 
+		style.WindowMenuButtonPosition = ImGuiDir_Right;
+
 		style.WindowBorderSize = WindowBorderSize;
 		style.WindowPadding = ImVec2(WindowPaddingX, WindowPaddingY);
 
+		style.TabBorderSize = TabBorderSize;
 		style.TabRounding = TabRounding;
 
 		style.FrameBorderSize = FrameBorderSize;
 		style.FramePadding = ImVec2(FramePaddingX, FramePaddingY);
+
+		style.ScrollbarRounding = ScrollbarRounding;
 
 		style.ChildBorderSize = ChildBorderThickness;
 		style.ChildRounding = ChildRounding;
@@ -97,6 +108,55 @@ namespace POG::Editor
 
 		style.ItemSpacing = ImVec2(ItemSpacingRight, ItemSpacingBottom);
 		style.ItemInnerSpacing = ImVec2(ItemInnerSpacingRight, ItemInnerSpacingBottom);
+
+		ImVec4* colours = style.Colors;
+
+		colours[ImGuiCol_DockingPreview] = DefaultGrey;
+
+		colours[ImGuiCol_WindowBg] = DarkerGrey;
+
+		colours[ImGuiCol_MenuBarBg] = DarkerGrey;
+
+		colours[ImGuiCol_TitleBg] = DarkererGrey;
+		colours[ImGuiCol_TitleBgActive] = DarkererGrey;
+
+		colours[ImGuiCol_Tab] = DarkererGrey;
+		colours[ImGuiCol_TabHovered] = DarkerGrey;
+		colours[ImGuiCol_TabActive] = DarkerGrey;
+		colours[ImGuiCol_TabUnfocused] = DarkererGrey;
+		colours[ImGuiCol_TabUnfocusedActive] = DarkerGrey;
+
+		colours[ImGuiCol_Separator] = DarkererGrey;
+		colours[ImGuiCol_SeparatorHovered] = DarkererGrey;
+		colours[ImGuiCol_SeparatorActive] = DarkererGrey;
+
+		colours[ImGuiCol_FrameBg] = DefaultGrey;
+		colours[ImGuiCol_FrameBgHovered] = LighterGrey;
+		colours[ImGuiCol_FrameBgActive] = LightererGrey;
+
+		colours[ImGuiCol_ScrollbarBg] = Transparent;
+		colours[ImGuiCol_ScrollbarGrab] = LighterGrey;
+		colours[ImGuiCol_ScrollbarGrabHovered] = LightererGrey;
+		colours[ImGuiCol_ScrollbarGrabActive] = LightestGrey;
+		
+		colours[ImGuiCol_ResizeGrip] = LighterGrey;
+		colours[ImGuiCol_ResizeGripHovered] = LightererGrey;
+		colours[ImGuiCol_ResizeGripActive] = LightestGrey;
+		
+		colours[ImGuiCol_Button] = DefaultGrey;
+		colours[ImGuiCol_ButtonHovered] = LighterGrey;
+		colours[ImGuiCol_ButtonActive] = LightestGrey;
+		
+		colours[ImGuiCol_SliderGrab] = DefaultGrey;
+		colours[ImGuiCol_SliderGrabActive] = LighterGrey;
+		
+		colours[ImGuiCol_CheckMark] = DefaultGrey;
+		
+		colours[ImGuiCol_Header] = DefaultGrey;
+		colours[ImGuiCol_HeaderHovered] = LighterGrey;
+		colours[ImGuiCol_HeaderActive] = LightererGrey;
+		
+		colours[ImGuiCol_TextSelectedBg] = DefaultGrey;
 	}
 
 	void Gui::Cleanup()
@@ -143,8 +203,11 @@ namespace POG::Editor
 
 	void Gui::EntitiesPanel()
 	{
+		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
+		ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(ItemSpacingRight, 0.0f));
 		ImGui::Begin("Entities", NULL, ImGuiWindowFlags_HorizontalScrollbar);
 		{
+			ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(4.0f, 2.0f));
 			if (clientScene)
 			{
 				clickedEntityId = Core::NullEntity;
@@ -163,8 +226,10 @@ namespace POG::Editor
 					EntitiesPanelAddNode(entityId);
 				}
 			}
+			ImGui::PopStyleVar();
 		}
 		ImGui::End();
+		ImGui::PopStyleVar(2);
 
 		if (clickedEntityId != Core::NullEntity)
 		{
@@ -195,6 +260,7 @@ namespace POG::Editor
 			clickedEntityId = entityId;
 		}
 
+		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(FramePaddingX, FramePaddingY));
 		if (ImGui::BeginPopupContextItem())
 		{
 			clickedEntityId = entityId;
@@ -208,6 +274,7 @@ namespace POG::Editor
 
 			ImGui::EndPopup();
 		}
+		ImGui::PopStyleVar();
 
 		if (isOpen)
 		{
@@ -316,24 +383,31 @@ namespace POG::Editor
 			ImGui::ShowDemoWindow(&showDemoWindow);
 		}
 
-		ImGui::Begin("Game");
+		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
+		ImGui::Begin("Game", NULL, ImGuiWindowFlags_HorizontalScrollbar);
 		{
-			if (ImGui::Button("Play"))
+			ImVec2 buttonSize(60.0f, 22.0f);
+
+			ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(0.0f, 0.0f));
+			ImGui::Indent(ImGui::GetWindowSize().x / 2.0f - 90.0f);
+			if (ImGui::Button("Play", buttonSize))
 			{
 				Core::Application::GetInstance().GetMainEventBus().Publish(ClientPlayEvent());
 			}
+			ImGui::Indent(-(ImGui::GetWindowSize().x / 2.0f - 90.0f));
 
 			ImGui::SameLine();
-			if (ImGui::Button("Pause"))
+			if (ImGui::Button("Pause", buttonSize))
 			{
 				Core::Application::GetInstance().GetMainEventBus().Publish(ClientPauseEvent());
 			}
 
 			ImGui::SameLine();
-			if (ImGui::Button("Stop"))
+			if (ImGui::Button("Stop", buttonSize))
 			{
 				Core::Application::GetInstance().GetMainEventBus().Publish(ClientStopEvent());
 			}
+			ImGui::PopStyleVar();
 
 			if (shouldSetClientWindowFocused)
 			{
@@ -359,6 +433,7 @@ namespace POG::Editor
 			ImGui::EndChild();
 		}
 		ImGui::End();
+		ImGui::PopStyleVar();
 	}
 
 	void Gui::ApplyChanges()

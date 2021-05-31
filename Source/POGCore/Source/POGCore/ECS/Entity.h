@@ -58,6 +58,13 @@ namespace POG::Core
 			// Reset the entity's name
 			entityNames[entityId] = "ENTITY NAME ERROR";
 
+			// Destroy any children this entity had
+			std::vector<EntityId>& children = entityChildren[entityId];
+			while (!children.empty())
+			{
+				Destroy(children[0]);
+			}
+
 			// Get the parent id
 			EntityId parentId = entityParents[entityId];
 
@@ -71,12 +78,6 @@ namespace POG::Core
 
 			// Clear the entity's parent
 			entityParents[entityId] = NullEntity;
-
-			// Destroy any children this entity had
-			for (EntityId childId : entityChildren[entityId])
-			{
-				Destroy(childId);
-			}
 		}
 
 		std::string GetName(EntityId entityId) const
