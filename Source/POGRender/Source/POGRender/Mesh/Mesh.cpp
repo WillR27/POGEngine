@@ -18,6 +18,7 @@ namespace POG::Render
 		, vertexDataArray(nullptr)
 		, positionDataAray(nullptr)
 		, colourDataArray(nullptr)
+		, texCoordsDataArray(nullptr)
 		, indexDataArray(nullptr)
 		//, meshSet(nullptr)
 	{
@@ -28,6 +29,7 @@ namespace POG::Render
 		delete[] vertexDataArray;
 		delete[] positionDataAray;
 		delete[] colourDataArray;
+		delete[] texCoordsDataArray;
 		delete[] indexDataArray;
 
 		for (char* additionalDataArray : additionalDataArrays)
@@ -59,8 +61,9 @@ namespace POG::Render
 
 			vbo.SetVertexData(GetVertexData(), Size());
 
-			vao.SetAttribute(0, 3, POG_FLOAT, false, 6 * sizeof(float), (void*)(0));
-			vao.SetAttribute(1, 3, POG_FLOAT, false, 6 * sizeof(float), (void*)(3 * sizeof(float)));
+			vao.SetAttribute(0, 3, POG_FLOAT, false, 8 * sizeof(float), (void*)(0));
+			vao.SetAttribute(1, 3, POG_FLOAT, false, 8 * sizeof(float), (void*)(3 * sizeof(float)));
+			vao.SetAttribute(2, 2, POG_FLOAT, false, 8 * sizeof(float), (void*)(6 * sizeof(float)));
 
 			if (IndexCount() == 0)
 			{
@@ -92,6 +95,10 @@ namespace POG::Render
 			dataPos = i * Vertex::Colour::Count;
 			memcpy(&newVertexDataArray[vertexDataPos], &colourDataArray[dataPos], Vertex::Colour::Size);
 			vertexDataPos += Vertex::Colour::Size;
+
+			dataPos = i * Vertex::TexCoords::Count;
+			memcpy(&newVertexDataArray[vertexDataPos], &texCoordsDataArray[dataPos], Vertex::TexCoords::Size);
+			vertexDataPos += Vertex::TexCoords::Size;
 
 			for (int j = 0; j < additionalDataArrays.size(); j++)
 			{
@@ -131,6 +138,18 @@ namespace POG::Render
 		delete[] colourDataArray;
 		colourDataArray = new Vertex::Colour::ValueType[size / sizeof(Vertex::Colour::ValueType)];
 		memcpy(colourDataArray, colourDataToBeCopied, size);
+	}
+
+	void Mesh::SetTexCoordsData(const Vertex::TexCoords::ValueType* texCoordsToBeCopied, int size)
+	{
+		if (texCoordsDataArray == nullptr)
+		{
+			stride += Vertex::TexCoords::Size;
+		}
+
+		delete[] texCoordsDataArray;
+		texCoordsDataArray = new Vertex::TexCoords::ValueType[size / sizeof(Vertex::TexCoords::ValueType)];
+		memcpy(texCoordsDataArray, texCoordsToBeCopied, size);
 	}
 
 	void Mesh::AddAdditionalData(const void* dataToBeCopied, int size, int stride)

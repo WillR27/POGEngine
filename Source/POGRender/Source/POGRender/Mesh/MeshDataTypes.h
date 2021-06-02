@@ -21,6 +21,14 @@ namespace POG::Render
 			static const int Size = sizeof(float) * Count;
 		};
 
+		class TexCoords
+		{
+		public:
+			typedef float ValueType;
+			static const int Count = 2;
+			static const int Size = sizeof(float) * Count;
+		};
+
 		class Index
 		{
 		public:

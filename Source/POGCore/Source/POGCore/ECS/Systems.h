@@ -31,6 +31,32 @@ namespace POG::Core
 		void Frame(float alpha);
 	};
 
+	class PhysicsSystem : public System
+	{
+	public:
+		PhysicsSystem(ECSManager& ecsManager)
+			: System::System(ecsManager)
+		{
+		}
+
+		static Signature GetSignature(ECSManager& ecsManager);
+
+		void Update(float dt);
+	};
+
+	class SpriteRendererSystem : public System
+	{
+	public:
+		SpriteRendererSystem(ECSManager& ecsManager)
+			: System::System(ecsManager)
+		{
+		}
+
+		static Signature GetSignature(ECSManager& ecsManager);
+
+		void Frame(float alpha);
+	};
+
 	class TransformSystem : public System
 	{
 	public:

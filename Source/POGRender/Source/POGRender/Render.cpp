@@ -65,6 +65,12 @@ namespace POG::Render
 		glFrontFace(face);
 	}
 
+	void Blend(bool enable)
+	{
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	}
+
 	void SetViewport(int x, int y, int width, int height)
 	{
 		glViewport(x, y, width, height);

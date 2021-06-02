@@ -31,6 +31,9 @@ namespace POG::Render
 		const Vertex::Colour::ValueType* GetColourData() const { return colourDataArray; }
 		void SetColourData(const Vertex::Colour::ValueType* colourDataToBeCopied, int size);
 
+		const Vertex::TexCoords::ValueType* GetTexCoordsData() const { return texCoordsDataArray; }
+		void SetTexCoordsData(const Vertex::TexCoords::ValueType* texCoordsToBeCopied, int size);
+
 		int GetAdditionalStride(int index) const { return additionalDataStrides[index]; }
 		const void* GetAdditionalData(int index) const { return additionalDataArrays[index]; }
 		void AddAdditionalData(const void* dataToBeCopied, int size, int stride);
@@ -62,6 +65,7 @@ namespace POG::Render
 
 		Vertex::Position::ValueType* positionDataAray;
 		Vertex::Colour::ValueType* colourDataArray;
+		Vertex::TexCoords::ValueType* texCoordsDataArray;
 
 		std::vector<char*> additionalDataArrays;
 		std::vector<int> additionalDataStrides;

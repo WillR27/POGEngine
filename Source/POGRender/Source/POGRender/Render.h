@@ -61,6 +61,8 @@ namespace POG::Render
 	void CullFace(RenderingOption face);
 	void SetFrontFace(RenderingOption face);
 
+	void Blend(bool enable);
+
 	void SetViewport(int x, int y, int width, int height);
 
 	void BindDefaultFrameBuffer();

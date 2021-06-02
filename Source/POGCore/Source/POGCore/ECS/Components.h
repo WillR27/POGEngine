@@ -20,6 +20,19 @@ namespace POG::Core
 		std::shared_ptr<Render::Material> material = nullptr;
 	};
 
+	struct RigidBody
+	{
+		Maths::Vec3 force = Maths::Vec3(0.0f, 0.0f, 0.0f);
+		Maths::Vec3 velocity = Maths::Vec3(0.0f, 0.0f, 0.0f);
+		float mass = 1.0f;
+		float dragCoef = 1.0f;
+	};
+
+	struct Sprite
+	{
+		Render::Texture* texture;
+	};
+
 	struct Transform
 	{
 		Maths::Vec3 position = Maths::Vec3(0.0f, 0.0f, 0.0f);

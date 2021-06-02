@@ -1,6 +1,8 @@
 #include "POGRenderPCH.h"
 #include "Texture.h"
 
+#include "POGUtil.h"
+
 #include <glad/glad.h>
 
 namespace POG::Render
@@ -9,6 +11,8 @@ namespace POG::Render
 
 	Texture::Texture()
 		: RenderingObject::RenderingObject()
+		, width(0)
+		, height(0)
 	{
 		glGenTextures(1, &id);
 
@@ -38,6 +42,16 @@ namespace POG::Render
 	{
 		Bind();
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+		this->width = width;
+		this->height = height;
+	}
+
+	void Texture::LoadFromImage(const char* file)
+	{
+		int width, height, channels;
+		Util::Image image = Util::LoadImage(file, width, height, channels, true);
+		SetData(image, width, height);
+		Util::FreeImage(image);
 	}
 
 	RenderingObject* Texture::GetCurrent()

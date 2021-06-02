@@ -76,7 +76,7 @@ void main()
 		mesh = std::make_shared <POG::Render::Mesh>();
 		mesh->SetPositionData(POG::Render::squarePositions, sizeof(POG::Render::squarePositions));
 		mesh->SetColourData(POG::Render::squareColours, sizeof(POG::Render::squareColours));
-		mesh->Build();
+		//mesh->Build();
 
 		material = std::make_shared<POG::Render::Material>();
 		material->AddColour("colourIn", POG::Maths::Vec4(1.0f, 0.0f, 0.0f, 1.0f));
@@ -84,11 +84,18 @@ void main()
 
 		player = GetECSManager().CreateEntity();
 		player.SetName("Player");
-		player.AddComponent<POG::Core::AttachedCamera>(POG::Core::AttachedCamera
+		player.AddComponent(POG::Core::AttachedCamera
 			{
 				.camera = POG::Render::Camera::MainCamera,
 			});
-		player.AddComponent<POG::Core::Transform>(POG::Core::Transform
+		player.AddComponent(POG::Core::RigidBody
+			{
+				.force = POG::Maths::Vec3(0.0f, 0.0f, 0.0f),
+				.velocity = POG::Maths::Vec3(0.0f, 0.0f, 0.0f),
+				.mass = 1.0f,
+				.dragCoef = 1.0f
+			});
+		player.AddComponent(POG::Core::Transform
 			{
 				.position = POG::Maths::Vec3(0.0f, 0.0f, -5.0f),
 				.orientation = POG::Maths::Quat(POG::Maths::Vec3(0.0f, 0.0f, 0.0f)),
@@ -97,17 +104,23 @@ void main()
 
 		square = GetECSManager().CreateEntity();
 		square.SetName("Square");
-		square.AddComponent<POG::Core::Transform>(POG::Core::Transform
+		square.AddComponent(POG::Core::Transform
 			{
 				.position = POG::Maths::Vec3(0.0f, 0.0f, 0.0f),
 				.orientation = POG::Maths::Quat(POG::Maths::Vec3(0.0f, 0.0f, 0.0f)),
 				.scale = POG::Maths::Vec3(1.0f, 1.0f, 1.0f),
 			});
-		square.AddComponent<POG::Core::MeshRenderer>(POG::Core::MeshRenderer
+		/*square.AddComponent(POG::Core::MeshRenderer
 			{
 				.mesh = mesh,
 				.material = material,
+			});*/
+		square.AddComponent(POG::Core::Sprite
+			{
+				.texture = &squareTexture,
 			});
+
+		squareTexture.LoadFromImage("F:\\Dev\\Projects\\Pagoog\\External\\POGEngine\\Source\\Example\\Resources\\Sprites\\Blob.png");
 
 		child = GetECSManager().CreateEntity();
 
@@ -122,15 +135,14 @@ void main()
 		POG::Core::Transform& squareTransform = square.GetComponent<POG::Core::Transform>();
 		//squareTransform.orientation *= POG::Maths::Quat(POG::Maths::Vec3(0.0f, 0.0f, 1.0f * dt));
 
-		POG::Core::Transform& playerTransform = player.GetComponent<POG::Core::Transform>();
+		POG::Core::RigidBody& playerRigidBody = player.GetComponent<POG::Core::RigidBody>();
 		POG::Core::AttachedCamera& playerCamera = player.GetComponent<POG::Core::AttachedCamera>();
-		float speed = 3.0f;
-		//playerTransform.position.x += inputPackage.GetAxisValue("Horizontal") * dt * speed;
-		playerTransform.position.y += inputPackage.GetAxisValue("Fly") * dt * speed;
-		//playerTransform.position.z += inputPackage.GetAxisValue("Vertical") * dt * speed;
-		//playerTransform.orientation *= POG::Maths::Quat(POG::Maths::Vec3(0.0f, 0.0f, 1.0f * dt));
-		playerTransform.position += (playerCamera.camera->GetRightVec() * static_cast<float>(inputPackage.GetAxisValue("Horizontal")) * dt * speed +
-									 playerCamera.camera->GetForwardVec() * static_cast<float>(inputPackage.GetAxisValue("Vertical")) * dt * speed);
+
+		float moveSpeed = 3.0f;
+		playerRigidBody.velocity =
+			(((playerCamera.camera->GetForwardVec() * static_cast<float>(inputPackage.GetAxisValue("Vertical"))) +
+				(playerCamera.camera->GetRightVec() * static_cast<float>(inputPackage.GetAxisValue("Horizontal")))) +
+				POG::Maths::Vec3(0.0f, static_cast<float>(inputPackage.GetAxisValue("Fly")), 0.0f)) * moveSpeed;
 
 		if (inputPackage.HasMouseMoved())
 		{
@@ -179,8 +191,9 @@ void main()
 
 	void ExampleScene::Update(float dt)
 	{
-		GetCameraUpdateViewSystem().UpdateView();
+		GetPhysicsSystem().Update(dt);
 		GetTransformSystem().Update(dt);
+		GetCameraUpdateViewSystem().UpdateView();
 	}
 
 	void ExampleScene::Frame(float alpha)
@@ -198,6 +211,7 @@ void main()
 		POG::Render::FaceCulling(true);
 		POG::Render::CullFace(POG_BACK);
 		POG::Render::DepthTest(true);
+		POG::Render::Blend(true);
 
 		//if (flip)
 		//{
@@ -235,6 +249,7 @@ void main()
 		//mesh->Render();
 
 		GetMeshRendererSystem().Frame(alpha);
+		GetSpriteRendererSystem().Frame(alpha);
 	}
 
 

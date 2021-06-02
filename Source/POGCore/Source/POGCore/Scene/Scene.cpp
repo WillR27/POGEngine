@@ -21,10 +21,14 @@ namespace POG::Core
 
         ecsManager.RegisterComponent<AttachedCamera>();
         ecsManager.RegisterComponent<MeshRenderer>();
+        ecsManager.RegisterComponent<RigidBody>();
+        ecsManager.RegisterComponent<Sprite>();
         ecsManager.RegisterComponent<Transform>();
 
         cameraUpdateViewSystem = ecsManager.RegisterSystem<CameraUpdateViewSystem>();
         meshRendererSystem = ecsManager.RegisterSystem<MeshRendererSystem>();
+        physicsSystem = ecsManager.RegisterSystem<PhysicsSystem>();
+        spriteRendererSystem = ecsManager.RegisterSystem<SpriteRendererSystem>();
         transformSystem = ecsManager.RegisterSystem<TransformSystem>();
     }
 

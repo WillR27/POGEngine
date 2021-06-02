@@ -33,6 +33,8 @@ namespace Example
 		POG::Core::Entity square;
 		POG::Core::Entity child;
 
+		POG::Render::Texture squareTexture;
+
 		bool flip;
 	};
 
