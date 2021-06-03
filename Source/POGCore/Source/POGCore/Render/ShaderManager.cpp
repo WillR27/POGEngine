@@ -3,10 +3,12 @@
 
 namespace POG::Core
 {
+	std::unique_ptr<ShaderManager> ShaderManager::globalShaderManager(nullptr);
 	std::unique_ptr<ShaderManager> ShaderManager::defaultShaderManager(nullptr);
 
 	void ShaderManager::Init()
 	{
+		globalShaderManager = std::make_unique<ShaderManager>();
 		defaultShaderManager = std::make_unique<ShaderManager>();
 
 		const char* spriteVertexShader = R"(
@@ -71,7 +73,14 @@ void main()
 
 	void ShaderManager::DestroyShader(const char* name)
 	{
-		delete shaders[name];
-		shaders.erase(name);
+		if (shaders.find(name) != shaders.end())
+		{
+			delete shaders[name];
+			shaders.erase(name);
+		}
+		else
+		{
+			POG_WARN("Tried to destroy shader \"{0}\" that didn't exist.", name);
+		}
 	}
 }

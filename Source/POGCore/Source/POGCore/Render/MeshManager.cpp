@@ -3,10 +3,12 @@
 
 namespace POG::Core
 {
+	std::unique_ptr<MeshManager> MeshManager::globalMeshManager(nullptr);
 	std::unique_ptr<MeshManager> MeshManager::defaultMeshManager(nullptr);
 
 	void MeshManager::Init()
 	{
+		globalMeshManager = std::make_unique<MeshManager>();
 		defaultMeshManager = std::make_unique<MeshManager>();
 
 		const float spritePositions[] =
@@ -64,7 +66,14 @@ namespace POG::Core
 
 	void MeshManager::DestroyMesh(const char* name)
 	{
-		delete meshes[name];
-		meshes.erase(name);
+		if (meshes.find(name) != meshes.end())
+		{
+			delete meshes[name];
+			meshes.erase(name);
+		}
+		else
+		{
+			POG_WARN("Tried to destroy mesh \"{0}\" that didn't exist.", name);
+		}
 	}
 }

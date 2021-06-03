@@ -9,6 +9,11 @@ namespace POG::Core
 	public:
 		static void Init();
 
+		static Render::Mesh& CreateGlobalMesh(const char* name) { return globalMeshManager->CreateMesh(name); }
+		static void DestroyGlobalMesh(const char* name) { globalMeshManager->DestroyMesh(name); }
+
+		static Render::Mesh& GetGlobalMesh(const char* name) { return globalMeshManager->GetMesh(name); }
+
 		static Render::Mesh& GetDefaultMesh(const char* name) { return defaultMeshManager->GetMesh(name); }
 
 		MeshManager();
@@ -21,6 +26,7 @@ namespace POG::Core
 		Render::Mesh& GetMesh(const char* name) { return *meshes[name]; }
 
 	private:
+		static std::unique_ptr<MeshManager> globalMeshManager;
 		static std::unique_ptr<MeshManager> defaultMeshManager;
 
 		std::map<const char*, Render::Mesh*> meshes;

@@ -1,13 +1,13 @@
 #include "ExamplePCH.h"
 #include "Example.h"
 
+#include <glad/glad.h>
+
 #include "POGCore/Main.h"
 
 #include "POGCore.h"
 #include "POGLog.h"
 #include "POGRender.h"
-
-#include <glad/glad.h>
 
 namespace Example
 {
@@ -82,6 +82,9 @@ void main()
 		material->AddColour("colourIn", POG::Maths::Vec4(1.0f, 0.0f, 0.0f, 1.0f));
 		material->SetShader(meshShader);
 
+		POG::Render::Texture& blobTexture = POG::Core::TextureManager::CreateGlobalTexture("Blob");
+		blobTexture.LoadFromImage("Resources\\Sprites\\Blob.png");
+
 		player = GetECSManager().CreateEntity();
 		player.SetName("Player");
 		player.AddComponent(POG::Core::AttachedCamera
@@ -117,13 +120,10 @@ void main()
 			});*/
 		square.AddComponent(POG::Core::Sprite
 			{
-				.texture = &squareTexture,
+				.texture = &blobTexture,
 			});
 
-		squareTexture.LoadFromImage("F:\\Dev\\Projects\\POGEngine\\Source\\Example\\Resources\\Sprites\\Blob.png");
-
 		child = GetECSManager().CreateEntity();
-
 	}
 
 	void ExampleScene::Exit()
@@ -148,6 +148,14 @@ void main()
 		{
 			float lookSpeed = 0.1f;
 			playerCamera.camera->AddPitchAndYaw(POG::Core::Input::GetDeltaMouseY() * dt * lookSpeed, POG::Core::Input::GetDeltaMouseX() * dt * lookSpeed);
+
+			auto& sprite = square.GetComponent<POG::Core::Sprite>();
+
+			POG::Core::TextureManager::DestroyGlobalTexture("Blob");
+			POG::Render::Texture& blobTexture = POG::Core::TextureManager::CreateGlobalTexture("Bloboid");
+			blobTexture.LoadFromImage("Resources\\Sprites\\Blob.png");
+
+			sprite.texture = &blobTexture;
 		}
 
 		if (inputPackage.HasActionOccurred("Right") && !child.IsValid())

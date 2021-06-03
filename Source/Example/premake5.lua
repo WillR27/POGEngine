@@ -35,6 +35,11 @@ createbaseprojectcpp("Example", "ConsoleApp")
 		"POG_STANDALONE",
 	}
 
+    postbuildcommands 
+    { 
+        copyfolder("%{prj.location}/Resources", outputbindirproj .. "/Resources/")
+    }
+
     filter "configurations:Dist"
         signexe = select(1, ("\"%{wks.location}/CodeSigning/SignFiles.bat\" \"" .. outputbindirproj .. "/Example.exe\""):gsub("/", "\\"))
 

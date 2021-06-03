@@ -3,6 +3,7 @@
 
 #include "POGCore/Render/MeshManager.h"
 #include "POGCore/Render/ShaderManager.h"
+#include "POGCore/Render/TextureManager.h"
 #include "POGCore/Scene/Scene.h"
 
 #include "POGDebug.h"
@@ -105,6 +106,7 @@ namespace POG::Core
 
 		MeshManager::Init();
 		ShaderManager::Init();
+		TextureManager::Init();
 
 		GetMainEventBus().Subscribe(this, &Application::OnWindowCloseEvent);
 		GetMainEventBus().Subscribe(this, &Application::OnCursorEnabledEvent);
