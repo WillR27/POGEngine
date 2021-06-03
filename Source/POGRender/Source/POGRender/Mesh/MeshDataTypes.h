@@ -2,39 +2,74 @@
 
 namespace POG::Render
 {
-	class Vertex
+	class VertexAttribute
 	{
 	public:
-		class Position
+		VertexAttribute()
+			: dataArray(nullptr)
 		{
-		public:
-			typedef float ValueType;
-			static const int Count = 3;
-			static const int Size = sizeof(float) * Count;
-		};
+		}
 
-		class Colour
-		{
-		public:
-			typedef float ValueType;
-			static const int Count = 3;
-			static const int Size = sizeof(float) * Count;
-		};
+		VertexAttribute(const VertexAttribute&) = delete;
+		VertexAttribute(VertexAttribute&&) = delete;
 
-		class TexCoords
+		virtual ~VertexAttribute()
 		{
-		public:
-			typedef float ValueType;
-			static const int Count = 2;
-			static const int Size = sizeof(float) * Count;
-		};
+			delete[] dataArray;
+		}
 
-		class Index
+		const char* GetData()
 		{
-		public:
-			typedef unsigned int ValueType;
-			static const int Count = 1;
-			static const int Size = sizeof(unsigned int) * Count;
-		};
+			return dataArray;
+		}
+
+		void SetData(const void* dataToBeCopied, int size)
+		{
+			// Delete the old data array if it exists
+			delete[] dataArray;
+
+			// Allocate a new array the size of the data being passed in
+			dataArray = new char[size];
+
+			// Copy the given data to the new array
+			memcpy(dataArray, dataToBeCopied, size);
+		}
+
+		// Returns the number of values per vertex e.g 3 for position, 2 for tex coords
+		virtual constexpr int Count() const = 0;
+
+		// Returns the size of an entire vertex's worth of data e.g. 12 bytes for a position, 8 bytes for a tex coord
+		virtual constexpr int Size() const = 0;
+
+	private:
+		char* dataArray;
+	};
+
+	struct Position : public VertexAttribute
+	{
+		using ValueType = float;
+		constexpr int Count() const override { return 3; }
+		constexpr int Size() const override { return sizeof(ValueType) * Count(); }
+	};
+
+	struct Colour : public VertexAttribute
+	{
+		using ValueType = float;
+		constexpr int Count() const override { return 3; }
+		constexpr int Size() const override { return sizeof(ValueType) * Count(); }
+	};
+
+	struct TexCoords : public VertexAttribute
+	{
+		using ValueType = float;
+		constexpr int Count() const override { return 2; }
+		constexpr int Size() const override { return sizeof(ValueType) * Count(); }
+	};
+
+	struct Index : public VertexAttribute
+	{
+		using ValueType = unsigned int;
+		constexpr int Count() const override { return 1; }
+		constexpr int Size() const override { return sizeof(ValueType) * Count(); }
 	};
 }

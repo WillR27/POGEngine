@@ -23,7 +23,7 @@ namespace POG::Editor
 	void LoadIcon(Render::Texture*& texture, const char* file)
 	{
 		int width, height, channels;
-		Util::Image image = Util::LoadImage(file, width, height, channels);
+		Util::Image image = Util::LoadImageFromFile(file, width, height, channels);
 		texture = new Render::Texture();
 		texture->SetData(image, width, height);
 		Util::FreeImage(image);

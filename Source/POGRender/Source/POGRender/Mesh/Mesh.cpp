@@ -1,24 +1,24 @@
 #include "POGRenderPCH.h"
 #include "Mesh.h"
 
-#include "POGRender/Render.h"
-#include "POGRender/Objects/VertexArray.h"
-#include "POGRender/Objects/VertexBuffer.h"
-#include "POGRender/Objects/IndexBuffer.h"
-
 #include "POGDebug.h"
 #include "POGLog.h"
 
 namespace POG::Render
 {
 	Mesh::Mesh()
-		: stride(0)
+		: vao(nullptr)
+		, vbo(nullptr)
+		, ibo(nullptr)
+		, stride(0)
 		, numberOfVertices(0)
 		, numberOfIndices(0)
 		, vertexDataArray(nullptr)
-		, positionDataAray(nullptr)
-		, colourDataArray(nullptr)
-		, texCoordsDataArray(nullptr)
+		, attributeData()
+		, attributeCounts()
+		, attributeStrides()
+		, attributeTypes()
+		, attributeDebugNames()
 		, indexDataArray(nullptr)
 		//, meshSet(nullptr)
 	{
@@ -27,19 +27,20 @@ namespace POG::Render
 	Mesh::~Mesh()
 	{
 		delete[] vertexDataArray;
-		delete[] positionDataAray;
-		delete[] colourDataArray;
-		delete[] texCoordsDataArray;
 		delete[] indexDataArray;
 
-		for (char* additionalDataArray : additionalDataArrays)
+		for (char* data : attributeData)
 		{
-			delete[] additionalDataArray;
+			delete[] data;
 		}
+
+		delete vao;
+		delete vbo;
+		delete ibo;
 
 		if (vertexDataArray == nullptr)
 		{
-			POG_WARN("Deleted a mesh before any data was used. Are you sure you wanted to do this?");
+			POG_WARN("Deleted a mesh before the mesh was built. Are you sure you meant to do this?");
 		}
 	}
 
@@ -51,27 +52,19 @@ namespace POG::Render
 		}
 		else*/
 		{
-			VertexArray vao; // TODO: Create on build?
-			VertexBuffer vbo;
-			IndexBuffer ibo;
+			POG_ASSERT(vao != nullptr, "Tried to render a mesh before building!");
 
-			vao.Bind();
-			vbo.Bind();
-			ibo.Bind();
-
-			vbo.SetVertexData(GetVertexData(), Size());
-
-			vao.SetAttribute(0, 3, POG_FLOAT, false, 8 * sizeof(float), (void*)(0));
-			vao.SetAttribute(1, 3, POG_FLOAT, false, 8 * sizeof(float), (void*)(3 * sizeof(float)));
-			vao.SetAttribute(2, 2, POG_FLOAT, false, 8 * sizeof(float), (void*)(6 * sizeof(float)));
+			vao->Bind();
+			vbo->Bind();
+			ibo->Bind();
 
 			if (IndexCount() == 0)
 			{
-				Render::RenderTrianglesFromArrays(0, Count());
+				Render::RenderTrianglesFromArrays(0, VertexCount());
 			}
 			else
 			{
-				ibo.SetIndexData(GetIndexData(), IndexSize());
+				ibo->SetIndexData(GetIndexData(), IndexSize());
 
 				Render::RenderTrianglesFromElements(0, IndexCount());
 			}
@@ -80,86 +73,85 @@ namespace POG::Render
 
 	void Mesh::Build() // TODO: Mark dirty and rebuild when necessary
 	{
+		POG_ASSERT(numberOfVertices != 0, "Number of vertices for mesh has not been set!");
+
+		if (attributeData.empty())
+		{
+			POG_WARN("Tried to build a mesh with no data. Are you sure meant to do this?");
+
+			return;
+		}
+
 		delete[] vertexDataArray;
-		char* newVertexDataArray = new char[Size()];
+		char* newVertexDataArray = new char[VertexArraySize()];
 
 		int vertexDataPos = 0;
 		int dataPos = 0;
 
 		for (int i = 0; i < numberOfVertices; i++)
 		{
-			dataPos = i * Vertex::Position::Count;
-			memcpy(&newVertexDataArray[vertexDataPos], &positionDataAray[dataPos], Vertex::Position::Size);
-			vertexDataPos += Vertex::Position::Size;
-
-			dataPos = i * Vertex::Colour::Count;
-			memcpy(&newVertexDataArray[vertexDataPos], &colourDataArray[dataPos], Vertex::Colour::Size);
-			vertexDataPos += Vertex::Colour::Size;
-
-			dataPos = i * Vertex::TexCoords::Count;
-			memcpy(&newVertexDataArray[vertexDataPos], &texCoordsDataArray[dataPos], Vertex::TexCoords::Size);
-			vertexDataPos += Vertex::TexCoords::Size;
-
-			for (int j = 0; j < additionalDataArrays.size(); j++)
+			for (int j = 0; j < attributeData.size(); j++)
 			{
-				char* additionalDataArray = (char*)additionalDataArrays[j];
-				int additionalDataStride = additionalDataStrides[j];
-
-				dataPos = i * additionalDataStride;
-				memcpy(&newVertexDataArray[vertexDataPos], &additionalDataArray[dataPos], additionalDataStride);
-				vertexDataPos += additionalDataStride;
+				int stride = attributeStrides[j];
+				dataPos = i * stride;
+				memcpy(&newVertexDataArray[vertexDataPos], &(attributeData[j][dataPos]), stride);
+				vertexDataPos += stride;
 			}
 		}
 
 		vertexDataArray = newVertexDataArray;
+
+		delete vao;
+		delete vbo;
+		delete ibo;
+
+		vao = new VertexArray();
+		vbo = new VertexBuffer();
+		ibo = new IndexBuffer();
+
+		vao->Bind();
+		vbo->Bind();
+		ibo->Bind();
+
+		vbo->SetVertexData(GetVertexData(), VertexArraySize());
+
+		long long offset = 0;
+		for (int i = 0; i < attributeData.size(); i++)
+		{
+			vao->SetAttribute(i, attributeCounts[i], attributeTypes[i], false, stride, (void*)(offset));
+			offset += attributeStrides[i];
+		}
 	}
 
-	void Mesh::SetPositionData(const Vertex::Position::ValueType* positionDataToBeCopied, int size)
+	void Mesh::SetAttributeData(int index, const void* dataToCopy, int size, int count, int stride, const char* debugName)
 	{
-		if (positionDataAray == nullptr)
+		// Check if the index is out of range
+		if (index >= attributeData.size())
 		{
-			stride += Vertex::Position::Size;
+			attributeData.resize(index + 1);
+			attributeCounts.resize(index + 1);
+			attributeStrides.resize(index + 1);
+			attributeTypes.resize(index + 1);
+			attributeDebugNames.resize(index + 1);
 		}
 
-		delete[] positionDataAray;
-		int numberOfValues = size / static_cast<int>(sizeof(Vertex::Position::ValueType));
-		numberOfVertices = numberOfValues / Vertex::Position::Count;
-		positionDataAray = new Vertex::Position::ValueType[numberOfValues];
-		memcpy(positionDataAray, positionDataToBeCopied, size);
-	}
+		// Delete existing data if it exists
+		delete[] attributeData[index];
 
-	void Mesh::SetColourData(const Vertex::Colour::ValueType* colourDataToBeCopied, int size)
-	{
-		if (colourDataArray == nullptr)
-		{
-			stride += Vertex::Colour::Size;
-		}
+		// Create a new array and copy the data
+		attributeData[index] = new char[size];
+		memcpy(attributeData[index], dataToCopy, size);
 
-		delete[] colourDataArray;
-		colourDataArray = new Vertex::Colour::ValueType[size / sizeof(Vertex::Colour::ValueType)];
-		memcpy(colourDataArray, colourDataToBeCopied, size);
-	}
+		// Set the count
+		attributeCounts[index] = count;
 
-	void Mesh::SetTexCoordsData(const Vertex::TexCoords::ValueType* texCoordsToBeCopied, int size)
-	{
-		if (texCoordsDataArray == nullptr)
-		{
-			stride += Vertex::TexCoords::Size;
-		}
-
-		delete[] texCoordsDataArray;
-		texCoordsDataArray = new Vertex::TexCoords::ValueType[size / sizeof(Vertex::TexCoords::ValueType)];
-		memcpy(texCoordsDataArray, texCoordsToBeCopied, size);
-	}
-
-	void Mesh::AddAdditionalData(const void* dataToBeCopied, int size, int stride)
-	{
+		// Update the total stride
+		this->stride -= attributeStrides[index];
 		this->stride += stride;
+		attributeStrides[index] = stride;
 
-		char* additionalData = new char[size];
-		memcpy(additionalData, dataToBeCopied, size);
-		additionalDataArrays.push_back(additionalData);
-		additionalDataStrides.push_back(stride);
+		// Keep track of the debug names
+		attributeDebugNames[index] = debugName;
 	}
 
 	void Mesh::SetIndexData(const unsigned int* indexDataToBeCopied, int size)

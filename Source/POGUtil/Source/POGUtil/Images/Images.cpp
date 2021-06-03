@@ -5,7 +5,7 @@
 
 namespace POG::Util
 {
-	Image LoadImage(const char* file, int& width, int& height, int& channels, bool flipVertically)
+	Image LoadImageFromFile(const char* file, int& width, int& height, int& channels, bool flipVertically)
 	{
 		stbi_set_flip_vertically_on_load(flipVertically);
 

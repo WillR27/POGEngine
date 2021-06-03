@@ -132,9 +132,10 @@ namespace POG::Core
 			};
 
 			Render::Mesh mesh;
-			mesh.SetPositionData(spritePositions, sizeof(spritePositions));
-			mesh.SetColourData(spriteColours, sizeof(spriteColours));
-			mesh.SetTexCoordsData(spriteTexCoords, sizeof(spriteTexCoords));
+			mesh.SetNumberOfVerices(4);
+			mesh.AddAttribute<float>(spritePositions, sizeof(spritePositions), 3);
+			mesh.AddAttribute<float>(spriteColours, sizeof(spriteColours), 3);
+			mesh.AddAttribute<float>(spriteTexCoords, sizeof(spriteTexCoords), 2);
 			mesh.SetIndexData(spriteIndices, sizeof(spriteIndices));
 			mesh.Build();
 

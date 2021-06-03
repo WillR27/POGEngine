@@ -49,7 +49,7 @@ namespace POG::Render
 	void Texture::LoadFromImage(const char* file)
 	{
 		int width, height, channels;
-		Util::Image image = Util::LoadImage(file, width, height, channels, true);
+		Util::Image image = Util::LoadImageFromFile(file, width, height, channels, true);
 		SetData(image, width, height);
 		Util::FreeImage(image);
 	}

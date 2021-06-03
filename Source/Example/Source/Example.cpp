@@ -74,8 +74,8 @@ void main()
 		meshShader->Init(vertexShaderSource, fragmentShaderSource);
 
 		mesh = std::make_shared <POG::Render::Mesh>();
-		mesh->SetPositionData(POG::Render::squarePositions, sizeof(POG::Render::squarePositions));
-		mesh->SetColourData(POG::Render::squareColours, sizeof(POG::Render::squareColours));
+		//mesh->SetPositionData(POG::Render::squarePositions, sizeof(POG::Render::squarePositions));
+		//mesh->SetColourData(POG::Render::squareColours, sizeof(POG::Render::squareColours));
 		//mesh->Build();
 
 		material = std::make_shared<POG::Render::Material>();
@@ -120,7 +120,7 @@ void main()
 				.texture = &squareTexture,
 			});
 
-		squareTexture.LoadFromImage("F:\\Dev\\Projects\\Pagoog\\External\\POGEngine\\Source\\Example\\Resources\\Sprites\\Blob.png");
+		squareTexture.LoadFromImage("F:\\Dev\\Projects\\POGEngine\\Source\\Example\\Resources\\Sprites\\Blob.png");
 
 		child = GetECSManager().CreateEntity();
 
@@ -208,7 +208,7 @@ void main()
 	
 		POG::Render::SetPolygonMode(POG_FRONT_AND_BACK, POG_FILL);
 		POG::Render::SetFrontFace(POG_CW);
-		POG::Render::FaceCulling(true);
+		POG::Render::FaceCulling(false);
 		POG::Render::CullFace(POG_BACK);
 		POG::Render::DepthTest(true);
 		POG::Render::Blend(true);

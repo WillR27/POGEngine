@@ -1,5 +1,13 @@
 #pragma once
 
+#include "POGDebug.h"
+#include "POGLog.h"
+
+#include "POGRender/Render.h"
+#include "POGRender/Objects/IndexBuffer.h"
+#include "POGRender/Objects/VertexArray.h"
+#include "POGRender/Objects/VertexBuffer.h"
+
 #include "MeshDataTypes.h"
 
 namespace POG::Render
@@ -25,26 +33,45 @@ namespace POG::Render
 		void Build();
 		const void* GetVertexData() const { return vertexDataArray; }
 
-		const Vertex::Position::ValueType* GetPositionData() const { return positionDataAray; }
-		void SetPositionData(const Vertex::Position::ValueType* positionDataToBeCopied, int size);
+		void SetAttributeData(int index, const void* dataToCopy, int size, int count, int stride, const char* debugName);
 
-		const Vertex::Colour::ValueType* GetColourData() const { return colourDataArray; }
-		void SetColourData(const Vertex::Colour::ValueType* colourDataToBeCopied, int size);
+		template<typename T>
+		void AddAttribute(const T* dataToCopy, int size, int count, const char* debugName = "")
+		{
+			SetAttribute(static_cast<int>(attributeData.size()), dataToCopy, size, count, debugName);
+		}
 
-		const Vertex::TexCoords::ValueType* GetTexCoordsData() const { return texCoordsDataArray; }
-		void SetTexCoordsData(const Vertex::TexCoords::ValueType* texCoordsToBeCopied, int size);
+		template<typename T>
+		void SetAttribute(int index, const T* dataToCopy, int size, int count, const char* debugName = "")
+		{
+			POG_ERROR("The type specified is not supported for meshes.");
+		}
 
-		int GetAdditionalStride(int index) const { return additionalDataStrides[index]; }
-		const void* GetAdditionalData(int index) const { return additionalDataArrays[index]; }
-		void AddAdditionalData(const void* dataToBeCopied, int size, int stride);
+		template<>
+		void SetAttribute<float>(int index, const float* dataToCopy, int size, int count, const char* debugName)
+		{
+			SetAttributeData(index, dataToCopy, size, count, sizeof(float) * count, debugName);
+
+			attributeTypes[index] = POG_FLOAT;
+		}
+
+		template<>
+		void SetAttribute<unsigned int>(int index, const unsigned int* dataToCopy, int size, int count, const char* debugName)
+		{
+			SetAttributeData(index, dataToCopy, size, count, sizeof(unsigned int) * count, debugName);
+
+			attributeTypes[index] = POG_UNSIGNED_INT_10F_11F_11F_REV;
+		}
 
 		const unsigned int* GetIndexData() const { return indexDataArray; }
 		void SetIndexData(const unsigned int* indexDataToBeCopied, int size);
 
+		void SetNumberOfVerices(int numberOfVertices) { this->numberOfVertices = numberOfVertices; }
+
 		// Returns the number of vertices in the mesh.
-		int Count() const { return numberOfVertices; }
+		int VertexCount() const { return numberOfVertices; }
 		// Returns the size of the vertex array in bytes.
-		int Size() const { return numberOfVertices * stride; }
+		int VertexArraySize() const { return numberOfVertices * stride; }
 
 		// Returns the number of indices in the mesh.
 		int IndexCount() const { return numberOfIndices; }
@@ -55,6 +82,10 @@ namespace POG::Render
 		//bool HasMeshSet() const { return meshSet != nullptr; }
 
 	private:
+		VertexArray* vao;
+		VertexBuffer* vbo;
+		IndexBuffer* ibo;
+
 		// The stride of each vertex in bytes, i.e sizeof(position) + sizeof(colour) + sizeof(...).
 		int stride;
 
@@ -63,15 +94,30 @@ namespace POG::Render
 
 		void* vertexDataArray;
 
-		Vertex::Position::ValueType* positionDataAray;
-		Vertex::Colour::ValueType* colourDataArray;
-		Vertex::TexCoords::ValueType* texCoordsDataArray;
-
-		std::vector<char*> additionalDataArrays;
-		std::vector<int> additionalDataStrides;
+		std::vector<char*> attributeData;
+		std::vector<int> attributeCounts;
+		std::vector<int> attributeStrides;
+		std::vector<unsigned int> attributeTypes;
+		std::vector<const char*> attributeDebugNames;
 
 		unsigned int* indexDataArray;
 
 		//MeshSet* meshSet;
+
+		// TODO: Replace with something that isn't this
+		static constexpr int SizeOf(unsigned int type)
+		{
+			switch (type)
+			{
+			case POG_FLOAT:
+				return sizeof(float);
+				break;
+			case POG_UNSIGNED_INT_2_10_10_10_REV:
+				return sizeof(unsigned int);
+				break;
+			default:
+				break;
+			}
+		}
 	};
 }
