@@ -36,7 +36,7 @@ namespace POG::Core
 
 	private:
 		static std::shared_ptr<Scene> ActiveScene;
-
+		
 		ECSManager ecsManager;
 
 		std::shared_ptr<CameraUpdateViewSystem> cameraUpdateViewSystem;

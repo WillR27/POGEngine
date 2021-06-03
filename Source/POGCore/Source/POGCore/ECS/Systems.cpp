@@ -1,6 +1,9 @@
 #include "POGCorePCH.h"
 #include "Systems.h"
 
+#include "POGCore/Render/MeshManager.h"
+#include "POGCore/Render/ShaderManager.h"
+
 namespace POG::Core
 {
 	Signature CameraUpdateViewSystem::GetSignature(ECSManager& ecsManager)
@@ -93,6 +96,8 @@ namespace POG::Core
 
 	void SpriteRendererSystem::Frame(float alpha)
 	{
+		Render::Mesh& mesh = MeshManager::GetDefaultMesh("Sprite Mesh");
+
 		for (EntityId entityId : entityIds)
 		{
 			auto& sprite = ecsManager.GetComponent<Sprite>(entityId);
@@ -101,88 +106,14 @@ namespace POG::Core
 			float width = sprite.texture->GetWidth() / 100.0f;
 			float height = sprite.texture->GetHeight() / 100.0f;
 
-			const float spritePositions[] =
-			{
-				0.5f,  0.5f, 0.0f,
-				0.5f, -0.5f, 0.0f,
-				-0.5f, -0.5f, 0.0f,
-				-0.5f,  0.5f, 0.0f
-			};
-
-			float spriteColours[] =
-			{
-				0.0f, 0.0f, 1.0f,
-				1.0f, 0.0f, 1.0f,
-				0.0f, 1.0f, 0.0f,
-				1.0f, 1.0f, 1.0f
-			};
-
-			float spriteTexCoords[] =
-			{
-				1.0f, 1.0f,
-				1.0f, 0.0f,
-				0.0f, 0.0f,
-				0.0f, 1.0f,
-			};
-
-			const unsigned int spriteIndices[] =
-			{
-				0, 1, 3,
-				1, 2, 3
-			};
-
-			Render::Mesh mesh;
-			mesh.SetNumberOfVerices(4);
-			mesh.AddAttribute<float>(spritePositions, sizeof(spritePositions), 3);
-			mesh.AddAttribute<float>(spriteColours, sizeof(spriteColours), 3);
-			mesh.AddAttribute<float>(spriteTexCoords, sizeof(spriteTexCoords), 2);
-			mesh.SetIndexData(spriteIndices, sizeof(spriteIndices));
-			mesh.Build();
-
-			Render::Shader shader = Render::Shader();
-			const char* vertexShaderSource = R"(
-#version 330 core
-layout (location = 0) in vec3 aPos;
-layout (location = 1) in vec3 aColour;
-layout (location = 2) in vec2 aTexCoord;
-
-uniform mat4 model;
-uniform mat4 view;
-uniform mat4 projection;
-
-out vec3 colour;
-out vec2 texCoord;
-
-void main()
-{
-    gl_Position = projection * view * model * vec4(aPos, 1.0);
-	colour  = aColour;
-	texCoord = aTexCoord;
-}
-)";
-
-			const char* fragmentShaderSource = R"(
-#version 330 core
-in vec3 colour;
-in vec2 texCoord;
-
-uniform sampler2D textureSample;
-
-out vec4 FragColor;
-
-void main()
-{
-	FragColor = texture(textureSample, texCoord);
-} 
-)";
-			shader.Init(vertexShaderSource, fragmentShaderSource);
-
 			Maths::Vec3 position = Maths::Lerp(transform.prevPosition, transform.position, alpha);
 			Maths::Quat orientation = Maths::Lerp(transform.prevOrientation, transform.orientation, alpha);
 			Maths::Vec3 scale = Maths::Lerp(transform.prevScale, transform.scale, alpha);
 			orientation.w *= -1.0f; // Invert model matrix rotation axes
 
 			sprite.texture->Bind();
+
+			Render::Shader& shader = ShaderManager::GetDefaultShader("Sprite Shader");
 			shader.Use();
 			shader.SetMatrix4fv("view", 1, false, Maths::ToData(Render::Camera::MainCamera->GetView()));
 			shader.SetMatrix4fv("projection", 1, false, Maths::ToData(Render::Camera::MainCamera->GetProjection()));

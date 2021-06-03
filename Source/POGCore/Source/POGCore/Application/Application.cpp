@@ -1,6 +1,8 @@
 #include "POGCorePCH.h"
 #include "Application.h"
 
+#include "POGCore/Render/MeshManager.h"
+#include "POGCore/Render/ShaderManager.h"
 #include "POGCore/Scene/Scene.h"
 
 #include "POGDebug.h"
@@ -100,6 +102,9 @@ namespace POG::Core
 			Render::SetContextAddressFunc(GetWindow().GetContextAddressFunc());
 			Render::Init();
 		}
+
+		MeshManager::Init();
+		ShaderManager::Init();
 
 		GetMainEventBus().Subscribe(this, &Application::OnWindowCloseEvent);
 		GetMainEventBus().Subscribe(this, &Application::OnCursorEnabledEvent);
