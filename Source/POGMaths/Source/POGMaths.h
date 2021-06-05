@@ -1,5 +1,7 @@
 #pragma once
 
+#define GLM_FORCE_LEFT_HANDED
+
 #include "POGMaths/Matrices.h"
 #include "POGMaths/Quaternions.h"
 #include "POGMaths/Vectors.h"

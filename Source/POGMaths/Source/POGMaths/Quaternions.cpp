@@ -15,6 +15,11 @@ namespace POG::Maths
 		return glm::normalize(quaternion);
 	}
 
+	Quat Inverse(Quat quaternion)
+	{
+		return glm::inverse(quaternion);
+	}
+
 	Quat Lerp(Quat start, Quat end, float a)
 	{
 		return glm::mix(static_cast<glm::quat>(start), static_cast<glm::quat>(end), a);

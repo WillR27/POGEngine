@@ -20,6 +20,16 @@ namespace POG::Maths
 		return glm::mix(static_cast<glm::vec3>(start), static_cast<glm::vec3>(end), a);
 	}
 
+	float Length(Vec3 vec1)
+	{
+		return glm::length(vec1);
+	}
+
+	float ScalarProduct(Vec3 vec1, Vec3 vec2)
+	{
+		return Length(vec1) * Length(vec2);
+	}
+
 	float DotProduct(Vec3 vec1, Vec3 vec2)
 	{
 		return glm::dot(static_cast<glm::vec3>(vec1), static_cast<glm::vec3>(vec2));

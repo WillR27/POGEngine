@@ -25,6 +25,10 @@ namespace POG::Core
         ecsManager.RegisterComponent<Sprite>();
         ecsManager.RegisterComponent<Transform>();
 
+        // Colliders
+        ecsManager.RegisterComponent<BoxCollider2D>();
+        ecsManager.RegisterComponent<RectCollider>();
+
         cameraUpdateViewSystem = ecsManager.RegisterSystem<CameraUpdateViewSystem>();
         meshRendererSystem = ecsManager.RegisterSystem<MeshRendererSystem>();
         physicsSystem = ecsManager.RegisterSystem<PhysicsSystem>();

@@ -11,6 +11,9 @@ namespace POG::Maths
 	// Normalises the given quaternion.
 	Quat Normalise(Quat quaternion);
 
+	// Returns the inverse of the quaternion.
+	Quat Inverse(Quat quaternion);
+
 	// Linearly interpolates between two quaternions.
 	Quat Lerp(Quat start, Quat end, float a);
 

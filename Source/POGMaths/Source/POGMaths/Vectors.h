@@ -20,7 +20,13 @@ namespace POG::Maths
 	// Linearly interpolates between two vectors.
 	Vec3 Lerp(Vec3 start, Vec3 end, float a);
 
-	// Returns the dot product of two vectos.
+	// Returns the magnitude of a vector.
+	float Length(Vec3 vec1);
+
+	// Returns the scalar product of two vectors.
+	float ScalarProduct(Vec3 vec1, Vec3 vec2);
+
+	// Returns the dot product of two vectors.
 	float DotProduct(Vec3 vec1, Vec3 vec2);
 
 	// Multiplies two vectors together using the absolute values, but preserves the signage.

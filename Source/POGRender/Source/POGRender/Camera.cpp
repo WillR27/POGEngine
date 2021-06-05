@@ -26,7 +26,7 @@ namespace POG::Render
 	{
 		cameraOrientation = Maths::Quat(Maths::Vec3(pitch, yaw, 0.0f));
 		//cameraOrientation.w *= -1.0f; // Invert view matrix rotation axes
-		parentOrientation.w *= -1.0f; // Invert view matrix rotation axes
+		//parentOrientation.w *= -1.0f; // Invert view matrix rotation axes
 
 		forwardVec = Maths::ToForwardVec(parentOrientation * cameraOrientation);
 		upVec = Maths::ToUpVec(parentOrientation * cameraOrientation);
@@ -44,10 +44,6 @@ namespace POG::Render
 	void Camera::CalculateProjection()
 	{
 		projection = glm::perspective(fov, aspectRatio, nearZ, farZ);
-		projection[0].x *= -1; // Covert to left handed coordinate system
-		projection[1].x *= -1; // Covert to left handed coordinate system
-		projection[2].x *= -1; // Covert to left handed coordinate system
-		projection[3].x *= -1; // Covert to left handed coordinate system
 	}
 
 	void Camera::SetFov(float newFov)

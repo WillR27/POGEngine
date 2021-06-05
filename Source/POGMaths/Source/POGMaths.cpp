@@ -16,6 +16,7 @@ namespace POG::Maths
 		model = Translate(model, position);
 		model = Rotate(model, ToMatrix(orientation));
 		model = Scale(model, scale);
+
 		return model;
 	}
 }

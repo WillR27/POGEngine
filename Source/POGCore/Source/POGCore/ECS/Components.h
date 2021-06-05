@@ -1,11 +1,11 @@
 #pragma once
 
-#include "POGCore/ECS/Common.h"
+#include <memory>
 
 #include "POGMaths.h"
 #include "POGRender.h"
 
-#include <memory>
+#include "POGCore/ECS/Common.h"
 
 namespace POG::Core
 {
@@ -43,4 +43,22 @@ namespace POG::Core
 		Maths::Quat prevOrientation = Maths::Quat(Maths::Vec3(0.0f, 0.0f, 0.0f));
 		Maths::Vec3 prevScale = Maths::Vec3(1.0f, 1.0f, 1.0f);
 	};
+
+	//////////////////////////////////////////////////////////////
+	// COLLIDERS
+
+	struct BoxCollider2D
+	{
+		Maths::Vec2 min = Maths::Vec2(-0.5f, -0.5f);
+		Maths::Vec2 max = Maths::Vec2(0.5f, 0.5f);
+	};
+
+	struct RectCollider
+	{
+		Maths::Vec2 min = Maths::Vec2(-0.5f, -0.5f);
+		Maths::Vec2 max = Maths::Vec2(0.5f, 0.5f);
+	};
+
+	// COLLIDERS
+	//////////////////////////////////////////////////////////////
 }

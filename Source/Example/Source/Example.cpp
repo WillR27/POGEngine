@@ -83,7 +83,7 @@ void main()
 		material->SetShader(meshShader);
 
 		POG::Render::Texture& blobTexture = POG::Core::TextureManager::CreateGlobalTexture("Blob");
-		blobTexture.LoadFromImage("Resources\\Sprites\\Blob.png");
+		blobTexture.LoadFromImage("Resources\\Sprites\\Square.png");
 
 		player = GetECSManager().CreateEntity();
 		player.SetName("Player");
@@ -109,9 +109,14 @@ void main()
 		square.SetName("Square");
 		square.AddComponent(POG::Core::Transform
 			{
-				.position = POG::Maths::Vec3(0.0f, 0.0f, 0.0f),
+				.position = POG::Maths::Vec3(2.0f, -1.0f, -2.0f),
 				.orientation = POG::Maths::Quat(POG::Maths::Vec3(0.0f, 0.0f, 0.0f)),
 				.scale = POG::Maths::Vec3(1.0f, 1.0f, 1.0f),
+			});
+		square.AddComponent(POG::Core::RectCollider
+			{
+				.min = POG::Maths::Vec2(-0.5f, -0.5f),
+				.max = POG::Maths::Vec2(0.5f, 0.5f),
 			});
 		/*square.AddComponent(POG::Core::MeshRenderer
 			{
@@ -133,8 +138,7 @@ void main()
 	void ExampleScene::Input(POG::Core::InputPackage& inputPackage, float dt)
 	{
 		POG::Core::Transform& squareTransform = square.GetComponent<POG::Core::Transform>();
-		//squareTransform.orientation *= POG::Maths::Quat(POG::Maths::Vec3(0.0f, 0.0f, 1.0f * dt));
-
+		
 		POG::Core::RigidBody& playerRigidBody = player.GetComponent<POG::Core::RigidBody>();
 		POG::Core::AttachedCamera& playerCamera = player.GetComponent<POG::Core::AttachedCamera>();
 
@@ -149,13 +153,13 @@ void main()
 			float lookSpeed = 0.1f;
 			playerCamera.camera->AddPitchAndYaw(POG::Core::Input::GetDeltaMouseY() * dt * lookSpeed, POG::Core::Input::GetDeltaMouseX() * dt * lookSpeed);
 
-			auto& sprite = square.GetComponent<POG::Core::Sprite>();
+			//auto& sprite = square.GetComponent<POG::Core::Sprite>();
 
-			POG::Core::TextureManager::DestroyGlobalTexture("Blob");
-			POG::Render::Texture& blobTexture = POG::Core::TextureManager::CreateGlobalTexture("Bloboid");
-			blobTexture.LoadFromImage("Resources\\Sprites\\Blob.png");
+			//POG::Core::TextureManager::DestroyGlobalTexture("Blob");
+			//POG::Render::Texture& blobTexture = POG::Core::TextureManager::CreateGlobalTexture("Bloboid");
+			//blobTexture.LoadFromImage("Resources\\Sprites\\Blob.png");
 
-			sprite.texture = &blobTexture;
+			//sprite.texture = &blobTexture;
 		}
 
 		if (inputPackage.HasActionOccurred("Right") && !child.IsValid())
@@ -200,6 +204,29 @@ void main()
 	void ExampleScene::Update(float dt)
 	{
 		GetPhysicsSystem().Update(dt);
+
+		POG::Core::Transform& squareTransform = square.GetComponent<POG::Core::Transform>();
+		POG::Core::RectCollider& squareRectCollider = square.GetComponent<POG::Core::RectCollider>();
+
+		// No idea what normalising needs doing
+		squareTransform.orientation = POG::Maths::Normalise(squareTransform.orientation);
+		squareTransform.orientation *= POG::Maths::Normalise(POG::Maths::Quat(POG::Maths::Vec3(1.0f * dt, 1.0f * dt, 1.0f * dt)));
+
+		POG::Core::Transform& playerTransform = player.GetComponent<POG::Core::Transform>();
+
+		POG::Core::Ray ray
+		{
+			.origin = playerTransform.position,
+			.direction = POG::Render::Camera::MainCamera->GetForwardVec(),
+		};
+
+		POG::Core::RayResultRectCollider result = POG::Core::Hits(ray, squareTransform, squareRectCollider);
+		if (result.hit)
+		{
+			POG_TRACE("{0}, {1}, {2}", result.pointOfIntersection.x, result.pointOfIntersection.y, result.pointOfIntersection.z);
+			POG_WARN("{0}, {1}", result.pointOnRect.x, result.pointOnRect.y);
+		}
+
 		GetTransformSystem().Update(dt);
 		GetCameraUpdateViewSystem().UpdateView();
 	}
@@ -215,9 +242,9 @@ void main()
 		POG::Render::ClearDepthBuffer();
 	
 		POG::Render::SetPolygonMode(POG_FRONT_AND_BACK, POG_FILL);
-		POG::Render::SetFrontFace(POG_CW);
-		POG::Render::FaceCulling(false);
-		POG::Render::CullFace(POG_BACK);
+		//POG::Render::SetFrontFace(POG_CW);
+		//POG::Render::FaceCulling(false);
+		//POG::Render::CullFace(POG_BACK);
 		POG::Render::DepthTest(true);
 		POG::Render::Blend(true);
 

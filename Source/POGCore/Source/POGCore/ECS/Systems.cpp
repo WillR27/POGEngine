@@ -109,8 +109,7 @@ namespace POG::Core
 			Maths::Vec3 position = Maths::Lerp(transform.prevPosition, transform.position, alpha);
 			Maths::Quat orientation = Maths::Lerp(transform.prevOrientation, transform.orientation, alpha);
 			Maths::Vec3 scale = Maths::Lerp(transform.prevScale, transform.scale, alpha);
-			orientation.w *= -1.0f; // Invert model matrix rotation axes
-
+			
 			sprite.texture->Bind();
 
 			Render::Shader& shader = ShaderManager::GetDefaultShader("Sprite Shader");
