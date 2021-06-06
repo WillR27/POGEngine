@@ -24,5 +24,7 @@ namespace POG::Core
 	};
 
 	RayResultRectCollider Hits(const Ray& ray, const Transform& transform, const RectCollider& rectCollider);
+
+	Ray CalcMouseRay(Maths::Vec3 origin);
 }
 

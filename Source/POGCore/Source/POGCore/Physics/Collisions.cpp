@@ -1,6 +1,8 @@
 #include "POGCorePCH.h"
 #include "Collisions.h"
 
+#include "POGCore/Application/Application.h"
+
 namespace POG::Core
 {
 	RayResultRectCollider Hits(const Ray& ray, const Transform& transform, const RectCollider& rectCollider)
@@ -43,5 +45,33 @@ namespace POG::Core
 		}
 
 		return result;
+	}
+
+	Ray CalcMouseRay(Maths::Vec3 origin)
+	{
+		// Normalise mouse coords to OpenGL style
+		float x = ((Core::Input::GetMouseX() * 2.0f) / Core::Application::GetInstance().GetWidth()) - 1.0f;
+		float y = 1.0f - ((Core::Input::GetMouseY() * 2.0f) / Core::Application::GetInstance().GetHeight());
+
+		// 1.0f to represent into the screen
+		POG::Maths::Vec4 clip(x, y, 1.0f, 1.0f);
+
+		// To eye space
+		POG::Maths::Vec4 eye = POG::Maths::Inverse(POG::Render::Camera::MainCamera->GetProjection()) * clip;
+		eye.z = 1.0f;
+		eye.w = 0.0f;
+
+		// To world space
+		POG::Maths::Vec4 world = POG::Maths::Inverse(POG::Render::Camera::MainCamera->GetView()) * eye;
+		POG::Maths::Vec3 direction(world.x, world.y, world.z);
+		direction = POG::Maths::Normalise(direction);
+
+		POG::Core::Ray ray
+		{
+			.origin = origin,
+			.direction = direction,
+		};
+
+		return ray;
 	}
 }
