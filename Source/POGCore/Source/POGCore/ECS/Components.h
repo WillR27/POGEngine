@@ -6,12 +6,13 @@
 #include "POGRender.h"
 
 #include "POGCore/ECS/Common.h"
+#include "POGCore/Render/Camera.h"
 
 namespace POG::Core
 {
 	struct AttachedCamera
 	{
-		std::shared_ptr<Render::Camera> camera = nullptr;
+		std::shared_ptr<Core::Camera> camera = nullptr;
 	};
 
 	struct MeshRenderer

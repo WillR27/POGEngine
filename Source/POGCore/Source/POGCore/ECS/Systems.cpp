@@ -51,8 +51,8 @@ namespace POG::Core
 			orientation.w *= -1.0f; // Invert model matrix rotation axes
 
 			Render::Shader& shader = material.GetShader();
-			shader.SetMatrix4fv("view", 1, false, Maths::ToData(Render::Camera::MainCamera->GetView()));
-			shader.SetMatrix4fv("projection", 1, false, Maths::ToData(Render::Camera::MainCamera->GetProjection()));
+			shader.SetMatrix4fv("view", 1, false, Maths::ToData(Core::Camera::MainCamera->GetView()));
+			shader.SetMatrix4fv("projection", 1, false, Maths::ToData(Core::Camera::MainCamera->GetProjection()));
 			shader.SetMatrix4fv("model", 1, false, Maths::ToData(Maths::ToModelMatrix(position, orientation, scale)));
 
 			meshRenderer.mesh->Render();
@@ -111,8 +111,8 @@ namespace POG::Core
 
 			Render::Shader& shader = ShaderManager::GetDefaultShader("Wireframe Shader");
 			shader.Use();
-			shader.SetMatrix4fv("view", 1, false, Maths::ToData(Render::Camera::MainCamera->GetView()));
-			shader.SetMatrix4fv("projection", 1, false, Maths::ToData(Render::Camera::MainCamera->GetProjection()));
+			shader.SetMatrix4fv("view", 1, false, Maths::ToData(Core::Camera::MainCamera->GetView()));
+			shader.SetMatrix4fv("projection", 1, false, Maths::ToData(Core::Camera::MainCamera->GetProjection()));
 			shader.SetMatrix4fv("model", 1, false, Maths::ToData(Maths::ToModelMatrix(position, orientation, scale)));
 
 			mesh.Render();
@@ -149,8 +149,8 @@ namespace POG::Core
 
 			Render::Shader& shader = ShaderManager::GetDefaultShader("Sprite Shader");
 			shader.Use();
-			shader.SetMatrix4fv("view", 1, false, Maths::ToData(Render::Camera::MainCamera->GetView()));
-			shader.SetMatrix4fv("projection", 1, false, Maths::ToData(Render::Camera::MainCamera->GetProjection()));
+			shader.SetMatrix4fv("view", 1, false, Maths::ToData(Core::Camera::MainCamera->GetView()));
+			shader.SetMatrix4fv("projection", 1, false, Maths::ToData(Core::Camera::MainCamera->GetProjection()));
 			shader.SetMatrix4fv("model", 1, false, Maths::ToData(Maths::ToModelMatrix(position, orientation, scale)));
 
 			mesh.Render();

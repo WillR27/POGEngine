@@ -1,7 +1,7 @@
-#include "POGRenderPCH.h"
+#include "POGCorePCH.h"
 #include "Camera.h"
 
-namespace POG::Render
+namespace POG::Core
 {
 	std::shared_ptr<Camera> Camera::MainCamera = std::make_shared<Camera>();
 

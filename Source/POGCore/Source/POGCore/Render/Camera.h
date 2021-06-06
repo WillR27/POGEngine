@@ -4,7 +4,7 @@
 
 #include <memory>
 
-namespace POG::Render
+namespace POG::Core
 {
 	class Camera
 	{

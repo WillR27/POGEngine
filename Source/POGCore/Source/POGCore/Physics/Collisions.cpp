@@ -57,12 +57,12 @@ namespace POG::Core
 		POG::Maths::Vec4 clip(x, y, 1.0f, 1.0f);
 
 		// To eye space
-		POG::Maths::Vec4 eye = POG::Maths::Inverse(POG::Render::Camera::MainCamera->GetProjection()) * clip;
+		POG::Maths::Vec4 eye = POG::Maths::Inverse(POG::Core::Camera::MainCamera->GetProjection()) * clip;
 		eye.z = 1.0f;
 		eye.w = 0.0f;
 
 		// To world space
-		POG::Maths::Vec4 world = POG::Maths::Inverse(POG::Render::Camera::MainCamera->GetView()) * eye;
+		POG::Maths::Vec4 world = POG::Maths::Inverse(POG::Core::Camera::MainCamera->GetView()) * eye;
 		POG::Maths::Vec3 direction(world.x, world.y, world.z);
 		direction = POG::Maths::Normalise(direction);
 

@@ -89,7 +89,7 @@ void main()
 		player.SetName("Player");
 		player.AddComponent(POG::Core::AttachedCamera
 			{
-				.camera = POG::Render::Camera::MainCamera,
+				.camera = POG::Core::Camera::MainCamera,
 			});
 		player.AddComponent(POG::Core::RigidBody
 			{
@@ -230,7 +230,7 @@ void main()
 		POG::Core::Ray ray
 		{
 			.origin = playerTransform.position,
-			.direction = POG::Render::Camera::MainCamera->GetForwardVec(),
+			.direction = POG::Core::Camera::MainCamera->GetForwardVec(),
 		};
 
 		POG::Core::RayResultRectCollider result = POG::Core::Hits(ray, squareTransform, squareRectCollider);
