@@ -9,11 +9,11 @@ createbaseprojectcpp("Example", "ConsoleApp")
         "../POGCommon/Source",
         "../POGCore/Source",
         "../POGDebug/Source",
+        "../POGGraphics/Source",
         "../POGLog/SPDLog/include",
         "../POGLog/Source",
         "../POGMaths/GLM",
         "../POGMaths/Source",
-        "../POGRender/Source",
 		"../POGUtil/Source",
     }
 
@@ -24,9 +24,9 @@ createbaseprojectcpp("Example", "ConsoleApp")
 		"POGCommon",
 		"POGCore",
 		"POGDebug",
+		"POGGraphics",
 		"POGLog",
 		"POGMaths",
-		"POGRender",
 		"POGUtil",
     }
 	

@@ -7,7 +7,7 @@
 
 #include "POGCore.h"
 #include "POGLog.h"
-#include "POGRender.h"
+#include "POGGraphics.h"
 
 namespace Example
 {
@@ -35,7 +35,7 @@ void main()
 
 		shader.Init(vertexShaderSource, fragmentShaderSource);
 
-		meshShader = std::make_shared<POG::Render::Shader>();
+		meshShader = std::make_shared<POG::Graphics::Shader>();
 		vertexShaderSource = R"(
 #version 330 core
 layout (location = 0) in vec3 aPos;
@@ -73,16 +73,16 @@ void main()
 
 		meshShader->Init(vertexShaderSource, fragmentShaderSource);
 
-		mesh = std::make_shared <POG::Render::Mesh>();
-		//mesh->SetPositionData(POG::Render::squarePositions, sizeof(POG::Render::squarePositions));
-		//mesh->SetColourData(POG::Render::squareColours, sizeof(POG::Render::squareColours));
+		mesh = std::make_shared <POG::Graphics::Mesh>();
+		//mesh->SetPositionData(POG::Graphics::squarePositions, sizeof(POG::Graphics::squarePositions));
+		//mesh->SetColourData(POG::Graphics::squareColours, sizeof(POG::Graphics::squareColours));
 		//mesh->Build();
 
-		material = std::make_shared<POG::Render::Material>();
+		material = std::make_shared<POG::Graphics::Material>();
 		material->AddColour("colourIn", POG::Maths::Vec4(1.0f, 0.0f, 0.0f, 1.0f));
 		material->SetShader(meshShader);
 
-		POG::Render::Texture& blobTexture = POG::Core::TextureManager::CreateGlobalTexture("Blob");
+		POG::Graphics::Texture& blobTexture = POG::Core::TextureManager::CreateGlobalTexture("Blob");
 		blobTexture.LoadFromImage("Resources\\Sprites\\Square.png");
 
 		player = GetECSManager().CreateEntity();
@@ -158,7 +158,7 @@ void main()
 			//auto& sprite = square.GetComponent<POG::Core::Sprite>();
 
 			//POG::Core::TextureManager::DestroyGlobalTexture("Blob");
-			//POG::Render::Texture& blobTexture = POG::Core::TextureManager::CreateGlobalTexture("Bloboid");
+			//POG::Graphics::Texture& blobTexture = POG::Core::TextureManager::CreateGlobalTexture("Bloboid");
 			//blobTexture.LoadFromImage("Resources\\Sprites\\Blob.png");
 
 			//sprite.texture = &blobTexture;
@@ -250,16 +250,16 @@ void main()
 		float g = ((float)rand() / (RAND_MAX)) / 3.0f + 0;
 		float b = ((float)rand() / (RAND_MAX)) / 3.0f + 0;
 
-		POG::Render::ClearColour(r, g, b, 1.0f);
-		POG::Render::ClearColourBuffer();
-		POG::Render::ClearDepthBuffer();
+		POG::Graphics::ClearColour(r, g, b, 1.0f);
+		POG::Graphics::ClearColourBuffer();
+		POG::Graphics::ClearDepthBuffer();
 	
-		POG::Render::SetPolygonMode(POG_FRONT_AND_BACK, POG_FILL);
-		//POG::Render::SetFrontFace(POG_CW);
-		//POG::Render::FaceCulling(false);
-		//POG::Render::CullFace(POG_BACK);
-		POG::Render::DepthTest(true);
-		POG::Render::Blend(true);
+		POG::Graphics::SetPolygonMode(POG_FRONT_AND_BACK, POG_FILL);
+		//POG::Graphics::SetFrontFace(POG_CW);
+		//POG::Graphics::FaceCulling(false);
+		//POG::Graphics::CullFace(POG_BACK);
+		POG::Graphics::DepthTest(true);
+		POG::Graphics::Blend(true);
 
 		//if (flip)
 		//{

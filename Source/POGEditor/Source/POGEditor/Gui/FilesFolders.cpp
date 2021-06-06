@@ -39,7 +39,7 @@ namespace POG::Editor
 				isRightClicked = ImGui::IsMouseClicked(ImGuiMouseButton_Right);
 			}
 
-			Render::Texture* texture = isFolder ? FolderIcon : FileIcon;
+			Graphics::Texture* texture = isFolder ? FolderIcon : FileIcon;
 			ImGui::Image((ImTextureID)((unsigned long long)(*texture)), ImVec2(imageWidth, imageHeight));
 			
 			const float textPadding = 5.0f;

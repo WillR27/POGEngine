@@ -8,11 +8,11 @@ createbaseprojectcpp("POGCore", "StaticLib")
 		
         "../POGCommon/Source",
         "../POGDebug/Source",
+        "../POGGraphics/Source",
         "../POGLog/SPDLog/include",
         "../POGLog/Source",
         "../POGMaths/GLM",
         "../POGMaths/Source",
-        "../POGRender/Source",
 		"../POGUtil/Source",
     }
 
@@ -22,9 +22,9 @@ createbaseprojectcpp("POGCore", "StaticLib")
 		
 		"POGCommon",
 		"POGDebug",
+		"POGGraphics",
 		"POGLog",
 		"POGMaths",
-		"POGRender",
 		"POGUtil"
 	}
 

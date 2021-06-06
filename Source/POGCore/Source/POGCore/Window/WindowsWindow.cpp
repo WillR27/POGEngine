@@ -6,7 +6,7 @@
 
 #include "POGDebug.h"
 #include "POGLog.h"
-#include "POGRender.h"
+#include "POGGraphics.h"
 
 #include <GLFW/glfw3.h>
 
@@ -173,7 +173,7 @@ namespace POG::Core
 	{
 		glfwSetWindowSize(window, view.GetWidth(), view.GetHeight());
 
-		Render::SetViewport(0, 0, view.GetWidth(), view.GetHeight());
+		Graphics::SetViewport(0, 0, view.GetWidth(), view.GetHeight());
 	}
 
 	void WindowsWindow::SetFullscreen(bool isFullscreen)

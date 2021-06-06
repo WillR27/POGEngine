@@ -1,14 +1,14 @@
 #include "POGCorePCH.h"
 #include "Application.h"
 
-#include "POGCore/Render/MeshManager.h"
-#include "POGCore/Render/ShaderManager.h"
-#include "POGCore/Render/TextureManager.h"
+#include "POGCore/Graphics/MeshManager.h"
+#include "POGCore/Graphics/ShaderManager.h"
+#include "POGCore/Graphics/TextureManager.h"
 #include "POGCore/Scene/Scene.h"
 
 #include "POGDebug.h"
 #include "POGLog.h"
-#include "POGRender.h"
+#include "POGGraphics.h"
 
 namespace POG::Core
 {
@@ -100,8 +100,8 @@ namespace POG::Core
 			window = Window::Create(name);
 			window->Init();
 
-			Render::SetContextAddressFunc(GetWindow().GetContextAddressFunc());
-			Render::Init();
+			Graphics::SetContextAddressFunc(GetWindow().GetContextAddressFunc());
+			Graphics::Init();
 		}
 
 		MeshManager::Init();
@@ -277,7 +277,7 @@ namespace POG::Core
 
 	void Application::SetContextAddressFunc(ContextAddressFunc func)
 	{
-		Render::SetContextAddressFunc(func);
+		Graphics::SetContextAddressFunc(func);
 	}
 
 	void Application::SetFullscreen(bool isFullscreen)

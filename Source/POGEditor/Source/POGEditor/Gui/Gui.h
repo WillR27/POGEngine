@@ -5,7 +5,7 @@
 #include <imgui_impl_opengl3.h>
 
 #include "POGCore.h"
-#include "POGRender.h"
+#include "POGGraphics.h"
 
 #include "Components.h"
 #include "Dialogs.h"
@@ -31,7 +31,7 @@ namespace POG::Editor
 		void AssetsPanel();
 		void MainMenu();
 		void ShowModalDialogs();
-		void GameWindow(Render::Texture& clientTexture);
+		void GameWindow(Graphics::Texture& clientTexture);
 		void ApplyChanges();
 		void Render();
 

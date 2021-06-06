@@ -376,7 +376,7 @@ namespace POG::Editor
 		deleteEntitiesConfirmationDialog.Render();
 	}
 
-	void Gui::GameWindow(Render::Texture& clientTexture)
+	void Gui::GameWindow(Graphics::Texture& clientTexture)
 	{
 #ifdef POG_DEBUG
 		bool showDemoWindow = true;

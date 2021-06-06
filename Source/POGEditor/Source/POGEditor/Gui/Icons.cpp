@@ -5,8 +5,8 @@
 
 namespace POG::Editor
 {
-	Render::Texture* FileIcon = nullptr;
-	Render::Texture* FolderIcon = nullptr;
+	Graphics::Texture* FileIcon = nullptr;
+	Graphics::Texture* FolderIcon = nullptr;
 
 	void LoadIcons()
 	{
@@ -20,11 +20,11 @@ namespace POG::Editor
 		delete FolderIcon;
 	}
 
-	void LoadIcon(Render::Texture*& texture, const char* file)
+	void LoadIcon(Graphics::Texture*& texture, const char* file)
 	{
 		int width, height, channels;
 		Util::Image image = Util::LoadImageFromFile(file, width, height, channels);
-		texture = new Render::Texture();
+		texture = new Graphics::Texture();
 		texture->SetData(image, width, height);
 		Util::FreeImage(image);
 	}

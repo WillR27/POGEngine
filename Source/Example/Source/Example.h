@@ -1,7 +1,7 @@
 #pragma once
 
 #include "POGCore.h"
-#include "POGRender.h"
+#include "POGGraphics.h"
 
 namespace Example
 {
@@ -21,13 +21,13 @@ namespace Example
 		void Frame(float alpha) override;
 
 	private:
-		POG::Render::Shader shader;
-		POG::Render::VertexBuffer vbo;
-		POG::Render::VertexArray vao;
+		POG::Graphics::Shader shader;
+		POG::Graphics::VertexBuffer vbo;
+		POG::Graphics::VertexArray vao;
 
-		std::shared_ptr<POG::Render::Shader> meshShader;
-		std::shared_ptr<POG::Render::Mesh> mesh;
-		std::shared_ptr<POG::Render::Material> material;
+		std::shared_ptr<POG::Graphics::Shader> meshShader;
+		std::shared_ptr<POG::Graphics::Mesh> mesh;
+		std::shared_ptr<POG::Graphics::Material> material;
 
 		POG::Core::Entity player;
 		POG::Core::Entity square;

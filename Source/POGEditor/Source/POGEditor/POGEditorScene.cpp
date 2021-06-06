@@ -56,11 +56,11 @@ void main()
 	{
 		POGEditor& pogEditor = static_cast<POGEditor&>(Core::Application::GetInstance());
 
-		Render::BindDefaultFrameBuffer();
+		Graphics::BindDefaultFrameBuffer();
 
-		Render::ClearColour(0.5f, 0.1f, 0.9f, 1.0f);
-		Render::ClearColourBuffer();
-		Render::ClearDepthBuffer();
+		Graphics::ClearColour(0.5f, 0.1f, 0.9f, 1.0f);
+		Graphics::ClearColourBuffer();
+		Graphics::ClearDepthBuffer();
 
 		gui.SetScene(pogEditor.IsClientLoaded() ? &pogEditor.GetClientApplication().GetActiveScene() : nullptr);
 		gui.Frame();
@@ -80,9 +80,9 @@ void main()
 
 		if (!pogEditor.IsClientLoaded())
 		{
-			Render::ClearColour(0.5f, 0.1f, 0.9f, 1.0f);
-			Render::ClearColourBuffer();
-			Render::ClearDepthBuffer();
+			Graphics::ClearColour(0.5f, 0.1f, 0.9f, 1.0f);
+			Graphics::ClearColourBuffer();
+			Graphics::ClearDepthBuffer();
 		}
 	}
 

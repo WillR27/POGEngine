@@ -1,15 +1,15 @@
 #pragma once
 
-#include "POGRender.h"
+#include "POGGraphics.h"
 
 namespace POG::Editor
 {
-	extern Render::Texture* FileIcon;
-	extern Render::Texture* FolderIcon;
+	extern Graphics::Texture* FileIcon;
+	extern Graphics::Texture* FolderIcon;
 
 	void LoadIcons();
 	void FreeIcons();
 
-	void LoadIcon(Render::Texture*& texture, const char* file);
+	void LoadIcon(Graphics::Texture*& texture, const char* file);
 }
 

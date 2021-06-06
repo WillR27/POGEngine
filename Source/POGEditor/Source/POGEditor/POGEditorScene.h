@@ -5,7 +5,7 @@
 #include "POGEditor/Gui/Gui.h"
 
 #include "POGCore.h"
-#include "POGRender.h"
+#include "POGGraphics.h"
 
 namespace POG::Editor
 {
@@ -27,12 +27,12 @@ namespace POG::Editor
 	private:
 		Gui gui;
 
-		Render::Shader shader;
-		Render::VertexBuffer vbo;
-		Render::VertexArray vao;
+		Graphics::Shader shader;
+		Graphics::VertexBuffer vbo;
+		Graphics::VertexArray vao;
 
-		Render::FrameBuffer clientFBO;
-		Render::Texture clientTexture;
+		Graphics::FrameBuffer clientFBO;
+		Graphics::Texture clientTexture;
 
 		void OnClientFocusedEvent(ClientFocusedEvent& e);
 		void OnCursorEnabledEvent(Core::CursorEnabledEvent& e);

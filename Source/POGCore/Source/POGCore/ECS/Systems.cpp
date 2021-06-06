@@ -1,8 +1,8 @@
 #include "POGCorePCH.h"
 #include "Systems.h"
 
-#include "POGCore/Render/MeshManager.h"
-#include "POGCore/Render/ShaderManager.h"
+#include "POGCore/Graphics/MeshManager.h"
+#include "POGCore/Graphics/ShaderManager.h"
 
 namespace POG::Core
 {
@@ -41,7 +41,7 @@ namespace POG::Core
 			auto& meshRenderer = ecsManager.GetComponent<MeshRenderer>(entityId);
 			auto& transform = ecsManager.GetComponent<Transform>(entityId);
 
-			Render::Material& material = *meshRenderer.material;
+			Graphics::Material& material = *meshRenderer.material;
 			material.GetShader().Use();
 			material.UpdateShaderUniforms();
 
@@ -50,7 +50,7 @@ namespace POG::Core
 			Maths::Vec3 scale = Maths::Lerp(transform.prevScale, transform.scale, alpha);
 			orientation.w *= -1.0f; // Invert model matrix rotation axes
 
-			Render::Shader& shader = material.GetShader();
+			Graphics::Shader& shader = material.GetShader();
 			shader.SetMatrix4fv("view", 1, false, Maths::ToData(Core::Camera::MainCamera->GetView()));
 			shader.SetMatrix4fv("projection", 1, false, Maths::ToData(Core::Camera::MainCamera->GetProjection()));
 			shader.SetMatrix4fv("model", 1, false, Maths::ToData(Maths::ToModelMatrix(position, orientation, scale)));
@@ -96,9 +96,9 @@ namespace POG::Core
 
 	void RectColliderRendererSystem::Frame(float alpha)
 	{
-		POG::Render::SetPolygonMode(POG_FRONT_AND_BACK, POG_LINE);
+		POG::Graphics::SetPolygonMode(POG_FRONT_AND_BACK, POG_LINE);
 
-		Render::Mesh& mesh = MeshManager::GetDefaultMesh("Wireframe Mesh");
+		Graphics::Mesh& mesh = MeshManager::GetDefaultMesh("Wireframe Mesh");
 
 		for (EntityId entityId : entityIds)
 		{
@@ -109,7 +109,7 @@ namespace POG::Core
 			Maths::Quat orientation = Maths::Lerp(transform.prevOrientation, transform.orientation, alpha);
 			Maths::Vec3 scale = Maths::Lerp(transform.prevScale, transform.scale, alpha);
 
-			Render::Shader& shader = ShaderManager::GetDefaultShader("Wireframe Shader");
+			Graphics::Shader& shader = ShaderManager::GetDefaultShader("Wireframe Shader");
 			shader.Use();
 			shader.SetMatrix4fv("view", 1, false, Maths::ToData(Core::Camera::MainCamera->GetView()));
 			shader.SetMatrix4fv("projection", 1, false, Maths::ToData(Core::Camera::MainCamera->GetProjection()));
@@ -118,7 +118,7 @@ namespace POG::Core
 			mesh.Render();
 		}
 
-		POG::Render::SetPolygonMode(POG_FRONT_AND_BACK, POG_FILL);
+		POG::Graphics::SetPolygonMode(POG_FRONT_AND_BACK, POG_FILL);
 	}
 
 	Signature SpriteRendererSystem::GetSignature(ECSManager& ecsManager)
@@ -131,7 +131,7 @@ namespace POG::Core
 
 	void SpriteRendererSystem::Frame(float alpha)
 	{
-		Render::Mesh& mesh = MeshManager::GetDefaultMesh("Sprite Mesh");
+		Graphics::Mesh& mesh = MeshManager::GetDefaultMesh("Sprite Mesh");
 
 		for (EntityId entityId : entityIds)
 		{
@@ -147,7 +147,7 @@ namespace POG::Core
 			
 			sprite.texture->Bind();
 
-			Render::Shader& shader = ShaderManager::GetDefaultShader("Sprite Shader");
+			Graphics::Shader& shader = ShaderManager::GetDefaultShader("Sprite Shader");
 			shader.Use();
 			shader.SetMatrix4fv("view", 1, false, Maths::ToData(Core::Camera::MainCamera->GetView()));
 			shader.SetMatrix4fv("projection", 1, false, Maths::ToData(Core::Camera::MainCamera->GetProjection()));

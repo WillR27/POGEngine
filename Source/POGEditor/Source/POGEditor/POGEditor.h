@@ -5,7 +5,7 @@
 #include "POGCore.h"
 #include "POGDebug.h"
 #include "POGLog.h"
-#include "POGRender.h"
+#include "POGGraphics.h"
 
 typedef POG::Core::IApplication* (__cdecl* CreateClientApplication)();
 

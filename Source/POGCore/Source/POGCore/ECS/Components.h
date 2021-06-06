@@ -3,10 +3,10 @@
 #include <memory>
 
 #include "POGMaths.h"
-#include "POGRender.h"
+#include "POGGraphics.h"
 
 #include "POGCore/ECS/Common.h"
-#include "POGCore/Render/Camera.h"
+#include "POGCore/Graphics/Camera.h"
 
 namespace POG::Core
 {
@@ -17,8 +17,8 @@ namespace POG::Core
 
 	struct MeshRenderer
 	{
-		std::shared_ptr<Render::Mesh> mesh = nullptr;
-		std::shared_ptr<Render::Material> material = nullptr;
+		std::shared_ptr<Graphics::Mesh> mesh = nullptr;
+		std::shared_ptr<Graphics::Material> material = nullptr;
 	};
 
 	struct RigidBody
@@ -31,7 +31,7 @@ namespace POG::Core
 
 	struct Sprite
 	{
-		Render::Texture* texture;
+		Graphics::Texture* texture;
 	};
 
 	struct Transform
