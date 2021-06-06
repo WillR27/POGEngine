@@ -314,6 +314,8 @@ namespace POG::Core
 
 		view.SetDimensions(e.width, e.height);
 
+		Render::Camera::MainCamera->SetAspectRatio(e.width / e.height);
+
 		if (IsStandalone())
 		{
 			window->UpdateView(view);

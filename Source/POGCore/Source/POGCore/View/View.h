@@ -5,7 +5,7 @@ namespace POG::Core
 	class View
 	{
 	public:
-		View(int width = 800, int height = 600);
+		View(int width = 1200, int height = 800);
 
 		~View() = default;
 

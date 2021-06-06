@@ -8,6 +8,9 @@ namespace POG::Maths
 {
 	const float* ToData(Mat4 matrix);
 
+	// Returns the inverse of the matrix.
+	Mat4 Inverse(Mat4 matrix);
+
 	// Translates the given matrix by the given translation vector.
 	Mat4 Translate(Mat4 matrix, Vec3 translation);
 

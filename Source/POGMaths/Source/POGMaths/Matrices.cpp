@@ -12,6 +12,11 @@ namespace POG::Maths
 		return glm::value_ptr(*((glm::mat4*)&matrix));
 	}
 
+	Mat4 Inverse(Mat4 matrix)
+	{
+		return glm::inverse(matrix);
+	}
+
 	Mat4 Translate(Mat4 matrix, Vec3 translation)
 	{
 		return glm::translate(matrix, translation);

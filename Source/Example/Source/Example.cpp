@@ -100,7 +100,7 @@ void main()
 			});
 		player.AddComponent(POG::Core::Transform
 			{
-				.position = POG::Maths::Vec3(0.0f, 0.0f, -5.0f),
+				.position = POG::Maths::Vec3(0.0f, 0.0f, -2.0f),
 				.orientation = POG::Maths::Quat(POG::Maths::Vec3(0.0f, 0.0f, 0.0f)),
 				.scale = POG::Maths::Vec3(1.0f, 1.0f, 1.0f),
 			});
@@ -109,7 +109,7 @@ void main()
 		square.SetName("Square");
 		square.AddComponent(POG::Core::Transform
 			{
-				.position = POG::Maths::Vec3(2.0f, -1.0f, -2.0f),
+				.position = POG::Maths::Vec3(1.0f, -1.2f, 1.1f),
 				.orientation = POG::Maths::Quat(POG::Maths::Vec3(0.0f, 0.0f, 0.0f)),
 				.scale = POG::Maths::Vec3(1.0f, 1.0f, 1.0f),
 			});
@@ -138,7 +138,9 @@ void main()
 	void ExampleScene::Input(POG::Core::InputPackage& inputPackage, float dt)
 	{
 		POG::Core::Transform& squareTransform = square.GetComponent<POG::Core::Transform>();
+		POG::Core::RectCollider& squareRectCollider = square.GetComponent<POG::Core::RectCollider>();
 		
+		POG::Core::Transform& playerTransform = player.GetComponent<POG::Core::Transform>();
 		POG::Core::RigidBody& playerRigidBody = player.GetComponent<POG::Core::RigidBody>();
 		POG::Core::AttachedCamera& playerCamera = player.GetComponent<POG::Core::AttachedCamera>();
 
@@ -151,7 +153,7 @@ void main()
 		if (inputPackage.HasMouseMoved())
 		{
 			float lookSpeed = 0.1f;
-			playerCamera.camera->AddPitchAndYaw(POG::Core::Input::GetDeltaMouseY() * dt * lookSpeed, POG::Core::Input::GetDeltaMouseX() * dt * lookSpeed);
+			//playerCamera.camera->AddPitchAndYaw(POG::Core::Input::GetDeltaMouseY() * dt * lookSpeed, POG::Core::Input::GetDeltaMouseX() * dt * lookSpeed);
 
 			//auto& sprite = square.GetComponent<POG::Core::Sprite>();
 
@@ -160,6 +162,51 @@ void main()
 			//blobTexture.LoadFromImage("Resources\\Sprites\\Blob.png");
 
 			//sprite.texture = &blobTexture;
+		}
+
+		if (inputPackage.HasActionOccurred("Left"))
+		{
+			float width = POG::Core::Application::GetInstance().GetWidth();
+			float height = POG::Core::Application::GetInstance().GetHeight();
+
+			// Normalise mouse coords to OpenGL style
+			float x = ((POG::Core::Input::GetMouseX() * 2.0f) / POG::Core::Application::GetInstance().GetWidth()) - 1.0f;
+			float y = 1.0f - ((POG::Core::Input::GetMouseY() * 2.0f) / POG::Core::Application::GetInstance().GetHeight());
+			
+			// 1.0f to represent into the screen
+			POG::Maths::Vec4 clip(x, y, 1.0f, 1.0f);
+
+			// To eye space
+			POG::Maths::Vec4 eye = POG::Maths::Inverse(POG::Render::Camera::MainCamera->GetProjection()) * clip;
+			eye.z = 1.0f;
+			eye.w = 0.0f;
+
+			// To world space
+			POG::Maths::Vec4 world2 = POG::Maths::Inverse(POG::Render::Camera::MainCamera->GetView()) * eye;
+			POG::Maths::Vec3 world(world2.x, world2.y, world2.z);
+			world = POG::Maths::Normalise(world);
+
+			glm::vec3 vec1 = glm::unProject(glm::vec3(POG::Core::Input::GetMouseX(), POG::Core::Input::GetMouseY(), 0.0f),
+				POG::Render::Camera::MainCamera->GetView(), POG::Render::Camera::MainCamera->GetProjection(),
+				glm::vec4(0.0f, 0.0f, 1200.0f, 800.0f));
+			glm::vec3 vec2 = glm::unProject(glm::vec3(POG::Core::Input::GetMouseX(), POG::Core::Input::GetMouseY(), -1.0f),
+				POG::Render::Camera::MainCamera->GetView(), POG::Render::Camera::MainCamera->GetProjection(),
+				glm::vec4(0.0f, 0.0f, 1200.0f, 800.0f));
+
+			glm::vec3 dir = vec2 - vec1;
+
+			POG::Core::Ray ray
+			{
+				.origin = playerTransform.position,
+				.direction = world,
+			};
+
+			POG::Core::RayResultRectCollider result = POG::Core::Hits(ray, squareTransform, squareRectCollider);
+			if (result.hit)
+			{
+				POG_TRACE("{0}, {1}, {2}", result.pointOfIntersection.x, result.pointOfIntersection.y, result.pointOfIntersection.z);
+				POG_WARN("{0}, {1}", result.pointOnRect.x, result.pointOnRect.y);
+			}
 		}
 
 		if (inputPackage.HasActionOccurred("Right") && !child.IsValid())
@@ -209,7 +256,7 @@ void main()
 		POG::Core::RectCollider& squareRectCollider = square.GetComponent<POG::Core::RectCollider>();
 
 		// No idea what normalising needs doing
-		squareTransform.orientation *= POG::Maths::Quat(POG::Maths::Vec3(0.0f, 1.0f * dt, 0.0f));
+		squareTransform.orientation *= POG::Maths::Quat(POG::Maths::Vec3(1.0f * dt, 1.0f * dt, 1.0f * dt));
 		squareTransform.orientation = POG::Maths::Normalise(squareTransform.orientation);
 
 		POG::Core::Transform& playerTransform = player.GetComponent<POG::Core::Transform>();
@@ -223,8 +270,8 @@ void main()
 		POG::Core::RayResultRectCollider result = POG::Core::Hits(ray, squareTransform, squareRectCollider);
 		if (result.hit)
 		{
-			POG_TRACE("{0}, {1}, {2}", result.pointOfIntersection.x, result.pointOfIntersection.y, result.pointOfIntersection.z);
-			POG_WARN("{0}, {1}", result.pointOnRect.x, result.pointOnRect.y);
+			//POG_TRACE("{0}, {1}, {2}", result.pointOfIntersection.x, result.pointOfIntersection.y, result.pointOfIntersection.z);
+			//POG_WARN("{0}, {1}", result.pointOnRect.x, result.pointOnRect.y);
 		}
 
 		GetTransformSystem().Update(dt);
@@ -299,7 +346,7 @@ void main()
 		SetTargetUpdatesPerSecond(60.0f);
 		SetTargetFramesPerSecond(60.0f);
 
-		SetCursorEnabled(false);
+		//SetCursorEnabled(false);
 
 		POG::Core::Scene::SetActiveScene(std::make_shared<ExampleScene>());
 
