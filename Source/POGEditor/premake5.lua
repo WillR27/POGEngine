@@ -41,5 +41,5 @@ createbaseprojectcpp("POGEditor", "ConsoleApp")
 
 	postbuildcommands 
     { 
-        copyfolder("%{prj.location}/Resources", outputbindirproj .. "/Resources/")
+        copyfolder("%{prj.location}/Resources", outputbindir .. "/Resources/")
     }

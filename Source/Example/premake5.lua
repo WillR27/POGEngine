@@ -2,6 +2,9 @@ createbaseprojectcpp("Example", "ConsoleApp")
     pchheader "ExamplePCH.h"
 	pchsource "Source/ExamplePCH.cpp"
 	
+    targetdir (outputbindirproj)
+    objdir (outputintdirproj)
+
     includedirs
     {
 		"../../External/Glad/include",

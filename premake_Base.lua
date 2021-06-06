@@ -12,8 +12,6 @@ outputbindir = "%{wks.location}/Out/Bin/" .. outputconfigname
 outputintdir = "%{wks.location}/Out/Int/" .. outputconfigname
 outputbindirproj = outputbindir .. "/%{prj.name}"
 outputintdirproj = outputintdir .. "/%{prj.name}"
-outputbindirproj = outputbindir
-outputintdirproj = outputintdir
 
 
 function createbaseprojectcpp(name, type)
@@ -23,8 +21,8 @@ function createbaseprojectcpp(name, type)
         cppdialect "C++latest"
         staticruntime "Off"
 
-        targetdir (outputbindirproj)
-        objdir (outputintdirproj)
+        targetdir (outputbindir)
+        objdir (outputintdir)
 
         files
         {
