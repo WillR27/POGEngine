@@ -32,6 +32,7 @@ namespace POG::Core
         cameraUpdateViewSystem = ecsManager.RegisterSystem<CameraUpdateViewSystem>();
         meshRendererSystem = ecsManager.RegisterSystem<MeshRendererSystem>();
         physicsSystem = ecsManager.RegisterSystem<PhysicsSystem>();
+        rectColliderRendererSystem = ecsManager.RegisterSystem<RectColliderRendererSystem>();
         spriteRendererSystem = ecsManager.RegisterSystem<SpriteRendererSystem>();
         transformSystem = ecsManager.RegisterSystem<TransformSystem>();
     }

@@ -1,5 +1,7 @@
 #pragma once
 
+#include <glm/gtx/rotate_vector.hpp>
+
 #include "Matrix.h"
 #include "Quaternion.h"
 #include "Vector.h"

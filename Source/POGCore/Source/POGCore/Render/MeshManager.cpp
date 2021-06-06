@@ -33,12 +33,18 @@ namespace POG::Core
 			1, 2, 3
 		};
 
-		Render::Mesh& mesh = defaultMeshManager->CreateMesh("Sprite Mesh");
-		mesh.SetNumberOfVerices(4);
-		mesh.AddAttribute(spritePositions, sizeof(spritePositions), 3);
-		mesh.AddAttribute(spriteTexCoords, sizeof(spriteTexCoords), 2);
-		mesh.SetIndexData(spriteIndices, sizeof(spriteIndices));
-		mesh.Build();
+		Render::Mesh& spriteMesh = defaultMeshManager->CreateMesh("Sprite Mesh");
+		spriteMesh.SetNumberOfVerices(4);
+		spriteMesh.AddAttribute(spritePositions, sizeof(spritePositions), 3);
+		spriteMesh.AddAttribute(spriteTexCoords, sizeof(spriteTexCoords), 2);
+		spriteMesh.SetIndexData(spriteIndices, sizeof(spriteIndices));
+		spriteMesh.Build();
+
+		Render::Mesh& wireframeMesh = defaultMeshManager->CreateMesh("Wireframe Mesh");
+		wireframeMesh.SetNumberOfVerices(4);
+		wireframeMesh.AddAttribute(spritePositions, sizeof(spritePositions), 3);
+		wireframeMesh.SetIndexData(spriteIndices, sizeof(spriteIndices));
+		wireframeMesh.Build();
 	}
 
 	MeshManager::MeshManager()

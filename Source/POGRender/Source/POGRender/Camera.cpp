@@ -25,12 +25,11 @@ namespace POG::Render
 	void Camera::UpdateView(Maths::Vec3 parentPosition, Maths::Quat parentOrientation)
 	{
 		cameraOrientation = Maths::Quat(Maths::Vec3(pitch, yaw, 0.0f));
-		//cameraOrientation.w *= -1.0f; // Invert view matrix rotation axes
-		//parentOrientation.w *= -1.0f; // Invert view matrix rotation axes
 
-		forwardVec = Maths::ToForwardVec(parentOrientation * cameraOrientation);
-		upVec = Maths::ToUpVec(parentOrientation * cameraOrientation);
-		rightVec = Maths::ToRightVec(parentOrientation * cameraOrientation);
+		Maths::Quat orientation = Maths::Normalise(parentOrientation * cameraOrientation);
+		forwardVec = Maths::ToForwardVec(orientation);
+		upVec = Maths::ToUpVec(orientation);
+		rightVec = Maths::ToRightVec(orientation);
 
 		view = glm::lookAt(parentPosition, parentPosition + forwardVec, upVec);
 	}

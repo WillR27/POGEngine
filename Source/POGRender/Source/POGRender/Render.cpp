@@ -23,6 +23,7 @@ namespace POG::Render
 	void Init()
 	{
 		glDebugMessageCallback(ErrorCallback, nullptr);
+		glLineWidth(3.0f);
 	}
 
 	void ClearColour(float r, float g, float b, float a)

@@ -86,6 +86,41 @@ namespace POG::Core
 		}
 	}
 
+	Signature RectColliderRendererSystem::GetSignature(ECSManager& ecsManager)
+	{
+		Signature signature;
+		signature.set(ecsManager.GetComponentTypeId<RectCollider>());
+		signature.set(ecsManager.GetComponentTypeId<Transform>());
+		return signature;
+	}
+
+	void RectColliderRendererSystem::Frame(float alpha)
+	{
+		POG::Render::SetPolygonMode(POG_FRONT_AND_BACK, POG_LINE);
+
+		Render::Mesh& mesh = MeshManager::GetDefaultMesh("Wireframe Mesh");
+
+		for (EntityId entityId : entityIds)
+		{
+			auto& rectCollider = ecsManager.GetComponent<RectCollider>(entityId);
+			auto& transform = ecsManager.GetComponent<Transform>(entityId);
+
+			Maths::Vec3 position = Maths::Lerp(transform.prevPosition, transform.position, alpha);
+			Maths::Quat orientation = Maths::Lerp(transform.prevOrientation, transform.orientation, alpha);
+			Maths::Vec3 scale = Maths::Lerp(transform.prevScale, transform.scale, alpha);
+
+			Render::Shader& shader = ShaderManager::GetDefaultShader("Wireframe Shader");
+			shader.Use();
+			shader.SetMatrix4fv("view", 1, false, Maths::ToData(Render::Camera::MainCamera->GetView()));
+			shader.SetMatrix4fv("projection", 1, false, Maths::ToData(Render::Camera::MainCamera->GetProjection()));
+			shader.SetMatrix4fv("model", 1, false, Maths::ToData(Maths::ToModelMatrix(position, orientation, scale)));
+
+			mesh.Render();
+		}
+
+		POG::Render::SetPolygonMode(POG_FRONT_AND_BACK, POG_FILL);
+	}
+
 	Signature SpriteRendererSystem::GetSignature(ECSManager& ecsManager)
 	{
 		Signature signature;

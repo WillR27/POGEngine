@@ -209,8 +209,8 @@ void main()
 		POG::Core::RectCollider& squareRectCollider = square.GetComponent<POG::Core::RectCollider>();
 
 		// No idea what normalising needs doing
+		squareTransform.orientation *= POG::Maths::Quat(POG::Maths::Vec3(0.0f, 1.0f * dt, 0.0f));
 		squareTransform.orientation = POG::Maths::Normalise(squareTransform.orientation);
-		squareTransform.orientation *= POG::Maths::Normalise(POG::Maths::Quat(POG::Maths::Vec3(1.0f * dt, 1.0f * dt, 1.0f * dt)));
 
 		POG::Core::Transform& playerTransform = player.GetComponent<POG::Core::Transform>();
 
@@ -285,6 +285,7 @@ void main()
 
 		GetMeshRendererSystem().Frame(alpha);
 		GetSpriteRendererSystem().Frame(alpha);
+		GetRectColliderRendererSystem().Frame(alpha);
 	}
 
 

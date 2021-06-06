@@ -44,6 +44,19 @@ namespace POG::Core
 		void Update(float dt);
 	};
 
+	class RectColliderRendererSystem : public System
+	{
+	public:
+		RectColliderRendererSystem(ECSManager& ecsManager)
+			: System::System(ecsManager)
+		{
+		}
+
+		static Signature GetSignature(ECSManager& ecsManager);
+
+		void Frame(float alpha);
+	};
+
 	class SpriteRendererSystem : public System
 	{
 	public:
