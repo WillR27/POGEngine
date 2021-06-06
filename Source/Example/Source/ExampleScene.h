@@ -5,18 +5,27 @@
 
 namespace Example
 {
-	class ExampleApplication : public POG::Core::Application
+	class ExampleScene : public POG::Core::Scene
 	{
 	public:
-		ExampleApplication();
+		ExampleScene() = default;
+
+		virtual ~ExampleScene() = default;
 
 		void Init() override;
 
-		void TryUpdate(float timeBetweenLoops) override;
-		void TryFrame(float timeBetweenLoops) override;
+		void Exit() override;
 
 		void Input(POG::Core::InputPackage& inputPackage, float dt) override;
 		void Update(float dt) override;
 		void Frame(float alpha) override;
+
+	private:
+		POG::Core::Entity player;
+		POG::Core::Entity square;
+		POG::Core::Entity child;
+
+		bool flip;
 	};
 }
+

@@ -9,299 +9,12 @@
 #include "POGLog.h"
 #include "POGGraphics.h"
 
+#include "ExampleScene.h"
+
+using namespace POG;
+
 namespace Example
 {
-	void ExampleScene::Init()
-	{
-		const char* vertexShaderSource = R"(
-#version 330 core
-layout (location = 0) in vec3 aPos;
-
-void main()
-{
-	gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);
-}
-)";
-
-		const char* fragmentShaderSource = R"(
-#version 330 core
-out vec4 FragColor;
-
-void main()
-{
-	FragColor = vec4(0.0f, 0.2f, 0.9f, 1.0f);
-}
-)";
-
-		shader.Init(vertexShaderSource, fragmentShaderSource);
-
-		meshShader = std::make_shared<POG::Graphics::Shader>();
-		vertexShaderSource = R"(
-#version 330 core
-layout (location = 0) in vec3 aPos;
-layout (location = 1) in vec3 aColour;
-
-uniform mat4 model;
-uniform mat4 view;
-uniform mat4 projection;
-
-//uniform vec4 colourIn;
-
-out vec3 colour;
-
-void main()
-{
-    gl_Position = projection * view * model * vec4(aPos, 1.0);
-	//gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);
-	colour = aColour;
-	//colour = vec3(colourIn.r, colourIn.g, colourIn.b);
-}
-)";
-
-		fragmentShaderSource = R"(
-#version 330 core
-in vec3 colour;
-
-out vec4 FragColor;
-
-void main()
-{
-	//FragColor = vec4(0.0f, 0.2f, 0.9f, 1.0f);
-    FragColor = vec4(colour, 1.0);
-} 
-)";
-
-		meshShader->Init(vertexShaderSource, fragmentShaderSource);
-
-		mesh = std::make_shared <POG::Graphics::Mesh>();
-		//mesh->SetPositionData(POG::Graphics::squarePositions, sizeof(POG::Graphics::squarePositions));
-		//mesh->SetColourData(POG::Graphics::squareColours, sizeof(POG::Graphics::squareColours));
-		//mesh->Build();
-
-		material = std::make_shared<POG::Graphics::Material>();
-		material->AddColour("colourIn", POG::Maths::Vec4(1.0f, 0.0f, 0.0f, 1.0f));
-		material->SetShader(meshShader);
-
-		POG::Graphics::Texture& blobTexture = POG::Core::TextureManager::CreateGlobalTexture("Blob");
-		blobTexture.LoadFromImage("Resources\\Sprites\\Square.png");
-
-		player = GetECSManager().CreateEntity();
-		player.SetName("Player");
-		player.AddComponent(POG::Core::AttachedCamera
-			{
-				.camera = POG::Core::Camera::MainCamera,
-			});
-		player.AddComponent(POG::Core::RigidBody
-			{
-				.force = POG::Maths::Vec3(0.0f, 0.0f, 0.0f),
-				.velocity = POG::Maths::Vec3(0.0f, 0.0f, 0.0f),
-				.mass = 1.0f,
-				.dragCoef = 1.0f
-			});
-		player.AddComponent(POG::Core::Transform
-			{
-				.position = POG::Maths::Vec3(0.0f, 0.0f, -2.0f),
-				.orientation = POG::Maths::Quat(POG::Maths::Vec3(0.0f, 0.0f, 0.0f)),
-				.scale = POG::Maths::Vec3(1.0f, 1.0f, 1.0f),
-			});
-
-		square = GetECSManager().CreateEntity();
-		square.SetName("Square");
-		square.AddComponent(POG::Core::Transform
-			{
-				.position = POG::Maths::Vec3(1.0f, -1.2f, 1.1f),
-				.orientation = POG::Maths::Quat(POG::Maths::Vec3(0.0f, 0.0f, 0.0f)),
-				.scale = POG::Maths::Vec3(1.0f, 1.0f, 1.0f),
-			});
-		square.AddComponent(POG::Core::RectCollider
-			{
-				.min = POG::Maths::Vec2(-0.5f, -0.5f),
-				.max = POG::Maths::Vec2(0.5f, 0.5f),
-			});
-		/*square.AddComponent(POG::Core::MeshRenderer
-			{
-				.mesh = mesh,
-				.material = material,
-			});*/
-		square.AddComponent(POG::Core::Sprite
-			{
-				.texture = &blobTexture,
-			});
-
-		child = GetECSManager().CreateEntity();
-	}
-
-	void ExampleScene::Exit()
-	{
-	}
-
-	void ExampleScene::Input(POG::Core::InputPackage& inputPackage, float dt)
-	{
-		POG::Core::Transform& squareTransform = square.GetComponent<POG::Core::Transform>();
-		POG::Core::RectCollider& squareRectCollider = square.GetComponent<POG::Core::RectCollider>();
-		
-		POG::Core::Transform& playerTransform = player.GetComponent<POG::Core::Transform>();
-		POG::Core::RigidBody& playerRigidBody = player.GetComponent<POG::Core::RigidBody>();
-		POG::Core::AttachedCamera& playerCamera = player.GetComponent<POG::Core::AttachedCamera>();
-
-		float moveSpeed = 3.0f;
-		playerRigidBody.velocity =
-			(((playerCamera.camera->GetForwardVec() * static_cast<float>(inputPackage.GetAxisValue("Vertical"))) +
-				(playerCamera.camera->GetRightVec() * static_cast<float>(inputPackage.GetAxisValue("Horizontal")))) +
-				POG::Maths::Vec3(0.0f, static_cast<float>(inputPackage.GetAxisValue("Fly")), 0.0f)) * moveSpeed;
-
-		if (inputPackage.HasMouseMoved())
-		{
-			float lookSpeed = 0.1f;
-			//playerCamera.camera->AddPitchAndYaw(POG::Core::Input::GetDeltaMouseY() * dt * lookSpeed, POG::Core::Input::GetDeltaMouseX() * dt * lookSpeed);
-
-			//auto& sprite = square.GetComponent<POG::Core::Sprite>();
-
-			//POG::Core::TextureManager::DestroyGlobalTexture("Blob");
-			//POG::Graphics::Texture& blobTexture = POG::Core::TextureManager::CreateGlobalTexture("Bloboid");
-			//blobTexture.LoadFromImage("Resources\\Sprites\\Blob.png");
-
-			//sprite.texture = &blobTexture;
-		}
-
-		if (inputPackage.HasActionOccurred("Left"))
-		{
-			POG::Core::Ray ray = POG::Core::CalcMouseRay(playerTransform.position);
-			POG::Core::RayResultRectCollider result = POG::Core::Hits(ray, squareTransform, squareRectCollider);
-			if (result.hit)
-			{
-				POG_TRACE("{0}, {1}, {2}", result.pointOfIntersection.x, result.pointOfIntersection.y, result.pointOfIntersection.z);
-				POG_WARN("{0}, {1}", result.pointOnRect.x, result.pointOnRect.y);
-			}
-		}
-
-		if (inputPackage.HasActionOccurred("Right") && !child.IsValid())
-		{
-			child = GetECSManager().CreateEntity();
-			child.SetParent(square);
-
-			GetECSManager().CreateEntity().SetParent(child);
-			GetECSManager().CreateEntity().SetParent(child);
-			GetECSManager().CreateEntity().SetParent(child);
-			GetECSManager().CreateEntity().SetParent(child);
-			GetECSManager().CreateEntity().SetParent(child);
-			GetECSManager().CreateEntity().SetParent(child);
-			GetECSManager().CreateEntity().SetParent(child);
-			GetECSManager().CreateEntity().SetParent(child);
-			GetECSManager().CreateEntity().SetParent(child);
-			GetECSManager().CreateEntity().SetParent(child);
-			GetECSManager().CreateEntity().SetParent(child);
-			GetECSManager().CreateEntity().SetParent(child);
-			GetECSManager().CreateEntity().SetParent(child);
-			GetECSManager().CreateEntity().SetParent(child);
-			GetECSManager().CreateEntity().SetParent(child);
-			GetECSManager().CreateEntity().SetParent(child);
-			GetECSManager().CreateEntity().SetParent(child);
-			GetECSManager().CreateEntity().SetParent(child);
-			GetECSManager().CreateEntity().SetParent(child);
-			GetECSManager().CreateEntity().SetParent(child);
-
-			POG::Core::Entity child2 = GetECSManager().CreateEntity();
-			child2.SetParent(child);
-
-			GetECSManager().CreateEntity().SetParent(child2);
-			GetECSManager().CreateEntity().SetParent(child2);
-			GetECSManager().CreateEntity().SetParent(child2);
-		}
-		else if (inputPackage.HasActionOccurred("Left") && child.IsValid())
-		{
-			GetECSManager().DestroyEntity(child);
-		}
-	}
-
-	void ExampleScene::Update(float dt)
-	{
-		GetPhysicsSystem().Update(dt);
-
-		POG::Core::Transform& squareTransform = square.GetComponent<POG::Core::Transform>();
-		POG::Core::RectCollider& squareRectCollider = square.GetComponent<POG::Core::RectCollider>();
-
-		// No idea what normalising needs doing
-		squareTransform.orientation *= POG::Maths::Quat(POG::Maths::Vec3(1.0f * dt, 1.0f * dt, 1.0f * dt));
-		squareTransform.orientation = POG::Maths::Normalise(squareTransform.orientation);
-
-		POG::Core::Transform& playerTransform = player.GetComponent<POG::Core::Transform>();
-
-		POG::Core::Ray ray
-		{
-			.origin = playerTransform.position,
-			.direction = POG::Core::Camera::MainCamera->GetForwardVec(),
-		};
-
-		POG::Core::RayResultRectCollider result = POG::Core::Hits(ray, squareTransform, squareRectCollider);
-		if (result.hit)
-		{
-			//POG_TRACE("{0}, {1}, {2}", result.pointOfIntersection.x, result.pointOfIntersection.y, result.pointOfIntersection.z);
-			//POG_WARN("{0}, {1}", result.pointOnRect.x, result.pointOnRect.y);
-		}
-
-		GetTransformSystem().Update(dt);
-		GetCameraUpdateViewSystem().UpdateView();
-	}
-
-	void ExampleScene::Frame(float alpha)
-	{
-		float r = ((float)rand() / (RAND_MAX)) / 3.0f + 0;
-		float g = ((float)rand() / (RAND_MAX)) / 3.0f + 0;
-		float b = ((float)rand() / (RAND_MAX)) / 3.0f + 0;
-
-		POG::Graphics::ClearColour(r, g, b, 1.0f);
-		POG::Graphics::ClearColourBuffer();
-		POG::Graphics::ClearDepthBuffer();
-	
-		POG::Graphics::SetPolygonMode(POG_FRONT_AND_BACK, POG_FILL);
-		//POG::Graphics::SetFrontFace(POG_CW);
-		//POG::Graphics::FaceCulling(false);
-		//POG::Graphics::CullFace(POG_BACK);
-		POG::Graphics::DepthTest(true);
-		POG::Graphics::Blend(true);
-
-		//if (flip)
-		//{
-		//	float vertices[] =
-		//	{
-		//		0.5f, 0.5f, 0.0f,
-		//		-0.5f, 0.5f, 0.0f,
-		//		-0.0f, -0.5f, 0.0f
-		//	};
-
-		//	vbo.Bind();
-		//	vbo.SetVertexData(vertices, sizeof(vertices));
-		//}
-		//else
-		//{
-		//	float vertices[] =
-		//	{
-		//		-0.5f, -0.5f, 0.0f,
-		//		0.5f, -0.5f, 0.0f,
-		//		0.0f,  0.5f, 0.0f
-		//	};
-
-		//	vbo.Bind();
-		//	vbo.SetVertexData(vertices, sizeof(vertices));
-		//}
-
-		//vao.Bind();
-		//vao.SetAttribute(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-
-		//shader.Use();
-
-		//glDrawArrays(GL_TRIANGLES, 0, 3);
-
-		//meshShader->Use();
-		//mesh->Render();
-
-		GetMeshRendererSystem().Frame(alpha);
-		GetSpriteRendererSystem().Frame(alpha);
-		GetRectColliderRendererSystem().Frame(alpha);
-	}
-
-
 	ExampleApplication::ExampleApplication()
 		: Application::Application("POG Example")
 	{
@@ -314,31 +27,31 @@ void main()
 
 		//SetCursorEnabled(false);
 
-		POG::Core::Scene::SetActiveScene(std::make_shared<ExampleScene>());
+		Core::Scene::SetActiveScene(std::make_shared<ExampleScene>());
 
-		GetInputManager().AddAction("Quit", POG::Core::InputInfo(POG::Core::InputType::Keyboard, POG_KEY_ESCAPE, POG_KEY_RELEASE, POG_MOD_ANY));
-		GetInputManager().AddAction("Fullscreen", POG::Core::InputInfo(POG::Core::InputType::Keyboard, POG_KEY_F11, POG_KEY_RELEASE, POG_MOD_ANY));
+		GetInputManager().AddAction("Quit", Core::InputInfo(Core::InputType::Keyboard, POG_KEY_ESCAPE, POG_KEY_RELEASE, POG_MOD_ANY));
+		GetInputManager().AddAction("Fullscreen", Core::InputInfo(Core::InputType::Keyboard, POG_KEY_F11, POG_KEY_RELEASE, POG_MOD_ANY));
 
-		GetInputManager().AddAction("Left", POG::Core::InputInfo(POG::Core::InputType::Mouse, POG_MOUSE_BUTTON_LEFT, POG_KEY_RELEASE));
-		GetInputManager().AddAction("Right", POG::Core::InputInfo(POG::Core::InputType::Mouse, POG_MOUSE_BUTTON_RIGHT, POG_KEY_RELEASE));
+		GetInputManager().AddAction("Left", Core::InputInfo(Core::InputType::Mouse, POG_MOUSE_BUTTON_LEFT, POG_KEY_RELEASE));
+		GetInputManager().AddAction("Right", Core::InputInfo(Core::InputType::Mouse, POG_MOUSE_BUTTON_RIGHT, POG_KEY_RELEASE));
 
 		GetInputManager().AddAxis("Fly",
-			POG::Core::InputInfo(POG::Core::InputType::Keyboard, POG_KEY_LEFT_CONTROL, POG_KEY_PRESS),
-			POG::Core::InputInfo(POG::Core::InputType::Keyboard, POG_KEY_LEFT_CONTROL, POG_KEY_RELEASE),
-			POG::Core::InputInfo(POG::Core::InputType::Keyboard, POG_KEY_SPACE, POG_KEY_PRESS),
-			POG::Core::InputInfo(POG::Core::InputType::Keyboard, POG_KEY_SPACE, POG_KEY_RELEASE));
+			Core::InputInfo(Core::InputType::Keyboard, POG_KEY_LEFT_CONTROL, POG_KEY_PRESS),
+			Core::InputInfo(Core::InputType::Keyboard, POG_KEY_LEFT_CONTROL, POG_KEY_RELEASE),
+			Core::InputInfo(Core::InputType::Keyboard, POG_KEY_SPACE, POG_KEY_PRESS),
+			Core::InputInfo(Core::InputType::Keyboard, POG_KEY_SPACE, POG_KEY_RELEASE));
 
 		GetInputManager().AddAxis("Horizontal",
-			POG::Core::InputInfo(POG::Core::InputType::Keyboard, POG_KEY_A, POG_KEY_PRESS),
-			POG::Core::InputInfo(POG::Core::InputType::Keyboard, POG_KEY_A, POG_KEY_RELEASE),
-			POG::Core::InputInfo(POG::Core::InputType::Keyboard, POG_KEY_D, POG_KEY_PRESS),
-			POG::Core::InputInfo(POG::Core::InputType::Keyboard, POG_KEY_D, POG_KEY_RELEASE));
+			Core::InputInfo(Core::InputType::Keyboard, POG_KEY_A, POG_KEY_PRESS),
+			Core::InputInfo(Core::InputType::Keyboard, POG_KEY_A, POG_KEY_RELEASE),
+			Core::InputInfo(Core::InputType::Keyboard, POG_KEY_D, POG_KEY_PRESS),
+			Core::InputInfo(Core::InputType::Keyboard, POG_KEY_D, POG_KEY_RELEASE));
 		
 		GetInputManager().AddAxis("Vertical",
-			POG::Core::InputInfo(POG::Core::InputType::Keyboard, POG_KEY_S, POG_KEY_PRESS),
-			POG::Core::InputInfo(POG::Core::InputType::Keyboard, POG_KEY_S, POG_KEY_RELEASE),
-			POG::Core::InputInfo(POG::Core::InputType::Keyboard, POG_KEY_W, POG_KEY_PRESS),
-			POG::Core::InputInfo(POG::Core::InputType::Keyboard, POG_KEY_W, POG_KEY_RELEASE));
+			Core::InputInfo(Core::InputType::Keyboard, POG_KEY_S, POG_KEY_PRESS),
+			Core::InputInfo(Core::InputType::Keyboard, POG_KEY_S, POG_KEY_RELEASE),
+			Core::InputInfo(Core::InputType::Keyboard, POG_KEY_W, POG_KEY_PRESS),
+			Core::InputInfo(Core::InputType::Keyboard, POG_KEY_W, POG_KEY_RELEASE));
 	}
 
 	void ExampleApplication::TryUpdate(float timeBetweenLoops)
@@ -351,7 +64,7 @@ void main()
 		Application::TryFrame(timeBetweenLoops);
 	}
 
-	void ExampleApplication::Input(POG::Core::InputPackage& inputPackage, float dt)
+	void ExampleApplication::Input(Core::InputPackage& inputPackage, float dt)
 	{
 		if (inputPackage.HasActionOccurred("Quit", true))
 		{
@@ -375,7 +88,7 @@ void main()
 	}
 }
 
-POG::Core::Application* POG::Core::CreateApplication()
+Core::Application* Core::CreateApplication()
 {
 	return new Example::ExampleApplication();
 }
