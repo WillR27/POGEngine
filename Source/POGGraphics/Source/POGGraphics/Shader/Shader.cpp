@@ -1,10 +1,10 @@
 #include "POGGraphicsPCH.h"
 #include "Shader.h"
 
-#include <glad/glad.h>
-
 #include "POGDebug.h"
 #include "POGLog.h"
+
+#include <glad/glad.h>
 
 namespace POG::Graphics
 {
