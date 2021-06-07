@@ -77,6 +77,8 @@ namespace POG::Core
 			GetMainEventBus().Unsubscribe(this, &Application::OnWindowSizeEvent);
 		}
 
+		GetMainEventBus().Unsubscribe(this, &Application::OnKeyEvent);
+
 		GetMainEventBus().Unsubscribe(inputManager, &InputManager::OnKeyEvent);
 		GetMainEventBus().Unsubscribe(inputManager, &InputManager::OnMouseButtonEvent);
 		GetMainEventBus().Unsubscribe(this, &Application::OnMouseMoveEvent);
@@ -104,6 +106,8 @@ namespace POG::Core
 			Graphics::Init();
 		}
 
+		Input::Init();
+
 		MeshManager::Init();
 		ShaderManager::Init();
 		TextureManager::Init();
@@ -116,6 +120,8 @@ namespace POG::Core
 			GetMainEventBus().Subscribe(window, &Window::OnWindowFocusEvent);
 			GetMainEventBus().Subscribe(this, &Application::OnWindowSizeEvent);
 		}
+
+		GetMainEventBus().Subscribe(this, &Application::OnKeyEvent);
 
 		GetMainEventBus().Subscribe(inputManager, &InputManager::OnKeyEvent);
 		GetMainEventBus().Subscribe(inputManager, &InputManager::OnMouseButtonEvent);
@@ -192,6 +198,7 @@ namespace POG::Core
 
 	void Application::ResetInput()
 	{
+		Input::ResetKeys();
 		Input::ResetMouseDeltas();
 	}
 
@@ -273,6 +280,12 @@ namespace POG::Core
 		Exit();
 
 		e.SetHandled();
+	}
+
+	void Application::OnKeyEvent(KeyEvent& e)
+	{
+		Input::KeyActions[e.key] = e.action;
+		Input::KeyModifiers[e.key] = e.mods;
 	}
 
 	void Application::SetContextAddressFunc(ContextAddressFunc func)

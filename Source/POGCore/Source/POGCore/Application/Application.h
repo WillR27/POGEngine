@@ -85,6 +85,10 @@ namespace POG::Core
 		void OnCursorEnabledEvent(Core::CursorEnabledEvent& e);
 		void OnWindowCloseEvent(WindowCloseEvent& e);
 
+		void OnKeyEvent(KeyEvent& e);
+		//void OnMouseMoveEvent(MouseMoveEvent& e);
+		//void OnMouseButtonEvent(MouseButtonEvent& e);
+
 		bool ShouldClose() const { return shouldClose; };
 
 		void SetContextAddressFunc(ContextAddressFunc func) override;
