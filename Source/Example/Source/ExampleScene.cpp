@@ -146,6 +146,11 @@ namespace Example
 		Core::Transform& squareTransform = square.GetComponent<Core::Transform>();
 		Core::RectCollider& squareRectCollider = square.GetComponent<Core::RectCollider>();
 
+		if (Core::Input::MouseButtonReleased(POG_MOUSE_BUTTON_LEFT))
+		{
+			POG_TRACE("asdsad");
+		}
+
 		// No idea what normalising needs doing
 		squareTransform.orientation *= Maths::Quat(Maths::Vec3(1.0f * dt, 1.0f * dt, 1.0f * dt));
 		squareTransform.orientation = Maths::Normalise(squareTransform.orientation);

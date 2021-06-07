@@ -29,29 +29,29 @@ namespace Example
 
 		Core::Scene::SetActiveScene(std::make_shared<ExampleScene>());
 
-		GetInputManager().AddAction("Quit", Core::InputInfo(Core::InputType::Keyboard, POG_KEY_ESCAPE, POG_KEY_RELEASE, POG_MOD_ANY));
-		GetInputManager().AddAction("Fullscreen", Core::InputInfo(Core::InputType::Keyboard, POG_KEY_F11, POG_KEY_RELEASE, POG_MOD_ANY));
+		GetInputManager().AddAction("Quit", Core::InputInfo(Core::InputType::Keyboard, POG_KEY_ESCAPE, POG_INPUT_RELEASE, POG_MOD_ANY));
+		GetInputManager().AddAction("Fullscreen", Core::InputInfo(Core::InputType::Keyboard, POG_KEY_F11, POG_INPUT_RELEASE, POG_MOD_ANY));
 
-		GetInputManager().AddAction("Left", Core::InputInfo(Core::InputType::Mouse, POG_MOUSE_BUTTON_LEFT, POG_KEY_RELEASE));
-		GetInputManager().AddAction("Right", Core::InputInfo(Core::InputType::Mouse, POG_MOUSE_BUTTON_RIGHT, POG_KEY_RELEASE));
+		GetInputManager().AddAction("Left", Core::InputInfo(Core::InputType::Mouse, POG_MOUSE_BUTTON_LEFT, POG_INPUT_RELEASE));
+		GetInputManager().AddAction("Right", Core::InputInfo(Core::InputType::Mouse, POG_MOUSE_BUTTON_RIGHT, POG_INPUT_RELEASE));
 
 		GetInputManager().AddAxis("Fly",
-			Core::InputInfo(Core::InputType::Keyboard, POG_KEY_LEFT_CONTROL, POG_KEY_PRESS),
-			Core::InputInfo(Core::InputType::Keyboard, POG_KEY_LEFT_CONTROL, POG_KEY_RELEASE),
-			Core::InputInfo(Core::InputType::Keyboard, POG_KEY_SPACE, POG_KEY_PRESS),
-			Core::InputInfo(Core::InputType::Keyboard, POG_KEY_SPACE, POG_KEY_RELEASE));
+			Core::InputInfo(Core::InputType::Keyboard, POG_KEY_LEFT_CONTROL, POG_INPUT_PRESS),
+			Core::InputInfo(Core::InputType::Keyboard, POG_KEY_LEFT_CONTROL, POG_INPUT_RELEASE),
+			Core::InputInfo(Core::InputType::Keyboard, POG_KEY_SPACE, POG_INPUT_PRESS),
+			Core::InputInfo(Core::InputType::Keyboard, POG_KEY_SPACE, POG_INPUT_RELEASE));
 
 		GetInputManager().AddAxis("Horizontal",
-			Core::InputInfo(Core::InputType::Keyboard, POG_KEY_A, POG_KEY_PRESS),
-			Core::InputInfo(Core::InputType::Keyboard, POG_KEY_A, POG_KEY_RELEASE),
-			Core::InputInfo(Core::InputType::Keyboard, POG_KEY_D, POG_KEY_PRESS),
-			Core::InputInfo(Core::InputType::Keyboard, POG_KEY_D, POG_KEY_RELEASE));
+			Core::InputInfo(Core::InputType::Keyboard, POG_KEY_A, POG_INPUT_PRESS),
+			Core::InputInfo(Core::InputType::Keyboard, POG_KEY_A, POG_INPUT_RELEASE),
+			Core::InputInfo(Core::InputType::Keyboard, POG_KEY_D, POG_INPUT_PRESS),
+			Core::InputInfo(Core::InputType::Keyboard, POG_KEY_D, POG_INPUT_RELEASE));
 		
 		GetInputManager().AddAxis("Vertical",
-			Core::InputInfo(Core::InputType::Keyboard, POG_KEY_S, POG_KEY_PRESS),
-			Core::InputInfo(Core::InputType::Keyboard, POG_KEY_S, POG_KEY_RELEASE),
-			Core::InputInfo(Core::InputType::Keyboard, POG_KEY_W, POG_KEY_PRESS),
-			Core::InputInfo(Core::InputType::Keyboard, POG_KEY_W, POG_KEY_RELEASE));
+			Core::InputInfo(Core::InputType::Keyboard, POG_KEY_S, POG_INPUT_PRESS),
+			Core::InputInfo(Core::InputType::Keyboard, POG_KEY_S, POG_INPUT_RELEASE),
+			Core::InputInfo(Core::InputType::Keyboard, POG_KEY_W, POG_INPUT_PRESS),
+			Core::InputInfo(Core::InputType::Keyboard, POG_KEY_W, POG_INPUT_RELEASE));
 	}
 
 	void ExampleApplication::TryUpdate(float timeBetweenLoops)

@@ -77,11 +77,9 @@ namespace POG::Core
 			GetMainEventBus().Unsubscribe(this, &Application::OnWindowSizeEvent);
 		}
 
-		GetMainEventBus().Unsubscribe(this, &Application::OnKeyEvent);
-
 		GetMainEventBus().Unsubscribe(inputManager, &InputManager::OnKeyEvent);
 		GetMainEventBus().Unsubscribe(inputManager, &InputManager::OnMouseButtonEvent);
-		GetMainEventBus().Unsubscribe(this, &Application::OnMouseMoveEvent);
+		GetMainEventBus().Unsubscribe(inputManager, &InputManager::OnMouseMoveEvent);
 
 		// This only applies to a standalone app that is run via Run()
 		// In the editor Run() is never used
@@ -121,11 +119,9 @@ namespace POG::Core
 			GetMainEventBus().Subscribe(this, &Application::OnWindowSizeEvent);
 		}
 
-		GetMainEventBus().Subscribe(this, &Application::OnKeyEvent);
-
 		GetMainEventBus().Subscribe(inputManager, &InputManager::OnKeyEvent);
 		GetMainEventBus().Subscribe(inputManager, &InputManager::OnMouseButtonEvent);
-		GetMainEventBus().Subscribe(this, &Application::OnMouseMoveEvent);
+		GetMainEventBus().Subscribe(inputManager, &InputManager::OnMouseMoveEvent);
 
 		inputManager.AddInputCallback(POG_BIND_FN_THIS(Input));
 	}
@@ -200,6 +196,7 @@ namespace POG::Core
 	{
 		Input::ResetKeys();
 		Input::ResetMouseDeltas();
+		Input::ResetMouseButtons();
 	}
 
 	void Application::Input()
@@ -282,12 +279,6 @@ namespace POG::Core
 		e.SetHandled();
 	}
 
-	void Application::OnKeyEvent(KeyEvent& e)
-	{
-		Input::KeyActions[e.key] = e.action;
-		Input::KeyModifiers[e.key] = e.mods;
-	}
-
 	void Application::SetContextAddressFunc(ContextAddressFunc func)
 	{
 		Graphics::SetContextAddressFunc(func);
@@ -333,13 +324,6 @@ namespace POG::Core
 		}
 
 		e.SetHandled();
-	}
-
-	void Application::OnMouseMoveEvent(MouseMoveEvent& e)
-	{
-		Input::SetMouseXY(e.mouseX, e.mouseY);
-
-		inputManager.OnMouseMoveEvent(e);
 	}
 }
 

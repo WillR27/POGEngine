@@ -61,8 +61,8 @@ namespace POG::Editor
 		GetMainEventBus().Subscribe(this, &POGEditor::OnClientPauseEvent);
 		GetMainEventBus().Subscribe(this, &POGEditor::OnClientStopEvent);
 
-		GetInputManager().AddAction("Quit", Core::InputInfo(Core::InputType::Keyboard, POG_KEY_ESCAPE, POG_KEY_RELEASE, POG_MOD_ANY));
-		GetInputManager().AddAction("Fullscreen", Core::InputInfo(Core::InputType::Keyboard, POG_KEY_F11, POG_KEY_RELEASE, POG_MOD_ANY));
+		GetInputManager().AddAction("Quit", Core::InputInfo(Core::InputType::Keyboard, POG_KEY_ESCAPE, POG_INPUT_RELEASE, POG_MOD_ANY));
+		GetInputManager().AddAction("Fullscreen", Core::InputInfo(Core::InputType::Keyboard, POG_KEY_F11, POG_INPUT_RELEASE, POG_MOD_ANY));
 
 		Core::Scene::SetActiveScene(std::make_shared<POGEditorScene>());
 	}

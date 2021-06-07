@@ -126,10 +126,10 @@
 
 #define POG_MAX_KEY_VALUE			350
 
-#define POG_KEY_EMPTY			   -1
-#define POG_KEY_RELEASE				0
-#define POG_KEY_PRESS          		1
-#define POG_KEY_REPEAT  			2
+#define POG_INPUT_NONE			   -1
+#define POG_INPUT_RELEASE			0
+#define POG_INPUT_PRESS        		1
+#define POG_INPUT_REPEAT  			2
 
 #define POG_MOUSE_BUTTON_1			0
 #define POG_MOUSE_BUTTON_2			1
@@ -144,6 +144,8 @@
 #define POG_MOUSE_BUTTON_RIGHT		POG_MOUSE_BUTTON_2
 #define POG_MOUSE_BUTTON_MIDDLE		POG_MOUSE_BUTTON_3
 
+#define POG_MAX_MOUSE_VALUE			10
+
 #define POG_MOD_ANY				   -0x0001
 #define POG_MOD_NONE				0x0000
 #define POG_MOD_SHIFT				0x0001
@@ -155,9 +157,12 @@
 
 namespace POG::Core
 {
+	struct KeyEvent;
+	struct MouseMoveEvent;
+	struct MouseButtonEvent;
+
 	class Input
 	{
-		friend struct MouseMoveEvent;
 		friend class Application;
 
 	public:
@@ -174,10 +179,17 @@ namespace POG::Core
 		static float GetDeltaMouseX() { return DeltaMouseX; }
 		static float GetDeltaMouseY() { return DeltaMouseY; }
 
+		static bool MouseButtonPressed(int button, int mod = POG_MOD_NONE);
+		static bool MouseButtonReleased(int button, int mod = POG_MOD_NONE);
+
 	private:
-		// Stores the most recent state since last frame
+		// Stores the most recent key states since last update
 		static std::array<int, POG_MAX_KEY_VALUE> KeyActions;
 		static std::array<int, POG_MAX_KEY_VALUE> KeyModifiers;
+
+		// Stores the most recent mouse button states since last update
+		static std::array<int, POG_MAX_MOUSE_VALUE> MouseActions;
+		static std::array<int, POG_MAX_MOUSE_VALUE> MouseModifiers;
 
 		static bool ShouldResetMouseMovement;
 		static float MouseX, MouseY;
@@ -186,9 +198,16 @@ namespace POG::Core
 
 		static void ResetKeys();
 
+		static void OnKeyEvent(KeyEvent& e);
+
 		static void ResetMouseMovement();
 		static void ResetMouseDeltas();
 		static void SetMouseXY(float x, float y);
+
+		static void ResetMouseButtons();
+
+		static void OnMouseMoveEvent(MouseMoveEvent& e);
+		static void OnMouseButtonEvent(MouseButtonEvent& e);
 	};
 }
 

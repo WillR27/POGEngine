@@ -57,7 +57,7 @@ namespace POG::Core
 		std::string ToString() const override
 		{
 			std::stringstream ss;
-			ss << GetName() << ": " << "MouseX:" << Input::MouseX << ", MouseY: " << Input::MouseY;
+			ss << GetName() << ": " << "MouseX:" << mouseX << ", MouseY: " << mouseY;
 			return ss.str();
 		}
 	};
