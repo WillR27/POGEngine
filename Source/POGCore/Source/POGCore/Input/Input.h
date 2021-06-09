@@ -5,9 +5,9 @@
 
 namespace POG::Core
 {
-	struct KeyEvent;
-	struct MouseMoveEvent;
-	struct MouseButtonEvent;
+	struct RawKeyEvent;
+	struct RawMouseMoveEvent;
+	struct RawMouseButtonEvent;
 
 	class Input
 	{
@@ -56,7 +56,7 @@ namespace POG::Core
 
 		static void ResetKeys();
 
-		static void OnKeyEvent(KeyEvent& e);
+		static void OnKeyEvent(RawKeyEvent& e);
 
 		static void ResetMouseMovement();
 		static void ResetMouseDeltas();
@@ -64,8 +64,8 @@ namespace POG::Core
 
 		static void ResetMouseButtons();
 
-		static void OnMouseMoveEvent(MouseMoveEvent& e);
-		static void OnMouseButtonEvent(MouseButtonEvent& e);
+		static void OnMouseMoveEvent(RawMouseMoveEvent& e);
+		static void OnMouseButtonEvent(RawMouseButtonEvent& e);
 
 		static void Dispatch(float dt);
 	};

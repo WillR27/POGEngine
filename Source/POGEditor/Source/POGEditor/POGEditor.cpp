@@ -134,7 +134,7 @@ namespace POG::Editor
 		}
 	}
 
-	void POGEditor::OnKeyEvent(Core::KeyEvent& e)
+	void POGEditor::OnKeyEvent(Core::RawKeyEvent& e)
 	{
 		if (e.key == POG_KEY_ESCAPE || e.key == POG_KEY_F11)
 		{
@@ -142,11 +142,11 @@ namespace POG::Editor
 		}
 	}
 
-	void POGEditor::OnMouseButtonEvent(Core::MouseButtonEvent& e)
+	void POGEditor::OnMouseButtonEvent(Core::RawMouseButtonEvent& e)
 	{
 	}
 
-	void POGEditor::OnMouseMoveEvent(Core::MouseMoveEvent& e)
+	void POGEditor::OnMouseMoveEvent(Core::RawMouseMoveEvent& e)
 	{
 
 	}

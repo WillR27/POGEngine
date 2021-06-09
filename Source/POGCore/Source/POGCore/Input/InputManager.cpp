@@ -37,7 +37,7 @@ namespace POG::Core
 		inputPackage.Clear();
 	}
 
-	void InputManager::OnKeyEvent(KeyEvent& e)
+	void InputManager::OnKeyEvent(RawKeyEvent& e)
 	{
 		InputInfo eventInputInfo(InputType::Keyboard, e.key, e.action, e.mods);
 		bool handled = false;
@@ -131,7 +131,7 @@ namespace POG::Core
 		}
 	}
 
-	void InputManager::OnMouseMoveEvent(MouseMoveEvent& e)
+	void InputManager::OnMouseMoveEvent(RawMouseMoveEvent& e)
 	{
 		inputPackage.SetMouseMoved();
 
@@ -141,7 +141,7 @@ namespace POG::Core
 		}
 	}
 
-	void InputManager::OnMouseButtonEvent(MouseButtonEvent& e)
+	void InputManager::OnMouseButtonEvent(RawMouseButtonEvent& e)
 	{
 		InputInfo eventInputInfo(InputType::Mouse, e.button, e.action, e.mods); // TODO: Merge with key inputs as they are the same?
 		bool handled = false;

@@ -44,9 +44,9 @@ namespace POG::Core
 
 		void Dispatch(float dt);
 
-		void OnKeyEvent(KeyEvent& e);
-		void OnMouseMoveEvent(MouseMoveEvent& e);
-		void OnMouseButtonEvent(MouseButtonEvent& e);
+		void OnKeyEvent(RawKeyEvent& e);
+		void OnMouseMoveEvent(RawMouseMoveEvent& e);
+		void OnMouseButtonEvent(RawMouseButtonEvent& e);
 
 		void AddInputCallback(InputCallback inputCallback);
 

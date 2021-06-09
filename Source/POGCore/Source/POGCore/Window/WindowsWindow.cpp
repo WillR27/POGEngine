@@ -109,21 +109,21 @@ namespace POG::Core
 			{
 				WindowData& windowData = GetWindowData(window);
 
-				Application::GetInstance().GetMainEventBus().Publish(KeyEvent(key, scancode, action, mods));
+				Application::GetInstance().GetMainEventBus().Publish(RawKeyEvent(key, scancode, action, mods));
 			});
 
 		glfwSetCursorPosCallback(window, [](GLFWwindow* window, double posX, double posY)
 			{
 				WindowData& windowData = GetWindowData(window);
 
-				Application::GetInstance().GetMainEventBus().Publish(MouseMoveEvent(static_cast<float>(posX), static_cast<float>(posY)));
+				Application::GetInstance().GetMainEventBus().Publish(RawMouseMoveEvent(static_cast<float>(posX), static_cast<float>(posY)));
 			});
 
 		glfwSetMouseButtonCallback(window, [](GLFWwindow* window, int button, int action, int mods)
 			{
 				WindowData& windowData = GetWindowData(window);
 
-				Application::GetInstance().GetMainEventBus().Publish(MouseButtonEvent(button, action, mods));
+				Application::GetInstance().GetMainEventBus().Publish(RawMouseButtonEvent(button, action, mods));
 			});
 	}
 

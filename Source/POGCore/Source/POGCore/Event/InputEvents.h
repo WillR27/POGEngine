@@ -12,11 +12,11 @@ namespace POG::Core
 		}
 	};
 
-	POG_EVENT(KeyEvent, InputEvent)
+	POG_EVENT(RawKeyEvent, InputEvent)
 	{
 		int key, scancode, action, mods;
 
-		KeyEvent(int key, int scancode, int action, int mods)
+		RawKeyEvent(int key, int scancode, int action, int mods)
 			: key(key)
 			, scancode(scancode)
 			, action(action)
@@ -26,7 +26,7 @@ namespace POG::Core
 
 		const char* GetName() const override
 		{
-			return STRINGIFY(KeyEvent);
+			return STRINGIFY(RawKeyEvent);
 		}
 
 		std::string ToString() const override
@@ -37,11 +37,11 @@ namespace POG::Core
 		}
 	};
 
-	POG_EVENT(MouseMoveEvent, InputEvent)
+	POG_EVENT(RawMouseMoveEvent, InputEvent)
 	{
 		float mouseX, mouseY;
 
-		MouseMoveEvent(float mouseX, float mouseY)
+		RawMouseMoveEvent(float mouseX, float mouseY)
 			: mouseX(mouseX)
 			, mouseY(mouseY)
 		{
@@ -49,7 +49,7 @@ namespace POG::Core
 
 		const char* GetName() const override
 		{
-			return STRINGIFY(MouseMoveEvent);
+			return STRINGIFY(RawMouseMoveEvent);
 		}
 
 		std::string ToString() const override
@@ -60,11 +60,11 @@ namespace POG::Core
 		}
 	};
 
-	POG_EVENT(MouseButtonEvent, InputEvent)
+	POG_EVENT(RawMouseButtonEvent, InputEvent)
 	{
 		int button, action, mods;
 
-		MouseButtonEvent(int button, int action, int mods)
+		RawMouseButtonEvent(int button, int action, int mods)
 			: button(button)
 			, action(action)
 			, mods(mods)
@@ -73,7 +73,7 @@ namespace POG::Core
 
 		const char* GetName() const override
 		{
-			return STRINGIFY(MouseButtonEvent);
+			return STRINGIFY(RawMouseButtonEvent);
 		}
 
 		std::string ToString() const override

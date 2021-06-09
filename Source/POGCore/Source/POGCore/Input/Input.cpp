@@ -91,7 +91,7 @@ namespace POG::Core
 		}
 	}
 
-	void Input::OnKeyEvent(KeyEvent& e)
+	void Input::OnKeyEvent(RawKeyEvent& e)
 	{
 		Input::KeyActions[e.key] = e.action;
 		Input::KeyModifiers[e.key] = e.mods;
@@ -141,7 +141,7 @@ namespace POG::Core
 		}
 	}
 
-	void Input::OnMouseMoveEvent(MouseMoveEvent& e)
+	void Input::OnMouseMoveEvent(RawMouseMoveEvent& e)
 	{
 		MouseHasMoved = true;
 
@@ -150,7 +150,7 @@ namespace POG::Core
 		GlobalInputManager.OnMouseMoveEvent(e);
 	}
 
-	void Input::OnMouseButtonEvent(MouseButtonEvent& e)
+	void Input::OnMouseButtonEvent(RawMouseButtonEvent& e)
 	{
 		Input::MouseActions[e.button] = e.action;
 		Input::MouseModifiers[e.button] = e.mods;

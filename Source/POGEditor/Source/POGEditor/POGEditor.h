@@ -55,9 +55,9 @@ namespace POG::Editor
 		bool wasCursorEnabled;
 
 		void OnInputEvent(Core::InputEvent& e);
-		void OnKeyEvent(Core::KeyEvent& e);
-		void OnMouseButtonEvent(Core::MouseButtonEvent& e);
-		void OnMouseMoveEvent(Core::MouseMoveEvent& e);
+		void OnKeyEvent(Core::RawKeyEvent& e);
+		void OnMouseButtonEvent(Core::RawMouseButtonEvent& e);
+		void OnMouseMoveEvent(Core::RawMouseMoveEvent& e);
 
 		void OnClientFocusedEvent(ClientFocusedEvent& e);
 		void OnClientPlayEvent(ClientPlayEvent& e);
