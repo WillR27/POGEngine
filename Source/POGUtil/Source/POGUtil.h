@@ -1,6 +1,7 @@
 #pragma once
 
 #include "POGUtil/Data/SpareSet.h"
+#include "POGUtil/Function/Function.h"
 #include "POGUtil/Images/Images.h"
 #include "POGUtil/Strings/Hash.h"
 #include "POGUtil/Strings/StringsUtil.h"
