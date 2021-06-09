@@ -130,28 +130,20 @@ namespace POG::Util
 			Reset(func, obj);
 		}
 
-		~Function()
-		{
-			delete functor;
-		}
-
 		void Reset(std::function<R(Args...)> func)
 		{
-			delete functor;
-			functor = new LambdaFunctor<R(Args...)>(func);
+			functor.reset(new LambdaFunctor<R(Args...)>(func));
 		}
 
 		void Reset(R(*func)(Args...))
 		{
-			delete functor;
-			functor = new FreeFunctor<R(Args...)>(func);
+			functor.reset(new FreeFunctor<R(Args...)>(func));
 		}
 
 		template<class T>
 		void Reset(R(T::*func)(Args...), T* obj)
 		{
-			delete functor;
-			functor = new MemberFunctor<R(T::*)(Args...)>(func, obj);
+			functor.reset(new MemberFunctor<R(T::*)(Args...)>(func, obj));
 		}
 
 		R operator()(Args... args)
@@ -160,7 +152,7 @@ namespace POG::Util
 		}
 
 	private:
-		Functor<R(Args...)>* functor;
+		std::shared_ptr<Functor<R(Args...)>> functor;
 	};
 
 	// FUNCTION

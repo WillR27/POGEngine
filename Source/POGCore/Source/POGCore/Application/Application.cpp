@@ -76,17 +76,6 @@ namespace POG::Core
 			GetMainEventBus().Unsubscribe(this, &Application::OnWindowSizeEvent);
 		}
 
-		Util::Function<void(WindowSizeEvent&)> egg(&Application::OnWindowSizeEvent, this);
-		WindowSizeEvent e(10, 10);
-		egg(e);
-
-		Util::Function<void(KeyEvent&)> egg2(&Input::OnKeyEvent);
-		KeyEvent ee(1, 1, 1, 2);
-		egg2(ee);
-
-		Util::Function<void(KeyEvent&)> egg3([this](KeyEvent& e) {e.SetHandled(); });
-		egg3(ee);
-
 		// This only applies to a standalone app that is run via Run()
 		// In the editor Run() is never used
 		if (IsStandalone())
@@ -125,7 +114,7 @@ namespace POG::Core
 			GetMainEventBus().Subscribe(this, &Application::OnWindowSizeEvent);
 		}
 
-		Input::AddInputCallback(POG_BIND_FN_THIS(Input));
+		Input::AddInputCallback({ &Application::Input, this });
 	}
 
 	void Application::PostInit()
@@ -134,7 +123,7 @@ namespace POG::Core
 		Scene::GetActiveScene().Init();
 		Scene::GetActiveScene().PostInit();
 
-		Input::AddInputCallback(POG_BIND_FN(Scene::GetActiveScene().Input));
+		Input::AddInputCallback({ &Scene::Input, &Scene::GetActiveScene() });
 	}
 
 	void Application::TryUpdate(float timeBetweenLoops)
