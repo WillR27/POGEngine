@@ -5,7 +5,7 @@
 
 #include "POGCore/Application/Application.h"
 #include "POGCore/Event/Events.h"
-#include "POGCore/Input/InputManager.h"
+#include "POGCore/Input/Input.h"
 #include "POGCore/Scene/Scene.h"
 #include "POGCore/View/View.h"
 #include "POGCore/Window/Window.h"
@@ -105,8 +105,6 @@ namespace POG::Core
 
 		Scene& GetActiveScene() override { return Scene::GetActiveScene(); }
 
-		InputManager& GetInputManager() { return inputManager; }
-
 		bool HasUpdated() const override { return hasUpdated; }
 
 		bool IsFullscreen() const { return isFullscreen; }
@@ -145,7 +143,6 @@ namespace POG::Core
 		View view;
 
 		EventBus* mainEventBus;
-		InputManager inputManager;
 
 		bool shouldClose;
 		bool hasUpdated;

@@ -2,8 +2,6 @@
 
 #include "Event.h"
 
-#include "POGCore/Input/Input.h"
-
 namespace POG::Core
 {
 	POG_EVENT(InputEvent, Event)

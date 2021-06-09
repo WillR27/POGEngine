@@ -1,10 +1,10 @@
 #pragma once
 
-#include "Input.h"
-#include "InputTypes.h"
-#include "InputPackage.h"
-
 #include "POGCore/Event/InputEvents.h"
+
+#include "InputPackage.h"
+#include "InputTypes.h"
+#include "InputValues.h"
 
 namespace POG::Core
 {
@@ -38,7 +38,7 @@ namespace POG::Core
 	class InputManager final
 	{
 	public:
-		InputManager();
+		InputManager(bool setEventsToHandled = true);
 
 		virtual ~InputManager() = default;
 
@@ -48,13 +48,15 @@ namespace POG::Core
 		void OnMouseMoveEvent(MouseMoveEvent& e);
 		void OnMouseButtonEvent(MouseButtonEvent& e);
 
-		void AddInputCallback(InputCallback actionCallback);
+		void AddInputCallback(InputCallback inputCallback);
 
 		void AddAction(std::string name, InputInfo inputInfo);
 		void AddState(std::string name, InputInfo activeInputInfo, InputInfo inactiveInputInfo);
 		void AddAxis(std::string name, InputInfo activeNegativeInputInfo, InputInfo inactiveNegativeInputInfo, InputInfo activePositiveInputInfo, InputInfo inactivePositiveInputInfo);
 
 	private:
+		bool setEventsToHandled;
+
 		std::vector<InputCallback> inputPackageCallbacks;
 
 		std::vector<InputInfo> actionInfos;

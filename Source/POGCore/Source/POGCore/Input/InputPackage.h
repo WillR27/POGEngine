@@ -1,8 +1,8 @@
 #pragma once
 
-#include "InputTypes.h"
-
 #include <vector>
+
+#include "InputTypes.h"
 
 namespace POG::Core
 {

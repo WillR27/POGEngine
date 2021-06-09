@@ -5,8 +5,9 @@
 
 namespace POG::Core
 {
-	InputManager::InputManager()
+	InputManager::InputManager(bool setEventsToHandled)
 		: actions()
+		, setEventsToHandled(setEventsToHandled)
 	{
 	}
 
@@ -124,7 +125,7 @@ namespace POG::Core
 			axes[i].SetValue(axisValue);
 		}
 
-		if (handled)
+		if (setEventsToHandled && handled)
 		{
 			e.SetHandled();
 		}
@@ -133,6 +134,11 @@ namespace POG::Core
 	void InputManager::OnMouseMoveEvent(MouseMoveEvent& e)
 	{
 		inputPackage.SetMouseMoved();
+
+		if (setEventsToHandled)
+		{
+			e.SetHandled();
+		}
 	}
 
 	void InputManager::OnMouseButtonEvent(MouseButtonEvent& e)
@@ -223,7 +229,7 @@ namespace POG::Core
 			axes[i].SetValue(axisValue);
 		}
 
-		if (handled)
+		if (setEventsToHandled && handled)
 		{
 			e.SetHandled();
 		}

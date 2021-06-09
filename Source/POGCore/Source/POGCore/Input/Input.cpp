@@ -14,12 +14,15 @@ namespace POG::Core
 
 	bool Input::ShouldResetMouseMovement = true;
 
+	bool Input::MouseHasMoved = false;
 	float Input::MouseX = 0.0f;
 	float Input::MouseY = 0.0f;
 	float Input::PrevMouseX = 0.0f;
 	float Input::PrevMouseY = 0.0f;
 	float Input::DeltaMouseX = 0.0f;
 	float Input::DeltaMouseY = 0.0f;
+
+	InputManager Input::GlobalInputManager(false);
 
 	void Input::Init()
 	{
@@ -59,6 +62,26 @@ namespace POG::Core
 		return MouseActions[button] == POG_INPUT_RELEASE && MouseModifiers[button] == mod;
 	}
 
+	void Input::AddInputCallback(InputCallback inputCallback)
+	{
+		GlobalInputManager.AddInputCallback(inputCallback);
+	}
+
+	void Input::AddAction(std::string name, InputInfo inputInfo)
+	{
+		GlobalInputManager.AddAction(name, inputInfo);
+	}
+
+	void Input::AddState(std::string name, InputInfo activeInputInfo, InputInfo inactiveInputInfo)
+	{
+		GlobalInputManager.AddState(name, activeInputInfo, inactiveInputInfo);
+	}
+
+	void Input::AddAxis(std::string name, InputInfo activeNegativeInputInfo, InputInfo inactiveNegativeInputInfo, InputInfo activePositiveInputInfo, InputInfo inactivePositiveInputInfo)
+	{
+		GlobalInputManager.AddAxis(name, activeNegativeInputInfo, inactiveNegativeInputInfo, activePositiveInputInfo, inactivePositiveInputInfo);
+	}
+
 	void Input::ResetKeys()
 	{
 		for (int i = 0; i < POG_MAX_KEY_VALUE; i++)
@@ -72,6 +95,8 @@ namespace POG::Core
 	{
 		Input::KeyActions[e.key] = e.action;
 		Input::KeyModifiers[e.key] = e.mods;
+
+		GlobalInputManager.OnKeyEvent(e);
 	}
 
 	void Input::ResetMouseMovement()
@@ -83,6 +108,7 @@ namespace POG::Core
 	{
 		DeltaMouseX = 0;
 		DeltaMouseY = 0;
+		MouseHasMoved = false;
 	}
 
 	void Input::SetMouseXY(float x, float y)
@@ -117,12 +143,23 @@ namespace POG::Core
 
 	void Input::OnMouseMoveEvent(MouseMoveEvent& e)
 	{
+		MouseHasMoved = true;
+
 		SetMouseXY(e.mouseX, e.mouseY);
+
+		GlobalInputManager.OnMouseMoveEvent(e);
 	}
 
 	void Input::OnMouseButtonEvent(MouseButtonEvent& e)
 	{
 		Input::MouseActions[e.button] = e.action;
 		Input::MouseModifiers[e.button] = e.mods;
+
+		GlobalInputManager.OnMouseButtonEvent(e);
+	}
+
+	void Input::Dispatch(float dt)
+	{
+		GlobalInputManager.Dispatch(dt);
 	}
 }

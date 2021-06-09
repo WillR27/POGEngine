@@ -1,14 +1,14 @@
 #include "POGCorePCH.h"
 #include "Application.h"
 
+#include "POGDebug.h"
+#include "POGGraphics.h"
+#include "POGLog.h"
+
 #include "POGCore/Graphics/MeshManager.h"
 #include "POGCore/Graphics/ShaderManager.h"
 #include "POGCore/Graphics/TextureManager.h"
 #include "POGCore/Scene/Scene.h"
-
-#include "POGDebug.h"
-#include "POGLog.h"
-#include "POGGraphics.h"
 
 namespace POG::Core
 {
@@ -25,7 +25,6 @@ namespace POG::Core
 		, isStandalone(true)
 		, view(1200, 800)
 		, mainEventBus(nullptr)
-		, inputManager()
 		, shouldClose(false)
 		, hasUpdated(false)
 		, isFullscreen(false)
@@ -77,10 +76,6 @@ namespace POG::Core
 			GetMainEventBus().Unsubscribe(this, &Application::OnWindowSizeEvent);
 		}
 
-		GetMainEventBus().Unsubscribe(inputManager, &InputManager::OnKeyEvent);
-		GetMainEventBus().Unsubscribe(inputManager, &InputManager::OnMouseButtonEvent);
-		GetMainEventBus().Unsubscribe(inputManager, &InputManager::OnMouseMoveEvent);
-
 		// This only applies to a standalone app that is run via Run()
 		// In the editor Run() is never used
 		if (IsStandalone())
@@ -119,11 +114,7 @@ namespace POG::Core
 			GetMainEventBus().Subscribe(this, &Application::OnWindowSizeEvent);
 		}
 
-		GetMainEventBus().Subscribe(inputManager, &InputManager::OnKeyEvent);
-		GetMainEventBus().Subscribe(inputManager, &InputManager::OnMouseButtonEvent);
-		GetMainEventBus().Subscribe(inputManager, &InputManager::OnMouseMoveEvent);
-
-		inputManager.AddInputCallback(POG_BIND_FN_THIS(Input));
+		Input::AddInputCallback(POG_BIND_FN_THIS(Input));
 	}
 
 	void Application::PostInit()
@@ -132,7 +123,7 @@ namespace POG::Core
 		Scene::GetActiveScene().Init();
 		Scene::GetActiveScene().PostInit();
 
-		inputManager.AddInputCallback(POG_BIND_FN(Scene::GetActiveScene().Input));
+		Input::AddInputCallback(POG_BIND_FN(Scene::GetActiveScene().Input));
 	}
 
 	void Application::TryUpdate(float timeBetweenLoops)
@@ -216,7 +207,7 @@ namespace POG::Core
 
 		Input();
 
-		inputManager.Dispatch(dt);
+		Input::Dispatch(dt);
 
 		Scene::GetActiveScene().Update(dt);
 	}
