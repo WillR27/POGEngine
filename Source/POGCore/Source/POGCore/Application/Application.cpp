@@ -67,13 +67,13 @@ namespace POG::Core
 	{
 		POG_INFO("Exiting application \"{0}\"!", name);
 
-		GetMainEventBus().Unsubscribe(this, &Application::OnWindowCloseEvent);
-		GetMainEventBus().Unsubscribe(this, &Application::OnCursorEnabledEvent);
+		GetMainEventBus().Unsubscribe<WindowCloseEvent>({ &Application::OnWindowCloseEvent, this });
+		GetMainEventBus().Unsubscribe<CursorEnabledEvent>({ &Application::OnCursorEnabledEvent, this });
 		
 		if (IsStandalone())
 		{
-			GetMainEventBus().Unsubscribe(window, &Window::OnWindowFocusEvent);
-			GetMainEventBus().Unsubscribe(this, &Application::OnWindowSizeEvent);
+			GetMainEventBus().Unsubscribe<WindowFocusEvent>({ &Window::OnWindowFocusEvent, window });
+			GetMainEventBus().Unsubscribe<WindowSizeEvent>({ &Application::OnWindowSizeEvent, this });
 		}
 
 		// This only applies to a standalone app that is run via Run()
@@ -105,13 +105,13 @@ namespace POG::Core
 		ShaderManager::Init();
 		TextureManager::Init();
 
-		GetMainEventBus().Subscribe(this, &Application::OnWindowCloseEvent);
-		GetMainEventBus().Subscribe(this, &Application::OnCursorEnabledEvent);
+		GetMainEventBus().Subscribe<WindowCloseEvent>({ &Application::OnWindowCloseEvent, this });
+		GetMainEventBus().Subscribe<CursorEnabledEvent>({ &Application::OnCursorEnabledEvent, this });
 
 		if (IsStandalone())
 		{
-			GetMainEventBus().Subscribe(window, &Window::OnWindowFocusEvent);
-			GetMainEventBus().Subscribe(this, &Application::OnWindowSizeEvent);
+			GetMainEventBus().Subscribe<WindowFocusEvent>({ &Window::OnWindowFocusEvent, window });
+			GetMainEventBus().Subscribe<WindowSizeEvent>({ &Application::OnWindowSizeEvent, this });
 		}
 
 		Input::AddInputCallback({ &Application::Input, this });

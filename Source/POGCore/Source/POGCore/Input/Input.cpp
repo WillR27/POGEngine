@@ -27,9 +27,9 @@ namespace POG::Core
 	void Input::Init()
 	{
 		auto& mainEventBus = Application::GetInstance().GetMainEventBus();
-		mainEventBus.Subscribe(OnKeyEvent);
-		mainEventBus.Subscribe(OnMouseMoveEvent);
-		mainEventBus.Subscribe(OnMouseButtonEvent);
+		mainEventBus.Subscribe<RawKeyEvent>(OnKeyEvent);
+		mainEventBus.Subscribe<RawMouseMoveEvent>(OnMouseMoveEvent);
+		mainEventBus.Subscribe<RawMouseButtonEvent>(OnMouseButtonEvent);
 
 		ResetKeys();
 		ResetMouseMovement();

@@ -17,6 +17,8 @@ namespace POG::Util
 		virtual ~Functor() = default;
 
 		virtual R operator()(Args... args) = 0;
+
+		virtual bool Equals(const Functor<R(Args...)>& functor) = 0;
 	};
 
 	template<typename>
@@ -37,6 +39,11 @@ namespace POG::Util
 		R operator()(Args... args) override
 		{
 			return func(std::forward<Args>(args)...);
+		}
+
+		bool Equals(const Functor<R(Args...)>& functor) override
+		{
+			return false; // TODO: Any way to compare lambdas? Signature?
 		}
 
 	private:
@@ -61,6 +68,13 @@ namespace POG::Util
 		R operator()(Args... args) override
 		{
 			return (*func)(std::forward<Args>(args)...);
+		}
+
+		bool Equals(const Functor<R(Args...)>& functor) override
+		{
+			const FreeFunctor freeFunctor = dynamic_cast<const FreeFunctor&>(functor);
+			
+			return &freeFunctor != nullptr && func == freeFunctor.func;
 		}
 
 	private:
@@ -88,6 +102,13 @@ namespace POG::Util
 			return (obj->*func)(std::forward<Args>(args)...);
 		}
 
+		bool Equals(const Functor<R(Args...)>& functor) override
+		{
+			const MemberFunctor memberFunctor = dynamic_cast<const MemberFunctor&>(functor);
+
+			return &memberFunctor != nullptr && func == memberFunctor.func && obj == memberFunctor.obj;;
+		}
+
 	private:
 		Func func;
 		T* obj;
@@ -98,6 +119,12 @@ namespace POG::Util
 
 	///////////////////////////////////////////////////////////////////////////////////
 	// FUNCTION
+
+	class FunctionBase
+	{
+	public:
+
+	};
 
 	template<typename>
 	class Function;
@@ -149,6 +176,14 @@ namespace POG::Util
 		R operator()(Args... args)
 		{
 			return functor->operator()(std::forward<Args>(args)...);
+		}
+
+		bool Equals(const Function<R(Args...)>& function)
+		{
+			Functor<R(Args...)>* self = functor.get();
+			Functor<R(Args...)>* target = function.functor.get();
+
+			return (self == nullptr && target == nullptr) || (self->Equals(*target));
 		}
 
 	private:

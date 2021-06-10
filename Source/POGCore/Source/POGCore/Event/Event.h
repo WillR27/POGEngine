@@ -71,65 +71,30 @@ namespace POG::Core
 	class EventHandlerBase
 	{
 	public:
-		void Handle(Event& e)
-		{
-			Call(e);
-		}
-
-	private:
-		virtual void Call(Event& e) = 0;
+		virtual void Handle(Event& e) = 0;
 	};
 
 	template<class E>
-	class EventHandler : public EventHandlerBase
+	class EventHandler final : public EventHandlerBase
 	{
 	public:
-		using Handler = void (*)(E&);
-
-		EventHandler(Handler handler)
-			: handler(handler)
+		EventHandler(Util::Function<void(E&)> function)
+			: function(function)
 		{
 		}
 
-		bool ConsistsOf(Handler handler) const
+		virtual void Handle(Event& e)
 		{
-			return this->handler == handler;
+			function(static_cast<E&>(e));
+		}
+
+		bool Equals(const EventHandler<E> eventHandler)
+		{
+			return this->function.Equals(eventHandler.function);
 		}
 
 	private:
-		Handler handler;
-
-		void Call(Event& e) override
-		{
-			handler(static_cast<E&>(e));
-		}
-	};
-
-	template<class T, class E>
-	class MemberEventHandler : public EventHandlerBase
-	{
-	public:
-		using Handler = void (T::*)(E&);
-
-		MemberEventHandler(T* object, Handler handler)
-			: object(object)
-			, handler(handler)
-		{
-		}
-
-		bool ConsistsOf(T* object, Handler handler) const
-		{
-			return this->object == object && this->handler == handler;
-		}
-
-	private:
-		T* object;
-		Handler handler;
-
-		void Call(Event& e) override
-		{
-			(object->*handler)(static_cast<E&>(e));
-		}
+		Util::Function<void(E&)> function;
 	};
 
 	class EventBus final
@@ -220,12 +185,12 @@ namespace POG::Core
 		}
 
 		template<class E>
-		void Subscribe(void (*handler)(E&))
+		void Subscribe(Util::Function<void(E&)> handler)
 		{
 			POG_TRACE("Subscribing event handler: {0}", typeid(handler).name());
 
 			constexpr Util::HashId eventId = Util::Hash<E>();
-			Subscribe(eventId, handler);
+			Subscribe<E>(eventId, handler);
 
 			if (DerivedClasses<eventId>::DerivedIds != nullptr)
 			{
@@ -237,7 +202,7 @@ namespace POG::Core
 		}
 
 		template<class E>
-		void Subscribe(Util::HashId eventId, void (*handler)(E&))
+		void Subscribe(Util::HashId eventId, Util::Function<void(E&)> handler)
 		{
 			std::vector<EventHandlerBase*>* handlers = subscribers[eventId];
 
@@ -252,47 +217,8 @@ namespace POG::Core
 			handlers->push_back(new EventHandler(handler));
 		}
 
-		template<class T, class E>
-		void Subscribe(T& object, void (T::*handler)(E&))
-		{
-			Subscribe(&object, handler);
-		}
-
-		template<class T, class E>
-		void Subscribe(T* object, void (T::*handler)(E&))
-		{
-			POG_TRACE("Subscribing event handler: {0}", typeid(handler).name());
-
-			constexpr Util::HashId eventId = Util::Hash<E>();
-			Subscribe(eventId, object, handler);
-
-			if (DerivedClasses<eventId>::DerivedIds != nullptr)
-			{
-				for (auto derivedId : *DerivedClasses<eventId>::DerivedIds)
-				{
-					Subscribe(derivedId, object, handler);
-				}
-			}
-		}
-
-		template<class T, class E>
-		void Subscribe(Util::HashId eventId, T* object, void (T::*handler)(E&))
-		{
-			std::vector<EventHandlerBase*>* handlers = subscribers[eventId];
-
-			// If handlers doesn't exist for this event type then create a new list
-			if (!handlers)
-			{
-				handlers = new std::vector<EventHandlerBase*>();
-				subscribers[eventId] = handlers;
-				eventDepths[eventId] = 0;
-			}
-
-			handlers->push_back(new MemberEventHandler(object, handler));
-		}
-
 		template<class E>
-		void Unsubscribe(void (*handler)(E&))
+		void Unsubscribe(Util::Function<void(E&)> handler)
 		{
 			POG_TRACE("Unsubscribing event handler: {0}", typeid(handler).name());
 
@@ -316,7 +242,7 @@ namespace POG::Core
 				while (it != handlers->end())
 				{
 					EventHandler<E>* testHandler = dynamic_cast<EventHandler<E>*>(*it);
-					if (testHandler != nullptr && testHandler->ConsistsOf(handler))
+					if (testHandler != nullptr && testHandler->Equals(handler))
 					{
 						delete* it;
 						it = handlers->erase(it);
@@ -333,63 +259,7 @@ namespace POG::Core
 				for (int i = 0; i < handlers->size(); i++)
 				{
 					EventHandler<E>* testHandler = dynamic_cast<EventHandler<E>*>((*handlers)[i]);
-					if (testHandler != nullptr && testHandler->ConsistsOf(handler))
-					{
-						eventHandlersToRemove[eventId].push_back(i);
-					}
-				}
-			}
-		}
-
-		template<class T, class E>
-		void Unsubscribe(T& object, void (T::*handler)(E&))
-		{
-			Unsubscribe(&object, handler);
-		}
-
-		template<class T, class E>
-		void Unsubscribe(T* object, void (T::*handler)(E&))
-		{
-			POG_TRACE("Unsubscribing event handler: {0}", typeid(handler).name());
-
-			constexpr Util::HashId eventId = Util::Hash<E>();
-			std::vector<EventHandlerBase*>* handlers = subscribers[eventId];
-
-			// If handlers doesn't exist for this event type then there's nothing to unsubscribe
-			if (!handlers)
-			{
-				POG_WARN("Tried to unsubscribe event handler that didn't exist!");
-
-				return;
-			}
-
-			int eventDepth = eventDepths[eventId];
-
-			// If we are not currently handling an event of this type we can just unsubscribe now
-			if (eventDepth == 0)
-			{
-				auto it = handlers->begin();
-				while (it != handlers->end())
-				{
-					MemberEventHandler<T, E>* testHandler = dynamic_cast<MemberEventHandler<T, E>*>(*it);
-					if (testHandler != nullptr && testHandler->ConsistsOf(object, handler))
-					{
-						delete *it;
-						it = handlers->erase(it);
-					}
-					else
-					{
-						it++;
-					}
-				}
-			}
-			// Otherwise make sure we don't remove it yet but make a note to once we've finished handling the root event
-			else
-			{
-				for (int i = 0; i < handlers->size(); i++)
-				{
-					MemberEventHandler<T, E>* testHandler = dynamic_cast<MemberEventHandler<T, E>*>((*handlers)[i]);
-					if (testHandler != nullptr && testHandler->ConsistsOf(object, handler))
+					if (testHandler != nullptr && testHandler->Equals(handler))
 					{
 						eventHandlersToRemove[eventId].push_back(i);
 					}

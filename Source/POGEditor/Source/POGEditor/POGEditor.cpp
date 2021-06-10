@@ -51,15 +51,15 @@ namespace POG::Editor
 		SetTargetUpdatesPerSecond(60.0f);
 		SetTargetFramesPerSecond(60.0f);
 
-		GetMainEventBus().Subscribe(this, &POGEditor::OnInputEvent);
-		GetMainEventBus().Subscribe(this, &POGEditor::OnKeyEvent);
-		GetMainEventBus().Subscribe(this, &POGEditor::OnMouseButtonEvent);
-		GetMainEventBus().Subscribe(this, &POGEditor::OnMouseMoveEvent);
+		GetMainEventBus().Subscribe<Core::InputEvent&>({ &POGEditor::OnInputEvent, this });
+		GetMainEventBus().Subscribe<Core::RawKeyEvent>({ &POGEditor::OnKeyEvent, this });
+		GetMainEventBus().Subscribe<Core::RawMouseButtonEvent>({ &POGEditor::OnMouseButtonEvent, this });
+		GetMainEventBus().Subscribe<Core::RawMouseMoveEvent>({ &POGEditor::OnMouseMoveEvent, this });
 
-		GetMainEventBus().Subscribe(this, &POGEditor::OnClientFocusedEvent);
-		GetMainEventBus().Subscribe(this, &POGEditor::OnClientPlayEvent);
-		GetMainEventBus().Subscribe(this, &POGEditor::OnClientPauseEvent);
-		GetMainEventBus().Subscribe(this, &POGEditor::OnClientStopEvent);
+		GetMainEventBus().Subscribe<ClientFocusedEvent>({ &POGEditor::OnClientFocusedEvent, this });
+		GetMainEventBus().Subscribe<ClientPlayEvent>({ &POGEditor::OnClientPlayEvent, this });
+		GetMainEventBus().Subscribe<ClientPauseEvent>({ &POGEditor::OnClientPauseEvent, this });
+		GetMainEventBus().Subscribe<ClientStopEvent>({ &POGEditor::OnClientStopEvent, this });
 
 		Core::Input::AddAction("Quit", Core::InputInfo(Core::InputType::Keyboard, POG_KEY_ESCAPE, POG_INPUT_RELEASE, POG_MOD_ANY));
 		Core::Input::AddAction("Fullscreen", Core::InputInfo(Core::InputType::Keyboard, POG_KEY_F11, POG_INPUT_RELEASE, POG_MOD_ANY));
