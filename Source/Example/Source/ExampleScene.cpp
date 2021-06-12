@@ -181,11 +181,10 @@ namespace Example
 		Graphics::ClearColourBuffer();
 		Graphics::ClearDepthBuffer();
 
-		Graphics::SetPolygonMode(POG_FRONT_AND_BACK, POG_FILL);
-		//Graphics::SetFrontFace(POG_CW);
-		//Graphics::FaceCulling(false);
-		//Graphics::CullFace(POG_BACK);
-		Graphics::DepthTest(true);
-		Graphics::Blend(true);
+		Graphics::SetFrontFaceDirection(Graphics::PolygonFaceDirection::Clockwise);
+		Graphics::SetCullFace(Graphics::PolygonFace::Back);
+		Graphics::Enable(Graphics::Capability::Blend);
+		Graphics::Enable(Graphics::Capability::CullFace);
+		Graphics::Enable(Graphics::Capability::DepthTest);
 	}
 }

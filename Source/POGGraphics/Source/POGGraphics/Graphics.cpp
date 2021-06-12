@@ -20,10 +20,19 @@ namespace POG::Graphics
 		POG_ASSERT(false, "OpenGL error!");
 	}
 
-	void Init()
+	void Enable(Capability capability)
 	{
-		glDebugMessageCallback(ErrorCallback, nullptr);
-		glLineWidth(3.0f);
+		glEnable(static_cast<GLenum>(capability));
+	}
+
+	void Disbale(Capability capability)
+	{
+		glDisable(static_cast<GLenum>(capability));
+	}
+
+	bool IsEnabled(Capability capability)
+	{
+		return glIsEnabled(static_cast<GLenum>(capability));
 	}
 
 	void ClearColour(float r, float g, float b, float a)
@@ -41,35 +50,35 @@ namespace POG::Graphics
 		glClear(GL_DEPTH_BUFFER_BIT);
 	}
 
-	void DepthTest(bool enable)
+	PolygonFace CurrentPolygonModeFace = PolygonFace::FrontAndBack;
+	PolygonFace GetPolygonModeFace() { return CurrentPolygonModeFace; }
+
+	PolygonMode CurrentPolygonMode = PolygonMode::Fill;
+	PolygonMode GetPolygonMode() { return CurrentPolygonMode; }
+
+	void SetPolygonMode(PolygonFace face, PolygonMode mode)
 	{
-		enable ? glEnable(GL_DEPTH_TEST) : glDisable(GL_DEPTH_TEST);
+		CurrentPolygonModeFace = face;
+		CurrentPolygonMode = mode;
+		glPolygonMode(static_cast<GLenum>(face), static_cast<GLenum>(mode));
 	}
 
-	void FaceCulling(bool enable)
+	PolygonFaceDirection CurrentFrontFaceDirection = PolygonFaceDirection::Clockwise;
+	PolygonFaceDirection GetFrontFaceDirection() { return CurrentFrontFaceDirection; }
+
+	void SetFrontFaceDirection(PolygonFaceDirection direction)
 	{
-		enable ? glEnable(GL_CULL_FACE) : glDisable(GL_CULL_FACE);
+		CurrentFrontFaceDirection = direction;
+		glFrontFace(static_cast<GLenum>(direction));
 	}
 
-	void SetPolygonMode(RenderingOption face, RenderingOption type)
-	{
-		glPolygonMode(face, type);
-	}
+	PolygonFace CurrentCullFace = PolygonFace::Back;
+	PolygonFace GetCullFace() { return CurrentCullFace; }
 
-	void CullFace(RenderingOption face)
+	void SetCullFace(PolygonFace face)
 	{
-		glCullFace(face);
-	}
-
-	void SetFrontFace(RenderingOption face)
-	{
-		glFrontFace(face);
-	}
-
-	void Blend(bool enable)
-	{
-		enable ? glEnable(GL_BLEND) : glDisable(GL_BLEND);
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		CurrentCullFace = face;
+		glCullFace(static_cast<GLenum>(face));
 	}
 
 	void SetViewport(int x, int y, int width, int height)
@@ -107,5 +116,16 @@ namespace POG::Graphics
 		POG_INFO("Initialising Glad!");
 		int success = gladLoadGLLoader((GLADloadproc)func);
 		POG_ASSERT(success, "Glad failed to initialise!");
+	}
+
+	void Init()
+	{
+		glDebugMessageCallback(ErrorCallback, nullptr);
+		glLineWidth(3.0f);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+		SetPolygonMode(CurrentPolygonModeFace, CurrentPolygonMode);
+		SetFrontFaceDirection(CurrentFrontFaceDirection);
+		SetCullFace(CurrentCullFace);
 	}
 }

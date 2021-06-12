@@ -26,6 +26,10 @@
 #define POG_TRIANGLES_ADJACENCY 	        0x000C 
 #define POG_PATCHES							0x000E
 
+#define POG_BLEND							0x0BE2
+#define POG_CULL_FACE						0x0B44
+#define POG_DEPTH_TEST						0x0B71
+
 #define POG_BYTE							0x1400
 #define POG_UNSIGNED_BYTE					0x1401
 #define POG_SHORT							0x1402
@@ -43,21 +47,53 @@ namespace POG::Graphics
 {
 	using RenderingOption = unsigned int;
 
+	enum class Capability : unsigned int
+	{
+		Blend			= POG_BLEND,
+		CullFace		= POG_CULL_FACE,
+		DepthTest		= POG_DEPTH_TEST,
+	};
+
+	enum class PolygonFace : unsigned int
+	{
+		FrontAndBack	= POG_FRONT_AND_BACK,
+		Front			= POG_FRONT,
+		Back			= POG_BACK,
+	};
+
+	enum class PolygonMode : unsigned int
+	{
+		Point			= POG_POINT,
+		Line			= POG_LINE,
+		Fill			= POG_FILL,
+	};
+
+	enum class PolygonFaceDirection : unsigned int
+	{
+		Clockwise = POG_CW,
+		CounterClockwise = POG_CCW,
+	};
+
 	void ErrorCallback(unsigned int source, unsigned int type, unsigned int id, unsigned int severity, int length, const char* message, const void* userParam);
 
-	void Init();
+	void Enable(Capability capability);
+	void Disbale(Capability capability);
+	bool IsEnabled(Capability capability);
 
 	void ClearColour(float r, float g, float b, float a);
 
 	void ClearColourBuffer();
 	void ClearDepthBuffer();
 
-	void DepthTest(bool enable);
-	void FaceCulling(bool enable);
+	PolygonFace GetPolygonModeFace();
+	PolygonMode GetPolygonMode();
+	void SetPolygonMode(PolygonFace face, PolygonMode mode);
 
-	void SetPolygonMode(RenderingOption face, RenderingOption type);
-	void CullFace(RenderingOption face);
-	void SetFrontFace(RenderingOption face);
+	PolygonFaceDirection GetFrontFace();
+	void SetFrontFaceDirection(PolygonFaceDirection face);
+
+	PolygonFace GetCullFace();
+	void SetCullFace(PolygonFace face);
 
 	void Blend(bool enable);
 
@@ -72,5 +108,7 @@ namespace POG::Graphics
 	void RenderTrianglesFromElements(unsigned int first, unsigned int count);
 
 	void SetContextAddressFunc(ContextAddressFunc func);
+
+	void Init();
 }
 
