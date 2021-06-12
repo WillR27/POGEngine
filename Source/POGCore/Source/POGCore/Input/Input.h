@@ -31,6 +31,14 @@ namespace POG::Core
 		static bool MouseButtonPressed(int button, int mod = POG_MOD_NONE);
 		static bool MouseButtonReleased(int button, int mod = POG_MOD_NONE);
 
+		static void AddInputCallback(void(*handler)(InputPackage&, float dt));
+
+		template<class T>
+		static void AddInputCallback(void(T::*handler)(InputPackage&, float dt), T* obj)
+		{
+			AddInputCallback({ handler, obj });
+		}
+
 		static void AddInputCallback(InputCallback inputCallback);
 
 		static void AddAction(std::string name, InputInfo inputInfo);

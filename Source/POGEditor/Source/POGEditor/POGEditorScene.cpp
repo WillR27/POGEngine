@@ -35,8 +35,8 @@ void main()
 		clientTexture.Bind();
 		clientFBO.BindTexture(clientTexture);
 
-		Core::Application::GetInstance().GetMainEventBus().Subscribe<Core::CursorEnabledEvent>({ &POGEditorScene::OnCursorEnabledEvent, this });
-		Core::Application::GetInstance().GetMainEventBus().Subscribe<ClientFocusedEvent>({ &POGEditorScene::OnClientFocusedEvent, this });
+		Core::Application::GetInstance().GetMainEventBus().Subscribe(&POGEditorScene::OnCursorEnabledEvent, this);
+		Core::Application::GetInstance().GetMainEventBus().Subscribe(&POGEditorScene::OnClientFocusedEvent, this);
 	}
 
 	void POGEditorScene::Exit()

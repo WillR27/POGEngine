@@ -67,13 +67,13 @@ namespace POG::Core
 	{
 		POG_INFO("Exiting application \"{0}\"!", name);
 
-		GetMainEventBus().Unsubscribe<WindowCloseEvent>({ &Application::OnWindowCloseEvent, this });
-		GetMainEventBus().Unsubscribe<CursorEnabledEvent>({ &Application::OnCursorEnabledEvent, this });
+		GetMainEventBus().Unsubscribe(&Application::OnWindowCloseEvent, this);
+		GetMainEventBus().Unsubscribe(&Application::OnCursorEnabledEvent, this);
 		
 		if (IsStandalone())
 		{
-			GetMainEventBus().Unsubscribe<WindowFocusEvent>({ &Window::OnWindowFocusEvent, window });
-			GetMainEventBus().Unsubscribe<WindowSizeEvent>({ &Application::OnWindowSizeEvent, this });
+			GetMainEventBus().Unsubscribe(&Window::OnWindowFocusEvent, window);
+			GetMainEventBus().Unsubscribe(&Application::OnWindowSizeEvent, this);
 		}
 
 		// This only applies to a standalone app that is run via Run()
@@ -105,16 +105,16 @@ namespace POG::Core
 		ShaderManager::Init();
 		TextureManager::Init();
 
-		GetMainEventBus().Subscribe<WindowCloseEvent>({ &Application::OnWindowCloseEvent, this });
-		GetMainEventBus().Subscribe<CursorEnabledEvent>({ &Application::OnCursorEnabledEvent, this });
+		GetMainEventBus().Subscribe(&Application::OnWindowCloseEvent, this);
+		GetMainEventBus().Subscribe(&Application::OnCursorEnabledEvent, this);
 
 		if (IsStandalone())
 		{
-			GetMainEventBus().Subscribe<WindowFocusEvent>({ &Window::OnWindowFocusEvent, window });
-			GetMainEventBus().Subscribe<WindowSizeEvent>({ &Application::OnWindowSizeEvent, this });
+			GetMainEventBus().Subscribe(&Window::OnWindowFocusEvent, window);
+			GetMainEventBus().Subscribe(&Application::OnWindowSizeEvent, this);
 		}
 
-		Input::AddInputCallback({ &Application::Input, this });
+		Input::AddInputCallback(&Application::Input, this);
 	}
 
 	void Application::PostInit()
@@ -123,7 +123,7 @@ namespace POG::Core
 		Scene::GetActiveScene().Init();
 		Scene::GetActiveScene().PostInit();
 
-		Input::AddInputCallback({ &Scene::Input, &Scene::GetActiveScene() });
+		Input::AddInputCallback(&Scene::Input, &Scene::GetActiveScene());
 	}
 
 	void Application::TryUpdate(float timeBetweenLoops)

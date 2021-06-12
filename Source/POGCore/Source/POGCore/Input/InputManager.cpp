@@ -235,6 +235,11 @@ namespace POG::Core
 		}
 	}
 
+	void InputManager::AddInputCallback(void(*handler)(InputPackage&, float dt))
+	{
+		AddInputCallback(Util::Function<void(InputPackage&, float dt)>(handler));
+	}
+
 	void InputManager::AddInputCallback(InputCallback inputCallback)
 	{
 		inputPackageCallbacks.push_back(inputCallback);

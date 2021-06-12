@@ -48,6 +48,14 @@ namespace POG::Core
 		void OnMouseMoveEvent(RawMouseMoveEvent& e);
 		void OnMouseButtonEvent(RawMouseButtonEvent& e);
 
+		void AddInputCallback(void(*handler)(InputPackage&, float dt));
+
+		template<class T>
+		void AddInputCallback(void(T::*handler)(InputPackage&, float dt), T* obj)
+		{
+			AddInputCallback({ handler, obj });
+		}
+
 		void AddInputCallback(InputCallback inputCallback);
 
 		void AddAction(std::string name, InputInfo inputInfo);

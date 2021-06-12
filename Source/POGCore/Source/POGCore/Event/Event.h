@@ -185,6 +185,18 @@ namespace POG::Core
 		}
 
 		template<class E>
+		void Subscribe(void(*handler)(E&))
+		{
+			Subscribe(Util::Function<void(E&)>(handler));
+		}
+
+		template<class T, class E>
+		void Subscribe(void(T::*handler)(E&), T* obj)
+		{
+			Subscribe<E>({ handler, obj });
+		}
+
+		template<class E>
 		void Subscribe(Util::Function<void(E&)> handler)
 		{
 			POG_TRACE("Subscribing event handler: {0}", typeid(handler).name());
@@ -215,6 +227,18 @@ namespace POG::Core
 			}
 
 			handlers->push_back(new EventHandler(handler));
+		}
+
+		template<class E>
+		void Unsubscribe(void(*handler)(E&))
+		{
+			Unsubscribe(Util::Function<void(E&)>(handler));
+		}
+
+		template<class T, class E>
+		void Unsubscribe(void(T::* handler)(E&), T* obj)
+		{
+			Unsubscribe<E>({ handler, obj });
 		}
 
 		template<class E>

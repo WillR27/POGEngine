@@ -27,9 +27,9 @@ namespace POG::Core
 	void Input::Init()
 	{
 		auto& mainEventBus = Application::GetInstance().GetMainEventBus();
-		mainEventBus.Subscribe<RawKeyEvent>(OnKeyEvent);
-		mainEventBus.Subscribe<RawMouseMoveEvent>(OnMouseMoveEvent);
-		mainEventBus.Subscribe<RawMouseButtonEvent>(OnMouseButtonEvent);
+		mainEventBus.Subscribe(OnKeyEvent);
+		mainEventBus.Subscribe(OnMouseMoveEvent);
+		mainEventBus.Subscribe(OnMouseButtonEvent);
 
 		ResetKeys();
 		ResetMouseMovement();
@@ -60,6 +60,11 @@ namespace POG::Core
 	bool Input::MouseButtonReleased(int button, int mod)
 	{
 		return MouseActions[button] == POG_INPUT_RELEASE && MouseModifiers[button] == mod;
+	}
+
+	void Input::AddInputCallback(void(*handler)(InputPackage&, float dt))
+	{
+		GlobalInputManager.AddInputCallback(Util::Function<void(InputPackage&, float dt)>(handler));
 	}
 
 	void Input::AddInputCallback(InputCallback inputCallback)
