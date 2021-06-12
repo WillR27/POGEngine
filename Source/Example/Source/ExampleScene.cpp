@@ -8,7 +8,7 @@ namespace Example
 	void ExampleScene::Init()
 	{
 		Graphics::Texture& blobTexture = Core::TextureManager::CreateGlobalTexture("Blob");
-		blobTexture.LoadFromImage("Resources\\Sprites\\Square.png");
+		blobTexture.LoadFromImage("Resources\\Sprites\\Rectangle.png");
 
 		player = GetECSManager().CreateEntity();
 		player.SetName("Player");
@@ -36,7 +36,7 @@ namespace Example
 			{
 				.position = Maths::Vec3(1.0f, -1.2f, 1.1f),
 				.orientation = Maths::Quat(Maths::Vec3(0.0f, 0.0f, 0.0f)),
-				.scale = Maths::Vec3(1.0f, 1.0f, 1.0f),
+				.scale = Maths::Vec3(1.5f, 1.0f, 1.0f),
 			});
 		square.AddComponent(Core::RectCollider
 			{
@@ -64,6 +64,7 @@ namespace Example
 	{
 		Core::Transform& squareTransform = square.GetComponent<Core::Transform>();
 		Core::RectCollider& squareRectCollider = square.GetComponent<Core::RectCollider>();
+		Core::Sprite& squareSprite = square.GetComponent<Core::Sprite>();
 
 		Core::Transform& playerTransform = player.GetComponent<Core::Transform>();
 		Core::RigidBody& playerRigidBody = player.GetComponent<Core::RigidBody>();
@@ -92,7 +93,7 @@ namespace Example
 		if (inputPackage.HasActionOccurred("Left"))
 		{
 			Core::Ray ray = Core::CalcMouseRay(playerTransform.position);
-			Core::RayResultRectCollider result = Core::Hits(ray, squareTransform, squareRectCollider);
+			Core::RayResultRectCollider result = Core::Hits(ray, squareTransform, squareRectCollider, squareSprite);
 			if (result.hit)
 			{
 				POG_TRACE("{0}, {1}, {2}", result.pointOfIntersection.x, result.pointOfIntersection.y, result.pointOfIntersection.z);
@@ -150,7 +151,7 @@ namespace Example
 		}
 
 		// No idea what normalising needs doing
-		squareTransform.orientation *= Maths::Quat(Maths::Vec3(1.0f * dt, 1.0f * dt, 1.0f * dt));
+		squareTransform.orientation *= Maths::Quat(Maths::Vec3(0.5f * dt, 0.5f * dt, 0.5f * dt));
 		squareTransform.orientation = Maths::Normalise(squareTransform.orientation);
 
 		Core::Transform& playerTransform = player.GetComponent<Core::Transform>();

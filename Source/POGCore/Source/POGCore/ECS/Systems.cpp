@@ -138,12 +138,15 @@ namespace POG::Core
 			auto& sprite = ecsManager.GetComponent<Sprite>(entityId);
 			auto& transform = ecsManager.GetComponent<Transform>(entityId);
 
-			float width = sprite.texture->GetWidth() / 100.0f;
-			float height = sprite.texture->GetHeight() / 100.0f;
+			float width = sprite.texture->GetWidth() / Sprite::PixelToUnitRatio;
+			float height = sprite.texture->GetHeight() / Sprite::PixelToUnitRatio;
+
+			Maths::Vec3 prevScale = transform.prevScale * Maths::Vec3(width, height, 1.0f);
+			Maths::Vec3 currentScale = transform.scale * Maths::Vec3(width, height, 1.0f);
 
 			Maths::Vec3 position = Maths::Lerp(transform.prevPosition, transform.position, alpha);
 			Maths::Quat orientation = Maths::Lerp(transform.prevOrientation, transform.orientation, alpha);
-			Maths::Vec3 scale = Maths::Lerp(transform.prevScale, transform.scale, alpha);
+			Maths::Vec3 scale = Maths::Lerp(prevScale, currentScale, alpha);
 			
 			sprite.texture->Bind();
 

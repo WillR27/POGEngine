@@ -5,9 +5,29 @@
 
 namespace POG::Core
 {
+	RayResultRectCollider Hits(const Ray& ray, const Transform& transform, const RectCollider& rectCollider, const Sprite& sprite)
+	{
+		float ratioX = sprite.texture->GetWidth() / Sprite::PixelToUnitRatio;
+		float ratioY = sprite.texture->GetHeight() / Sprite::PixelToUnitRatio;
+		
+		RectCollider collider = rectCollider;
+		collider.min.x *= ratioX;
+		collider.max.x *= ratioX;
+		collider.min.y *= ratioY;
+		collider.max.y *= ratioY;
+
+		return Hits(ray, transform, collider);
+	}
+
 	RayResultRectCollider Hits(const Ray& ray, const Transform& transform, const RectCollider& rectCollider)
 	{
 		RayResultRectCollider result;
+
+		RectCollider collider = rectCollider;
+		collider.min.x *= transform.scale.x;
+		collider.max.x *= transform.scale.x;
+		collider.min.y *= transform.scale.y;
+		collider.max.y *= transform.scale.y;
 
 		// Position on a plane plus the normal to the plane = a representation of a plane
 		// So we use the object's position
@@ -35,10 +55,10 @@ namespace POG::Core
 			result.pointOnRect = POG::Maths::Vec2(aa.x, aa.y);
 
 			// If we are inside, we have victory
-			if (((result.pointOnRect.x >= rectCollider.min.x && result.pointOnRect.x <= rectCollider.max.x)
-				|| (result.pointOnRect.x <= rectCollider.min.x && result.pointOnRect.x >= rectCollider.max.x))
-				&& ((result.pointOnRect.y >= rectCollider.min.y && result.pointOnRect.y <= rectCollider.max.y)
-					|| (result.pointOnRect.y <= rectCollider.min.y && result.pointOnRect.y >= rectCollider.max.y)))
+			if (((result.pointOnRect.x >= collider.min.x && result.pointOnRect.x <= collider.max.x)
+				|| (result.pointOnRect.x <= collider.min.x && result.pointOnRect.x >= collider.max.x))
+				&& ((result.pointOnRect.y >= collider.min.y && result.pointOnRect.y <= collider.max.y)
+					|| (result.pointOnRect.y <= collider.min.y && result.pointOnRect.y >= collider.max.y)))
 			{
 				result.hit = true;
 			}

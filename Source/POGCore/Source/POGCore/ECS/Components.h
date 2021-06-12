@@ -31,6 +31,8 @@ namespace POG::Core
 
 	struct Sprite
 	{
+		static const float PixelToUnitRatio;
+
 		Graphics::Texture* texture;
 	};
 

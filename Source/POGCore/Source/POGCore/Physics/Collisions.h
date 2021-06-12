@@ -23,6 +23,7 @@ namespace POG::Core
 		Maths::Vec2 pointOnRect = Maths::Vec2(0.0f, 0.0f);
 	};
 
+	RayResultRectCollider Hits(const Ray& ray, const Transform& transform, const RectCollider& rectCollider, const Sprite& sprite);
 	RayResultRectCollider Hits(const Ray& ray, const Transform& transform, const RectCollider& rectCollider);
 
 	Ray CalcMouseRay(Maths::Vec3 origin);
