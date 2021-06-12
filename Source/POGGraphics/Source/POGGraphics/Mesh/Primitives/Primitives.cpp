@@ -3,49 +3,21 @@
 
 namespace POG::Graphics
 {
-	const float squarePositions[] =
-	{
-		1.0f, -1.0f, -1.0f,
-		-1.0f, -1.0f, -1.0f,
-		1.0f,  1.0f, -1.0f,
-		-1.0f,  1.0f, -1.0f,
-		1.0f,  1.0f, -1.0f,
-		-1.0f, -1.0f, -1.0f
-	};
-	const float squareColours[] =
-	{
-		 0.0f, 0.0f,1.0f,
-		1.0f, 0.0f, 1.0f,
-		0.0f, 1.0f, 0.0f,
-		1.0f, 1.0f, 1.0f,
-		 0.0f, 1.0f,0.0f,
-		 0.0f, 0.0f,0.0f
-	};
-	const float squareColoursColours[] =
-	{
-		 0.0f, 0.0f,1.0f,
-		0.0f, 0.0f, 0.0f,
-		0.0f, 0.0f, 0.0f,
-		0.0f, 0.0f, 0.0f,
-		 0.0f, 0.0f,0.0f,
-		 0.0f, 0.0f,0.0f
-	};
-
-	const float squarePositions2[] =
+	const float Square::Positions[] =
 	{
 		0.5f,  0.5f, 0.0f,
 		0.5f, -0.5f, 0.0f,
 		-0.5f, -0.5f, 0.0f,
 		-0.5f,  0.5f, 0.0f
 	};
-	const float squareColours2[] =
+	const float Square::TexCoords[] =
 	{
-		0.0f, 0.0f, 1.0f,
-		1.0f, 0.0f, 1.0f,
-		0.0f, 1.0f, 0.0f,
-		1.0f, 1.0f, 1.0f
+		1.0f, 1.0f,
+		1.0f, 0.0f,
+		0.0f, 0.0f,
+		0.0f, 1.0f,
 	};
-	const unsigned int squareIndices2[] =
+	const unsigned int Square::Indices[] =
 	{
 		0, 1, 3,
 		1, 2, 3

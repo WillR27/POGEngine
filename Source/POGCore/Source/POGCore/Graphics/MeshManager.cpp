@@ -11,39 +11,17 @@ namespace POG::Core
 		globalMeshManager = std::make_unique<MeshManager>();
 		defaultMeshManager = std::make_unique<MeshManager>();
 
-		const float spritePositions[] =
-		{
-			0.5f,  0.5f, 0.0f,
-			0.5f, -0.5f, 0.0f,
-			-0.5f, -0.5f, 0.0f,
-			-0.5f,  0.5f, 0.0f
-		};
-
-		float spriteTexCoords[] =
-		{
-			1.0f, 1.0f,
-			1.0f, 0.0f,
-			0.0f, 0.0f,
-			0.0f, 1.0f,
-		};
-
-		const unsigned int spriteIndices[] =
-		{
-			0, 1, 3,
-			1, 2, 3
-		};
-
 		Graphics::Mesh& spriteMesh = defaultMeshManager->CreateMesh("Sprite Mesh");
 		spriteMesh.SetNumberOfVerices(4);
-		spriteMesh.AddAttribute(spritePositions, sizeof(spritePositions), 3);
-		spriteMesh.AddAttribute(spriteTexCoords, sizeof(spriteTexCoords), 2);
-		spriteMesh.SetIndexData(spriteIndices, sizeof(spriteIndices));
+		spriteMesh.AddAttribute(Graphics::Square::Positions, sizeof(Graphics::Square::Positions), 3);
+		spriteMesh.AddAttribute(Graphics::Square::TexCoords, sizeof(Graphics::Square::TexCoords), 2);
+		spriteMesh.SetIndexData(Graphics::Square::Indices, sizeof(Graphics::Square::Indices));
 		spriteMesh.Build();
 
 		Graphics::Mesh& wireframeMesh = defaultMeshManager->CreateMesh("Wireframe Mesh");
 		wireframeMesh.SetNumberOfVerices(4);
-		wireframeMesh.AddAttribute(spritePositions, sizeof(spritePositions), 3);
-		wireframeMesh.SetIndexData(spriteIndices, sizeof(spriteIndices));
+		wireframeMesh.AddAttribute(Graphics::Square::Positions, sizeof(Graphics::Square::Positions), 3);
+		wireframeMesh.SetIndexData(Graphics::Square::Indices, sizeof(Graphics::Square::Indices));
 		wireframeMesh.Build();
 	}
 

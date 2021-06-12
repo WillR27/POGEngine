@@ -2,13 +2,14 @@
 
 namespace POG::Graphics
 {
-	extern const float squarePositions[18];
-	extern const float squareColours[18];
-	extern const float squareColoursColours[18];
+	struct Square
+	{
+		static const float Positions[12];
+		static const float TexCoords[8];
+		static const unsigned int Indices[6];
+	};
 
-	extern const float squarePositions2[12];
-	extern const float squareColours2[12];
-	extern const unsigned int squareIndices2[6];
+
 
 	extern const float cubePositions[108];
 	extern const float cubeColours[108];
