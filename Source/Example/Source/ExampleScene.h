@@ -3,6 +3,8 @@
 #include "POGCore.h"
 #include "POGGraphics.h"
 
+#include "Player.h"
+
 namespace Example
 {
 	class ExampleScene : public POG::Core::Scene
@@ -21,7 +23,7 @@ namespace Example
 		void Frame(float alpha) override;
 
 	private:
-		POG::Core::Entity player;
+		Player player;
 		POG::Core::Entity square;
 		POG::Core::Entity child;
 

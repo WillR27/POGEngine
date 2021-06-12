@@ -127,5 +127,9 @@ namespace POG::Graphics
 		SetPolygonMode(PolygonFace::Back, CurrentPolygonModeBack);
 		SetFrontFaceDirection(CurrentFrontFaceDirection);
 		SetCullFace(CurrentCullFace);
+
+		Enable(Graphics::Capability::Blend);
+		Enable(Graphics::Capability::CullFace);
+		Enable(Graphics::Capability::DepthTest);
 	}
 }

@@ -97,8 +97,8 @@ namespace POG::Core
 
 	void SpriteRectColliderRendererSystem::Frame(float alpha)
 	{
-		Graphics::PolygonFace prevFace = Graphics::GetPolygonModeFace();
-		Graphics::PolygonMode prevMode = Graphics::GetPolygonMode();
+		Graphics::PolygonMode prevModeFront = Graphics::GetPolygonMode(Graphics::PolygonFace::Front);
+		Graphics::PolygonMode prevModeBack = Graphics::GetPolygonMode(Graphics::PolygonFace::Back);
 
 		Graphics::SetPolygonMode(Graphics::PolygonFace::FrontAndBack, Graphics::PolygonMode::Line);
 
@@ -129,7 +129,8 @@ namespace POG::Core
 			mesh.Render();
 		}
 
-		Graphics::SetPolygonMode(prevFace, prevMode);
+		Graphics::SetPolygonMode(Graphics::PolygonFace::Front, prevModeFront);
+		Graphics::SetPolygonMode(Graphics::PolygonFace::Back, prevModeBack);
 	}
 
 	Signature SpriteRendererSystem::GetSignature(ECSManager& ecsManager)

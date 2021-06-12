@@ -254,10 +254,6 @@ namespace POG::Core
 
 		ECSManager& GetECSManager() const { return *ecsManager; }
 
-		//MeshManager& GetMeshManager();
-		//MaterialManager& GetMaterialManager();
-		//ShaderManager& GetShaderManager();
-
 	private:
 		EntityInfo entityInfo;
 		ECSManager* ecsManager;

@@ -72,6 +72,16 @@ namespace POG::Core
 
     void Scene::PreFrame(float alpha)
     {
+        float r = ((float)rand() / (RAND_MAX)) / 3.0f + 0;
+        float g = ((float)rand() / (RAND_MAX)) / 3.0f + 0;
+        float b = ((float)rand() / (RAND_MAX)) / 3.0f + 0;
+        r = 0.5f;
+        g = 0.5f;
+        b = 0.9f;
+
+        Graphics::ClearColour(r, g, b, 1.0f);
+        Graphics::ClearColourBuffer();
+        Graphics::ClearDepthBuffer();
     }
 
     void Scene::Frame(float alpha)

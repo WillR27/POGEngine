@@ -132,10 +132,6 @@ namespace POG::Core
 			// Find the corresponding component id index
 			POG_ASSERT(componentTypeIds.find(hashId) != componentTypeIds.end(), "Tried to access a component array that didn't exist: {0}.", STRINGIFY(T));
 
-			ComponentTypeId asd = componentTypeIds[hashId];
-
-			auto asdsada = componentArrays[asd];
-
 			// Return the component array at this index
 			return std::static_pointer_cast<ComponentArray<T>>(componentArrays[componentTypeIds[hashId]]);
 		}
