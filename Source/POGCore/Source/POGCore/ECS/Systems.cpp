@@ -86,28 +86,36 @@ namespace POG::Core
 		}
 	}
 
-	Signature RectColliderRendererSystem::GetSignature(ECSManager& ecsManager)
+	Signature SpriteRectColliderRendererSystem::GetSignature(ECSManager& ecsManager)
 	{
 		Signature signature;
 		signature.set(ecsManager.GetComponentTypeId<RectCollider>());
+		signature.set(ecsManager.GetComponentTypeId<Sprite>());
 		signature.set(ecsManager.GetComponentTypeId<Transform>());
 		return signature;
 	}
 
-	void RectColliderRendererSystem::Frame(float alpha)
+	void SpriteRectColliderRendererSystem::Frame(float alpha)
 	{
 		POG::Graphics::SetPolygonMode(POG_FRONT_AND_BACK, POG_LINE);
 
-		Graphics::Mesh& mesh = MeshManager::GetDefaultMesh("Wireframe Mesh");
+		Graphics::Mesh& mesh = MeshManager::GetDefaultMesh("Square Mesh");
 
 		for (EntityId entityId : entityIds)
 		{
 			auto& rectCollider = ecsManager.GetComponent<RectCollider>(entityId);
+			auto& sprite = ecsManager.GetComponent<Sprite>(entityId);
 			auto& transform = ecsManager.GetComponent<Transform>(entityId);
+
+			float ratioX = sprite.texture->GetWidth() / sprite.pixelsToUnitsRatio;
+			float ratioY = sprite.texture->GetHeight() / sprite.pixelsToUnitsRatio;
+
+			Maths::Vec3 prevScale = transform.prevScale * Maths::Vec3(ratioX, ratioY, 1.0f);
+			Maths::Vec3 currentScale = transform.scale * Maths::Vec3(ratioX, ratioY, 1.0f);
 
 			Maths::Vec3 position = Maths::Lerp(transform.prevPosition, transform.position, alpha);
 			Maths::Quat orientation = Maths::Lerp(transform.prevOrientation, transform.orientation, alpha);
-			Maths::Vec3 scale = Maths::Lerp(transform.prevScale, transform.scale, alpha);
+			Maths::Vec3 scale = Maths::Lerp(prevScale, currentScale, alpha);
 
 			Graphics::Shader& shader = ShaderManager::GetDefaultShader("Wireframe Shader");
 			shader.Use();
@@ -138,11 +146,11 @@ namespace POG::Core
 			auto& sprite = ecsManager.GetComponent<Sprite>(entityId);
 			auto& transform = ecsManager.GetComponent<Transform>(entityId);
 
-			float width = sprite.texture->GetWidth() / Sprite::PixelToUnitRatio;
-			float height = sprite.texture->GetHeight() / Sprite::PixelToUnitRatio;
+			float ratioX = sprite.texture->GetWidth() / sprite.pixelsToUnitsRatio;
+			float ratioY = sprite.texture->GetHeight() / sprite.pixelsToUnitsRatio;
 
-			Maths::Vec3 prevScale = transform.prevScale * Maths::Vec3(width, height, 1.0f);
-			Maths::Vec3 currentScale = transform.scale * Maths::Vec3(width, height, 1.0f);
+			Maths::Vec3 prevScale = transform.prevScale * Maths::Vec3(ratioX, ratioY, 1.0f);
+			Maths::Vec3 currentScale = transform.scale * Maths::Vec3(ratioX, ratioY, 1.0f);
 
 			Maths::Vec3 position = Maths::Lerp(transform.prevPosition, transform.position, alpha);
 			Maths::Quat orientation = Maths::Lerp(transform.prevOrientation, transform.orientation, alpha);

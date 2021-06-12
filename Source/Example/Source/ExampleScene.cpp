@@ -51,6 +51,7 @@ namespace Example
 		square.AddComponent(Core::Sprite
 			{
 				.texture = &blobTexture,
+				.pixelsToUnitsRatio = 100.0f,
 			});
 
 		child = GetECSManager().CreateEntity();

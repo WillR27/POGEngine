@@ -7,8 +7,8 @@ namespace POG::Core
 {
 	RayResultRectCollider Hits(const Ray& ray, const Transform& transform, const RectCollider& rectCollider, const Sprite& sprite)
 	{
-		float ratioX = sprite.texture->GetWidth() / Sprite::PixelToUnitRatio;
-		float ratioY = sprite.texture->GetHeight() / Sprite::PixelToUnitRatio;
+		float ratioX = sprite.texture->GetWidth() / sprite.pixelsToUnitsRatio;
+		float ratioY = sprite.texture->GetHeight() / sprite.pixelsToUnitsRatio;
 		
 		RectCollider collider = rectCollider;
 		collider.min.x *= ratioX;

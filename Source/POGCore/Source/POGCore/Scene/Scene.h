@@ -37,7 +37,7 @@ namespace POG::Core
 		CameraUpdateViewSystem& GetCameraUpdateViewSystem() { return *cameraUpdateViewSystem; }
 		MeshRendererSystem& GetMeshRendererSystem() { return *meshRendererSystem; }
 		PhysicsSystem& GetPhysicsSystem() { return *physicsSystem; }
-		RectColliderRendererSystem& GetRectColliderRendererSystem() { return *rectColliderRendererSystem; }
+		SpriteRectColliderRendererSystem& GetSpriteRectColliderRendererSystem() { return *spriteRectColliderRendererSystem; }
 		SpriteRendererSystem& GetSpriteRendererSystem() { return *spriteRendererSystem; }
 		TransformSystem& GetTransformSystem() { return *transformSystem; }
 
@@ -49,7 +49,7 @@ namespace POG::Core
 		std::shared_ptr<CameraUpdateViewSystem> cameraUpdateViewSystem;
 		std::shared_ptr<MeshRendererSystem> meshRendererSystem;
 		std::shared_ptr<PhysicsSystem> physicsSystem;
-		std::shared_ptr<RectColliderRendererSystem> rectColliderRendererSystem;
+		std::shared_ptr<SpriteRectColliderRendererSystem> spriteRectColliderRendererSystem;
 		std::shared_ptr<SpriteRendererSystem> spriteRendererSystem;
 		std::shared_ptr<TransformSystem> transformSystem;
 	};

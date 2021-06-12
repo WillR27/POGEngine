@@ -18,7 +18,7 @@ namespace POG::Core
 		spriteMesh.SetIndexData(Graphics::Square::Indices, sizeof(Graphics::Square::Indices));
 		spriteMesh.Build();
 
-		Graphics::Mesh& wireframeMesh = defaultMeshManager->CreateMesh("Wireframe Mesh");
+		Graphics::Mesh& wireframeMesh = defaultMeshManager->CreateMesh("Square Mesh");
 		wireframeMesh.SetNumberOfVerices(4);
 		wireframeMesh.AddAttribute(Graphics::Square::Positions, sizeof(Graphics::Square::Positions), 3);
 		wireframeMesh.SetIndexData(Graphics::Square::Indices, sizeof(Graphics::Square::Indices));

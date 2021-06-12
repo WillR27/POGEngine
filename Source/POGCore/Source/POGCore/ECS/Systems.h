@@ -44,10 +44,10 @@ namespace POG::Core
 		void Update(float dt);
 	};
 
-	class RectColliderRendererSystem : public System
+	class SpriteRectColliderRendererSystem : public System
 	{
 	public:
-		RectColliderRendererSystem(ECSManager& ecsManager)
+		SpriteRectColliderRendererSystem(ECSManager& ecsManager)
 			: System::System(ecsManager)
 		{
 		}
