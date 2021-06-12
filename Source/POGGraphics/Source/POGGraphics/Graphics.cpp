@@ -50,16 +50,15 @@ namespace POG::Graphics
 		glClear(GL_DEPTH_BUFFER_BIT);
 	}
 
-	PolygonFace CurrentPolygonModeFace = PolygonFace::FrontAndBack;
-	PolygonFace GetPolygonModeFace() { return CurrentPolygonModeFace; }
-
-	PolygonMode CurrentPolygonMode = PolygonMode::Fill;
-	PolygonMode GetPolygonMode() { return CurrentPolygonMode; }
+	PolygonMode CurrentPolygonModeFront = PolygonMode::Fill;
+	PolygonMode CurrentPolygonModeBack = PolygonMode::Fill;
+	PolygonMode GetPolygonMode(PolygonFace face) { return face == PolygonFace::Back ? CurrentPolygonModeBack : CurrentPolygonModeFront; }
 
 	void SetPolygonMode(PolygonFace face, PolygonMode mode)
 	{
-		CurrentPolygonModeFace = face;
-		CurrentPolygonMode = mode;
+		if (face == PolygonFace::Front) CurrentPolygonModeFront = mode;
+		else if (face == PolygonFace::Back) CurrentPolygonModeBack = mode;
+		else { CurrentPolygonModeFront = mode; CurrentPolygonModeBack = mode; }
 		glPolygonMode(static_cast<GLenum>(face), static_cast<GLenum>(mode));
 	}
 

@@ -85,8 +85,7 @@ namespace POG::Graphics
 	void ClearColourBuffer();
 	void ClearDepthBuffer();
 
-	PolygonFace GetPolygonModeFace();
-	PolygonMode GetPolygonMode();
+	PolygonMode GetPolygonMode(PolygonFace face);
 	void SetPolygonMode(PolygonFace face, PolygonMode mode);
 
 	PolygonFaceDirection GetFrontFace();
