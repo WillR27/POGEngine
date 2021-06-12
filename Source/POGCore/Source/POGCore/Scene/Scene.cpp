@@ -51,13 +51,38 @@ namespace POG::Core
 
     void Scene::Input(InputPackage& inputPackage, float dt)
     {
+        // Leave empty
+    }
+
+    void Scene::PreUpdate(float dt)
+    {
     }
 
     void Scene::Update(float dt)
+    {
+        // Leave empty
+    }
+
+    void Scene::PostUpdate(float dt)
+    {
+        GetPhysicsSystem().Update(dt);
+        GetTransformSystem().Update(dt);
+        GetCameraUpdateViewSystem().UpdateView();
+    }
+
+    void Scene::PreFrame(float alpha)
     {
     }
 
     void Scene::Frame(float alpha)
     {
+        // Leave empty
+    }
+
+    void Scene::PostFrame(float alpha)
+    {
+        GetMeshRendererSystem().Frame(alpha);
+        GetSpriteRendererSystem().Frame(alpha);
+        GetRectColliderRendererSystem().Frame(alpha);
     }
 }

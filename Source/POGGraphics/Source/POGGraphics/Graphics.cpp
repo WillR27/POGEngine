@@ -68,7 +68,7 @@ namespace POG::Graphics
 
 	void Blend(bool enable)
 	{
-		glEnable(GL_BLEND);
+		enable ? glEnable(GL_BLEND) : glDisable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	}
 

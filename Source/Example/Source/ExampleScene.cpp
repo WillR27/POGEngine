@@ -141,8 +141,6 @@ namespace Example
 
 	void ExampleScene::Update(float dt)
 	{
-		GetPhysicsSystem().Update(dt);
-
 		Core::Transform& squareTransform = square.GetComponent<Core::Transform>();
 		Core::RectCollider& squareRectCollider = square.GetComponent<Core::RectCollider>();
 
@@ -169,9 +167,6 @@ namespace Example
 			//POG_TRACE("{0}, {1}, {2}", result.pointOfIntersection.x, result.pointOfIntersection.y, result.pointOfIntersection.z);
 			//POG_WARN("{0}, {1}", result.pointOnRect.x, result.pointOnRect.y);
 		}
-
-		GetTransformSystem().Update(dt);
-		GetCameraUpdateViewSystem().UpdateView();
 	}
 
 	void ExampleScene::Frame(float alpha)
@@ -190,44 +185,5 @@ namespace Example
 		//Graphics::CullFace(POG_BACK);
 		Graphics::DepthTest(true);
 		Graphics::Blend(true);
-
-		//if (flip)
-		//{
-		//	float vertices[] =
-		//	{
-		//		0.5f, 0.5f, 0.0f,
-		//		-0.5f, 0.5f, 0.0f,
-		//		-0.0f, -0.5f, 0.0f
-		//	};
-
-		//	vbo.Bind();
-		//	vbo.SetVertexData(vertices, sizeof(vertices));
-		//}
-		//else
-		//{
-		//	float vertices[] =
-		//	{
-		//		-0.5f, -0.5f, 0.0f,
-		//		0.5f, -0.5f, 0.0f,
-		//		0.0f,  0.5f, 0.0f
-		//	};
-
-		//	vbo.Bind();
-		//	vbo.SetVertexData(vertices, sizeof(vertices));
-		//}
-
-		//vao.Bind();
-		//vao.SetAttribute(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-
-		//shader.Use();
-
-		//glDrawArrays(GL_TRIANGLES, 0, 3);
-
-		//meshShader->Use();
-		//mesh->Render();
-
-		GetMeshRendererSystem().Frame(alpha);
-		GetSpriteRendererSystem().Frame(alpha);
-		GetRectColliderRendererSystem().Frame(alpha);
 	}
 }

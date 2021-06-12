@@ -23,8 +23,14 @@ namespace POG::Core
 		virtual void Exit();
 
 		virtual void Input(InputPackage& inputPackage, float dt);
+
+		void PreUpdate(float dt);
 		virtual void Update(float dt);
+		void PostUpdate(float dt);
+
+		void PreFrame(float alpha);
 		virtual void Frame(float alpha);
+		void PostFrame(float alpha);
 
 		ECSManager& GetECSManager() { return ecsManager; }
 

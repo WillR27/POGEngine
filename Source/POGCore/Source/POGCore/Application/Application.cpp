@@ -209,7 +209,9 @@ namespace POG::Core
 
 		Input::Dispatch(dt);
 
+		Scene::GetActiveScene().PreUpdate(dt);
 		Scene::GetActiveScene().Update(dt);
+		Scene::GetActiveScene().PostUpdate(dt);
 	}
 
 	void Application::Frame(float alpha)
@@ -219,7 +221,9 @@ namespace POG::Core
 			window->Frame();
 		}
 
+		Scene::GetActiveScene().PreFrame(timeBetweenFrames / GetTargetFrameInterval());
 		Scene::GetActiveScene().Frame(timeBetweenFrames / GetTargetFrameInterval());
+		Scene::GetActiveScene().PostFrame(timeBetweenFrames / GetTargetFrameInterval());
 
 		if (IsStandalone())
 		{
