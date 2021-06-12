@@ -123,7 +123,8 @@ namespace POG::Graphics
 		glLineWidth(3.0f);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-		SetPolygonMode(CurrentPolygonModeFace, CurrentPolygonMode);
+		SetPolygonMode(PolygonFace::Front, CurrentPolygonModeFront);
+		SetPolygonMode(PolygonFace::Back, CurrentPolygonModeBack);
 		SetFrontFaceDirection(CurrentFrontFaceDirection);
 		SetCullFace(CurrentCullFace);
 	}
