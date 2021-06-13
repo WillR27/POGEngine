@@ -56,6 +56,15 @@ namespace POG::Core
 		return { x, y };
 	}
 
+	float Mouse::AngleFromXAxis(Maths::Vec2 normalisedOrigin)
+	{
+		Maths::Vec2 pos = Normalise() - normalisedOrigin;
+
+		float angle = atan2f(pos.y, pos.x);
+
+		return angle;
+	}
+
 	bool Mouse::IsButtonPressed(int button, int mod)
 	{
 		return MouseActions[button] == POG_INPUT_PRESS && MouseModifiers[button] == mod;

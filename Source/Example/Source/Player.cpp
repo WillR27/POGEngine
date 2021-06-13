@@ -55,7 +55,7 @@ namespace Example
 
 		Maths::Vec2 mousePos = Core::Mouse::Normalise();
 
-		float angle = atan2f(mousePos.y, mousePos.x) + Maths::HalfPi();
+		float angle = Core::Mouse::AngleFromXAxis() + Maths::HalfPi();
 		transform.orientation = Maths::Quat(Maths::Vec3(0.0f, 0.0f, -angle));
 		attachedCamera.relativeOrientation = Maths::Quat(Maths::Vec3(0.0f, 0.0f, angle));
 	}

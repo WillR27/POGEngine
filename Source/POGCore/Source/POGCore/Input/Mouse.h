@@ -30,7 +30,11 @@ namespace POG::Core
 		static float GetDeltaY() { return DeltaPos.y; }
 
 		// Normalises the mouse coords with respect to the window to fit the given range
-		static Maths::Vec2 Normalise(Maths::Vec2 min = Maths::Vec2(-1.0f, -1.0f), Maths::Vec2 max = Maths::Vec2(1.0f, 1.0f));
+		static Maths::Vec2 Normalise(Maths::Vec2 min = { -1.0f, -1.0f }, Maths::Vec2 max = { 1.0f, 1.0f });
+
+		// Returns the angle of the mouse cursor relative to the x axis in radians
+		// The origin must lie within the range (-1.0f to +1.0f, -1.0f to +1.0f)
+		static float AngleFromXAxis(Maths::Vec2 normalisedOrigin = { 0.0f, 0.0f });
 
 		static bool IsButtonPressed(int button, int mod = POG_MOD_NONE);
 		static bool IsButtonReleased(int button, int mod = POG_MOD_NONE);
