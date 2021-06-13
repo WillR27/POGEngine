@@ -52,6 +52,16 @@ namespace POG::Core
 		return KeyActions[key] == POG_INPUT_REPEAT && KeyModifiers[key] == mod;
 	}
 
+	float Input::NormaliseMouseX()
+	{
+		return ((GetMouseX() * 2.0f) / Core::Application::GetInstance().GetWidth()) - 1.0f;
+	}
+
+	float Input::NormaliseMouseY()
+	{
+		return ((GetMouseY() * 2.0f) / Core::Application::GetInstance().GetHeight()) - 1.0f;
+	}
+
 	bool Input::MouseButtonPressed(int button, int mod)
 	{
 		return MouseActions[button] == POG_INPUT_PRESS && MouseModifiers[button] == mod;

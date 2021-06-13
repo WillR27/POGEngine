@@ -25,10 +25,15 @@ namespace POG::Core
 		textures.clear();
 	}
 
-	Graphics::Texture& TextureManager::CreateTexture(const char* name)
+	Graphics::Texture& TextureManager::CreateTexture(const char* name, const char* file)
 	{
 		Graphics::Texture* newTexture = new Graphics::Texture();
 		textures[name] = newTexture;
+
+		if (file != "")
+		{
+			newTexture->LoadFromImage(file);
+		}
 
 		return *newTexture;
 	}

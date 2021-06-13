@@ -22,16 +22,18 @@ namespace POG::Core
 		CalculateProjection();
 	}
 
-	void Camera::UpdateView(Maths::Vec3 parentPosition, Maths::Quat parentOrientation)
+	void Camera::UpdateView(Maths::Vec3 parentPosition, Maths::Vec3 relativePosition, Maths::Quat parentOrientation, Maths::Quat relativeOrientation)
 	{
 		cameraOrientation = Maths::Quat(Maths::Vec3(pitch, yaw, 0.0f));
 
-		Maths::Quat orientation = Maths::Normalise(parentOrientation * cameraOrientation);
+		Maths::Vec3 position = parentPosition + relativePosition;
+		Maths::Quat orientation = Maths::Normalise(relativeOrientation * Maths::Normalise(parentOrientation * cameraOrientation));
+
 		forwardVec = Maths::ToForwardVec(orientation);
 		upVec = Maths::ToUpVec(orientation);
 		rightVec = Maths::ToRightVec(orientation);
 
-		view = glm::lookAt(parentPosition, parentPosition + forwardVec, upVec);
+		view = glm::lookAt(position, position + forwardVec, upVec);
 	}
 
 	void Camera::AddPitchAndYaw(float pitchAmount, float yawAmount)

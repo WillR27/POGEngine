@@ -27,6 +27,8 @@ namespace POG::Core
 		static float GetPrevMouseY() { return PrevMouseY; }
 		static float GetDeltaMouseX() { return DeltaMouseX; }
 		static float GetDeltaMouseY() { return DeltaMouseY; }
+		static float NormaliseMouseX();
+		static float NormaliseMouseY();
 
 		static bool MouseButtonPressed(int button, int mod = POG_MOD_NONE);
 		static bool MouseButtonReleased(int button, int mod = POG_MOD_NONE);

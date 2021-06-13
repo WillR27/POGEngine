@@ -19,9 +19,9 @@ namespace POG::Core
 		for (EntityId entityId : entityIds)
 		{
 			auto& transform = ecsManager.GetComponent<Transform>(entityId);
-			auto& camera = ecsManager.GetComponent<AttachedCamera>(entityId);
+			auto& attachedCamera = ecsManager.GetComponent<AttachedCamera>(entityId);
 
-			camera.camera->UpdateView(transform.position, transform.orientation);
+			attachedCamera.camera->UpdateView(transform.position, attachedCamera.relativePosition, transform.orientation, attachedCamera.relativeOrientation);
 		}
 	}
 

@@ -12,6 +12,9 @@ namespace POG::Core
 {
 	struct AttachedCamera
 	{
+		Maths::Vec3 relativePosition = Maths::Vec3(0.0f, 0.0f, 0.0f);
+		Maths::Quat relativeOrientation = Maths::Quat(Maths::Vec3(0.0f, 0.0f, 0.0f));
+
 		std::shared_ptr<Core::Camera> camera = nullptr;
 	};
 

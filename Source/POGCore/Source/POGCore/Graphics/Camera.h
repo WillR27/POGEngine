@@ -13,7 +13,7 @@ namespace POG::Core
 
 		Camera();
 
-		void UpdateView(Maths::Vec3 parentPosition, Maths::Quat parentOrientation);
+		void UpdateView(Maths::Vec3 parentPosition, Maths::Vec3 relativePosition, Maths::Quat parentOrientation, Maths::Quat relativeOrientation);
 		void AddPitchAndYaw(float pitchAmount, float yawAmount);
 		Maths::Quat GetCameraOrientation() const { return cameraOrientation; }
 

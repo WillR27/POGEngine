@@ -7,8 +7,8 @@ namespace Example
 {
 	void ExampleScene::Init()
 	{
-		Graphics::Texture& blobTexture = Core::TextureManager::CreateGlobalTexture("Blob");
-		blobTexture.LoadFromImage("Resources\\Sprites\\Rectangle.png");
+		Graphics::Texture& playerTexture = Core::TextureManager::CreateGlobalTexture("Player", "Resources\\Sprites\\Player.png");
+		Graphics::Texture& rectangleTexture = Core::TextureManager::CreateGlobalTexture("Rectangle", "Resources\\Sprites\\Rectangle.png");
 
 		player = GetECSManager().CreateEntity<Player>(3.0f, 2.0f);
 		Core::Input::AddInputCallback(&Player::InputCallback, &player);
@@ -33,8 +33,7 @@ namespace Example
 			});*/
 		square.AddComponent(Core::Sprite
 			{
-				.texture = &blobTexture,
-				.pixelsToUnitsRatio = 100.0f,
+				.texture = &rectangleTexture,
 			});
 
 		child = GetECSManager().CreateEntity();
@@ -118,6 +117,6 @@ namespace Example
 
 	void ExampleScene::Frame(float alpha)
 	{
-		
+
 	}
 }

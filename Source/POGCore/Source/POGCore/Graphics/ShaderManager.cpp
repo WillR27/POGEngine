@@ -41,7 +41,14 @@ out vec4 FragColor;
 
 void main()
 {
-	FragColor = texture(textureSample, texCoord);
+	vec4 texColour = texture(textureSample, texCoord);
+
+	if (texColour.a == 0.0)
+	{
+		discard;
+	}
+
+	FragColor = texColour;
 } 
 )";
 
