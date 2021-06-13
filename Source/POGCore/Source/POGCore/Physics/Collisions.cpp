@@ -69,6 +69,7 @@ namespace POG::Core
 
 	Ray CalcMouseRay(Maths::Vec3 origin)
 	{
+		// TODO: Use Mouse::Normalise() instead
 		// Normalise mouse coords to OpenGL style
 		float x = ((Core::Mouse::GetX() * 2.0f) / Core::Application::GetInstance().GetWidth()) - 1.0f;
 		float y = 1.0f - ((Core::Mouse::GetY() * 2.0f) / Core::Application::GetInstance().GetHeight());

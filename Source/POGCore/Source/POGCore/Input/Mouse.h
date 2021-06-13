@@ -1,5 +1,7 @@
 #pragma once
 
+#include "POGMaths.h"
+
 #include "InputValues.h"
 
 namespace POG::Core
@@ -14,14 +16,21 @@ namespace POG::Core
 		friend class WindowsWindow;
 
 		static bool HasMouseMoved() { return MouseHasMoved; }
-		static float GetX() { return MouseX; }
-		static float GetY() { return MouseY; }
-		static float GetPrevX() { return PrevMouseX; }
-		static float GetPrevY() { return PrevMouseY; }
-		static float GetDeltaX() { return DeltaMouseX; }
-		static float GetDeltaY() { return DeltaMouseY; }
-		static float NormaliseMouseX();
-		static float NormaliseMouseY();
+
+		static Maths::Vec2 GetPos() { return Pos; }
+		static float GetX() { return Pos.x; }
+		static float GetY() { return Pos.y; }
+
+		static Maths::Vec2 GetPrevPos() { return PrevPos; }
+		static float GetPrevX() { return PrevPos.x; }
+		static float GetPrevY() { return PrevPos.y; }
+
+		static Maths::Vec2 GetDeltaPos() { return DeltaPos; }
+		static float GetDeltaX() { return DeltaPos.x; }
+		static float GetDeltaY() { return DeltaPos.y; }
+
+		// Normalises the mouse coords with respect to the window to fit the given range
+		static Maths::Vec2 Normalise(Maths::Vec2 min = Maths::Vec2(-1.0f, -1.0f), Maths::Vec2 max = Maths::Vec2(1.0f, 1.0f));
 
 		static bool IsButtonPressed(int button, int mod = POG_MOD_NONE);
 		static bool IsButtonReleased(int button, int mod = POG_MOD_NONE);
@@ -33,13 +42,13 @@ namespace POG::Core
 
 		static bool ShouldResetMouseMovement;
 		static bool MouseHasMoved;
-		static float MouseX, MouseY;
-		static float PrevMouseX, PrevMouseY;
-		static float DeltaMouseX, DeltaMouseY;
+		static Maths::Vec2 Pos;
+		static Maths::Vec2 PrevPos;
+		static Maths::Vec2 DeltaPos;
 
 		static void Init();
 
-		static void SetXY(float x, float y);
+		static void SetPos(Maths::Vec2 mousePos);
 
 		static void ResetMovement();
 		static void ResetDeltas();

@@ -1,5 +1,7 @@
 #pragma once
 
+#include "POGMaths.h"
+
 #include "Event.h"
 
 namespace POG::Core
@@ -39,11 +41,10 @@ namespace POG::Core
 
 	POG_EVENT(RawMouseMoveEvent, InputEvent)
 	{
-		float mouseX, mouseY;
+		Maths::Vec2 pos;
 
-		RawMouseMoveEvent(float mouseX, float mouseY)
-			: mouseX(mouseX)
-			, mouseY(mouseY)
+		RawMouseMoveEvent(Maths::Vec2 pos)
+			: pos(pos)
 		{
 		}
 
@@ -55,7 +56,7 @@ namespace POG::Core
 		std::string ToString() const override
 		{
 			std::stringstream ss;
-			ss << GetName() << ": " << "MouseX:" << mouseX << ", MouseY: " << mouseY;
+			ss << GetName() << ": " << "MouseX:" << pos.x << ", MouseY: " << pos.y;
 			return ss.str();
 		}
 	};

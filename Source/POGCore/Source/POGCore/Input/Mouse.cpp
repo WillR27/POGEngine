@@ -14,12 +14,9 @@ namespace POG::Core
 	bool Mouse::ShouldResetMouseMovement = true;
 	
 	bool Mouse::MouseHasMoved = false;
-	float Mouse::MouseX = 0.0f;
-	float Mouse::MouseY = 0.0f;
-	float Mouse::PrevMouseX = 0.0f;
-	float Mouse::PrevMouseY = 0.0f;
-	float Mouse::DeltaMouseX = 0.0f;
-	float Mouse::DeltaMouseY = 0.0f;
+	Maths::Vec2 Mouse::Pos(0.0f, 0.0f);
+	Maths::Vec2 Mouse::PrevPos(0.0f, 0.0f);
+	Maths::Vec2 Mouse::DeltaPos(0.0f, 0.0f);
 
 	void Mouse::Init()
 	{
@@ -36,7 +33,7 @@ namespace POG::Core
 	{
 		MouseHasMoved = true;
 
-		SetXY(e.mouseX, e.mouseY);
+		SetPos(e.pos);
 
 		Input::GlobalInputManager.OnMouseMoveEvent(e);
 	}
@@ -49,14 +46,14 @@ namespace POG::Core
 		Input::GlobalInputManager.OnMouseButtonEvent(e);
 	}
 
-	float Mouse::NormaliseMouseX()
+	Maths::Vec2 Mouse::Normalise(Maths::Vec2 min, Maths::Vec2 max)
 	{
-		return ((GetX() * 2.0f) / Core::Application::GetInstance().GetWidth()) - 1.0f;
-	}
+		Maths::Vec2 dif = max - min;
 
-	float Mouse::NormaliseMouseY()
-	{
-		return ((GetY() * 2.0f) / Core::Application::GetInstance().GetHeight()) - 1.0f;
+		float x = ((GetX() * dif.x) / Core::Application::GetInstance().GetWidth()) - (dif.x / 2.0f);
+		float y = ((GetY() * dif.y) / Core::Application::GetInstance().GetHeight()) - (dif.y / 2.0f);
+
+		return { x, y };
 	}
 
 	bool Mouse::IsButtonPressed(int button, int mod)
@@ -69,25 +66,21 @@ namespace POG::Core
 		return MouseActions[button] == POG_INPUT_RELEASE && MouseModifiers[button] == mod;
 	}
 
-	void Mouse::SetXY(float x, float y)
+	void Mouse::SetPos(Maths::Vec2 mousePos)
 	{
 		if (ShouldResetMouseMovement)
 		{
-			PrevMouseX = x;
-			PrevMouseY = y;
+			PrevPos = mousePos;
 
 			ShouldResetMouseMovement = false;
 		}
 		else
 		{
-			PrevMouseX = MouseX;
-			PrevMouseY = MouseY;
+			PrevPos = Pos;
 		}
 
-		MouseX = x;
-		MouseY = y;
-		DeltaMouseX += MouseX - PrevMouseX;
-		DeltaMouseY += MouseY - PrevMouseY;
+		Pos = mousePos;
+		DeltaPos += (Pos - PrevPos);
 	}
 
 	void Mouse::ResetMovement()
@@ -97,8 +90,7 @@ namespace POG::Core
 
 	void Mouse::ResetDeltas()
 	{
-		DeltaMouseX = 0;
-		DeltaMouseY = 0;
+		DeltaPos = Maths::Vec2(0.0f, 0.0f);
 		MouseHasMoved = false;
 	}
 
