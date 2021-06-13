@@ -53,8 +53,8 @@ namespace Example
 		rigidBody.velocity.y = rigidBody.velocity.y > moveSpeed ? moveSpeed : rigidBody.velocity.y < -moveSpeed ? -moveSpeed : rigidBody.velocity.y;
 		rigidBody.velocity.z = 0.0f;
 
-		float mouseX = Core::Input::NormaliseMouseX();
-		float mouseY = Core::Input::NormaliseMouseY();
+		float mouseX = Core::Mouse::NormaliseMouseX();
+		float mouseY = Core::Mouse::NormaliseMouseY();
 
 		float angle = atan2f(mouseY, mouseX) + Maths::HalfPi();
 		transform.orientation = Maths::Quat(Maths::Vec3(0.0f, 0.0f, -angle));

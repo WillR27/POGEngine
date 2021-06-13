@@ -99,7 +99,8 @@ namespace POG::Core
 			Graphics::Init();
 		}
 
-		Input::Init();
+		Keyboard::Init();
+		Mouse::Init();
 
 		MeshManager::Init();
 		ShaderManager::Init();
@@ -185,9 +186,9 @@ namespace POG::Core
 
 	void Application::ResetInput()
 	{
-		Input::ResetKeys();
-		Input::ResetMouseDeltas();
-		Input::ResetMouseButtons();
+		Keyboard::ResetKeys();
+		Mouse::ResetMouseDeltas();
+		Mouse::ResetMouseButtons();
 	}
 
 	void Application::Input()

@@ -70,8 +70,8 @@ namespace POG::Core
 	Ray CalcMouseRay(Maths::Vec3 origin)
 	{
 		// Normalise mouse coords to OpenGL style
-		float x = ((Core::Input::GetMouseX() * 2.0f) / Core::Application::GetInstance().GetWidth()) - 1.0f;
-		float y = 1.0f - ((Core::Input::GetMouseY() * 2.0f) / Core::Application::GetInstance().GetHeight());
+		float x = ((Core::Mouse::GetMouseX() * 2.0f) / Core::Application::GetInstance().GetWidth()) - 1.0f;
+		float y = 1.0f - ((Core::Mouse::GetMouseY() * 2.0f) / Core::Application::GetInstance().GetHeight());
 
 		// 1.0f to represent into the screen
 		POG::Maths::Vec4 clip(x, y, 1.0f, 1.0f);

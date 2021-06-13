@@ -90,7 +90,7 @@ namespace Example
 		Core::Transform& squareTransform = square.GetComponent<Core::Transform>();
 		Core::RectCollider& squareRectCollider = square.GetComponent<Core::RectCollider>();
 
-		if (Core::Input::MouseButtonReleased(POG_MOUSE_BUTTON_LEFT))
+		if (Core::Mouse::MouseButtonReleased(POG_MOUSE_BUTTON_LEFT))
 		{
 			POG_TRACE("asdsad");
 		}
