@@ -187,8 +187,8 @@ namespace POG::Core
 	void Application::ResetInput()
 	{
 		Keyboard::ResetKeys();
-		Mouse::ResetMouseDeltas();
-		Mouse::ResetMouseButtons();
+		Mouse::ResetDeltas();
+		Mouse::ResetButtons();
 	}
 
 	void Application::Input()

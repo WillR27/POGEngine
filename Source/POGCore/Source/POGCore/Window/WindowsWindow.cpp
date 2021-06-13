@@ -181,6 +181,8 @@ namespace POG::Core
 		static int width, height, x, y;
 		this->isFullscreen = isFullscreen;
 
+		Mouse::ResetMovement();
+
 		if (isFullscreen)
 		{
 			width = windowData.width;

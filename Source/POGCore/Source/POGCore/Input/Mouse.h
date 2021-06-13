@@ -11,19 +11,20 @@ namespace POG::Core
 	{
 	public:
 		friend class Application;
+		friend class WindowsWindow;
 
 		static bool HasMouseMoved() { return MouseHasMoved; }
-		static float GetMouseX() { return MouseX; }
-		static float GetMouseY() { return MouseY; }
-		static float GetPrevMouseX() { return PrevMouseX; }
-		static float GetPrevMouseY() { return PrevMouseY; }
-		static float GetDeltaMouseX() { return DeltaMouseX; }
-		static float GetDeltaMouseY() { return DeltaMouseY; }
+		static float GetX() { return MouseX; }
+		static float GetY() { return MouseY; }
+		static float GetPrevX() { return PrevMouseX; }
+		static float GetPrevY() { return PrevMouseY; }
+		static float GetDeltaX() { return DeltaMouseX; }
+		static float GetDeltaY() { return DeltaMouseY; }
 		static float NormaliseMouseX();
 		static float NormaliseMouseY();
 
-		static bool MouseButtonPressed(int button, int mod = POG_MOD_NONE);
-		static bool MouseButtonReleased(int button, int mod = POG_MOD_NONE);
+		static bool IsButtonPressed(int button, int mod = POG_MOD_NONE);
+		static bool IsButtonReleased(int button, int mod = POG_MOD_NONE);
 
 	private:
 		// Stores the most recent mouse button states since last update
@@ -38,14 +39,14 @@ namespace POG::Core
 
 		static void Init();
 
-		static void ResetMouseMovement();
-		static void ResetMouseDeltas();
-		static void SetMouseXY(float x, float y);
+		static void SetXY(float x, float y);
 
-		static void ResetMouseButtons();
+		static void ResetMovement();
+		static void ResetDeltas();
+		static void ResetButtons();
 
-		static void OnMouseMoveEvent(RawMouseMoveEvent& e);
-		static void OnMouseButtonEvent(RawMouseButtonEvent& e);
+		static void OnRawMouseMoveEvent(RawMouseMoveEvent& e);
+		static void OnRawMouseButtonEvent(RawMouseButtonEvent& e);
 	};
 }
 

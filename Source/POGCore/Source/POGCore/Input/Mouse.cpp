@@ -24,24 +24,24 @@ namespace POG::Core
 	void Mouse::Init()
 	{
 		auto& mainEventBus = Application::GetInstance().GetMainEventBus();
-		mainEventBus.Subscribe(OnMouseMoveEvent);
-		mainEventBus.Subscribe(OnMouseButtonEvent);
+		mainEventBus.Subscribe(OnRawMouseMoveEvent);
+		mainEventBus.Subscribe(OnRawMouseButtonEvent);
 
-		ResetMouseMovement();
-		ResetMouseDeltas();
-		ResetMouseButtons();
+		ResetMovement();
+		ResetDeltas();
+		ResetButtons();
 	}
 
-	void Mouse::OnMouseMoveEvent(RawMouseMoveEvent& e)
+	void Mouse::OnRawMouseMoveEvent(RawMouseMoveEvent& e)
 	{
 		MouseHasMoved = true;
 
-		SetMouseXY(e.mouseX, e.mouseY);
+		SetXY(e.mouseX, e.mouseY);
 
 		Input::GlobalInputManager.OnMouseMoveEvent(e);
 	}
 
-	void Mouse::OnMouseButtonEvent(RawMouseButtonEvent& e)
+	void Mouse::OnRawMouseButtonEvent(RawMouseButtonEvent& e)
 	{
 		Mouse::MouseActions[e.button] = e.action;
 		Mouse::MouseModifiers[e.button] = e.mods;
@@ -51,37 +51,25 @@ namespace POG::Core
 
 	float Mouse::NormaliseMouseX()
 	{
-		return ((GetMouseX() * 2.0f) / Core::Application::GetInstance().GetWidth()) - 1.0f;
+		return ((GetX() * 2.0f) / Core::Application::GetInstance().GetWidth()) - 1.0f;
 	}
 
 	float Mouse::NormaliseMouseY()
 	{
-		return ((GetMouseY() * 2.0f) / Core::Application::GetInstance().GetHeight()) - 1.0f;
+		return ((GetY() * 2.0f) / Core::Application::GetInstance().GetHeight()) - 1.0f;
 	}
 
-	bool Mouse::MouseButtonPressed(int button, int mod)
+	bool Mouse::IsButtonPressed(int button, int mod)
 	{
 		return MouseActions[button] == POG_INPUT_PRESS && MouseModifiers[button] == mod;
 	}
 
-	bool Mouse::MouseButtonReleased(int button, int mod)
+	bool Mouse::IsButtonReleased(int button, int mod)
 	{
 		return MouseActions[button] == POG_INPUT_RELEASE && MouseModifiers[button] == mod;
 	}
 
-	void Mouse::ResetMouseMovement()
-	{
-		ShouldResetMouseMovement = true;
-	}
-
-	void Mouse::ResetMouseDeltas()
-	{
-		DeltaMouseX = 0;
-		DeltaMouseY = 0;
-		MouseHasMoved = false;
-	}
-
-	void Mouse::SetMouseXY(float x, float y)
+	void Mouse::SetXY(float x, float y)
 	{
 		if (ShouldResetMouseMovement)
 		{
@@ -102,7 +90,19 @@ namespace POG::Core
 		DeltaMouseY += MouseY - PrevMouseY;
 	}
 
-	void Mouse::ResetMouseButtons()
+	void Mouse::ResetMovement()
+	{
+		ShouldResetMouseMovement = true;
+	}
+
+	void Mouse::ResetDeltas()
+	{
+		DeltaMouseX = 0;
+		DeltaMouseY = 0;
+		MouseHasMoved = false;
+	}
+
+	void Mouse::ResetButtons()
 	{
 		for (int i = 0; i < POG_MAX_MOUSE_VALUE; i++)
 		{
