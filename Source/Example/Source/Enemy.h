@@ -3,10 +3,10 @@
 #include "POGCore.h"
 #include "POGMaths.h"
 
-#include "Player.h"
-
 namespace Example
 {
+	class Player;
+
 	struct EnemyInfo
 	{
 

@@ -30,6 +30,7 @@ namespace Example
 		POG::Core::Entity child;
 
 		std::shared_ptr<BulletMoveSystem> bulletMoveSystem;
+		std::shared_ptr<BulletCollisionSystem> bulletCollisionSystem;
 		std::shared_ptr<EnemySystem> enemySystem;
 
 		bool flip;

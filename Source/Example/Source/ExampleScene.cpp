@@ -18,6 +18,7 @@ namespace Example
 		GetECSManager().RegisterComponent<BulletInfo>();
 		GetECSManager().RegisterComponent<EnemyInfo>();
 		bulletMoveSystem = GetECSManager().RegisterSystem<BulletMoveSystem>();
+		bulletCollisionSystem = GetECSManager().RegisterSystem<BulletCollisionSystem>(*GetECSManager().RegisterSystem<BulletEnemyCollisionSystem>());
 		enemySystem = GetECSManager().RegisterSystem<EnemySystem>(player);
 
 		square = GetECSManager().CreateEntity();
@@ -108,6 +109,7 @@ namespace Example
 
 		bulletMoveSystem->Update(dt);
 		enemySystem->Update(dt);
+		bulletCollisionSystem->Update(dt);
 
 		//Core::Transform& playerTransform = player.GetComponent<Core::Transform>();
 

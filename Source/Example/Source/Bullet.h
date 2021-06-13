@@ -3,6 +3,8 @@
 #include "POGCore.h"
 #include "POGMaths.h"
 
+#include "Enemy.h"
+
 namespace Example
 {
 	struct BulletInfo
@@ -30,6 +32,36 @@ namespace Example
 		static POG::Core::Signature GetSignature(POG::Core::ECSManager& ecsManager);
 
 		void Update(float dt);
+	};
+
+	class BulletEnemyCollisionSystem : public POG::Core::System
+	{
+	public:
+		BulletEnemyCollisionSystem(POG::Core::ECSManager& ecsManager)
+			: System::System(ecsManager)
+		{
+		}
+
+		static POG::Core::Signature GetSignature(POG::Core::ECSManager& ecsManager);
+
+		void Update(POG::Core::EntityId bulletId, float dt);
+	};
+
+	class BulletCollisionSystem : public POG::Core::System
+	{
+	public:
+		BulletCollisionSystem(POG::Core::ECSManager& ecsManager, BulletEnemyCollisionSystem& bulletEnemyCollisionSystem)
+			: System::System(ecsManager)
+			, bulletEnemyCollisionSystem(bulletEnemyCollisionSystem)
+		{
+		}
+
+		static POG::Core::Signature GetSignature(POG::Core::ECSManager& ecsManager);
+
+		void Update(float dt);
+
+	private:
+		BulletEnemyCollisionSystem& bulletEnemyCollisionSystem;
 	};
 }
 

@@ -1,6 +1,8 @@
 #include "ExamplePCH.h"
 #include "Enemy.h"
 
+#include "Player.h"
+
 using namespace POG;
 
 namespace Example

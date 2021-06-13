@@ -60,4 +60,34 @@ namespace Example
 			ecsManager.DestroyEntity(bulletId);
 		}
 	}
+
+	Core::Signature BulletEnemyCollisionSystem::GetSignature(Core::ECSManager& ecsManager)
+	{
+		Core::Signature signature;
+		signature.set(ecsManager.GetComponentTypeId<EnemyInfo>());
+		return signature;
+	}
+
+	void BulletEnemyCollisionSystem::Update(Core::EntityId bulletId, float dt)
+	{
+		for (auto enemyId : entityIds)
+		{
+			// COLLIDE
+		}
+	}
+
+	Core::Signature BulletCollisionSystem::GetSignature(Core::ECSManager& ecsManager)
+	{
+		Core::Signature signature;
+		signature.set(ecsManager.GetComponentTypeId<BulletInfo>());
+		return signature;
+	}
+
+	void BulletCollisionSystem::Update(float dt)
+	{
+		for (auto bulletId : entityIds)
+		{
+			bulletEnemyCollisionSystem.Update(bulletId, dt);
+		}
+	}
 }
