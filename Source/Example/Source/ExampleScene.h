@@ -4,6 +4,7 @@
 #include "POGGraphics.h"
 
 #include "Bullet.h"
+#include "Enemy.h"
 #include "Player.h"
 
 namespace Example
@@ -29,6 +30,7 @@ namespace Example
 		POG::Core::Entity child;
 
 		std::shared_ptr<BulletMoveSystem> bulletMoveSystem;
+		std::shared_ptr<EnemySystem> enemySystem;
 
 		bool flip;
 	};

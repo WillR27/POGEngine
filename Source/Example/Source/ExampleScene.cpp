@@ -9,13 +9,16 @@ namespace Example
 	{
 		Graphics::Texture& playerTexture = Core::TextureManager::CreateGlobalTexture("Player", "Resources\\Sprites\\Player.png");
 		Graphics::Texture& bulletTexture = Core::TextureManager::CreateGlobalTexture("Bullet", "Resources\\Sprites\\Bullet.png");
+		Graphics::Texture& enemyTexture = Core::TextureManager::CreateGlobalTexture("Enemy", "Resources\\Sprites\\Enemy.png");
 		Graphics::Texture& rectangleTexture = Core::TextureManager::CreateGlobalTexture("Rectangle", "Resources\\Sprites\\Rectangle.png");
-
-		GetECSManager().RegisterComponent<BulletInfo>();
-		bulletMoveSystem = GetECSManager().RegisterSystem<BulletMoveSystem>();
 
 		player = GetECSManager().CreateEntity<Player>(3.0f, 2.0f);
 		Core::Input::AddInputCallback(&Player::InputCallback, &player);
+
+		GetECSManager().RegisterComponent<BulletInfo>();
+		GetECSManager().RegisterComponent<EnemyInfo>();
+		bulletMoveSystem = GetECSManager().RegisterSystem<BulletMoveSystem>();
+		enemySystem = GetECSManager().RegisterSystem<EnemySystem>(player);
 
 		square = GetECSManager().CreateEntity();
 		square.SetName("Square");
@@ -104,6 +107,7 @@ namespace Example
 		squareTransform.orientation = Maths::Normalise(squareTransform.orientation);
 
 		bulletMoveSystem->Update(dt);
+		enemySystem->Update(dt);
 
 		//Core::Transform& playerTransform = player.GetComponent<Core::Transform>();
 

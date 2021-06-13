@@ -140,7 +140,7 @@ namespace POG::Core
 			// Try catch up with updates if we are lagging
 			while (timeBetweenUpdates >= GetTargetUpdateInterval())
 			{
-				POG_WARN(timeBetweenUpdates);
+				//POG_WARN(timeBetweenUpdates);
 
 				// Count how many updates we have done this game loop (happens if we are lagging)
 				updatesInCurrentLoop++;

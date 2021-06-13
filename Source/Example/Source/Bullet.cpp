@@ -10,7 +10,10 @@ namespace Example
 	{
 		AddComponent(BulletInfo
 			{
-				.timeExisted = 0.0f,
+			});
+
+		AddComponent(Core::RectCollider
+			{
 			});
 
 		AddComponent(Core::Sprite
@@ -22,11 +25,10 @@ namespace Example
 			{
 				.position = origin,
 				.orientation = Maths::Quat(Maths::Vec3(0.0f, 0.0f, -direction)),
-				.scale = Maths::Vec3(1.0f, 1.0f, 1.0f),
 			});
 	}
 
-	POG::Core::Signature BulletMoveSystem::GetSignature(POG::Core::ECSManager& ecsManager)
+	Core::Signature BulletMoveSystem::GetSignature(Core::ECSManager& ecsManager)
 	{
 		Core::Signature signature;
 		signature.set(ecsManager.GetComponentTypeId<BulletInfo>());

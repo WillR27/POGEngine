@@ -21,6 +21,10 @@ namespace Example
 				.camera = Core::Camera::MainCamera,
 			});
 
+		AddComponent(Core::RectCollider
+			{
+			});
+
 		AddComponent(Core::RigidBody
 			{
 				.force = Maths::Vec3(0.0f, 0.0f, 0.0f),
