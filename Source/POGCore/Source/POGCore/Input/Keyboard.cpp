@@ -14,12 +14,12 @@ namespace POG::Core
 	void Keyboard::Init()
 	{
 		auto& mainEventBus = Application::GetInstance().GetMainEventBus();
-		mainEventBus.Subscribe(OnKeyEvent);
+		mainEventBus.Subscribe(OnRawKeyEvent);
 
 		ResetKeys();
 	}
 
-	void Keyboard::OnKeyEvent(RawKeyEvent& e)
+	void Keyboard::OnRawKeyEvent(RawKeyEvent& e)
 	{
 		KeyActions[e.key] = e.action;
 		KeyModifiers[e.key] = e.mods;
@@ -27,17 +27,17 @@ namespace POG::Core
 		Input::GlobalInputManager.OnKeyEvent(e);
 	}
 
-	bool Keyboard::KeyPressed(int key, int mod)
+	bool Keyboard::IsKeyPressed(int key, int mod)
 	{
 		return KeyActions[key] == POG_INPUT_PRESS && KeyModifiers[key] == mod;
 	}
 
-	bool Keyboard::KeyReleased(int key, int mod)
+	bool Keyboard::IsKeyReleased(int key, int mod)
 	{
 		return KeyActions[key] == POG_INPUT_RELEASE && KeyModifiers[key] == mod;
 	}
 
-	bool Keyboard::KeyRepeated(int key, int mod)
+	bool Keyboard::IsKeyRepeated(int key, int mod)
 	{
 		return KeyActions[key] == POG_INPUT_REPEAT && KeyModifiers[key] == mod;
 	}
