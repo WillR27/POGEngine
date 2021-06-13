@@ -33,7 +33,6 @@ namespace POG::Core
 		, targetUpdateInterval(1.0f / targetUpdatesPerSecond)
 		, targetFramesPerSecond(60.0f)
 		, targetFrameInterval(1.0f / targetFramesPerSecond)
-		, timeBetweenLoops(0)
 		, timeBetweenUpdates(0)
 		, timeBetweenFrames(0)
 	{
@@ -141,7 +140,7 @@ namespace POG::Core
 			// Try catch up with updates if we are lagging
 			while (timeBetweenUpdates >= GetTargetUpdateInterval())
 			{
-				//POG_INFO(1.0f / timeBetweenUpdates);
+				POG_WARN(timeBetweenUpdates);
 
 				// Count how many updates we have done this game loop (happens if we are lagging)
 				updatesInCurrentLoop++;
@@ -245,10 +244,17 @@ namespace POG::Core
 
 		while (!ShouldClose())
 		{
-			timeBetweenLoops = timer.Stop();
+			float timeBetweenLoops = timer.Stop();
 			timer.Reset();
 			timer.Start();
 
+			// If the app runs too fast, the timer is not accurate enough in seconds as a float
+			// So if we are running at over 1000 loops per second, just create a hard limit
+			if (timeBetweenLoops < 0.001f)
+			{
+				Sleep(1);
+			}
+		
 			TryUpdate(timeBetweenLoops);
 			TryFrame(timeBetweenLoops);
 		}

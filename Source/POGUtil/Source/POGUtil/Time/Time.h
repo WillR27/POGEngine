@@ -38,11 +38,15 @@ namespace POG::Util
 			case Time::Unit::Nanoseconds:		divisor = 1; break;
 			}
 
-			elapsedTime += std::chrono::duration_cast<std::chrono::duration<T, std::nano>>(end - start).count() / divisor;
+			T deltaTime = std::chrono::duration_cast<std::chrono::duration<T, std::nano>>(end - start).count() / divisor;
 
 			if (!D)
 			{
 				elapsedTime += static_cast<T>(static_cast<int>(elapsedTime));
+			}
+			else
+			{
+				elapsedTime += deltaTime;
 			}
 
 			return elapsedTime;
@@ -64,7 +68,7 @@ namespace POG::Util
 			switch (U)
 			{
 			case Time::Unit::Seconds:			unit = "s"; break;
-			case Time::Unit::Microseconds:	unit = "us"; break;
+			case Time::Unit::Microseconds:		unit = "us"; break;
 			case Time::Unit::Nanoseconds:		unit = "ns"; break;
 			}
 

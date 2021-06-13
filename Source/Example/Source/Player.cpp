@@ -1,6 +1,8 @@
 #include "ExamplePCH.h"
 #include "Player.h"
 
+#include "Bullet.h"
+
 using namespace POG;
 
 namespace Example
@@ -53,10 +55,13 @@ namespace Example
 		rigidBody.velocity.y = rigidBody.velocity.y > moveSpeed ? moveSpeed : rigidBody.velocity.y < -moveSpeed ? -moveSpeed : rigidBody.velocity.y;
 		rigidBody.velocity.z = 0.0f;
 
-		Maths::Vec2 mousePos = Core::Mouse::Normalise();
-
-		float angle = Core::Mouse::AngleFromXAxis() + Maths::HalfPi();
+		float angle = Core::Mouse::AngleFromXAxis();
 		transform.orientation = Maths::Quat(Maths::Vec3(0.0f, 0.0f, -angle));
 		attachedCamera.relativeOrientation = Maths::Quat(Maths::Vec3(0.0f, 0.0f, angle));
+
+		if (inputPackage.HasActionOccurred("Left"))
+		{
+			GetECSManager().CreateEntity<Bullet>(transform.position, angle);
+		}
 	}
 }

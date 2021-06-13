@@ -3,6 +3,7 @@
 #include "POGCore.h"
 #include "POGGraphics.h"
 
+#include "Bullet.h"
 #include "Player.h"
 
 namespace Example
@@ -26,6 +27,8 @@ namespace Example
 		Player player;
 		POG::Core::Entity square;
 		POG::Core::Entity child;
+
+		std::shared_ptr<BulletMoveSystem> bulletMoveSystem;
 
 		bool flip;
 	};

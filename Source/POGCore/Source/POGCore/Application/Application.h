@@ -128,7 +128,6 @@ namespace POG::Core
 	protected:
 		Util::Timer<Util::Time::Unit::Seconds, float, true> timer;
 
-		float timeBetweenLoops;
 		float timeBetweenUpdates;
 		float timeBetweenFrames;
 

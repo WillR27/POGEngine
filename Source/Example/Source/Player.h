@@ -4,7 +4,7 @@
 
 namespace Example
 {
-	class Player : POG::Core::Entity
+	class Player : public POG::Core::Entity
 	{
 	public:
 		Player() = default;

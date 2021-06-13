@@ -183,6 +183,8 @@ namespace POG::Core
 		{
 		}
 
+		virtual ~Entity() = default;
+
 		operator EntityId () { return GetId(); }
 
 		template <typename T>
