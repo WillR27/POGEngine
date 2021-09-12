@@ -86,6 +86,53 @@ namespace POG::Core
 		}
 	}
 
+	Signature SpriteBoxCollider2DRendererSystem::GetSignature(ECSManager& ecsManager)
+	{
+		Signature signature;
+		signature.set(ecsManager.GetComponentTypeId<BoxCollider2D>());
+		signature.set(ecsManager.GetComponentTypeId<Sprite>());
+		signature.set(ecsManager.GetComponentTypeId<Transform>());
+		return signature;
+	}
+
+	void SpriteBoxCollider2DRendererSystem::Frame(float alpha)
+	{
+		Graphics::PolygonMode prevModeFront = Graphics::GetPolygonMode(Graphics::PolygonFace::Front);
+		Graphics::PolygonMode prevModeBack = Graphics::GetPolygonMode(Graphics::PolygonFace::Back);
+
+		Graphics::SetPolygonMode(Graphics::PolygonFace::FrontAndBack, Graphics::PolygonMode::Line);
+
+		Graphics::Mesh& mesh = MeshManager::GetDefaultMesh("Square Mesh");
+
+		for (EntityId entityId : entityIds)
+		{
+			auto& boxCollider = ecsManager.GetComponent<BoxCollider2D>(entityId);
+			auto& sprite = ecsManager.GetComponent<Sprite>(entityId);
+			auto& transform = ecsManager.GetComponent<Transform>(entityId);
+
+			float ratioX = sprite.texture->GetWidth() / sprite.pixelsToUnitsRatio;
+			float ratioY = sprite.texture->GetHeight() / sprite.pixelsToUnitsRatio;
+
+			Maths::Vec3 prevScale = transform.prevScale * Maths::Vec3(ratioX, ratioY, 1.0f);
+			Maths::Vec3 currentScale = transform.scale * Maths::Vec3(ratioX, ratioY, 1.0f);
+
+			Maths::Vec3 position = Maths::Lerp(transform.prevPosition, transform.position, alpha);
+			Maths::Quat orientation = Maths::Lerp(transform.prevOrientation, transform.orientation, alpha);
+			Maths::Vec3 scale = Maths::Lerp(prevScale, currentScale, alpha);
+
+			Graphics::Shader& shader = ShaderManager::GetDefaultShader("Wireframe Shader");
+			shader.Use();
+			shader.SetMatrix4fv("view", 1, false, Maths::ToData(Core::Camera::MainCamera->GetView()));
+			shader.SetMatrix4fv("projection", 1, false, Maths::ToData(Core::Camera::MainCamera->GetProjection()));
+			shader.SetMatrix4fv("model", 1, false, Maths::ToData(Maths::ToModelMatrix(position, orientation, scale)));
+
+			mesh.Render();
+		}
+
+		Graphics::SetPolygonMode(Graphics::PolygonFace::Front, prevModeFront);
+		Graphics::SetPolygonMode(Graphics::PolygonFace::Back, prevModeBack);
+	}
+
 	Signature SpriteRectColliderRendererSystem::GetSignature(ECSManager& ecsManager)
 	{
 		Signature signature;

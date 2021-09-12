@@ -1,6 +1,8 @@
 #include "ExamplePCH.h"
 #include "Bullet.h"
 
+#include "POGCore/Physics/Collisions.h"
+
 using namespace POG;
 
 namespace Example
@@ -12,8 +14,10 @@ namespace Example
 			{
 			});
 
-		AddComponent(Core::RectCollider
+		AddComponent(Core::BoxCollider2D
 			{
+				.min = Maths::Vec2(-0.05f, -0.05f),
+				.max = Maths::Vec2(0.05f, 0.05f),
 			});
 
 		AddComponent(Core::Sprite
@@ -70,9 +74,21 @@ namespace Example
 
 	void BulletEnemyCollisionSystem::Update(Core::EntityId bulletId, float dt)
 	{
+		Core::Transform& transform1 = ecsManager.GetComponent<Core::Transform>(bulletId);
+		Core::BoxCollider2D& boxCollider1 = ecsManager.GetComponent<Core::BoxCollider2D>(bulletId);
+
 		for (auto enemyId : entityIds)
 		{
-			// COLLIDE
+			Core::Transform& transform2 = ecsManager.GetComponent<Core::Transform>(enemyId);
+			Core::BoxCollider2D& boxCollider2 = ecsManager.GetComponent<Core::BoxCollider2D>(enemyId);
+
+			Core::CollisionResult result = Core::TestCollisionBoxCollider2D(transform1, boxCollider1, transform2, boxCollider2);
+
+			if (result.collision)
+			{
+				POG_WARN("hit");
+				transform1.position += result.displacement;
+			}
 		}
 	}
 

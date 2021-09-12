@@ -51,6 +51,8 @@ namespace POG::Core
 		Maths::Vec3 prevScale = Maths::Vec3(1.0f, 1.0f, 1.0f);
 	};
 
+	Maths::Vec2 ApplyTransform(Maths::Vec2 vec, Transform transform);
+
 	//////////////////////////////////////////////////////////////
 	// COLLIDERS
 

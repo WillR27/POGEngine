@@ -14,7 +14,7 @@ namespace Example
 			{
 			});
 
-		AddComponent(Core::RectCollider
+		AddComponent(Core::BoxCollider2D
 			{
 			});
 
