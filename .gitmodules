@@ -16,3 +16,6 @@
 [submodule "Source/POGMaths/GLM"]
 	path = Source/POGMaths/GLM
 	url = https://github.com/g-truc/glm
+[submodule "Source/POGUtil/STB"]
+	path = Source/POGUtil/STB
+	url = https://github.com/nothings/stb

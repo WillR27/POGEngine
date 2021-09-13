@@ -24,10 +24,12 @@ bin
 int
 *.vcx*
 *.sln
-**/glm/doc
 
 # External
 **/External
+**/Source/POGLog/SPDLog
+**/Source/POGMaths/GLM
+**/Source/POGUtil/STB
 
 # Not .git
 !**/*.git*
