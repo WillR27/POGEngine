@@ -10,3 +10,6 @@
 [submodule "External/ImGui"]
 	path = External/ImGui
 	url = https://github.com/WillR27/imgui
+[submodule "Source/POGLog/SPDLog"]
+	path = Source/POGLog/SPDLog
+	url = https://github.com/gabime/spdlog
