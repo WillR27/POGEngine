@@ -28,3 +28,6 @@ int
 
 # External
 **/External
+
+# Not .git
+!**/*.git*
