@@ -25,3 +25,6 @@ int
 *.vcx*
 *.sln
 **/glm/doc
+
+# External
+**/External
