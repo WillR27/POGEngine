@@ -13,3 +13,6 @@
 [submodule "Source/POGLog/SPDLog"]
 	path = Source/POGLog/SPDLog
 	url = https://github.com/gabime/spdlog
+[submodule "Source/POGMaths/GLM"]
+	path = Source/POGMaths/GLM
+	url = https://github.com/g-truc/glm
