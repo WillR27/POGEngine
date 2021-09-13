@@ -7,3 +7,6 @@
 [submodule "External/GoogleTest"]
 	path = External/GoogleTest
 	url = https://github.com/WillR27/googletest
+[submodule "External/ImGui"]
+	path = External/ImGui
+	url = https://github.com/WillR27/imgui
