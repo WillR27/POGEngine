@@ -29,6 +29,9 @@ namespace Example
 				.orientation = Maths::Quat(Maths::Vec3(0.0f, 0.0f, 0.0f)),
 				.scale = Maths::Vec3(1.5f, 1.0f, 1.0f),
 			});
+		square.AddComponent(Core::Interpolator
+			{
+			});
 		square.AddComponent(Core::RectCollider
 			{
 				.min = Maths::Vec2(-0.5f, -0.5f),

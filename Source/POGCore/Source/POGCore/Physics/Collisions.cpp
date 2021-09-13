@@ -178,18 +178,18 @@ namespace POG::Core
 	{
 		std::vector<Maths::Vec2> points1 
 		{  
-			Core::ApplyTransform({ boxCollider1.min.x, boxCollider1.min.y }, transform1),
-			Core::ApplyTransform({ boxCollider1.min.x, boxCollider1.max.y }, transform1),
-			Core::ApplyTransform({ boxCollider1.max.x, boxCollider1.max.y }, transform1),
-			Core::ApplyTransform({ boxCollider1.max.x, boxCollider1.min.y }, transform1),
+			transform1.ApplyTransform({ boxCollider1.min.x, boxCollider1.min.y }),
+			transform1.ApplyTransform({ boxCollider1.min.x, boxCollider1.max.y }),
+			transform1.ApplyTransform({ boxCollider1.max.x, boxCollider1.max.y }),
+			transform1.ApplyTransform({ boxCollider1.max.x, boxCollider1.min.y }),
 		};
 
 		std::vector<Maths::Vec2> points2
 		{
-			Core::ApplyTransform({ boxCollider2.min.x, boxCollider2.min.y }, transform2),
-			Core::ApplyTransform({ boxCollider2.min.x, boxCollider2.max.y }, transform2),
-			Core::ApplyTransform({ boxCollider2.max.x, boxCollider2.max.y }, transform2),
-			Core::ApplyTransform({ boxCollider2.max.x, boxCollider2.min.y }, transform2),
+			transform2.ApplyTransform({ boxCollider2.min.x, boxCollider2.min.y }),
+			transform2.ApplyTransform({ boxCollider2.min.x, boxCollider2.max.y }),
+			transform2.ApplyTransform({ boxCollider2.max.x, boxCollider2.max.y }),
+			transform2.ApplyTransform({ boxCollider2.max.x, boxCollider2.min.y }),
 		};
 
 		return TestCollision({ transform1.position.x, transform1.position.y }, points1, { transform2.position.x, transform2.position.y }, points2);

@@ -30,6 +30,7 @@ namespace POG::Core
 	{
 		Signature signature;
 		signature.set(ecsManager.GetComponentTypeId<Transform>());
+		signature.set(ecsManager.GetComponentTypeId<Interpolator>());
 		signature.set(ecsManager.GetComponentTypeId<MeshRenderer>());
 		return signature;
 	}
@@ -40,14 +41,15 @@ namespace POG::Core
 		{
 			auto& meshRenderer = ecsManager.GetComponent<MeshRenderer>(entityId);
 			auto& transform = ecsManager.GetComponent<Transform>(entityId);
+			auto& interpolator = ecsManager.GetComponent<Interpolator>(entityId);
 
 			Graphics::Material& material = *meshRenderer.material;
 			material.GetShader().Use();
 			material.UpdateShaderUniforms();
 
-			Maths::Vec3 position = Maths::Lerp(transform.prevPosition, transform.position, alpha);
-			Maths::Quat orientation = Maths::Lerp(transform.prevOrientation, transform.orientation, alpha);
-			Maths::Vec3 scale = Maths::Lerp(transform.prevScale, transform.scale, alpha);
+			Maths::Vec3 position = Maths::Lerp(interpolator.prevTransform.position, transform.position, alpha);
+			Maths::Quat orientation = Maths::Lerp(interpolator.prevTransform.orientation, transform.orientation, alpha);
+			Maths::Vec3 scale = Maths::Lerp(interpolator.prevTransform.scale, transform.scale, alpha);
 			orientation.w *= -1.0f; // Invert model matrix rotation axes
 
 			Graphics::Shader& shader = material.GetShader();
@@ -92,6 +94,7 @@ namespace POG::Core
 		signature.set(ecsManager.GetComponentTypeId<BoxCollider2D>());
 		signature.set(ecsManager.GetComponentTypeId<Sprite>());
 		signature.set(ecsManager.GetComponentTypeId<Transform>());
+		signature.set(ecsManager.GetComponentTypeId<Interpolator>());
 		return signature;
 	}
 
@@ -109,15 +112,16 @@ namespace POG::Core
 			auto& boxCollider = ecsManager.GetComponent<BoxCollider2D>(entityId);
 			auto& sprite = ecsManager.GetComponent<Sprite>(entityId);
 			auto& transform = ecsManager.GetComponent<Transform>(entityId);
+			auto& interpolator = ecsManager.GetComponent<Interpolator>(entityId);
 
 			float ratioX = sprite.texture->GetWidth() / sprite.pixelsToUnitsRatio;
 			float ratioY = sprite.texture->GetHeight() / sprite.pixelsToUnitsRatio;
 
-			Maths::Vec3 prevScale = transform.prevScale * Maths::Vec3(ratioX, ratioY, 1.0f);
+			Maths::Vec3 prevScale = interpolator.prevTransform.scale * Maths::Vec3(ratioX, ratioY, 1.0f);
 			Maths::Vec3 currentScale = transform.scale * Maths::Vec3(ratioX, ratioY, 1.0f);
 
-			Maths::Vec3 position = Maths::Lerp(transform.prevPosition, transform.position, alpha);
-			Maths::Quat orientation = Maths::Lerp(transform.prevOrientation, transform.orientation, alpha);
+			Maths::Vec3 position = Maths::Lerp(interpolator.prevTransform.position, transform.position, alpha);
+			Maths::Quat orientation = Maths::Lerp(interpolator.prevTransform.orientation, transform.orientation, alpha);
 			Maths::Vec3 scale = Maths::Lerp(prevScale, currentScale, alpha);
 
 			Graphics::Shader& shader = ShaderManager::GetDefaultShader("Wireframe Shader");
@@ -139,6 +143,7 @@ namespace POG::Core
 		signature.set(ecsManager.GetComponentTypeId<RectCollider>());
 		signature.set(ecsManager.GetComponentTypeId<Sprite>());
 		signature.set(ecsManager.GetComponentTypeId<Transform>());
+		signature.set(ecsManager.GetComponentTypeId<Interpolator>());
 		return signature;
 	}
 
@@ -156,15 +161,16 @@ namespace POG::Core
 			auto& rectCollider = ecsManager.GetComponent<RectCollider>(entityId);
 			auto& sprite = ecsManager.GetComponent<Sprite>(entityId);
 			auto& transform = ecsManager.GetComponent<Transform>(entityId);
+			auto& interpolator = ecsManager.GetComponent<Interpolator>(entityId);
 
 			float ratioX = sprite.texture->GetWidth() / sprite.pixelsToUnitsRatio;
 			float ratioY = sprite.texture->GetHeight() / sprite.pixelsToUnitsRatio;
 
-			Maths::Vec3 prevScale = transform.prevScale * Maths::Vec3(ratioX, ratioY, 1.0f);
+			Maths::Vec3 prevScale = interpolator.prevTransform.scale* Maths::Vec3(ratioX, ratioY, 1.0f);
 			Maths::Vec3 currentScale = transform.scale * Maths::Vec3(ratioX, ratioY, 1.0f);
 
-			Maths::Vec3 position = Maths::Lerp(transform.prevPosition, transform.position, alpha);
-			Maths::Quat orientation = Maths::Lerp(transform.prevOrientation, transform.orientation, alpha);
+			Maths::Vec3 position = Maths::Lerp(interpolator.prevTransform.position, transform.position, alpha);
+			Maths::Quat orientation = Maths::Lerp(interpolator.prevTransform.orientation, transform.orientation, alpha);
 			Maths::Vec3 scale = Maths::Lerp(prevScale, currentScale, alpha);
 
 			Graphics::Shader& shader = ShaderManager::GetDefaultShader("Wireframe Shader");
@@ -185,6 +191,7 @@ namespace POG::Core
 		Signature signature;
 		signature.set(ecsManager.GetComponentTypeId<Sprite>());
 		signature.set(ecsManager.GetComponentTypeId<Transform>());
+		signature.set(ecsManager.GetComponentTypeId<Interpolator>());
 		return signature;
 	}
 
@@ -196,15 +203,16 @@ namespace POG::Core
 		{
 			auto& sprite = ecsManager.GetComponent<Sprite>(entityId);
 			auto& transform = ecsManager.GetComponent<Transform>(entityId);
+			auto& interpolator = ecsManager.GetComponent<Interpolator>(entityId);
 
 			float ratioX = sprite.texture->GetWidth() / sprite.pixelsToUnitsRatio;
 			float ratioY = sprite.texture->GetHeight() / sprite.pixelsToUnitsRatio;
 
-			Maths::Vec3 prevScale = transform.prevScale * Maths::Vec3(ratioX, ratioY, 1.0f);
+			Maths::Vec3 prevScale = interpolator.prevTransform.scale * Maths::Vec3(ratioX, ratioY, 1.0f);
 			Maths::Vec3 currentScale = transform.scale * Maths::Vec3(ratioX, ratioY, 1.0f);
 
-			Maths::Vec3 position = Maths::Lerp(transform.prevPosition, transform.position, alpha);
-			Maths::Quat orientation = Maths::Lerp(transform.prevOrientation, transform.orientation, alpha);
+			Maths::Vec3 position = Maths::Lerp(interpolator.prevTransform.position, transform.position, alpha);
+			Maths::Quat orientation = Maths::Lerp(interpolator.prevTransform.orientation, transform.orientation, alpha);
 			Maths::Vec3 scale = Maths::Lerp(prevScale, currentScale, alpha);
 			
 			sprite.texture->Bind();
@@ -223,6 +231,7 @@ namespace POG::Core
 	{
 		Signature signature;
 		signature.set(ecsManager.GetComponentTypeId<Transform>());
+		signature.set(ecsManager.GetComponentTypeId<Interpolator>());
 		return signature;
 	}
 
@@ -230,10 +239,11 @@ namespace POG::Core
 	{
 		for (EntityId entityId : entityIds)
 		{
-			Transform& transform = ecsManager.GetComponent<Transform>(entityId);
-			transform.prevPosition = transform.position;
-			transform.prevOrientation = transform.orientation;
-			transform.prevScale = transform.scale;
+			auto& transform = ecsManager.GetComponent<Transform>(entityId);
+			auto& interpolator = ecsManager.GetComponent<Interpolator>(entityId);
+			interpolator.prevTransform.position = transform.position;
+			interpolator.prevTransform.orientation = transform.orientation;
+			interpolator.prevTransform.scale = transform.scale;
 		}
 	}
 }

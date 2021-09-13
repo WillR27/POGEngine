@@ -44,6 +44,10 @@ namespace Example
 				.orientation = Maths::Quat(Maths::Vec3(0.0f, 0.0f, 0.0f)),
 				.scale = Maths::Vec3(1.0f, 1.0f, 1.0f),
 			});
+
+		AddComponent(Core::Interpolator
+			{
+			});
 	}
 
 	void Player::InputCallback(Core::InputPackage& inputPackage, float dt)

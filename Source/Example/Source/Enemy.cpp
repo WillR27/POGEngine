@@ -27,6 +27,10 @@ namespace Example
 			{
 				.position = origin,
 			});
+
+		AddComponent(Core::Interpolator
+			{
+			});
 	}
 
 	Core::Signature EnemySystem::GetSignature(POG::Core::ECSManager& ecsManager)

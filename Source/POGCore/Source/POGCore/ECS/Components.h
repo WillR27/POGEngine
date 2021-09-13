@@ -40,18 +40,12 @@ namespace POG::Core
 		float pixelsToUnitsRatio = PixelsToUnitsRatio;
 	};
 
-	struct Transform
+	using Transform = Maths::Transform;
+	
+	struct Interpolator
 	{
-		Maths::Vec3 position = Maths::Vec3(0.0f, 0.0f, 0.0f);
-		Maths::Quat orientation = Maths::Quat(Maths::Vec3(0.0f, 0.0f, 0.0f));
-		Maths::Vec3 scale = Maths::Vec3(1.0f, 1.0f, 1.0f);
-
-		Maths::Vec3 prevPosition = Maths::Vec3(0.0f, 0.0f, 0.0f);
-		Maths::Quat prevOrientation = Maths::Quat(Maths::Vec3(0.0f, 0.0f, 0.0f));
-		Maths::Vec3 prevScale = Maths::Vec3(1.0f, 1.0f, 1.0f);
+		Transform prevTransform = Transform();
 	};
-
-	Maths::Vec2 ApplyTransform(Maths::Vec2 vec, Transform transform);
 
 	//////////////////////////////////////////////////////////////
 	// COLLIDERS

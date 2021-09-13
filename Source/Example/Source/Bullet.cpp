@@ -30,6 +30,10 @@ namespace Example
 				.position = origin,
 				.orientation = Maths::Quat(Maths::Vec3(0.0f, 0.0f, -direction)),
 			});
+
+		AddComponent(Core::Interpolator
+			{
+			});
 	}
 
 	Core::Signature BulletMoveSystem::GetSignature(Core::ECSManager& ecsManager)

@@ -24,6 +24,7 @@ namespace POG::Core
         ecsManager.RegisterComponent<RigidBody>();
         ecsManager.RegisterComponent<Sprite>();
         ecsManager.RegisterComponent<Transform>();
+        ecsManager.RegisterComponent<Interpolator>();
 
         // Colliders
         ecsManager.RegisterComponent<BoxCollider2D>();
