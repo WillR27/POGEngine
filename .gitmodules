@@ -19,3 +19,6 @@
 [submodule "Source/POGUtil/STB"]
 	path = Source/POGUtil/STB
 	url = https://github.com/nothings/stb
+[submodule "External/FreeType"]
+	path = External/FreeType
+	url = https://github.com/WillR27/freetype
