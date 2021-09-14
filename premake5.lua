@@ -27,6 +27,7 @@ workspace "POGEngine"
 
 	
 group "External Dependencies"
+	include "External/FreeType/premake5.lua"
 	include "External/GLFW/premake5.lua"
 	include "External/Glad/premake5.lua"
 	include "External/GoogleTest/premake5.lua"
