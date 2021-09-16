@@ -10,9 +10,6 @@
 [submodule "External/GLFW"]
 	path = External/GLFW
 	url = https://github.com/WillR27/glfw
-[submodule "External/GoogleTest"]
-	path = External/GoogleTest
-	url = https://github.com/WillR27/googletest
 [submodule "Source/POGLog/SPDLog"]
 	path = Source/POGLog/SPDLog
 	url = https://github.com/gabime/spdlog
