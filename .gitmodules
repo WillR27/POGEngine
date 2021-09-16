@@ -1,24 +1,9 @@
 [submodule "External/Glad"]
 	path = External/Glad
 	url = https://github.com/WillR27/Glad
-[submodule "External/GLFW"]
-	path = External/GLFW
-	url = https://github.com/WillR27/glfw
-[submodule "External/GoogleTest"]
-	path = External/GoogleTest
-	url = https://github.com/WillR27/googletest
 [submodule "External/ImGui"]
 	path = External/ImGui
 	url = https://github.com/WillR27/imgui
-[submodule "Source/POGLog/SPDLog"]
-	path = Source/POGLog/SPDLog
-	url = https://github.com/gabime/spdlog
-[submodule "Source/POGMaths/GLM"]
-	path = Source/POGMaths/GLM
-	url = https://github.com/g-truc/glm
-[submodule "Source/POGUtil/STB"]
-	path = Source/POGUtil/STB
-	url = https://github.com/nothings/stb
 [submodule "External/FreeType"]
 	path = External/FreeType
 	url = https://github.com/WillR27/freetype
