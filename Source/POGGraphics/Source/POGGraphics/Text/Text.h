@@ -1,5 +1,9 @@
 #pragma once
 
+#include "POGGraphics/Objects/VertexArray.h"
+#include "POGGraphics/Objects/VertexBuffer.h"
+#include "POGGraphics/Objects/Texture.h"
+
 #include "POGMaths.h"
 
 namespace POG::Graphics
@@ -12,6 +16,13 @@ namespace POG::Graphics
         Maths::Vec2i    size;       // Size of glyph
         Maths::Vec2i    bearing;    // Offset from baseline to left/top of glyph
         unsigned int    advance;    // Offset to advance to next glyph
+    };
+
+    struct Font
+    {
+        std::map<char, Character> characters;
+        VertexArray vao;
+        VertexBuffer vbo;
     };
 
 	void InitText();

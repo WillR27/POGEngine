@@ -14,7 +14,7 @@ namespace POG::Graphics
 {
     FT_Library ft;
 
-    std::map<const char*, std::map<char, Character>> Fonts;
+    std::map<const char*, Font*> fonts;
 
 	void InitText()
 	{
@@ -38,13 +38,15 @@ namespace POG::Graphics
 
         glPixelStorei(GL_UNPACK_ALIGNMENT, 1); // disable byte-alignment restriction
 
-        auto& chars = Fonts[name];
+        Font* font = new Font();
+        auto& chars = font->characters;
+
         for (unsigned char c = 0; c < 128; c++)
         {
             // load character glyph 
             if (FT_Load_Char(face, c, FT_LOAD_RENDER))
             {
-                POG_ERROR("EGGG");
+                POG_ERROR("Failed to load char '{0}' from font \"{1}\"", c, name);
                 continue;
             }
 
@@ -62,17 +64,17 @@ namespace POG::Graphics
 
         FT_Done_Face(face);
         //FT_Done_FreeType(ft);
+
+        font->vao.Bind();
+        font->vbo.Bind();
+        font->vbo.SetVertexData(nullptr, sizeof(float) * 6 * 4);
+        font->vao.SetAttribute(0, 4, POG_FLOAT, false, 4 * sizeof(float), 0);
+
+        fonts[name] = font;
     }
 
 	void RenderText(std::string text, float x, float y, float scale, Maths::Vec3 colour)
 	{
-		VertexArray vao;
-		VertexBuffer vbo;
-		vao.Bind();
-		vbo.Bind();
-		vbo.SetVertexData(nullptr, sizeof(float) * 6 * 4);
-		vao.SetAttribute(0, 4, POG_FLOAT, false, 4 * sizeof(float), 0);
-
         glEnable(GL_CULL_FACE);
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -126,15 +128,16 @@ void main()
 		shader.SetMatrix4fv("projection", 1, false, Maths::ToData(projection));
 		shader.Set3f("textColor", colour.r, colour.g, colour.b);
 
-        vao.Bind();
-
         Disable(Graphics::Capability::DepthTest);
 
-        auto& Characters = Fonts["Arial"];
+        Font& font = *fonts["Arial"];
+        auto& chars = font.characters;
+
+        font.vao.Bind();
 
         for (auto c = text.begin(); c != text.end(); c++)
         {
-            Character ch = Characters[*c];
+            Character ch = chars[*c];
 
             float xpos = x + ch.bearing.x * scale;
             float ypos = y - (ch.size.y - ch.bearing.y) * scale;
@@ -154,7 +157,7 @@ void main()
             };
 
             ch.texture->Bind();
-            vbo.Bind();
+            font.vbo.Bind();
             glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), vertices); // be sure to use glBufferSubData and not glBufferData
 
             RenderTrianglesFromArrays(0, 6);
