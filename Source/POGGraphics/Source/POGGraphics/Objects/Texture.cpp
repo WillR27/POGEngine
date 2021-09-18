@@ -46,6 +46,14 @@ namespace POG::Graphics
 		this->height = height;
 	}
 
+	void Texture::SetDataRed(void* data, int width, int height)
+	{
+		Bind();
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, width, height, 0, GL_RED, GL_UNSIGNED_BYTE, data);
+		this->width = width;
+		this->height = height;
+	}
+
 	void Texture::LoadFromImage(const char* file)
 	{
 		int width, height, channels;

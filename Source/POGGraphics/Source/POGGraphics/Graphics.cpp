@@ -1,6 +1,8 @@
 #include "POGGraphicsPCH.h"
 #include "Graphics.h"
 
+#include "POGGraphics/Text/Text.h"
+
 #include "POGDebug.h"
 #include "POGLog.h"
 
@@ -25,7 +27,7 @@ namespace POG::Graphics
 		glEnable(static_cast<GLenum>(capability));
 	}
 
-	void Disbale(Capability capability)
+	void Disable(Capability capability)
 	{
 		glDisable(static_cast<GLenum>(capability));
 	}
@@ -131,5 +133,7 @@ namespace POG::Graphics
 		Enable(Graphics::Capability::Blend);
 		Enable(Graphics::Capability::CullFace);
 		Enable(Graphics::Capability::DepthTest);
+
+		InitText();
 	}
 }

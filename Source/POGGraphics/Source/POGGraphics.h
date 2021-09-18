@@ -11,3 +11,4 @@
 #include "POGGraphics/Objects/VertexArray.h"
 #include "POGGraphics/Objects/VertexBuffer.h"
 #include "POGGraphics/Shader/Shader.h"
+#include "POGGraphics/Text/Text.h"

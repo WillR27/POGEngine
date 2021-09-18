@@ -77,7 +77,7 @@ namespace POG::Graphics
 	void ErrorCallback(unsigned int source, unsigned int type, unsigned int id, unsigned int severity, int length, const char* message, const void* userParam);
 
 	void Enable(Capability capability);
-	void Disbale(Capability capability);
+	void Disable(Capability capability);
 	bool IsEnabled(Capability capability);
 
 	void ClearColour(float r, float g, float b, float a);

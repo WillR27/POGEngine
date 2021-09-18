@@ -17,6 +17,7 @@ namespace POG::Graphics
 		virtual void Unbind() override;
 
 		void SetData(void* data, int width, int height);
+		void SetDataRed(void* data, int width, int height);
 
 		void LoadFromImage(const char* file);
 

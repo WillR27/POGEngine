@@ -97,5 +97,6 @@ namespace POG::Core
         GetSpriteRendererSystem().Frame(alpha);
         GetSpriteBoxCollider2DRendererSystem().Frame(alpha);
         GetSpriteRectColliderRendererSystem().Frame(alpha);
+        Graphics::RenderText("This is sample text", 250.0f, 250.0f, 1.0f, Maths::Vec3(0.5, 0.8f, 0.2f));
     }
 }

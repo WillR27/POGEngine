@@ -4,6 +4,7 @@ createbaseprojectcpp("POGGraphics", "StaticLib")
 
     includedirs
     {
+        "../../External/FreeType/include",
         "../../External/Glad/include",
 		
         "../POGCommon/Source",
@@ -18,6 +19,7 @@ createbaseprojectcpp("POGGraphics", "StaticLib")
 
     links
     {
+		"FreeType",
 		"Glad",
 	
 		"POGCommon",
