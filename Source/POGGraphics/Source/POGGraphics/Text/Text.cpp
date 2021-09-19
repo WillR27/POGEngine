@@ -12,22 +12,23 @@
 
 namespace POG::Graphics
 {
-    FT_Library ft;
-
-    std::map<const char*, Font*> fonts;
+    std::map<const char*, Font> fonts;
 
 	void InitText()
 	{
-        if (int error = FT_Init_FreeType(&ft))
-        {
-            POG_ERROR("Failed to initialise FreeType with error code: {0}", error);
-        }
-
         LoadFont("Arial", "F:\\arial.ttf");
 	}
 
     void LoadFont(const char* name, const char* file)
     {
+        // TODO: Move to proper init
+
+        FT_Library ft;
+        if (int error = FT_Init_FreeType(&ft))
+        {
+            POG_ERROR("Failed to initialise FreeType with error code: {0}", error);
+        }
+
         FT_Face face;
         if (int error = FT_New_Face(ft, file, 0, &face))
         {
@@ -38,8 +39,10 @@ namespace POG::Graphics
 
         glPixelStorei(GL_UNPACK_ALIGNMENT, 1); // disable byte-alignment restriction
 
-        Font* font = new Font();
-        auto& chars = font->characters;
+        // TODO: Check if font already exists
+
+        Font& font = fonts[name];
+        auto& chars = font.characters;
 
         for (unsigned char c = 0; c < 128; c++)
         {
@@ -50,11 +53,11 @@ namespace POG::Graphics
                 continue;
             }
 
-            Texture* texture2 = new Texture();
-            texture2->SetDataRed(face->glyph->bitmap.buffer, face->glyph->bitmap.width, face->glyph->bitmap.rows);
+            Texture texture;
+            texture.SetDataRed(face->glyph->bitmap.buffer, face->glyph->bitmap.width, face->glyph->bitmap.rows);
             Character character
             {
-                texture2,
+                texture,
                 Maths::Vec2i(face->glyph->bitmap.width, face->glyph->bitmap.rows),
                 Maths::Vec2i(face->glyph->bitmap_left, face->glyph->bitmap_top),
                 face->glyph->advance.x,
@@ -63,14 +66,12 @@ namespace POG::Graphics
         }
 
         FT_Done_Face(face);
-        //FT_Done_FreeType(ft);
+        FT_Done_FreeType(ft);
 
-        font->vao.Bind();
-        font->vbo.Bind();
-        font->vbo.SetVertexData(nullptr, sizeof(float) * 6 * 4);
-        font->vao.SetAttribute(0, 4, POG_FLOAT, false, 4 * sizeof(float), 0);
-
-        fonts[name] = font;
+        font.vao.Bind();
+        font.vbo.Bind();
+        font.vbo.SetVertexData(nullptr, sizeof(float) * 6 * 4);
+        font.vao.SetAttribute(0, 4, POG_FLOAT, false, 4 * sizeof(float), 0);
     }
 
 	void RenderText(std::string text, float x, float y, float scale, Maths::Vec3 colour)
@@ -130,7 +131,7 @@ void main()
 
         Disable(Graphics::Capability::DepthTest);
 
-        Font& font = *fonts["Arial"];
+        Font& font = fonts["Arial"];
         auto& chars = font.characters;
 
         font.vao.Bind();
@@ -156,7 +157,7 @@ void main()
                 { xpos + w, ypos + h,   1.0f, 0.0f }
             };
 
-            ch.texture->Bind();
+            ch.texture.Bind();
             font.vbo.Bind();
             glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), vertices); // be sure to use glBufferSubData and not glBufferData
 

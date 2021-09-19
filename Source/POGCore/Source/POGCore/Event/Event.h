@@ -71,6 +71,8 @@ namespace POG::Core
 	class EventHandlerBase
 	{
 	public:
+		virtual ~EventHandlerBase() = default;
+
 		virtual void Handle(Event& e) = 0;
 	};
 
@@ -82,6 +84,8 @@ namespace POG::Core
 			: function(function)
 		{
 		}
+
+		virtual ~EventHandler() = default;
 
 		virtual void Handle(Event& e)
 		{
@@ -268,7 +272,7 @@ namespace POG::Core
 					EventHandler<E>* testHandler = dynamic_cast<EventHandler<E>*>(*it);
 					if (testHandler != nullptr && testHandler->Equals(handler))
 					{
-						delete* it;
+						delete *it;
 						it = handlers->erase(it);
 					}
 					else

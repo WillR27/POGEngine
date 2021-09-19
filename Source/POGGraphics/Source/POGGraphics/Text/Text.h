@@ -12,7 +12,7 @@ namespace POG::Graphics
 
     struct Character 
     {
-        Texture*        texture;    // ID handle of the glyph texture
+        Texture         texture;    // ID handle of the glyph texture
         Maths::Vec2i    size;       // Size of glyph
         Maths::Vec2i    bearing;    // Offset from baseline to left/top of glyph
         unsigned int    advance;    // Offset to advance to next glyph
