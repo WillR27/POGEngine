@@ -30,5 +30,7 @@ namespace POG::Graphics
     void LoadFont(const char* name, const char* file);
 
     void RenderText(std::string text, float x, float y, float scale, Maths::Vec3 colour);
+
+    void SetWindowWidthHeight(float width, float height);
 }
 

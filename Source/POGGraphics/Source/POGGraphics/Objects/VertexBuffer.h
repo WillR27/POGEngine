@@ -23,6 +23,7 @@ namespace POG::Graphics
 		virtual RenderingObject* GetCurrent() override;
 
 		void SetVertexData(const void* vertexData, unsigned int size);
+		void SetVertexSubData(const void* vertexData, unsigned int size);
 
 	private:
 		static VertexBuffer* currentVBO;

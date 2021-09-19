@@ -27,6 +27,8 @@ namespace Example
 
 		//SetCursorEnabled(false);
 
+		Graphics::LoadFont("Arial", "F:\\arial.ttf");
+
 		Core::Scene::SetActiveScene(std::make_shared<ExampleScene>());
 
 		Core::Input::AddAction("Quit", Core::InputInfo(Core::InputType::Keyboard, POG_KEY_ESCAPE, POG_INPUT_RELEASE, POG_MOD_ANY));

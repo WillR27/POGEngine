@@ -82,16 +82,6 @@ namespace POG::Graphics
 		glCullFace(static_cast<GLenum>(face));
 	}
 
-	void SetViewport(int x, int y, int width, int height)
-	{
-		glViewport(x, y, width, height);
-	}
-
-	void BindDefaultFrameBuffer()
-	{
-		glBindFramebuffer(GL_FRAMEBUFFER, 0);
-	}
-
 	void RenderArrays(RenderingOption type, unsigned int first, unsigned int count)
 	{
 		glDrawArrays(type, first, count);
@@ -110,6 +100,26 @@ namespace POG::Graphics
 	void RenderTrianglesFromElements(unsigned int first, unsigned int count)
 	{
 		RenderElements(POG_TRIANGLES, first, count);
+	}
+
+	void SetPixelStorei(Alignment alignment, int value)
+	{
+		glPixelStorei(static_cast<GLenum>(alignment), value);
+	}
+
+	void SetPixelStoref(Alignment alignment, float value)
+	{
+		glPixelStoref(static_cast<GLenum>(alignment), value);
+	}
+
+	void SetViewport(int x, int y, int width, int height)
+	{
+		glViewport(x, y, width, height);
+	}
+
+	void BindDefaultFrameBuffer()
+	{
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
 
 	void SetContextAddressFunc(ContextAddressFunc func)

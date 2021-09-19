@@ -320,6 +320,8 @@ namespace POG::Core
 
 		view.SetDimensions(e.width, e.height);
 
+		Graphics::SetWindowWidthHeight(static_cast<float>(e.width), static_cast<float>(e.height));
+
 		if (IsStandalone())
 		{
 			window->UpdateView(view);

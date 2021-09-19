@@ -51,4 +51,9 @@ namespace POG::Graphics
 	{
 		glBufferData(GL_ARRAY_BUFFER, size, vertexData, GL_STATIC_DRAW);
 	}
+
+	void VertexBuffer::SetVertexSubData(const void* vertexData, unsigned int size)
+	{
+		glBufferSubData(GL_ARRAY_BUFFER, 0, size, vertexData);
+	}
 }

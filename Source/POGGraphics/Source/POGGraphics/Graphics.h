@@ -43,6 +43,9 @@
 #define POG_UNSIGNED_INT_2_10_10_10_REV		0x8368 
 #define POG_UNSIGNED_INT_10F_11F_11F_REV	0x8C3B  
 
+#define POG_UNPACK_ALIGNMENT				0x0CF5
+#define POG_PACK_ALIGNMENT					0x0D05
+
 namespace POG::Graphics
 {
 	using RenderingOption = unsigned int;
@@ -70,8 +73,14 @@ namespace POG::Graphics
 
 	enum class PolygonFaceDirection : unsigned int
 	{
-		Clockwise = POG_CW,
-		CounterClockwise = POG_CCW,
+		Clockwise			= POG_CW,
+		CounterClockwise	= POG_CCW,
+	};
+
+	enum class Alignment : unsigned int
+	{
+		Unpack	= POG_UNPACK_ALIGNMENT,
+		Pack	= POG_PACK_ALIGNMENT,
 	};
 
 	void ErrorCallback(unsigned int source, unsigned int type, unsigned int id, unsigned int severity, int length, const char* message, const void* userParam);
@@ -88,23 +97,24 @@ namespace POG::Graphics
 	PolygonMode GetPolygonMode(PolygonFace face);
 	void SetPolygonMode(PolygonFace face, PolygonMode mode);
 
-	PolygonFaceDirection GetFrontFace();
+	PolygonFaceDirection GetFrontFaceDirection();
 	void SetFrontFaceDirection(PolygonFaceDirection face);
 
 	PolygonFace GetCullFace();
 	void SetCullFace(PolygonFace face);
-
-	void Blend(bool enable);
-
-	void SetViewport(int x, int y, int width, int height);
-
-	void BindDefaultFrameBuffer();
 
 	void RenderArrays(RenderingOption type, unsigned int first, unsigned int count);
 	void RenderElements(RenderingOption type, unsigned int first, unsigned int count);
 
 	void RenderTrianglesFromArrays(unsigned int first, unsigned int count);
 	void RenderTrianglesFromElements(unsigned int first, unsigned int count);
+
+	void SetPixelStorei(Alignment alignment, int value);
+	void SetPixelStoref(Alignment alignment, float value);
+
+	void SetViewport(int x, int y, int width, int height);
+
+	void BindDefaultFrameBuffer();
 
 	void SetContextAddressFunc(ContextAddressFunc func);
 
