@@ -17,7 +17,9 @@ namespace POG::Graphics
 		VertexArray(const VertexArray&) = delete;
 		VertexArray(VertexArray&&) = delete;
 
-		~VertexArray();
+		virtual ~VertexArray();
+
+		virtual void Dispose() override;
 
 		virtual void Bind() override;
 		virtual void Unbind() override;

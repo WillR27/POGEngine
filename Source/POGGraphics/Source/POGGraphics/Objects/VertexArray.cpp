@@ -15,6 +15,14 @@ namespace POG::Graphics
 
 	VertexArray::~VertexArray()
 	{
+		if (ShouldDispose())
+		{
+			Dispose();
+		}
+	}
+
+	void VertexArray::Dispose()
+	{
 		glDeleteVertexArrays(1, &id);
 	}
 

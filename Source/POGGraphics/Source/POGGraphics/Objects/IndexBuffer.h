@@ -13,7 +13,9 @@ namespace POG::Graphics
 		IndexBuffer(const IndexBuffer&) = delete;
 		IndexBuffer(IndexBuffer&&) = delete;
 
-		~IndexBuffer();
+		virtual ~IndexBuffer();
+
+		virtual void Dispose() override;
 
 		virtual void Bind() override;
 		virtual void Unbind() override;

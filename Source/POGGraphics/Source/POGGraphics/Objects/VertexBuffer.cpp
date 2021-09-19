@@ -15,6 +15,14 @@ namespace POG::Graphics
 
 	VertexBuffer::~VertexBuffer()
 	{
+		if (ShouldDispose())
+		{
+			Dispose();
+		}
+	}
+
+	void VertexBuffer::Dispose()
+	{
 		glDeleteBuffers(1, &id);
 	}
 

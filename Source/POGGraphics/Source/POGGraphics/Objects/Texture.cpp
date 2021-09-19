@@ -24,6 +24,14 @@ namespace POG::Graphics
 
 	Texture::~Texture()
 	{
+		if (ShouldDispose())
+		{
+			Dispose();
+		}
+	}
+
+	void Texture::Dispose()
+	{
 		glDeleteTextures(1, &id);
 	}
 

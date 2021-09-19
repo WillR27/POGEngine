@@ -15,6 +15,14 @@ namespace POG::Graphics
 
 	IndexBuffer::~IndexBuffer()
 	{
+		if (ShouldDispose())
+		{
+			Dispose();
+		}
+	}
+
+	void IndexBuffer::Dispose()
+	{
 		glDeleteBuffers(1, &id);
 	}
 

@@ -12,7 +12,9 @@ namespace POG::Graphics
 		FrameBuffer(const FrameBuffer&) = delete;
 		FrameBuffer(FrameBuffer&&) = delete;
 
-		~FrameBuffer();
+		virtual ~FrameBuffer();
+
+		virtual void Dispose() override;
 
 		virtual void Bind() override;
 		virtual void Unbind() override;

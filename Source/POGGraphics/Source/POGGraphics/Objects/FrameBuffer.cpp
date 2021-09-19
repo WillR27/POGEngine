@@ -15,6 +15,14 @@ namespace POG::Graphics
 
 	FrameBuffer::~FrameBuffer()
 	{
+		if (ShouldDispose())
+		{
+			Dispose();
+		}
+	}
+
+	void FrameBuffer::Dispose()
+	{
 		glDeleteFramebuffers(1, &id);
 	}
 

@@ -1,12 +1,16 @@
 #pragma once
 
+#include "POGCommon.h"
+
 namespace POG::Graphics
 {
-	class RenderingObject
+	class RenderingObject : public Common::Disposable
 	{
 	public:
 		RenderingObject();
 		virtual ~RenderingObject() = default;
+
+		virtual void Dispose() = 0;
 
 		operator unsigned int() const { return id; }
 

@@ -13,7 +13,9 @@ namespace POG::Graphics
 		VertexBuffer(const VertexBuffer&) = delete;
 		VertexBuffer(VertexBuffer&&) = delete;
 
-		~VertexBuffer();
+		virtual ~VertexBuffer();
+
+		virtual void Dispose() override;
 
 		virtual void Bind() override;
 		virtual void Unbind() override;

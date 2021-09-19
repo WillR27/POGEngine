@@ -13,6 +13,8 @@ namespace POG::Graphics
 
 		virtual ~Texture();
 
+		virtual void Dispose() override;
+
 		virtual void Bind() override;
 		virtual void Unbind() override;
 
