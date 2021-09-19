@@ -13,6 +13,11 @@ namespace POG::Graphics
 		glGenFramebuffers(1, &id);
 	}
 
+	FrameBuffer::FrameBuffer(const FrameBuffer& frameBuffer)
+		: RenderingObject::RenderingObject(frameBuffer)
+	{
+	}
+
 	FrameBuffer::~FrameBuffer()
 	{
 		if (GetRefCount() == 1)

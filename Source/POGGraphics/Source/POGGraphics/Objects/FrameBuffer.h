@@ -9,7 +9,7 @@ namespace POG::Graphics
 	{
 	public:
 		FrameBuffer();
-		FrameBuffer(const FrameBuffer&) = delete;
+		FrameBuffer(const FrameBuffer& frameBuffer);
 		FrameBuffer(FrameBuffer&&) = delete;
 
 		virtual ~FrameBuffer();

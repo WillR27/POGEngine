@@ -10,7 +10,7 @@ namespace POG::Graphics
 	{
 	public:
 		IndexBuffer();
-		IndexBuffer(const IndexBuffer&) = delete;
+		IndexBuffer(const IndexBuffer& indexBuffer);
 		IndexBuffer(IndexBuffer&&) = delete;
 
 		virtual ~IndexBuffer();

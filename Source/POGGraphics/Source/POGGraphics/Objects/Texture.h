@@ -8,7 +8,7 @@ namespace POG::Graphics
 	{
 	public:
 		Texture();
-		Texture(const Texture&) = delete;
+		Texture(const Texture& texture);
 		Texture(Texture&&) = delete;
 
 		virtual ~Texture();

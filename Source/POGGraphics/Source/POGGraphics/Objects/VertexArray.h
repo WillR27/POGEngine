@@ -14,7 +14,7 @@ namespace POG::Graphics
 	{
 	public:
 		VertexArray();
-		VertexArray(const VertexArray&) = delete;
+		VertexArray(const VertexArray& vertexArray);
 		VertexArray(VertexArray&&) = delete;
 
 		virtual ~VertexArray();

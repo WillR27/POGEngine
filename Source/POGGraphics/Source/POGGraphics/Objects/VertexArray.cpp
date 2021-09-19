@@ -13,6 +13,11 @@ namespace POG::Graphics
 		glGenVertexArrays(1, &id);
 	}
 
+	VertexArray::VertexArray(const VertexArray& vertexArray)
+		: RenderingObject::RenderingObject(vertexArray)
+	{
+	}
+
 	VertexArray::~VertexArray()
 	{
 		if (GetRefCount() == 1)

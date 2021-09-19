@@ -13,6 +13,11 @@ namespace POG::Graphics
 		glGenBuffers(1, &id);
 	}
 
+	IndexBuffer::IndexBuffer(const IndexBuffer& indexBuffer)
+		: RenderingObject::RenderingObject(indexBuffer)
+	{
+	}
+
 	IndexBuffer::~IndexBuffer()
 	{
 		if (GetRefCount() == 1)

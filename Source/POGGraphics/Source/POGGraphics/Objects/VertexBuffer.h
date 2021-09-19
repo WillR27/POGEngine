@@ -10,7 +10,7 @@ namespace POG::Graphics
 	{
 	public:
 		VertexBuffer();
-		VertexBuffer(const VertexBuffer&) = delete;
+		VertexBuffer(const VertexBuffer& vertexBuffer);
 		VertexBuffer(VertexBuffer&&) = delete;
 
 		virtual ~VertexBuffer();

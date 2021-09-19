@@ -9,7 +9,8 @@ namespace POG::Graphics
 	}
 
 	RenderingObject::RenderingObject(const RenderingObject& renderingObject)
-		: id(renderingObject.id)
+		: SharedObject::SharedObject(renderingObject)
+		, id(renderingObject.id)
 	{
 	}
 }

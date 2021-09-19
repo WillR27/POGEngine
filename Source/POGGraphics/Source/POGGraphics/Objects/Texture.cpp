@@ -22,6 +22,13 @@ namespace POG::Graphics
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	}
 
+	Texture::Texture(const Texture& texture)
+		: RenderingObject::RenderingObject(texture)
+		, width(texture.width)
+		, height(texture.height)
+	{
+	}
+
 	Texture::~Texture()
 	{
 		if (GetRefCount() == 1)

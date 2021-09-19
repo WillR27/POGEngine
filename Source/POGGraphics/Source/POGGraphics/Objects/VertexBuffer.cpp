@@ -13,6 +13,11 @@ namespace POG::Graphics
 		glGenBuffers(1, &id);
 	}
 
+	VertexBuffer::VertexBuffer(const VertexBuffer& vertexBuffer)
+		: RenderingObject::RenderingObject(vertexBuffer)
+	{
+	}
+
 	VertexBuffer::~VertexBuffer()
 	{
 		if (GetRefCount() == 1)
