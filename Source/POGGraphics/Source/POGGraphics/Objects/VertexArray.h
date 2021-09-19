@@ -19,6 +19,8 @@ namespace POG::Graphics
 
 		virtual ~VertexArray();
 
+		VertexArray& operator=(const VertexArray& vertexArray);
+
 		virtual void Dispose() override;
 
 		virtual void Bind() override;

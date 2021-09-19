@@ -26,6 +26,13 @@ namespace POG::Graphics
 		}
 	}
 
+	IndexBuffer& IndexBuffer::operator=(const IndexBuffer& indexBuffer)
+	{
+		RenderingObject::operator=(indexBuffer);
+
+		return *this;
+	}
+
 	void IndexBuffer::Dispose()
 	{
 		glDeleteBuffers(1, &id);

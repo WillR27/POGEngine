@@ -13,6 +13,8 @@ namespace POG::Graphics
 
 		virtual ~RenderingObject() = default;
 
+		RenderingObject& operator=(const RenderingObject& renderingObject);
+
 		virtual void Dispose() = 0;
 
 		operator unsigned int() const { return id; }

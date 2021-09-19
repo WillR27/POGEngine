@@ -15,6 +15,8 @@ namespace POG::Graphics
 
 		virtual ~VertexBuffer();
 
+		VertexBuffer& operator=(const VertexBuffer& vertexBuffer);
+
 		virtual void Dispose() override;
 
 		virtual void Bind() override;

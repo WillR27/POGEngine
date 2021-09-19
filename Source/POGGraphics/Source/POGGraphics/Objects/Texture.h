@@ -13,6 +13,8 @@ namespace POG::Graphics
 
 		virtual ~Texture();
 
+		Texture& operator=(const Texture& texture);
+
 		virtual void Dispose() override;
 
 		virtual void Bind() override;

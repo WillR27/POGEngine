@@ -8,8 +8,6 @@
 
 namespace POG::Graphics
 {
-    class Texture;
-
     struct Character 
     {
         Texture         texture;    // ID handle of the glyph texture
@@ -30,6 +28,8 @@ namespace POG::Graphics
     void LoadFont(const char* name, const char* file);
 
     void RenderText(std::string text, float x, float y, float scale, Maths::Vec3 colour);
+
+    void SetFont(const char* name);
 
     void SetWindowWidthHeight(float width, float height);
 }

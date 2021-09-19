@@ -15,6 +15,8 @@ namespace POG::Graphics
 
 		virtual ~IndexBuffer();
 
+		IndexBuffer& operator=(const IndexBuffer& indexBuffer);
+
 		virtual void Dispose() override;
 
 		virtual void Bind() override;

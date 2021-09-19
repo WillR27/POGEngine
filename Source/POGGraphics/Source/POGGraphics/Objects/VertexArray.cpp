@@ -26,6 +26,13 @@ namespace POG::Graphics
 		}
 	}
 
+	VertexArray& VertexArray::operator=(const VertexArray& vertexArray)
+	{
+		RenderingObject::operator=(vertexArray);
+
+		return *this;
+	}
+
 	void VertexArray::Dispose()
 	{
 		glDeleteVertexArrays(1, &id);

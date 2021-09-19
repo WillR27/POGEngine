@@ -17,9 +17,11 @@ namespace POG::Common
 
 		virtual ~SharedObject();
 
+		SharedObject& operator=(const SharedObject& sharedObject);
+
 		int GetRefCount() const { return *refCount; }
 
 	private:
-		int* const refCount;
+		int* refCount;
 	};
 }

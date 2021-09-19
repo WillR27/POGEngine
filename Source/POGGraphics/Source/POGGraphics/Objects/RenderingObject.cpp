@@ -13,4 +13,13 @@ namespace POG::Graphics
 		, id(renderingObject.id)
 	{
 	}
+
+	RenderingObject& RenderingObject::operator=(const RenderingObject& renderingObject)
+	{
+		SharedObject::operator=(renderingObject);
+
+		this->id = renderingObject.id;
+
+		return *this;
+	}
 }

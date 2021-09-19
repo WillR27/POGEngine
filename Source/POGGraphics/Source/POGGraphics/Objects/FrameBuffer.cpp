@@ -26,6 +26,13 @@ namespace POG::Graphics
 		}
 	}
 
+	FrameBuffer& FrameBuffer::operator=(const FrameBuffer& frameBuffer)
+	{
+		RenderingObject::operator=(frameBuffer);
+
+		return *this;
+	}
+
 	void FrameBuffer::Dispose()
 	{
 		glDeleteFramebuffers(1, &id);

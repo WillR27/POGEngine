@@ -52,7 +52,7 @@ namespace Example
 			auto& bulletInfo = ecsManager.GetComponent<BulletInfo>(bulletId);
 			bulletInfo.timeExisted += dt;
 
-			if (bulletInfo.timeExisted > 3.0f)
+			if (bulletInfo.timeExisted > 5.0f)
 			{
 				bulletsToDestroy.push_back(bulletId);
 				continue;
@@ -90,7 +90,6 @@ namespace Example
 
 			if (result.collision)
 			{
-				POG_WARN("hit");
 				transform1.position += result.displacement;
 			}
 		}

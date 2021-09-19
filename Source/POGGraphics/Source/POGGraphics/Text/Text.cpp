@@ -10,12 +10,19 @@
 
 #include <glad/glad.h>
 
+// https://learnopengl.com/In-Practice/Text-Rendering
+// https://www.freetype.org/freetype2/docs/tutorial/step1.html#section-3
+
 namespace POG::Graphics
 {
     std::map<const char*, Font> fonts;
 
+    Font* currentFont;
+
     float windowWidth = 1200.0f;
     float windowHeight = 800.0f;
+
+    Shader shader;
 
     const char* textVertexShader = R"(
 #version 330 core
@@ -48,8 +55,6 @@ void main()
 }  	
 )";
 
-    Shader shader;
-
 	void InitText()
 	{
         shader.Init(textVertexShader, textFragmentShader);
@@ -57,6 +62,13 @@ void main()
 
     void LoadFont(const char* name, const char* file)
     {
+        if (fonts.find(name) != fonts.end())
+        {
+            POG_WARN("Font \"{0}\" is already loaded!", name);
+
+            return;
+        }
+
         // TODO: Move to proper init
         FT_Library ft;
         if (int error = FT_Init_FreeType(&ft))
@@ -74,7 +86,6 @@ void main()
 
         SetPixelStorei(Alignment::Unpack, 1);
 
-        // TODO: Check if font already exists
         Font& font = fonts[name];
         auto& chars = font.characters;
 
@@ -117,15 +128,14 @@ void main()
         Disable(Capability::DepthTest);
 
         glm::mat4 projection = glm::ortho(0.0f, windowWidth, 0.0f, windowHeight);
+
         shader.Use();
 		shader.SetMatrix4fv("projection", 1, false, Maths::ToData(projection));
 		shader.Set3f("textColor", colour.r, colour.g, colour.b);
 
-        Font& font = fonts["Arial"];
-        auto& chars = font.characters;
+        currentFont->vao.Bind();
 
-        font.vao.Bind();
-
+        auto& chars = currentFont->characters;
         for (auto c = text.begin(); c != text.end(); c++)
         {
             Character ch = chars[*c];
@@ -148,16 +158,25 @@ void main()
             };
 
             ch.texture.Bind();
-            font.vbo.Bind();
-            font.vbo.SetVertexSubData(vertices, sizeof(vertices));
+            currentFont->vbo.Bind();
+            currentFont->vbo.SetVertexSubData(vertices, sizeof(vertices));
             RenderTrianglesFromArrays(0, 6);
 
-            // now advance cursors for next glyph (note that advance is number of 1/64 pixels)
-            x += (ch.advance >> 6) * scale; // bitshift by 6 to get value in pixels (2^6 = 64 (divide amount of 1/64th pixels by 64 to get amount of pixels))
+            x += (ch.advance >> 6) * scale;
         }
 
         Enable(Capability::DepthTest);
 	}
+
+    void SetFont(const char* name)
+    {
+        if (fonts.find(name) == fonts.end())
+        {
+            POG_WARN("Tried to set font to \"{0}\" but it has not been loaded!", name);
+        }
+
+        currentFont = &fonts[name];
+    }
 
     void SetWindowWidthHeight(float width, float height)
     {

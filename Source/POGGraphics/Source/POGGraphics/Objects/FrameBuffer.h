@@ -14,6 +14,8 @@ namespace POG::Graphics
 
 		virtual ~FrameBuffer();
 
+		FrameBuffer& operator=(const FrameBuffer& frameBuffer);
+
 		virtual void Dispose() override;
 
 		virtual void Bind() override;

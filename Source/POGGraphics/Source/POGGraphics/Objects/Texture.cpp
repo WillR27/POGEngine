@@ -37,6 +37,16 @@ namespace POG::Graphics
 		}
 	}
 
+	Texture& Texture::operator=(const Texture& texture)
+	{
+		RenderingObject::operator=(texture);
+
+		this->width = texture.width;
+		this->height = texture.height;
+
+		return *this;
+	}
+
 	void Texture::Dispose()
 	{
 		glDeleteTextures(1, &id);

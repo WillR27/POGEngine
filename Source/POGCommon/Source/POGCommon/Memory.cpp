@@ -23,4 +23,20 @@ namespace POG::Common
 			delete refCount;
 		}
 	}
+
+	SharedObject& SharedObject::operator=(const SharedObject& sharedObject)
+	{
+		(*refCount)--;
+
+		if (*refCount == 0)
+		{
+			delete refCount;
+		}
+
+		refCount = sharedObject.refCount;
+
+		(*refCount)++;
+
+		return *this;
+	}
 }

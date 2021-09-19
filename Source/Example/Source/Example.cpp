@@ -28,6 +28,7 @@ namespace Example
 		//SetCursorEnabled(false);
 
 		Graphics::LoadFont("Arial", "F:\\arial.ttf");
+		Graphics::SetFont("Arial");
 
 		Core::Scene::SetActiveScene(std::make_shared<ExampleScene>());
 

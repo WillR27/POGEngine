@@ -26,6 +26,13 @@ namespace POG::Graphics
 		}
 	}
 
+	VertexBuffer& VertexBuffer::operator=(const VertexBuffer& vertexBuffer)
+	{
+		RenderingObject::operator=(vertexBuffer);
+
+		return *this;
+	}
+
 	void VertexBuffer::Dispose()
 	{
 		glDeleteBuffers(1, &id);
