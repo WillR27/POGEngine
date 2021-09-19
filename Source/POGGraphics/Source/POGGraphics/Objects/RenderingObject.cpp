@@ -7,4 +7,9 @@ namespace POG::Graphics
 		: id(0)
 	{
 	}
+
+	RenderingObject::RenderingObject(const RenderingObject& renderingObject)
+		: id(renderingObject.id)
+	{
+	}
 }

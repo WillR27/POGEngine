@@ -4,10 +4,13 @@
 
 namespace POG::Graphics
 {
-	class RenderingObject : public Common::Disposable
+	class RenderingObject : public Common::Disposable, public Common::SharedObject
 	{
 	public:
 		RenderingObject();
+		RenderingObject(const RenderingObject& renderingObject);
+		RenderingObject(RenderingObject&& renderingObject) = delete;
+
 		virtual ~RenderingObject() = default;
 
 		virtual void Dispose() = 0;

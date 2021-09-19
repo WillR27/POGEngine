@@ -15,7 +15,7 @@ namespace POG::Graphics
 
 	VertexBuffer::~VertexBuffer()
 	{
-		if (ShouldDispose())
+		if (GetRefCount() == 1)
 		{
 			Dispose();
 		}

@@ -15,7 +15,7 @@ namespace POG::Graphics
 
 	FrameBuffer::~FrameBuffer()
 	{
-		if (ShouldDispose())
+		if (GetRefCount() == 1)
 		{
 			Dispose();
 		}

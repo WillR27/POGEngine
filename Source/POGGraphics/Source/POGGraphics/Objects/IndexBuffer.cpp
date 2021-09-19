@@ -15,7 +15,7 @@ namespace POG::Graphics
 
 	IndexBuffer::~IndexBuffer()
 	{
-		if (ShouldDispose())
+		if (GetRefCount() == 1)
 		{
 			Dispose();
 		}

@@ -24,7 +24,7 @@ namespace POG::Graphics
 
 	Texture::~Texture()
 	{
-		if (ShouldDispose())
+		if (GetRefCount() == 1)
 		{
 			Dispose();
 		}

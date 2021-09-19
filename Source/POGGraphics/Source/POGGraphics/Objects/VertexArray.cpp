@@ -15,7 +15,7 @@ namespace POG::Graphics
 
 	VertexArray::~VertexArray()
 	{
-		if (ShouldDispose())
+		if (GetRefCount() == 1)
 		{
 			Dispose();
 		}
