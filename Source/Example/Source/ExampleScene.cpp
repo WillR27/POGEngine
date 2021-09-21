@@ -136,6 +136,6 @@ namespace Example
 	{
 		ExampleCanvas ec;
 		ec.Init();
-		ec.Draw();
+		ec.DrawChildren();
 	}
 }

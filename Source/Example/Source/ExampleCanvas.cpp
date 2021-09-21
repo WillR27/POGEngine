@@ -13,9 +13,9 @@ namespace Example
 	void ExampleCanvas::Init()
 	{
 		auto& textControl = AddControl<Core::TextControl>();
-		textControl.SetText("Test text");
+		textControl.SetText("ooooooooo");
 
 		auto& panelControl = AddControl<Core::PanelControl>();
-		panelControl.SetColour({1.0f, 1.0f, 0.0f});
+		panelControl.SetColour({ 1.0f, 1.0f, 0.0f });
 	}
 }

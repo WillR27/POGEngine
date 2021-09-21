@@ -97,14 +97,19 @@ void main()
 
             Texture texture;
             texture.SetDataRed(face->glyph->bitmap.buffer, face->glyph->bitmap.width, face->glyph->bitmap.rows);
-            Character character
+            Character ch
             {
                 texture,
                 Maths::Vec2i(face->glyph->bitmap.width, face->glyph->bitmap.rows),
                 Maths::Vec2i(face->glyph->bitmap_left, face->glyph->bitmap_top),
                 static_cast<unsigned int>(face->glyph->advance.x),
             };
-            chars.insert({ c, character });
+
+            int ypos = ch.bearing.y - ch.size.y;
+            font.minY = ypos < font.minY ? ypos : font.minY;
+            font.maxY = ypos + ch.size.y > font.maxY ? ypos + ch.size.y : font.maxY;
+
+            chars.insert({ c, ch });
         }
 
         FT_Done_Face(face);
@@ -118,7 +123,42 @@ void main()
         SetPixelStorei(Alignment::Unpack, 4);
     }
 
-	void RenderText(std::string text, float x, float y, float scale, Maths::Vec3 colour)
+    float CalcCharX(const Character& ch, int x, float scale)
+    {
+        return x + ch.bearing.x * scale;
+    }
+
+    float CalcCharY(const Character& ch, int y, float scale)
+    {
+        return y - (ch.size.y - ch.bearing.y) * scale;
+    }
+
+    float CalcCharWidth(const Character& ch, float scale)
+    {
+        return ch.size.x * scale;
+    }
+
+    float CalcCharHeight(const Character& ch, float scale)
+    {
+        return ch.size.y * scale;
+    }
+
+    Maths::Vec2i GetTextSize(std::string text, float scale)
+    {
+        float x = 0;
+
+        auto& chars = currentFont->characters;
+        for (auto c = text.begin(); c != text.end(); c++)
+        {
+            Character ch = chars[*c];
+
+            x += static_cast<int>((ch.advance >> 6) * scale);
+        }
+
+        return { static_cast<int>(x), static_cast<int>((currentFont->maxY - currentFont->minY) * scale) };
+    }
+
+	void RenderText(std::string text, int x, int y, float scale, Maths::Vec3 colour)
 	{
         Enable(Capability::Blend);
         Enable(Capability::CullFace);
@@ -137,11 +177,11 @@ void main()
         {
             Character ch = chars[*c];
 
-            float xpos = x + ch.bearing.x * scale;
-            float ypos = y - (ch.size.y - ch.bearing.y) * scale;
+            float xpos = CalcCharX(ch, x, scale);
+            float ypos = CalcCharY(ch, y, scale) - (currentFont->minY * scale);
 
-            float w = ch.size.x * scale;
-            float h = ch.size.y * scale;
+            float w = CalcCharWidth(ch, scale);
+            float h = CalcCharHeight(ch, scale);
 
             float vertices[6][4] = 
             {
@@ -159,7 +199,7 @@ void main()
             currentFont->vbo.SetVertexSubData(vertices, sizeof(vertices));
             RenderTrianglesFromArrays(0, 6);
 
-            x += (ch.advance >> 6) * scale;
+            x += static_cast<int>((ch.advance >> 6) * scale);
         }
 
         Enable(Capability::DepthTest);

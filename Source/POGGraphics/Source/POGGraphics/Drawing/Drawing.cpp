@@ -50,11 +50,20 @@ void main()
 
 	void DrawRectangle(int x, int y, int width, int height, Maths::Vec3 colour)
 	{
+		bool depthTest = IsEnabled(Capability::DepthTest);
+
+		Disable(Capability::DepthTest);
+
 		shader.Use();
 		shader.SetMatrix4fv("projection", 1, false, Maths::ToData(glm::ortho(0.0f, WindowWidth, 0.0f, WindowHeight)));
-		shader.SetMatrix4fv("model", 1, false, Maths::ToData(Maths::ToModelMatrix(Maths::Vec3(x, y, 0.0f), Maths::Quat(), Maths::Vec3(width, height, 1.0f))));
+		shader.SetMatrix4fv("model", 1, false, Maths::ToData(Maths::ToModelMatrix(Maths::Vec3(x + (width / 2.0f), y + (height / 2.0f), 0.0f), Maths::Quat(), Maths::Vec3(width, height, 1.0f))));
 		shader.Set3f("colour", colour.r, colour.g, colour.b);
 
 		mesh.Render();
+
+		if (depthTest)
+		{
+			Enable(Capability::DepthTest);
+		}
 	}
 }

@@ -19,6 +19,7 @@ namespace POG::Graphics
     struct Font
     {
         std::map<char, Character> characters;
+        int minY, maxY;
         VertexArray vao;
         VertexBuffer vbo;
     };
@@ -27,7 +28,9 @@ namespace POG::Graphics
 
     void LoadFont(const char* name, const char* file);
 
-    void RenderText(std::string text, float x, float y, float scale, Maths::Vec3 colour);
+    Maths::Vec2i GetTextSize(std::string text, float scale);
+
+    void RenderText(std::string text, int x, int y, float scale, Maths::Vec3 colour);
 
     void SetFont(const char* name);
 }

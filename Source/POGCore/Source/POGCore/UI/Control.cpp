@@ -6,22 +6,16 @@
 namespace POG::Core
 {
 	Control::Control()
-		: Control::Control(nullptr)
-	{
-	}
-
-	Control::Control(Control& parent)
-		: Control::Control(&parent)
-	{
-	}
-
-	Control::Control(Control* parent)
-		: parent(parent)
+		: parent(nullptr)
 		, children()
 		, x(0)
 		, y(0)
-		, width()
-		, height()
+		, windowX(x)
+		, windowY(y)
+		, width(100)
+		, height(100)
+		, actualWidth(width)
+		, actualHeight(height)
 	{
 	}
 
@@ -35,6 +29,16 @@ namespace POG::Core
 		if (parent != nullptr)
 		{
 			parent->children.erase(std::find(parent->children.begin(), parent->children.end(), this));
+		}
+	}
+
+	void Control::DrawChildren()
+	{
+		Draw();
+
+		for (auto it = children.rbegin(); it != children.rend(); it++)
+		{
+			(*it)->DrawChildren();
 		}
 	}
 

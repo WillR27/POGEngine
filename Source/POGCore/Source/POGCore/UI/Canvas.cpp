@@ -15,9 +15,6 @@ namespace POG::Core
 
 	void Canvas::Draw()
 	{
-		for (Control* control : children)
-		{
-			control->Draw();
-		}
+		
 	}
 }
