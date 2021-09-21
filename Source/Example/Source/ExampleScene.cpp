@@ -1,6 +1,8 @@
 #include "ExamplePCH.h"
 #include "ExampleScene.h"
 
+#include "ExampleCanvas.h"
+
 using namespace POG;
 
 namespace Example
@@ -132,6 +134,8 @@ namespace Example
 
 	void ExampleScene::Frame(float alpha)
 	{
-
+		ExampleCanvas ec;
+		ec.Init();
+		ec.Draw();
 	}
 }

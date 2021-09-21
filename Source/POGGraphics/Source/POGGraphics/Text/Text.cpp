@@ -19,10 +19,7 @@ namespace POG::Graphics
 
     Font* currentFont;
 
-    float windowWidth = 1200.0f;
-    float windowHeight = 800.0f;
-
-    Shader shader;
+    static Shader shader;
 
     const char* textVertexShader = R"(
 #version 330 core
@@ -127,7 +124,7 @@ void main()
         Enable(Capability::CullFace);
         Disable(Capability::DepthTest);
 
-        glm::mat4 projection = glm::ortho(0.0f, windowWidth, 0.0f, windowHeight);
+        Maths::Mat4 projection = glm::ortho(0.0f, WindowWidth, 0.0f, WindowHeight);
 
         shader.Use();
 		shader.SetMatrix4fv("projection", 1, false, Maths::ToData(projection));
@@ -176,11 +173,5 @@ void main()
         }
 
         currentFont = &fonts[name];
-    }
-
-    void SetWindowWidthHeight(float width, float height)
-    {
-        windowWidth = width;
-        windowHeight = height;
     }
 }

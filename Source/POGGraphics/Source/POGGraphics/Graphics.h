@@ -118,6 +118,10 @@ namespace POG::Graphics
 
 	void SetContextAddressFunc(ContextAddressFunc func);
 
+	extern float WindowWidth;
+	extern float WindowHeight;
+	void SetWindowWidthHeight(float width, float height);
+
 	void Init();
 }
 

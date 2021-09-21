@@ -1,6 +1,7 @@
 #include "POGGraphicsPCH.h"
 #include "Graphics.h"
 
+#include "POGGraphics/Drawing/Drawing.h"
 #include "POGGraphics/Text/Text.h"
 
 #include "POGDebug.h"
@@ -129,6 +130,15 @@ namespace POG::Graphics
 		POG_ASSERT(success, "Glad failed to initialise!");
 	}
 
+	float WindowWidth = 1200.0f;
+	float WindowHeight = 800.0f;
+
+	void SetWindowWidthHeight(float width, float height)
+	{
+		WindowWidth = width;
+		WindowHeight = height;
+	}
+
 	void Init()
 	{
 		glDebugMessageCallback(ErrorCallback, nullptr);
@@ -144,6 +154,7 @@ namespace POG::Graphics
 		Enable(Graphics::Capability::CullFace);
 		Enable(Graphics::Capability::DepthTest);
 
+		InitDrawing();
 		InitText();
 	}
 }

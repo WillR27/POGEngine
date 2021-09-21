@@ -1,0 +1,17 @@
+#pragma once
+
+#include "POGCore.h"
+
+namespace Example
+{
+	class ExampleCanvas : public POG::Core::Canvas
+	{
+	public:
+		ExampleCanvas();
+
+		virtual ~ExampleCanvas() = default;
+
+		virtual void Init() override;
+	};
+}
+

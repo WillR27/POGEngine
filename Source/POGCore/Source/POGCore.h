@@ -9,3 +9,5 @@
 #include "POGCore/Graphics/TextureManager.h"
 #include "POGCore/Physics/Collisions.h"
 #include "POGCore/Scene/Scene.h"
+#include "POGCore/UI/Canvas.h"
+#include "POGCore/UI/Controls/Controls.h"
