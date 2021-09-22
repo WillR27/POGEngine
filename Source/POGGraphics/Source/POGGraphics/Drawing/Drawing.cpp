@@ -31,7 +31,7 @@ uniform vec3 colour;
 
 void main()
 {
-	FragColor = vec4(1.0, 1.0, 0.0, 1.0);
+	FragColor = vec4(colour, 1.0);
 } 
 )";
 
@@ -48,7 +48,7 @@ void main()
 		mesh.Build();
 	}
 
-	void DrawRectangle(int x, int y, int width, int height, Maths::Vec3 colour)
+	void DrawRectangle(float x, float y, float width, float height, Maths::Vec3 colour)
 	{
 		bool depthTest = IsEnabled(Capability::DepthTest);
 

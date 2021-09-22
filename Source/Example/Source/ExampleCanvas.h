@@ -12,6 +12,10 @@ namespace Example
 		virtual ~ExampleCanvas() = default;
 
 		virtual void Init() override;
+
+		virtual void Draw(Canvas& canvas) override;
+
+		POG::Core::PanelControl* panelControl;
 	};
 }
 

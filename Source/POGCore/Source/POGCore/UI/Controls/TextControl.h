@@ -11,7 +11,9 @@ namespace POG::Core
 
 		virtual ~TextControl() = default;
 
-		virtual void Draw() override;
+		virtual void Draw(Canvas& canvas) override;
+
+		virtual void CalculateActualSize(Canvas& canvas) override;
 
 		std::string GetText() const { return text; }
 		void SetText(std::string text) { this->text = text; }

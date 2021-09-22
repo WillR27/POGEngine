@@ -1,21 +1,25 @@
 #include "POGCorePCH.h"
 #include "Control.h"
 
+#include "POGCore/UI/Canvas.h"
+
 #include "POGLog.h"
+#include "POGMaths.h"
 
 namespace POG::Core
 {
 	Control::Control()
 		: parent(nullptr)
 		, children()
-		, x(0)
-		, y(0)
+		, x(0.0f)
+		, y(0.0f)
 		, windowX(x)
 		, windowY(y)
-		, width(100)
-		, height(100)
+		, width(100.0f)
+		, height(100.0f)
 		, actualWidth(width)
 		, actualHeight(height)
+		, anchor(Core::Anchor::Left | Core::Anchor::Top)
 	{
 	}
 
@@ -32,13 +36,59 @@ namespace POG::Core
 		}
 	}
 
-	void Control::DrawChildren()
+	void Control::Frame(Canvas& canvas)
 	{
-		Draw();
+		CalculateWindowPos(canvas);
+		CalculateActualSize(canvas);
+		Draw(canvas);
 
-		for (auto it = children.rbegin(); it != children.rend(); it++)
+		for (auto it = children.begin(); it != children.end(); it++)
 		{
-			(*it)->DrawChildren();
+			(*it)->Frame(canvas);
+		}
+	}
+
+	void Control::CalculateWindowPos(Canvas& canvas)
+	{
+		SetWindowX(static_cast<int>(x * canvas.GetScaleX()) + parent->GetWindowX());
+		SetWindowY(static_cast<int>(y * canvas.GetScaleY()) + parent->GetWindowY());
+	}
+
+	void Control::CalculateActualSize(Canvas& canvas)
+	{
+		SetActualWidth(Maths::Min(width * canvas.GetScaleX(), parent->GetActualWidth() - GetX() * canvas.GetScaleX()));
+		SetActualHeight(Maths::Min(height * canvas.GetScaleY(), parent->GetActualHeight() - GetY() * canvas.GetScaleY()));
+	}
+
+	void Control::OnParentWidthChanged(float deltaWidth)
+	{
+		if ((anchor & Anchor::Left) && (anchor & Anchor::Right))
+		{
+			SetWidth(width - deltaWidth);
+		}
+		else if ((anchor & Anchor::Right))
+		{
+			SetX(x - deltaWidth);
+		}
+		else if ((anchor & Anchor::None))
+		{
+			SetX(x - deltaWidth / 2.0f);
+		}
+	}
+
+	void Control::OnParentHeightChanged(float deltaHeight)
+	{
+		if ((anchor & Anchor::Top) && (anchor & Anchor::Bottom))
+		{
+			SetHeight(height - deltaHeight);
+		}
+		else if ((anchor & Anchor::Bottom))
+		{
+			SetY(y - deltaHeight);
+		}
+		else if ((anchor & Anchor::None))
+		{
+			SetY(y - deltaHeight / 2.0f);
 		}
 	}
 

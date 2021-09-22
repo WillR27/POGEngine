@@ -5,6 +5,7 @@
 
 #include "Bullet.h"
 #include "Enemy.h"
+#include "ExampleCanvas.h"
 #include "Player.h"
 
 namespace Example
@@ -25,6 +26,7 @@ namespace Example
 		void Frame(float alpha) override;
 
 	private:
+		ExampleCanvas ec;
 		Player player;
 		POG::Core::Entity square;
 		POG::Core::Entity child;

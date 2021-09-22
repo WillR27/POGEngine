@@ -6,6 +6,6 @@ namespace POG::Graphics
 {
 	void InitDrawing();
 
-	void DrawRectangle(int x, int y, int width, int height, Maths::Vec3 colour);
+	void DrawRectangle(float x, float y, float width, float height, Maths::Vec3 colour);
 }
 

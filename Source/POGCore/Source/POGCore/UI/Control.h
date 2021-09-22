@@ -4,6 +4,8 @@
 
 namespace POG::Core
 {
+	class Canvas;
+
 	class Control
 	{
 	public:
@@ -13,9 +15,15 @@ namespace POG::Core
 
 		virtual ~Control();
 
-		virtual void Draw() = 0;
+		void Frame(Canvas& canvas);
 
-		void DrawChildren();
+		virtual void Draw(Canvas& canvas) = 0;
+
+		virtual void CalculateWindowPos(Canvas& canvas);
+		virtual void CalculateActualSize(Canvas& canvas);
+
+		virtual void OnParentWidthChanged(float deltaWidth);
+		virtual void OnParentHeightChanged(float deltaHeight);
 
 		template<class T, typename... Args>
 		T& AddControl(Args&&... args)
@@ -34,30 +42,39 @@ namespace POG::Core
 
 		std::vector<Control*>& GetChildren() { return children; }
 
-		int GetX() const { return x; }
-		void SetX(int x) { this->x = x; }
-		int GetY() const { return y; }
-		void SetY(int y) { this->y = y; }
+		float GetX() const { return x; }
+		void SetX(float x) { this->x = x; }
+		float GetY() const { return y; }
+		void SetY(float y) { this->y = y; }
 
-		int GetWindowX() const { return windowX; }
-		int GetWindowY() const { return windowY; }
+		float GetWindowX() const { return windowX; }
+		void SetWindowX(float windowX) { this->windowX = windowX; }
+		float GetWindowY() const { return windowY; }
+		void SetWindowY(float windowY) { this->windowY = windowY; }
 
-		int GetWidth() const { return width; }
-		void SetWidth(int width) { this->width = width; }
-		int GetHeight() const { return height; }
-		void SetHeight(int height) { this->height = height; }
+		float GetWidth() const { return width; }
+		void SetWidth(float width) { float deltaWidth = this->width - width; this->width = width; for (Control* control : children) { control->OnParentWidthChanged(deltaWidth); } }
+		float GetHeight() const { return height; }
+		void SetHeight(float height) { float deltaHeight = this->height - height; this->height = height; for (Control* control : children)  { control->OnParentHeightChanged(deltaHeight); } }
 
-		int GetActualWidth() const { return actualWidth; }
-		int GetActualHeight() const { return actualHeight; }
+		float GetActualWidth() const { return actualWidth; }
+		void SetActualWidth(float actualWidth) { this->actualWidth = actualWidth; }
+		float GetActualHeight() const { return actualHeight; }
+		void SetActualHeight(float actualHeight) { this->actualHeight = actualHeight; }
 
-	protected:
+		Anchor GetAnchor() const { return anchor; }
+		void SetAnchor(Anchor anchor) { this->anchor = anchor; }
+
+	private:
 		Control* parent;
 		std::vector<Control*> children;
 
-		int x, y;
-		int windowX, windowY;
-		int width, height;
-		int actualWidth, actualHeight;
+		float x, y;
+		float windowX, windowY;
+		float width, height;
+		float actualWidth, actualHeight;
+
+		Anchor anchor;
 	};
 }
 

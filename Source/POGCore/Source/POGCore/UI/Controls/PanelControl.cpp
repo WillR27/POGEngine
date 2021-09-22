@@ -2,6 +2,7 @@
 #include "PanelControl.h"
 
 #include "POGCore/Application/Application.h"
+#include "POGCore/UI/Canvas.h"
 
 #include "POGGraphics.h"
 
@@ -12,8 +13,13 @@ namespace POG::Core
 	{
 	}
 
-	void PanelControl::Draw()
+	void PanelControl::Draw(Canvas& canvas)
 	{
-		Graphics::DrawRectangle(windowX, (Application::GetInstance().GetHeight() - windowY) - actualHeight, actualWidth, actualHeight, colour);
+		if (GetActualWidth() < 0.0f || GetActualHeight() < 0.0f)
+		{
+			return;
+		}
+
+		Graphics::DrawRectangle(GetWindowX(), (Application::GetInstance().GetHeight() - GetWindowY()) - GetActualHeight(), GetActualWidth(), GetActualHeight(), colour);
 	}
 }

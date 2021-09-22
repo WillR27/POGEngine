@@ -118,6 +118,11 @@ namespace POG::Graphics
 		glViewport(x, y, width, height);
 	}
 
+	void SetScissor(int x, int y, int width, int height)
+	{
+		glScissor(x, y, width, height);
+	}
+
 	void BindDefaultFrameBuffer()
 	{
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);

@@ -29,6 +29,7 @@
 #define POG_BLEND							0x0BE2
 #define POG_CULL_FACE						0x0B44
 #define POG_DEPTH_TEST						0x0B71
+#define POG_SCISSOR_TEST					0x0C11
 
 #define POG_BYTE							0x1400
 #define POG_UNSIGNED_BYTE					0x1401
@@ -55,6 +56,7 @@ namespace POG::Graphics
 		Blend			= POG_BLEND,
 		CullFace		= POG_CULL_FACE,
 		DepthTest		= POG_DEPTH_TEST,
+		ScissorTest		= POG_SCISSOR_TEST,
 	};
 
 	enum class PolygonFace : unsigned int
@@ -113,6 +115,7 @@ namespace POG::Graphics
 	void SetPixelStoref(Alignment alignment, float value);
 
 	void SetViewport(int x, int y, int width, int height);
+	void SetScissor(int x, int y, int width, int height);
 
 	void BindDefaultFrameBuffer();
 

@@ -1,8 +1,6 @@
 #include "ExamplePCH.h"
 #include "ExampleScene.h"
 
-#include "ExampleCanvas.h"
-
 using namespace POG;
 
 namespace Example
@@ -50,6 +48,8 @@ namespace Example
 			});
 
 		child = GetECSManager().CreateEntity();
+
+		ec.Init();
 	}
 
 	void ExampleScene::Exit()
@@ -134,8 +134,6 @@ namespace Example
 
 	void ExampleScene::Frame(float alpha)
 	{
-		ExampleCanvas ec;
-		ec.Init();
-		ec.DrawChildren();
+		ec.Frame(ec);
 	}
 }

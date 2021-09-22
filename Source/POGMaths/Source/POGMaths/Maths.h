@@ -34,4 +34,32 @@ namespace POG::Maths
 
 	// Creates a model matrix from the passed parameters. 
 	Mat4 ToModelMatrix(Vec3 position, Quat orientation, Vec3 scale);
+
+	static inline constexpr int Min(int a, int b)
+	{
+		return a < b ? a : b;
+	}
+	static inline constexpr int Max(int a, int b)
+	{
+		return a > b ? a : b;
+	}
+
+	static inline constexpr float Min(float a, float b)
+	{
+		return a < b ? a : b;
+	}
+	static inline constexpr float Max(float a, float b)
+	{
+		return a > b ? a : b;
+	}
+
+	static inline constexpr int IsOdd(int x) 
+	{ 
+		return x & 1; 
+	}
+
+	static inline constexpr int DivideRoundDown(int a, int b)
+	{
+		return a / b - (a % b < 0 ? 1 : 0);
+	}
 }
