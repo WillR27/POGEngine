@@ -1,7 +1,7 @@
 #include "POGCorePCH.h"
 #include "Control.h"
 
-#include "POGCore/UI/Canvas.h"
+#include "Canvas.h"
 
 #include "POGLog.h"
 #include "POGMaths.h"
@@ -9,7 +9,8 @@
 namespace POG::Core
 {
 	Control::Control()
-		: parent(nullptr)
+		: canvas(nullptr)
+		, parent(nullptr)
 		, children()
 		, x(0.0f)
 		, y(0.0f)
@@ -20,6 +21,7 @@ namespace POG::Core
 		, actualWidth(width)
 		, actualHeight(height)
 		, anchor(Core::Anchor::Left | Core::Anchor::Top)
+		, eventBus()
 	{
 	}
 
@@ -36,28 +38,28 @@ namespace POG::Core
 		}
 	}
 
-	void Control::Frame(Canvas& canvas)
+	void Control::Frame()
 	{
-		CalculateWindowPos(canvas);
-		CalculateActualSize(canvas);
-		Draw(canvas);
+		CalculateWindowPos();
+		CalculateActualSize();
+		Draw();
 
 		for (auto it = children.begin(); it != children.end(); it++)
 		{
-			(*it)->Frame(canvas);
+			(*it)->Frame();
 		}
 	}
 
-	void Control::CalculateWindowPos(Canvas& canvas)
+	void Control::CalculateWindowPos()
 	{
-		SetWindowX(static_cast<int>(x * canvas.GetScaleX()) + parent->GetWindowX());
-		SetWindowY(static_cast<int>(y * canvas.GetScaleY()) + parent->GetWindowY());
+		SetWindowX(static_cast<int>(x * canvas->GetScaleX()) + parent->GetWindowX());
+		SetWindowY(static_cast<int>(y * canvas->GetScaleY()) + parent->GetWindowY());
 	}
 
-	void Control::CalculateActualSize(Canvas& canvas)
+	void Control::CalculateActualSize()
 	{
-		SetActualWidth(Maths::Min(width * canvas.GetScaleX(), parent->GetActualWidth() - GetX() * canvas.GetScaleX()));
-		SetActualHeight(Maths::Min(height * canvas.GetScaleY(), parent->GetActualHeight() - GetY() * canvas.GetScaleY()));
+		SetActualWidth(Maths::Min(width * canvas->GetScaleX(), parent->GetActualWidth() - GetX() * canvas->GetScaleX()));
+		SetActualHeight(Maths::Min(height * canvas->GetScaleY(), parent->GetActualHeight() - GetY() * canvas->GetScaleY()));
 	}
 
 	void Control::OnParentWidthChanged(float deltaWidth)
@@ -90,6 +92,47 @@ namespace POG::Core
 		{
 			SetY(y - deltaHeight / 2.0f);
 		}
+	}
+
+	void Control::OnRawMouseButtonEvent(RawMouseButtonEvent& e)
+	{
+		if (IsMouseOver())
+		{
+			for (Control* control : children)
+			{
+				if (e.IsHandled())
+				{
+					return;
+				}
+
+				control->OnRawMouseButtonEvent(e);
+			}
+
+			if (e.IsHandled())
+			{
+				return;
+			}
+
+			if (e.action == POG_INPUT_RELEASE)
+			{
+				eventBus.Publish(MouseReleaseEvent(e.button));
+			}
+
+			if (e.action == POG_INPUT_PRESS)
+			{
+				eventBus.Publish(MousePressEvent(e.button));
+			}
+
+			e.SetHandled();
+		}
+	}
+
+	bool Control::IsMouseOver() const
+	{
+		float mouseX = Mouse::GetX();
+		float mouseY = Mouse::GetY();
+
+		return mouseX >= windowX && mouseX <= windowX + actualWidth && mouseY >= windowY && mouseY <= windowY + actualHeight;
 	}
 
 	void Control::RemoveControl(Control& control)

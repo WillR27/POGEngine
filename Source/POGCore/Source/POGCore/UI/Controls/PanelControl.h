@@ -13,7 +13,7 @@ namespace POG::Core
 
 		virtual ~PanelControl() = default;
 
-		virtual void Draw(Canvas& canvas) override;
+		virtual void Draw() override;
 
 		Maths::Vec3 GetColour() const { return colour; }
 		void SetColour(Maths::Vec3 colour) { this->colour = colour; }

@@ -7,6 +7,9 @@ namespace Example
 {
 	void ExampleScene::Init()
 	{
+		ec.Init();
+		Core::Application::GetInstance().GetMainEventBus().Subscribe(&Core::Canvas::OnRawMouseButtonEvent, static_cast<Core::Canvas*>(&ec));
+
 		Graphics::Texture& playerTexture = Core::TextureManager::CreateGlobalTexture("Player", "Resources\\Sprites\\Player.png");
 		Graphics::Texture& bulletTexture = Core::TextureManager::CreateGlobalTexture("Bullet", "Resources\\Sprites\\Bullet.png");
 		Graphics::Texture& enemyTexture = Core::TextureManager::CreateGlobalTexture("Enemy", "Resources\\Sprites\\Enemy.png");
@@ -48,12 +51,11 @@ namespace Example
 			});
 
 		child = GetECSManager().CreateEntity();
-
-		ec.Init();
 	}
 
 	void ExampleScene::Exit()
 	{
+		Core::Application::GetInstance().GetMainEventBus().Unsubscribe(&Core::Canvas::OnRawMouseButtonEvent, static_cast<Core::Canvas*>(&ec));
 	}
 
 	void ExampleScene::Input(Core::InputPackage& inputPackage, float dt)
@@ -103,11 +105,6 @@ namespace Example
 		Core::Transform& squareTransform = square.GetComponent<Core::Transform>();
 		Core::RectCollider& squareRectCollider = square.GetComponent<Core::RectCollider>();
 
-		if (Core::Mouse::IsButtonReleased(POG_MOUSE_BUTTON_LEFT))
-		{
-			POG_TRACE("asdsad");
-		}
-
 		// No idea what normalising needs doing
 		squareTransform.orientation *= Maths::Quat(Maths::Vec3(0.5f * dt, 0.5f * dt, 0.5f * dt));
 		squareTransform.orientation = Maths::Normalise(squareTransform.orientation);
@@ -134,6 +131,6 @@ namespace Example
 
 	void ExampleScene::Frame(float alpha)
 	{
-		ec.Frame(ec);
+		ec.Frame();
 	}
 }

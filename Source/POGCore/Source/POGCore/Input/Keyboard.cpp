@@ -21,6 +21,12 @@ namespace POG::Core
 
 	void Keyboard::OnRawKeyEvent(RawKeyEvent& e)
 	{
+		if (e.key == -1)
+		{
+			POG_WARN("Ignoring unknown key!");
+			return;
+		}
+
 		KeyActions[e.key] = e.action;
 		KeyModifiers[e.key] = e.mods;
 

@@ -82,7 +82,7 @@ namespace POG::Core
 		void Update(float dt) override;
 		void Frame(float alpha) override;
 
-		void OnCursorEnabledEvent(Core::CursorEnabledEvent& e);
+		void OnCursorEnabledEvent(CursorEnabledEvent& e);
 		void OnWindowCloseEvent(WindowCloseEvent& e);
 
 		bool ShouldClose() const { return shouldClose; };

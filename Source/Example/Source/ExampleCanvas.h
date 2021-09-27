@@ -13,9 +13,16 @@ namespace Example
 
 		virtual void Init() override;
 
-		virtual void Draw(Canvas& canvas) override;
+		virtual void Draw() override;
+
+		void PanelControl_OnMouseReleaseEvent(POG::Core::MouseReleaseEvent& e);
+		void PanelControl_OnMousePressEvent(POG::Core::MousePressEvent& e);
+
+		void PanelControl2_OnMouseReleaseEvent(POG::Core::MouseReleaseEvent& e);
+		void PanelControl2_OnMousePressEvent(POG::Core::MousePressEvent& e);
 
 		POG::Core::PanelControl* panelControl;
+		POG::Core::PanelControl* panelControl2;
 	};
 }
 

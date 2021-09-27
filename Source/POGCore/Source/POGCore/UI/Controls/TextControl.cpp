@@ -8,7 +8,7 @@
 
 namespace POG::Core
 {
-	void TextControl::Draw(Canvas& canvas)
+	void TextControl::Draw()
 	{
 		if (GetActualWidth() < 0.0f || GetActualHeight() < 0.0f)
 		{
@@ -21,10 +21,10 @@ namespace POG::Core
 		Graphics::Disable(Graphics::Capability::ScissorTest);
 	}
 
-	void TextControl::CalculateActualSize(Canvas& canvas)
+	void TextControl::CalculateActualSize()
 	{
 		Maths::Vec2i size = Graphics::GetTextSize(text, 1.0f);
-		SetActualWidth(Maths::Min(GetWidth() * canvas.GetScaleX(), Maths::Min(static_cast<float>(size.x), GetParent().GetActualWidth() - GetX() * canvas.GetScaleX())));
-		SetActualHeight(Maths::Min(GetHeight() * canvas.GetScaleY(), Maths::Min(static_cast<float>(size.y), GetParent().GetActualHeight() - GetY() * canvas.GetScaleY())));
+		SetActualWidth(Maths::Min(GetWidth() * GetCanvas().GetScaleX(), Maths::Min(static_cast<float>(size.x), GetParent().GetActualWidth() - GetX() * GetCanvas().GetScaleX())));
+		SetActualHeight(Maths::Min(GetHeight() * GetCanvas().GetScaleY(), Maths::Min(static_cast<float>(size.y), GetParent().GetActualHeight() - GetY() * GetCanvas().GetScaleY())));
 	}
 }

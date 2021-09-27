@@ -134,12 +134,14 @@ namespace POG::Core
 		void PublishExisting(E& e)
 		{
 			constexpr Util::HashId eventId = Util::Hash<E>();
-			std::vector<EventHandlerBase*>* handlers = subscribers[eventId];
-			
-			if (!handlers)
+			auto it = subscribers.find(eventId);
+
+			if (it == subscribers.end())
 			{
 				return;
 			}
+
+			std::vector<EventHandlerBase*>* handlers = it->second;
 
 			int& eventDepth = eventDepths[eventId];
 			std::vector<int>& eventHandlerIndexesToRemove = eventHandlersToRemove[eventId];

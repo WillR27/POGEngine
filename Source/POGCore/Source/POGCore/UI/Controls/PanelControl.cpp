@@ -13,7 +13,7 @@ namespace POG::Core
 	{
 	}
 
-	void PanelControl::Draw(Canvas& canvas)
+	void PanelControl::Draw()
 	{
 		if (GetActualWidth() < 0.0f || GetActualHeight() < 0.0f)
 		{

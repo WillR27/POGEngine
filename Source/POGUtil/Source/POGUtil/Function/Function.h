@@ -72,9 +72,16 @@ namespace POG::Util
 
 		bool Equals(const Functor<R(Args...)>& functor) override
 		{
-			const FreeFunctor freeFunctor = dynamic_cast<const FreeFunctor&>(functor);
-			
-			return &freeFunctor != nullptr && func == freeFunctor.func;
+			try
+			{
+				const FreeFunctor& freeFunctor = dynamic_cast<const FreeFunctor&>(functor);
+
+				return &freeFunctor != nullptr && func == freeFunctor.func;
+			}
+			catch (...)
+			{
+				return false;
+			}
 		}
 
 	private:
@@ -104,9 +111,16 @@ namespace POG::Util
 
 		bool Equals(const Functor<R(Args...)>& functor) override
 		{
-			const MemberFunctor memberFunctor = dynamic_cast<const MemberFunctor&>(functor);
+			try
+			{
+				const MemberFunctor& memberFunctor = dynamic_cast<const MemberFunctor&>(functor);
 
-			return &memberFunctor != nullptr && func == memberFunctor.func && obj == memberFunctor.obj;;
+				return &memberFunctor != nullptr && func == memberFunctor.func && obj == memberFunctor.obj;
+			}
+			catch (...)
+			{
+				return false;
+			}
 		}
 
 	private:

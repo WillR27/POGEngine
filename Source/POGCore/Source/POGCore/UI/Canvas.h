@@ -14,10 +14,12 @@ namespace POG::Core
 
 		virtual void Init() = 0;
 
-		virtual void Draw(Canvas& canvas) override;
+		virtual void Draw() override;
 
-		virtual void CalculateWindowPos(Canvas& canvas) override;
-		virtual void CalculateActualSize(Canvas& canvas) override;
+		virtual void CalculateWindowPos() override;
+		virtual void CalculateActualSize() override;
+
+		void OnRawMouseButtonEvent(RawMouseButtonEvent& e);
 
 		ScaleMode GetScaleMode() const { return scaleMode; }
 		void SetScaleMode(ScaleMode scaleMode) { this->scaleMode = scaleMode; }
@@ -25,9 +27,17 @@ namespace POG::Core
 		float GetScaleX() const { return scaleX; }
 		float GetScaleY() const { return scaleY; }
 
+		float GetUnscaledMouseX() const { return unscaledMouseX; }
+		float GetUnscaledMouseY() const { return unscaledMouseY; }
+
+		Control& GetFocusedControl() const { return *focusedControl; }
+		void SetFocusedControl(Control& control) { this->focusedControl = &control; }
+
 	private:
 		ScaleMode scaleMode;
 		float scaleX, scaleY;
+		float unscaledMouseX, unscaledMouseY;
+		Control* focusedControl;
 	};
 }
 

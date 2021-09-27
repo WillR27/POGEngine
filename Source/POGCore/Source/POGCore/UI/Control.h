@@ -1,46 +1,56 @@
 #pragma once
 
+#include "ControlEvents.h"
 #include "UIProperties.h"
+#include "POGCore/Input/Input.h"
 
 namespace POG::Core
 {
-	class Canvas;
-
 	class Control
 	{
 	public:
+		friend class Canvas;
+
 		Control();
 		Control(const Control&) = delete;
 		Control(Control&&) = delete;
 
 		virtual ~Control();
 
-		void Frame(Canvas& canvas);
+		void Frame();
 
-		virtual void Draw(Canvas& canvas) = 0;
+		virtual void Draw() = 0;
 
-		virtual void CalculateWindowPos(Canvas& canvas);
-		virtual void CalculateActualSize(Canvas& canvas);
+		virtual void CalculateWindowPos();
+		virtual void CalculateActualSize();
 
 		virtual void OnParentWidthChanged(float deltaWidth);
 		virtual void OnParentHeightChanged(float deltaHeight);
+
+		virtual void OnRawMouseButtonEvent(RawMouseButtonEvent& e);
+
+		bool IsMouseOver() const;
+
+		Canvas& GetCanvas() const { return *canvas; }
+		//void SetCanvas(Canvas& canvas) { this->canvas = &canvas; }
+
+		Control& GetParent() const { return *parent; }
+		void SetParent(Control& parent) { this->parent = &parent; }
+
+		std::vector<Control*>& GetChildren() { return children; }
 
 		template<class T, typename... Args>
 		T& AddControl(Args&&... args)
 		{
 			T* control = new T(std::forward<Args>(args)...);
 			children.push_back(control);
+			control->canvas = this->canvas;
 			control->parent = this;
 
 			return *control;
 		}
 
 		void RemoveControl(Control& control);
-
-		Control& GetParent() const { return *parent; }
-		void SetParent(Control& parent) { this->parent = &parent; }
-
-		std::vector<Control*>& GetChildren() { return children; }
 
 		float GetX() const { return x; }
 		void SetX(float x) { this->x = x; }
@@ -65,7 +75,10 @@ namespace POG::Core
 		Anchor GetAnchor() const { return anchor; }
 		void SetAnchor(Anchor anchor) { this->anchor = anchor; }
 
+		EventBus& GetEventBus() { return eventBus; }
+
 	private:
+		Canvas* canvas;
 		Control* parent;
 		std::vector<Control*> children;
 
@@ -75,6 +88,8 @@ namespace POG::Core
 		float actualWidth, actualHeight;
 
 		Anchor anchor;
+
+		EventBus eventBus;
 	};
 }
 
