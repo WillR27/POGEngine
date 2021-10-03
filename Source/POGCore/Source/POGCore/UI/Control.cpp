@@ -120,10 +120,47 @@ namespace POG::Core
 
 			if (e.action == POG_INPUT_PRESS)
 			{
+				canvas->SetFocusedControl(*this);
+
 				eventBus.Publish(MousePressEvent(e.button));
 			}
 
 			e.SetHandled();
+		}
+	}
+
+	void Control::OnRawKeyEvent(RawKeyEvent& e)
+	{
+		if (IsFocused())
+		{
+			if (e.action == POG_INPUT_RELEASE)
+			{
+				eventBus.Publish(KeyReleaseEvent(e.key, e.mods));
+			}
+
+			if (e.action == POG_INPUT_PRESS)
+			{
+				eventBus.Publish(KeyPressEvent(e.key, e.mods));
+			}
+
+			if (e.action == POG_INPUT_REPEAT)
+			{
+				eventBus.Publish(KeyRepeatEvent(e.key, e.mods));
+			}
+
+			e.SetHandled();
+		}
+		else
+		{
+			for (Control* control : children)
+			{
+				if (e.IsHandled())
+				{
+					return;
+				}
+
+				control->OnRawKeyEvent(e);
+			}
 		}
 	}
 
@@ -133,6 +170,11 @@ namespace POG::Core
 		float mouseY = Mouse::GetY();
 
 		return mouseX >= windowX && mouseX <= windowX + actualWidth && mouseY >= windowY && mouseY <= windowY + actualHeight;
+	}
+
+	bool Control::IsFocused() const
+	{
+		return &canvas->GetFocusedControl() == this;
 	}
 
 	void Control::RemoveControl(Control& control)

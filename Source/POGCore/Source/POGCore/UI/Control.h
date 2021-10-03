@@ -28,11 +28,14 @@ namespace POG::Core
 		virtual void OnParentHeightChanged(float deltaHeight);
 
 		virtual void OnRawMouseButtonEvent(RawMouseButtonEvent& e);
+		virtual void OnRawKeyEvent(RawKeyEvent& e);
 
 		bool IsMouseOver() const;
 
 		Canvas& GetCanvas() const { return *canvas; }
 		//void SetCanvas(Canvas& canvas) { this->canvas = &canvas; }
+
+		bool IsFocused() const;
 
 		Control& GetParent() const { return *parent; }
 		void SetParent(Control& parent) { this->parent = &parent; }

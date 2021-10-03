@@ -60,4 +60,11 @@ namespace POG::Core
 
 		Control::OnRawMouseButtonEvent(eCopy);
 	}
+
+	void Canvas::OnRawKeyEvent(RawKeyEvent& e)
+	{
+		RawKeyEvent eCopy = e;
+
+		Control::OnRawKeyEvent(eCopy);
+	}
 }

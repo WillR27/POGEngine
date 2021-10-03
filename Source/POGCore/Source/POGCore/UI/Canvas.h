@@ -20,6 +20,7 @@ namespace POG::Core
 		virtual void CalculateActualSize() override;
 
 		void OnRawMouseButtonEvent(RawMouseButtonEvent& e);
+		void OnRawKeyEvent(RawKeyEvent& e);
 
 		ScaleMode GetScaleMode() const { return scaleMode; }
 		void SetScaleMode(ScaleMode scaleMode) { this->scaleMode = scaleMode; }

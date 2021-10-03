@@ -9,6 +9,7 @@ namespace Example
 	{
 		ec.Init();
 		Core::Application::GetInstance().GetMainEventBus().Subscribe(&Core::Canvas::OnRawMouseButtonEvent, static_cast<Core::Canvas*>(&ec));
+		Core::Application::GetInstance().GetMainEventBus().Subscribe(&Core::Canvas::OnRawKeyEvent, static_cast<Core::Canvas*>(&ec));
 
 		Graphics::Texture& playerTexture = Core::TextureManager::CreateGlobalTexture("Player", "Resources\\Sprites\\Player.png");
 		Graphics::Texture& bulletTexture = Core::TextureManager::CreateGlobalTexture("Bullet", "Resources\\Sprites\\Bullet.png");
@@ -56,6 +57,7 @@ namespace Example
 	void ExampleScene::Exit()
 	{
 		Core::Application::GetInstance().GetMainEventBus().Unsubscribe(&Core::Canvas::OnRawMouseButtonEvent, static_cast<Core::Canvas*>(&ec));
+		Core::Application::GetInstance().GetMainEventBus().Unsubscribe(&Core::Canvas::OnRawKeyEvent, static_cast<Core::Canvas*>(&ec));
 	}
 
 	void ExampleScene::Input(Core::InputPackage& inputPackage, float dt)

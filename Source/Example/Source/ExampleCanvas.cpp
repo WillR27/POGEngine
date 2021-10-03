@@ -21,17 +21,17 @@ namespace Example
 		panelControl->SetAnchor(Core::Anchor::None);
 
 		panelControl2 = &panelControl->AddControl<Core::PanelControl>();
-		panelControl2->SetWidth(100.0f);
+		panelControl2->SetWidth(120.0f);
 		panelControl2->SetX(70.0f);
 		panelControl2->SetY(100.0f);
 		panelControl2->SetColour({ 0.0f, 0.0f, 1.0f });
 		panelControl2->SetAnchor(Core::Anchor::Left | Core::Anchor::Right | Core::Anchor::Bottom);
 
-		auto& textControl = panelControl2->AddControl<Core::TextControl>();
-		textControl.SetX(20.0f);
-		textControl.SetY(40.0f);
-		textControl.SetAnchor(Core::Anchor::Left | Core::Anchor::Bottom | Core::Anchor::Right);
-		textControl.SetText("Cut off text");
+		auto& textFieldControl = panelControl2->AddControl<Core::TextFieldControl>();
+		textFieldControl.SetX(20.0f);
+		textFieldControl.SetY(40.0f);
+		textFieldControl.SetAnchor(Core::Anchor::Left | Core::Anchor::Bottom | Core::Anchor::Right);
+		textFieldControl.SetText("Cut off text");
 
 		panelControl->GetEventBus().Subscribe(&ExampleCanvas::PanelControl_OnMouseReleaseEvent, this);
 		panelControl->GetEventBus().Subscribe(&ExampleCanvas::PanelControl_OnMousePressEvent, this);
