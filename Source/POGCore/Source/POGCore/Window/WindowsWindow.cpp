@@ -74,6 +74,8 @@ namespace POG::Core
 
 		glfwMakeContextCurrent(window);
 		glfwSetWindowUserPointer(window, &windowData);
+
+		glfwSetInputMode(window, GLFW_LOCK_KEY_MODS, GLFW_TRUE);
 	}
 
 	void WindowsWindow::InitCallbacks()

@@ -47,6 +47,25 @@ namespace POG::Core
 	{
 		return KeyActions[key] == POG_INPUT_REPEAT && KeyModifiers[key] == mod;
 	}
+
+	char Keyboard::GetCharacter(int key, int mods)
+	{
+		int capsMods = POG_MOD_CAPS_LOCK | POG_MOD_SHIFT;
+
+		if (key >= POG_KEY_A && key <= POG_KEY_Z)
+		{
+			if (capsMods & mods)
+			{
+				return key;
+			}
+			else
+			{
+				return key + 32;
+			}
+		}
+
+		return 0;
+	}
 	
 	void Keyboard::ResetKeys()
 	{

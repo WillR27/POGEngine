@@ -42,6 +42,10 @@ namespace POG::Core
 		{
 			textOffset = cursorDif < 0.0f ? cursorDif : 0.0f;
 		}
+		else if (cursorDif == 0.0f)
+		{
+			textOffset = 0.0f;
+		}
 
 		// Fix cursor going off the left of the control
 		cursorOffset = characterPositions[cursorPos] + textOffset;
@@ -130,13 +134,17 @@ namespace POG::Core
 
 	void TextFieldControl::Type(int key, int mods)
 	{
-		if (key == POG_KEY_LEFT_SHIFT || key == POG_KEY_RIGHT_SHIFT)
+		if (key == POG_KEY_CAPS_LOCK || 
+			key == POG_KEY_LEFT_CONTROL || 
+			key == POG_KEY_RIGHT_CONTROL || 
+			key == POG_KEY_LEFT_SHIFT || 
+			key == POG_KEY_RIGHT_SHIFT)
 		{
 
 		}
 		else if (key == POG_KEY_LEFT)
 		{
-			if (mods | POG_MOD_SHIFT)
+			if (mods & POG_MOD_SHIFT)
 			{
 				if (highlightPos == -1)
 				{
@@ -153,7 +161,7 @@ namespace POG::Core
 		}
 		else if (key == POG_KEY_RIGHT)
 		{
-			if (mods | POG_MOD_SHIFT)
+			if (mods & POG_MOD_SHIFT)
 			{
 				if (highlightPos == -1)
 				{
@@ -168,6 +176,42 @@ namespace POG::Core
 			cursorPos++;
 			cursorPos = cursorPos > text.size() ? text.size() : cursorPos;
 		}
+		else if (key == POG_KEY_BACKSPACE)
+		{
+			if ((text.length() > 0 && cursorPos > 0) || highlightPos != -1)
+			{
+				if (highlightPos != -1)
+				{
+					int start = cursorPos > highlightPos ? highlightPos : cursorPos;
+					text.erase(start, abs(cursorPos - highlightPos));
+					cursorPos = start;
+					highlightPos = -1;
+				}
+				else
+				{
+					text.erase(cursorPos - 1, 1);
+					cursorPos--;
+					cursorPos = cursorPos > 0 ? cursorPos : 0;
+				}
+			}
+		}
+		else if (key == POG_KEY_DELETE)
+		{
+			if (cursorPos < text.length() || highlightPos != -1)
+			{
+				if (highlightPos != -1)
+				{
+					int start = cursorPos > highlightPos ? highlightPos : cursorPos;
+					text.erase(start, abs(cursorPos - highlightPos));
+					cursorPos = start;
+					highlightPos = -1;
+				}
+				else
+				{
+					text.erase(cursorPos, 1);
+				}
+			}
+		}
 		else
 		{
 			if (highlightPos != -1)
@@ -178,16 +222,17 @@ namespace POG::Core
 				highlightPos = -1;
 			}
 
-			char c = static_cast<char>(key);
+			char c = static_cast<char>(Keyboard::GetCharacter(key, mods));
 			if (cursorPos == text.size())
 			{
 				text.append(1, c);
-				cursorPos++;
 			}
 			else
 			{
 				text.insert(cursorPos, 1, c);
 			}
+
+			cursorPos++;
 		}
 	}
 }
