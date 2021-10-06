@@ -16,6 +16,7 @@ namespace POG::Core
 		virtual void CalculateActualSize() override;
 
 		void OnMousePressEvent(MousePressEvent& e);
+		void OnMouseReleaseEvent(MouseReleaseEvent& e);
 		void OnKeyPressEvent(KeyPressEvent& e);
 		void OnKeyReleaseEvent(KeyReleaseEvent& e);
 		void OnKeyRepeatEvent(KeyRepeatEvent& e);
@@ -34,7 +35,27 @@ namespace POG::Core
 		float textOffset;
 		float cursorOffset;
 
+		bool mouseDown;
+		float clickedMouseX, clickedMouseY;
+
 		void Type(int key, int mods);
+		void Type(char c);
+
+		void CalculateCharacterPositions();
+		void CalculateTextOffset();
+
+		void MoveCursorLeft();
+		void MoveCursorRight();
+
+		void StartHighlight();
+		void CancelHighlight();
+
+		void OnBackspace();
+		void OnDelete();
+
+		void DeletePreviousCharacter();
+		void DeleteNextCharacter();
+		void DeleteSelection();
 	};
 }
 

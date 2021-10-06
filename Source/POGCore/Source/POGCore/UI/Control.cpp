@@ -96,36 +96,26 @@ namespace POG::Core
 
 	void Control::OnRawMouseButtonEvent(RawMouseButtonEvent& e)
 	{
-		if (IsMouseOver())
+		for (Control* control : children)
 		{
-			for (Control* control : children)
-			{
-				if (e.IsHandled())
-				{
-					return;
-				}
-
-				control->OnRawMouseButtonEvent(e);
-			}
+			control->OnRawMouseButtonEvent(e);
 
 			if (e.IsHandled())
 			{
 				return;
 			}
+		}
 
-			if (e.action == POG_INPUT_RELEASE)
-			{
-				eventBus.Publish(MouseReleaseEvent(e.button));
-			}
+		if (e.action == POG_INPUT_RELEASE)
+		{
+			eventBus.Publish(MouseReleaseEvent(e.button));
+		}
 
-			if (e.action == POG_INPUT_PRESS)
-			{
-				canvas->SetFocusedControl(*this);
+		if (e.action == POG_INPUT_PRESS)
+		{
+			canvas->SetFocusedControl(*this);
 
-				eventBus.Publish(MousePressEvent(e.button));
-			}
-
-			e.SetHandled();
+			eventBus.Publish(MousePressEvent(e.button));
 		}
 	}
 
@@ -154,12 +144,12 @@ namespace POG::Core
 		{
 			for (Control* control : children)
 			{
+				control->OnRawKeyEvent(e);
+
 				if (e.IsHandled())
 				{
 					return;
 				}
-
-				control->OnRawKeyEvent(e);
 			}
 		}
 	}

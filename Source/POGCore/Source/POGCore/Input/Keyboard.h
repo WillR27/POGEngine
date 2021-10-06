@@ -15,6 +15,7 @@ namespace POG::Core
 		static bool IsKeyReleased(int key, int mod = POG_MOD_NONE);
 		static bool IsKeyRepeated(int key, int mod = POG_MOD_NONE);
 
+		static bool IsCharacter(int key);
 		static char GetCharacter(int key, int mods);
 
 	private:

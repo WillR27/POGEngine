@@ -48,23 +48,52 @@ namespace POG::Core
 		return KeyActions[key] == POG_INPUT_REPEAT && KeyModifiers[key] == mod;
 	}
 
+	bool Keyboard::IsCharacter(int key)
+	{
+		return key >= 32 && key <= 126;
+	}
+
 	char Keyboard::GetCharacter(int key, int mods)
 	{
-		int capsMods = POG_MOD_CAPS_LOCK | POG_MOD_SHIFT;
-
 		if (key >= POG_KEY_A && key <= POG_KEY_Z)
 		{
-			if (capsMods & mods)
-			{
-				return key;
-			}
-			else
+			constexpr int capsMods = POG_MOD_CAPS_LOCK | POG_MOD_SHIFT;
+
+			if (!(mods & capsMods))
 			{
 				return key + 32;
 			}
 		}
+		else if (mods & POG_MOD_SHIFT)
+		{
+			switch (key)
+			{
+			case  '`': return '¬';
+			case  '1': return '!';
+			case  '2': return '"';
+			case  '3': return '£';
+			case  '4': return '$';
+			case  '5': return '%';
+			case  '6': return '^';
+			case  '7': return '&';
+			case  '8': return '*';
+			case  '9': return '(';
+			case  '0': return ')';
+			case  '-': return '_';
+			case  '=': return '+';
+			case  '[': return '{';
+			case  ']': return '}';
+			case  ';': return ':';
+			case '\'': return '@';
+			case  '#': return '~';
+			case '\\': return '|';
+			case  ',': return '<';
+			case  '.': return '>';
+			case  '/': return '?';
+			}
+		}
 
-		return 0;
+		return key;
 	}
 	
 	void Keyboard::ResetKeys()
