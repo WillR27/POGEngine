@@ -38,6 +38,10 @@ namespace POG::Core
 		}
 	}
 
+	void Control::Init()
+	{
+	}
+
 	void Control::Frame()
 	{
 		CalculateWindowPos();

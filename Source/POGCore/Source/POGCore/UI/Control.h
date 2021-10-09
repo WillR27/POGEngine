@@ -17,6 +17,8 @@ namespace POG::Core
 
 		virtual ~Control();
 
+		virtual void Init();
+
 		void Frame();
 
 		virtual void Draw() = 0;
@@ -50,6 +52,7 @@ namespace POG::Core
 			children.push_back(control);
 			control->canvas = this->canvas;
 			control->parent = this;
+			control->Init();
 
 			return *control;
 		}

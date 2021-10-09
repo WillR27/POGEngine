@@ -11,6 +11,8 @@ namespace POG::Core
 
 		virtual ~TextFieldControl() = default;
 
+		virtual void Init() override;
+
 		virtual void Draw() override;
 
 		virtual void CalculateActualSize() override;

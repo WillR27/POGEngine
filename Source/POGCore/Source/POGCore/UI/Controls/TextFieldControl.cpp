@@ -21,6 +21,10 @@ namespace POG::Core
 		, clickedMouseX(0.0f)
 		, clickedMouseY(0.0f)
 	{
+	}
+
+	void TextFieldControl::Init()
+	{
 		GetEventBus().Subscribe(&TextFieldControl::OnMousePressEvent, this);
 		GetEventBus().Subscribe(&TextFieldControl::OnMouseReleaseEvent, this);
 		GetEventBus().Subscribe(&TextFieldControl::OnKeyPressEvent, this);
