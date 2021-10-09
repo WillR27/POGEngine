@@ -2,6 +2,8 @@
 
 #include "POGCore/UI/Control.h"
 
+#include "POGUtil.h"
+
 namespace POG::Core
 {
 	class TextFieldControl : public Control
@@ -13,9 +15,9 @@ namespace POG::Core
 
 		virtual void Init() override;
 
-		virtual void Update() override;
+		virtual void Update(float dt) override;
 
-		virtual void Draw() override;
+		virtual void Draw(float alpha) override;
 
 		virtual void CalculateActualSize() override;
 
@@ -35,6 +37,8 @@ namespace POG::Core
 		std::vector<float> characterPositions;
 		int cursorPos;
 		int highlightPos;
+
+		Util::Timer<Util::Time::Unit::Seconds, float, true> cursorTimer;
 
 		float textOffset;
 		float cursorOffset;

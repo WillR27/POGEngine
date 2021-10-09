@@ -13,7 +13,7 @@ namespace Example
 
 		virtual void Init() override;
 
-		virtual void Draw() override;
+		virtual void Draw(float alpha) override;
 
 		void PanelControl_OnMouseReleaseEvent(POG::Core::MouseReleaseEvent& e);
 		void PanelControl_OnMousePressEvent(POG::Core::MousePressEvent& e);

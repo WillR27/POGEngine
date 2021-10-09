@@ -93,6 +93,6 @@ namespace POG::Core
 
 		static Signature GetSignature(ECSManager& ecsManager);
 
-		void Update(float dt);
+		void Update();
 	};
 }

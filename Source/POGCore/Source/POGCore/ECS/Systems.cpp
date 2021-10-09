@@ -235,7 +235,7 @@ namespace POG::Core
 		return signature;
 	}
 
-	void TransformSystem::Update(float dt)
+	void TransformSystem::Update()
 	{
 		for (EntityId entityId : entityIds)
 		{

@@ -22,6 +22,8 @@ namespace POG::Core
 
 		virtual void Exit();
 
+		void PreInput();
+
 		virtual void Input(InputPackage& inputPackage, float dt);
 
 		void PreUpdate(float dt);

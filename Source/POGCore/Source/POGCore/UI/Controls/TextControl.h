@@ -11,7 +11,7 @@ namespace POG::Core
 
 		virtual ~TextControl() = default;
 
-		virtual void Draw() override;
+		virtual void Draw(float alpha) override;
 
 		virtual void CalculateActualSize() override;
 

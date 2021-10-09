@@ -15,6 +15,7 @@ namespace POG::Core
 		, characterPositions()
 		, cursorPos(4)
 		, highlightPos(2)
+		, cursorTimer()
 		, textOffset(0)
 		, cursorOffset(0)
 		, mouseDown(false)
@@ -30,11 +31,13 @@ namespace POG::Core
 		GetEventBus().Subscribe(&TextFieldControl::OnKeyPressEvent, this);
 		GetEventBus().Subscribe(&TextFieldControl::OnKeyReleaseEvent, this);
 		GetEventBus().Subscribe(&TextFieldControl::OnKeyRepeatEvent, this);
+
+		cursorTimer.Start();
 	}
 
-	void TextFieldControl::Update()
+	void TextFieldControl::Update(float dt)
 	{
-		Control::Update();
+		Control::Update(dt);
 
 		CalculateCharacterPositions();
 		CalculateClickAndDrag();
@@ -42,7 +45,7 @@ namespace POG::Core
 		CalculateCursorOffset();
 	}
 
-	void TextFieldControl::Draw()
+	void TextFieldControl::Draw(float alpha)
 	{
 		if (GetActualWidth() < 0.0f || GetActualHeight() < 0.0f)
 		{
@@ -80,8 +83,16 @@ namespace POG::Core
 
 			Graphics::RenderText(text, static_cast<int>(GetWindowX() + textOffset), static_cast<int>((Application::GetInstance().GetHeight() - GetWindowY()) - GetActualHeight()), 1.0f, colour);
 
-			Maths::Vec2i size2 = Graphics::GetTextSize("|", 1.0f);
-			Graphics::DrawRectangle(GetWindowX() + cursorOffset, (Application::GetInstance().GetHeight() - GetWindowY()) - GetActualHeight(), size2.x / 3.0f, GetActualHeight(), colour);
+			float elapsed = cursorTimer.Elapsed();
+			if (elapsed > 2.0f)
+			{
+				cursorTimer.Reset();
+			}
+			else if (elapsed > 1.0f)
+			{
+				Maths::Vec2i size2 = Graphics::GetTextSize("|", 1.0f);
+				Graphics::DrawRectangle(GetWindowX() + cursorOffset, (Application::GetInstance().GetHeight() - GetWindowY()) - GetActualHeight(), size2.x / 3.0f, GetActualHeight(), colour);
+			}
 		}
 
 		Graphics::Disable(Graphics::Capability::ScissorTest);

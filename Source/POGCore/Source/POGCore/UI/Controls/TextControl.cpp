@@ -8,7 +8,7 @@
 
 namespace POG::Core
 {
-	void TextControl::Draw()
+	void TextControl::Draw(float alpha)
 	{
 		if (GetActualWidth() < 0.0f || GetActualHeight() < 0.0f)
 		{

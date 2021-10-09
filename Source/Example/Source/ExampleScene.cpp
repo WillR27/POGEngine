@@ -115,26 +115,11 @@ namespace Example
 		enemySystem->Update(dt);
 		bulletCollisionSystem->Update(dt);
 
-		ec.Update();
-
-		//Core::Transform& playerTransform = player.GetComponent<Core::Transform>();
-
-		//Core::Ray ray
-		//{
-		//	.origin = playerTransform.position,
-		//	.direction = Core::Camera::MainCamera->GetForwardVec(),
-		//};
-
-		//Core::RayResultRectCollider result = Core::Hits(ray, squareTransform, squareRectCollider);
-		//if (result.hit)
-		//{
-		//	//POG_TRACE("{0}, {1}, {2}", result.pointOfIntersection.x, result.pointOfIntersection.y, result.pointOfIntersection.z);
-		//	//POG_WARN("{0}, {1}", result.pointOnRect.x, result.pointOnRect.y);
-		//}
+		ec.Update(dt);
 	}
 
 	void ExampleScene::Frame(float alpha)
 	{
-		ec.Frame();
+		ec.Frame(alpha);
 	}
 }

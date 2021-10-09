@@ -24,41 +24,51 @@ namespace POG::Util
 		void Start()
 		{
 			start = timer.now();
+			stopped = false;
 		}
 
 		T Stop()
 		{
-			auto end = timer.now();
+			T elapsed = Elapsed();
+			stopped = true;
 
-			T divisor = 1000000;
-			switch (U)
-			{
-			case Time::Unit::Seconds:			divisor = 1000000000; break;
-			case Time::Unit::Microseconds:		divisor = 1000; break;
-			case Time::Unit::Nanoseconds:		divisor = 1; break;
-			}
-
-			T deltaTime = std::chrono::duration_cast<std::chrono::duration<T, std::nano>>(end - start).count() / divisor;
-
-			if (!D)
-			{
-				elapsedTime += static_cast<T>(static_cast<int>(elapsedTime));
-			}
-			else
-			{
-				elapsedTime += deltaTime;
-			}
-
-			return elapsedTime;
+			return elapsed;
 		}
 
 		void Reset()
 		{
 			elapsedTime = 0;
+			start = timer.now();
 		}
 
 		T Elapsed()
 		{
+			if (!stopped)
+			{
+				end = timer.now();
+
+				T divisor = 1000000;
+				switch (U)
+				{
+				case Time::Unit::Seconds:			divisor = 1000000000; break;
+				case Time::Unit::Microseconds:		divisor = 1000; break;
+				case Time::Unit::Nanoseconds:		divisor = 1; break;
+				}
+
+				T deltaTime = std::chrono::duration_cast<std::chrono::duration<T, std::nano>>(end - start).count() / divisor;
+
+				if (!D)
+				{
+					elapsedTime += static_cast<T>(static_cast<int>(deltaTime));
+				}
+				else
+				{
+					elapsedTime += deltaTime;
+				}
+
+				start = end;
+			}
+
 			return elapsedTime;
 		}
 
@@ -81,8 +91,10 @@ namespace POG::Util
 		std::chrono::high_resolution_clock timer = std::chrono::high_resolution_clock();
 
 		std::chrono::time_point<std::chrono::steady_clock> start;
+		std::chrono::time_point<std::chrono::steady_clock> end;
 
 		T elapsedTime = 0;
+		bool stopped = true;
 	};
 }
 

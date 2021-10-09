@@ -42,31 +42,23 @@ namespace POG::Core
 	{
 	}
 
-	void Control::Input()
+	void Control::Update(float dt)
 	{
 		for (auto it = children.begin(); it != children.end(); it++)
 		{
-			(*it)->Input();
+			(*it)->Update(dt);
 		}
 	}
 
-	void Control::Update()
-	{
-		for (auto it = children.begin(); it != children.end(); it++)
-		{
-			(*it)->Update();
-		}
-	}
-
-	void Control::Frame()
+	void Control::Frame(float alpha)
 	{
 		CalculateWindowPos();
 		CalculateActualSize();
-		Draw();
+		Draw(alpha);
 
 		for (auto it = children.begin(); it != children.end(); it++)
 		{
-			(*it)->Frame();
+			(*it)->Frame(alpha);
 		}
 	}
 

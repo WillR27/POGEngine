@@ -19,11 +19,10 @@ namespace POG::Core
 
 		virtual void Init();
 
-		virtual void Input();
-		virtual void Update();
-		virtual void Frame();
+		virtual void Update(float dt);
+		virtual void Frame(float alpha);
 
-		virtual void Draw() = 0;
+		virtual void Draw(float alpha) = 0;
 
 		virtual void CalculateWindowPos();
 		virtual void CalculateActualSize();

@@ -51,6 +51,11 @@ namespace POG::Core
     {
     }
 
+    void Scene::PreInput()
+    {
+        GetTransformSystem().Update();
+    }
+
     void Scene::Input(InputPackage& inputPackage, float dt)
     {
         // Leave empty
@@ -68,7 +73,6 @@ namespace POG::Core
     void Scene::PostUpdate(float dt)
     {
         GetPhysicsSystem().Update(dt);
-        GetTransformSystem().Update(dt);
         GetCameraUpdateViewSystem().UpdateView();
     }
 
@@ -93,10 +97,10 @@ namespace POG::Core
 
     void Scene::PostFrame(float alpha)
     {
-        /*GetMeshRendererSystem().Frame(alpha);
-        GetSpriteRendererSystem().Frame(alpha);
-        GetSpriteBoxCollider2DRendererSystem().Frame(alpha);
-        GetSpriteRectColliderRendererSystem().Frame(alpha);
-        Graphics::RenderText("This is sample text", 250, 250, 1.0f, Maths::Vec3(0.5, 0.8f, 0.2f));*/
+        //GetMeshRendererSystem().Frame(alpha);
+        //GetSpriteRendererSystem().Frame(alpha);
+        //GetSpriteBoxCollider2DRendererSystem().Frame(alpha);
+        //GetSpriteRectColliderRendererSystem().Frame(alpha);
+        //Graphics::RenderText("This is sample text", 250, 250, 1.0f, Maths::Vec3(0.5, 0.8f, 0.2f));
     }
 }

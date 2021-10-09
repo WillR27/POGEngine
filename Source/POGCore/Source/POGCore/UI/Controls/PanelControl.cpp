@@ -13,7 +13,7 @@ namespace POG::Core
 	{
 	}
 
-	void PanelControl::Draw()
+	void PanelControl::Draw(float alpha)
 	{
 		if (GetActualWidth() < 0.0f || GetActualHeight() < 0.0f)
 		{

@@ -14,7 +14,9 @@ namespace POG::Core
 
 		virtual void Init() = 0;
 
-		virtual void Draw() override;
+		virtual void Update(float dt) override;
+
+		virtual void Draw(float alpha) override;
 
 		virtual void CalculateWindowPos() override;
 		virtual void CalculateActualSize() override;

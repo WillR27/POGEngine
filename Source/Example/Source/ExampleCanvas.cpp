@@ -33,19 +33,27 @@ namespace Example
 		textFieldControl.SetAnchor(Core::Anchor::Left | Core::Anchor::Bottom | Core::Anchor::Right);
 		textFieldControl.SetText("Cut off text");
 
-		panelControl->GetEventBus().Subscribe(&ExampleCanvas::PanelControl_OnMouseReleaseEvent, this);
 		panelControl->GetEventBus().Subscribe(&ExampleCanvas::PanelControl_OnMousePressEvent, this);
+		panelControl->GetEventBus().Subscribe(&ExampleCanvas::PanelControl_OnMouseReleaseEvent, this);
 
-		panelControl2->GetEventBus().Subscribe(&ExampleCanvas::PanelControl2_OnMouseReleaseEvent, this);
 		panelControl2->GetEventBus().Subscribe(&ExampleCanvas::PanelControl2_OnMousePressEvent, this);
+		panelControl2->GetEventBus().Subscribe(&ExampleCanvas::PanelControl2_OnMouseReleaseEvent, this);
 	}
 
-	void ExampleCanvas::Draw()
+	void ExampleCanvas::Draw(float alpha)
 	{
 		//panelControl->SetWidth(panelControl->GetWidth() + 2);
 		//panelControl->SetHeight(panelControl->GetHeight() + 1);
 
-		Canvas::Draw();
+		Canvas::Draw(alpha);
+	}
+
+	void ExampleCanvas::PanelControl_OnMousePressEvent(POG::Core::MousePressEvent& e)
+	{
+		if (panelControl->IsFocused())
+		{
+			panelControl->SetColour({ 0.0f, 1.0f, 0.0f });
+		}
 	}
 
 	void ExampleCanvas::PanelControl_OnMouseReleaseEvent(POG::Core::MouseReleaseEvent& e)
@@ -53,18 +61,16 @@ namespace Example
 		panelControl->SetColour({ 1.0f, 0.0f, 1.0f });
 	}
 
-	void ExampleCanvas::PanelControl_OnMousePressEvent(POG::Core::MousePressEvent& e)
+	void ExampleCanvas::PanelControl2_OnMousePressEvent(POG::Core::MousePressEvent& e)
 	{
-		panelControl->SetColour({ 0.0f, 1.0f, 0.0f });
+		if (panelControl2->IsFocused())
+		{
+			panelControl2->SetColour({ 1.0f, 0.5f, 0.0f });
+		}
 	}
 
 	void ExampleCanvas::PanelControl2_OnMouseReleaseEvent(POG::Core::MouseReleaseEvent& e)
 	{
 		panelControl2->SetColour({ 1.0f, 0.0f, 0.5f });
-	}
-
-	void ExampleCanvas::PanelControl2_OnMousePressEvent(POG::Core::MousePressEvent& e)
-	{
-		panelControl2->SetColour({ 1.0f, 0.5f, 0.0f });
 	}
 }

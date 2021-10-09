@@ -24,7 +24,15 @@ namespace POG::Core
 		SetActualHeight(height);
 	}
 
-	void Canvas::Draw()
+	void Canvas::Update(float dt)
+	{
+		unscaledMouseX = Mouse::GetX() / scaleX;
+		unscaledMouseY = Mouse::GetY() / scaleY;
+
+		Control::Update(dt);
+	}
+
+	void Canvas::Draw(float alpha)
 	{
 		if (scaleMode == ScaleMode::Stretch)
 		{
@@ -36,10 +44,6 @@ namespace POG::Core
 			scaleX = 1.0f;
 			scaleY = 1.0f;
 		}
-
-		// TODO: Move and call before input handling
-		unscaledMouseX = Mouse::GetX() / scaleX;
-		unscaledMouseY = Mouse::GetY() / scaleY;
 
 		Graphics::DrawRectangle(GetWindowX(), (static_cast<float>(Application::GetInstance().GetHeight()) - GetWindowY()) - GetActualHeight(), GetActualWidth(), GetActualHeight(), { 1.0f, 1.0f, 1.0f });
 	}

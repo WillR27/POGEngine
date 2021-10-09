@@ -172,7 +172,7 @@ namespace POG::Core
 		{
 			//POG_TRACE(1.0f / timeBetweenFrames);
 
-			Frame(timeBetweenFrames / GetTargetFrameInterval());
+			Frame(timeBetweenUpdates / GetTargetUpdateInterval());
 
 			// We don't care about trying to catch up with frames so set to 0
 			timeBetweenFrames = 0.0f;
@@ -207,6 +207,8 @@ namespace POG::Core
 
 		Input();
 
+		Scene::GetActiveScene().PreInput();
+
 		Input::Dispatch(dt);
 
 		Scene::GetActiveScene().PreUpdate(dt);
@@ -221,9 +223,9 @@ namespace POG::Core
 			window->Frame();
 		}
 
-		Scene::GetActiveScene().PreFrame(timeBetweenFrames / GetTargetFrameInterval());
-		Scene::GetActiveScene().Frame(timeBetweenFrames / GetTargetFrameInterval());
-		Scene::GetActiveScene().PostFrame(timeBetweenFrames / GetTargetFrameInterval());
+		Scene::GetActiveScene().PreFrame(alpha);
+		Scene::GetActiveScene().Frame(alpha);
+		Scene::GetActiveScene().PostFrame(alpha);
 
 		if (IsStandalone())
 		{
