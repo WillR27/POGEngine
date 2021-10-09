@@ -115,6 +115,8 @@ namespace Example
 		enemySystem->Update(dt);
 		bulletCollisionSystem->Update(dt);
 
+		ec.Update();
+
 		//Core::Transform& playerTransform = player.GetComponent<Core::Transform>();
 
 		//Core::Ray ray

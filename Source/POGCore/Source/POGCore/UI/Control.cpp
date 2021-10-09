@@ -42,6 +42,22 @@ namespace POG::Core
 	{
 	}
 
+	void Control::Input()
+	{
+		for (auto it = children.begin(); it != children.end(); it++)
+		{
+			(*it)->Input();
+		}
+	}
+
+	void Control::Update()
+	{
+		for (auto it = children.begin(); it != children.end(); it++)
+		{
+			(*it)->Update();
+		}
+	}
+
 	void Control::Frame()
 	{
 		CalculateWindowPos();

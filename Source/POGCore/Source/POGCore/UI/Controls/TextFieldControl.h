@@ -13,6 +13,8 @@ namespace POG::Core
 
 		virtual void Init() override;
 
+		virtual void Update() override;
+
 		virtual void Draw() override;
 
 		virtual void CalculateActualSize() override;

@@ -19,7 +19,9 @@ namespace POG::Core
 
 		virtual void Init();
 
-		void Frame();
+		virtual void Input();
+		virtual void Update();
+		virtual void Frame();
 
 		virtual void Draw() = 0;
 

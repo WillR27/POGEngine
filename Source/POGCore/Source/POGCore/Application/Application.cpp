@@ -242,6 +242,9 @@ namespace POG::Core
 		timer.Reset();
 		timer.Start();
 
+		// Call an initial update to kick things off
+		Update(0.0f);
+
 		while (!ShouldClose())
 		{
 			float timeBetweenLoops = timer.Stop();

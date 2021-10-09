@@ -32,17 +32,22 @@ namespace POG::Core
 		GetEventBus().Subscribe(&TextFieldControl::OnKeyRepeatEvent, this);
 	}
 
+	void TextFieldControl::Update()
+	{
+		Control::Update();
+
+		CalculateCharacterPositions();
+		CalculateClickAndDrag();
+		CalculateTextOffset();
+		CalculateCursorOffset();
+	}
+
 	void TextFieldControl::Draw()
 	{
 		if (GetActualWidth() < 0.0f || GetActualHeight() < 0.0f)
 		{
 			return;
 		}
-
-		CalculateCharacterPositions();
-		CalculateClickAndDrag();
-		CalculateTextOffset();
-		CalculateCursorOffset();
 
 		Graphics::DrawRectangle(GetWindowX(), (Application::GetInstance().GetHeight() - GetWindowY()) - GetActualHeight(), GetActualWidth(), GetActualHeight(), { 1.0f, 0.9f, 0.3f });
 
