@@ -57,14 +57,15 @@ namespace POG::Core
 	void Canvas::OnRawMouseButtonEvent(RawMouseButtonEvent& e)
 	{
 		RawMouseButtonEvent eCopy = e;
+		Control::FindAndSetFocusedControl(eCopy);
 
-		Control::OnRawMouseButtonEvent(eCopy);
+		RawMouseButtonEvent eCopy2 = e;
+		Control::OnRawMouseButtonEvent(eCopy2);
 	}
 
 	void Canvas::OnRawKeyEvent(RawKeyEvent& e)
 	{
 		RawKeyEvent eCopy = e;
-
 		Control::OnRawKeyEvent(eCopy);
 	}
 }

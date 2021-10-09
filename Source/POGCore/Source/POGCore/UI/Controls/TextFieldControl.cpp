@@ -36,48 +36,9 @@ namespace POG::Core
 		}
 
 		CalculateCharacterPositions();
-
-		if (mouseDown && IsMouseOver())
-		{
-			float deltaX = Mouse::GetX() - clickedMouseX;
-			float localDeltaMouseX = deltaX - GetWindowX();
-			float localMouseX = Mouse::GetX() - GetWindowX();
-
-			int oldCursorPos = cursorPos;
-			float smallestDif = 10000.0f;
-			for (size_t i = 0; i < characterPositions.size(); i++)
-			{
-				float dif = abs(localMouseX - characterPositions[i] - textOffset);
-				if (dif < smallestDif)
-				{
-					smallestDif = dif;
-					cursorPos = i;
-				}
-			}
-
-			if (cursorPos != oldCursorPos)
-			{
-				if (highlightPos == -1)
-				{
-					highlightPos = oldCursorPos;
-				}
-			}
-			else if (cursorPos == highlightPos)
-			{
-				highlightPos = -1;
-			}
-
-			if (localMouseX < GetActualWidth() * 0.1f)
-			{
-				MoveCursorLeft();
-			}
-			else if (localMouseX > GetActualWidth() * 0.9f)
-			{
-				MoveCursorRight();
-			}
-		}
-
+		CalculateClickAndDrag();
 		CalculateTextOffset();
+		CalculateCursorOffset();
 
 		Graphics::DrawRectangle(GetWindowX(), (Application::GetInstance().GetHeight() - GetWindowY()) - GetActualHeight(), GetActualWidth(), GetActualHeight(), { 1.0f, 0.9f, 0.3f });
 
@@ -229,61 +190,6 @@ namespace POG::Core
 		cursorPos++;
 	}
 
-	void TextFieldControl::CalculateCharacterPositions()
-	{
-		characterPositions.clear();
-		characterPositions.resize(text.length() + 1);
-		characterPositions[0] = 0;
-		for (size_t i = 1; i <= text.length(); i++)
-		{
-			characterPositions[i] = Graphics::GetTextSize(text.substr(0, i), 1.0f).x;
-		}
-	}
-
-	void TextFieldControl::CalculateTextOffset()
-	{
-		// Fix the cursor going off the right of the control
-		float cursorDif = GetActualWidth() - characterPositions[cursorPos];
-		if (cursorDif - textOffset < 0.0f)
-		{
-			textOffset = cursorDif < 0.0f ? cursorDif : 0.0f;
-
-			// Check the cursor is actually outside the text field
-			if (cursorDif < 0.0f)
-			{
-				// Shift text so the cursor is now 2/3 of the way along the text field
-				textOffset -= GetActualWidth() / 3.0f;
-
-				// Don't go further than the end of the text
-				float maxOffset = -(characterPositions.back() - GetActualWidth());
-				if (textOffset < maxOffset)
-				{
-					textOffset = maxOffset;
-				}
-			}
-			else
-			{
-				textOffset = 0.0f;
-			}
-		}
-
-		// Fix cursor going off the left of the control
-		cursorOffset = characterPositions[cursorPos] + textOffset;
-		if (cursorOffset < 0.0f)
-		{
-			// Shift text so the cursor is now 1/3 of the way along the text field
-			textOffset += GetActualWidth() / 3.0f;
-
-			// Don't go past the start of the text
-			if (textOffset > 0.0f)
-			{
-				textOffset = 0.0f;
-			}
-
-			cursorOffset = characterPositions[cursorPos] + textOffset;
-		}
-	}
-
 	void TextFieldControl::MoveCursorLeft()
 	{
 		cursorPos--;
@@ -357,5 +263,106 @@ namespace POG::Core
 		text.erase(start, abs(cursorPos - highlightPos));
 		cursorPos = start;
 		highlightPos = -1;
+	}
+
+	void TextFieldControl::CalculateCharacterPositions()
+	{
+		characterPositions.clear();
+		characterPositions.resize(text.length() + 1);
+		characterPositions[0] = 0;
+		for (size_t i = 1; i <= text.length(); i++)
+		{
+			characterPositions[i] = Graphics::GetTextSize(text.substr(0, i), 1.0f).x;
+		}
+	}
+
+	void TextFieldControl::CalculateClickAndDrag()
+	{
+		if (mouseDown && IsMouseOver())
+		{
+			float deltaX = Mouse::GetX() - clickedMouseX;
+			float localDeltaMouseX = deltaX - GetWindowX();
+			float localMouseX = Mouse::GetX() - GetWindowX();
+
+			int oldCursorPos = cursorPos;
+			float smallestDif = 10000.0f;
+			for (size_t i = 0; i < characterPositions.size(); i++)
+			{
+				float dif = abs(localMouseX - characterPositions[i] - textOffset);
+				if (dif < smallestDif)
+				{
+					smallestDif = dif;
+					cursorPos = i;
+				}
+			}
+
+			if (cursorPos != oldCursorPos)
+			{
+				if (highlightPos == -1)
+				{
+					highlightPos = oldCursorPos;
+				}
+			}
+			else if (cursorPos == highlightPos)
+			{
+				highlightPos = -1;
+			}
+
+			if (localMouseX < GetActualWidth() * 0.1f)
+			{
+				MoveCursorLeft();
+			}
+			else if (localMouseX > GetActualWidth() * 0.9f)
+			{
+				MoveCursorRight();
+			}
+		}
+	}
+
+	void TextFieldControl::CalculateTextOffset()
+	{
+		// Fix the cursor going off the right of the control
+		float cursorDif = GetActualWidth() - characterPositions[cursorPos];
+		if (cursorDif - textOffset < 0.0f)
+		{
+			textOffset = cursorDif < 0.0f ? cursorDif : 0.0f;
+
+			// Check the cursor is actually outside the text field
+			if (cursorDif < 0.0f)
+			{
+				// Shift text so the cursor is now 2/3 of the way along the text field
+				textOffset -= GetActualWidth() / 3.0f;
+
+				// Don't go further than the end of the text
+				float maxOffset = -(characterPositions.back() - GetActualWidth());
+				if (textOffset < maxOffset)
+				{
+					textOffset = maxOffset;
+				}
+			}
+			else
+			{
+				textOffset = 0.0f;
+			}
+		}
+	}
+
+	void TextFieldControl::CalculateCursorOffset()
+	{
+		// Fix cursor going off the left of the control
+		cursorOffset = characterPositions[cursorPos] + textOffset;
+		if (cursorOffset < 0.0f)
+		{
+			// Shift text so the cursor is now 1/3 of the way along the text field
+			textOffset += GetActualWidth() / 3.0f;
+
+			// Don't go past the start of the text
+			if (textOffset > 0.0f)
+			{
+				textOffset = 0.0f;
+			}
+
+			cursorOffset = characterPositions[cursorPos] + textOffset;
+		}
 	}
 }

@@ -41,9 +41,6 @@ namespace POG::Core
 		void Type(int key, int mods);
 		void Type(char c);
 
-		void CalculateCharacterPositions();
-		void CalculateTextOffset();
-
 		void MoveCursorLeft();
 		void MoveCursorRight();
 
@@ -56,6 +53,11 @@ namespace POG::Core
 		void DeletePreviousCharacter();
 		void DeleteNextCharacter();
 		void DeleteSelection();
+
+		void CalculateCharacterPositions();
+		void CalculateClickAndDrag();
+		void CalculateTextOffset();
+		void CalculateCursorOffset();
 	};
 }
 

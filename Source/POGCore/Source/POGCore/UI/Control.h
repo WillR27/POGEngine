@@ -27,6 +27,7 @@ namespace POG::Core
 		virtual void OnParentWidthChanged(float deltaWidth);
 		virtual void OnParentHeightChanged(float deltaHeight);
 
+		void FindAndSetFocusedControl(RawMouseButtonEvent& e);
 		virtual void OnRawMouseButtonEvent(RawMouseButtonEvent& e);
 		virtual void OnRawKeyEvent(RawKeyEvent& e);
 

@@ -94,6 +94,29 @@ namespace POG::Core
 		}
 	}
 
+	void Control::FindAndSetFocusedControl(RawMouseButtonEvent& e)
+	{
+		if (IsMouseOver())
+		{
+			for (Control* control : children)
+			{
+				control->FindAndSetFocusedControl(e);
+
+				if (e.IsHandled())
+				{
+					return;
+				}
+			}
+
+			if (e.action == POG_INPUT_PRESS)
+			{
+				canvas->SetFocusedControl(*this);
+
+				e.SetHandled();
+			}
+		}
+	}
+
 	void Control::OnRawMouseButtonEvent(RawMouseButtonEvent& e)
 	{
 		for (Control* control : children)
@@ -106,16 +129,13 @@ namespace POG::Core
 			}
 		}
 
-		if (e.action == POG_INPUT_RELEASE)
-		{
-			eventBus.Publish(MouseReleaseEvent(e.button));
-		}
-
 		if (e.action == POG_INPUT_PRESS)
 		{
-			canvas->SetFocusedControl(*this);
-
 			eventBus.Publish(MousePressEvent(e.button));
+		}
+		else if (e.action == POG_INPUT_RELEASE)
+		{
+			eventBus.Publish(MouseReleaseEvent(e.button));
 		}
 	}
 
@@ -123,17 +143,15 @@ namespace POG::Core
 	{
 		if (IsFocused())
 		{
-			if (e.action == POG_INPUT_RELEASE)
-			{
-				eventBus.Publish(KeyReleaseEvent(e.key, e.mods));
-			}
-
 			if (e.action == POG_INPUT_PRESS)
 			{
 				eventBus.Publish(KeyPressEvent(e.key, e.mods));
 			}
-
-			if (e.action == POG_INPUT_REPEAT)
+			else if (e.action == POG_INPUT_RELEASE)
+			{
+				eventBus.Publish(KeyReleaseEvent(e.key, e.mods));
+			}
+			else if (e.action == POG_INPUT_REPEAT)
 			{
 				eventBus.Publish(KeyRepeatEvent(e.key, e.mods));
 			}
